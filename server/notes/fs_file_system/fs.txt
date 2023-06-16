@@ -1,0 +1,17 @@
+Read the contents of a file: 
+  fs.readFile(path, options, callback)
+
+Write data to a file: 
+  fs.writeFile(file, data, options, callback)
+
+Rename or move a file: 
+  fs.rename(oldPath, newPath, callback)
+
+Delete a file: 
+  fs.unlink(path, callback)
+
+Create a directory: 
+  fs.mkdir(path, options, callback)
+
+Check if a file or directory exists: 
+  fs.exists(path, callback)
