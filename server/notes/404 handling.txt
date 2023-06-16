@@ -1,0 +1,52 @@
+server side:
+
+app.all('*', (req, res) => {
+  res.status(404)
+  if (req.accepts('html')) {
+    res.sendFile(path.join(__dirname, 'views', '404.html'))
+  } else if (req.accepts('json')) {
+    res.json({ message: '404 Not Found' })
+  } else {
+    res.type('txt').send('404 Not Found')
+  }
+})
+
+=====================================================================================
+
+client side:
+
+fetch('/nonexistent-route', {
+  headers: {
+    Accept: 'text/plain, application/json, text/html' // Set the Accept header to indicate acceptance of plain text, JSON, and HTML
+  }
+})
+  .then(response => {
+    if (response.ok) {
+      // Request was successful, process the response based on content type
+      const contentType = response.headers.get('Content-Type');
+
+      if (contentType.includes('text/plain')) {
+        // Handle plain text response
+        return response.text();
+      } else if (contentType.includes('application/json')) {
+        // Handle JSON response
+        return response.json();
+      } else if (contentType.includes('text/html')) {
+        // Handle HTML response
+        return response.text();
+      } else {
+        throw new Error('Unexpected response content type');
+      }
+    } else {
+      // Handle the error case
+      throw new Error('Request failed with status: ' + response.status);
+    }
+  })
+  .then(responseData => {
+    // Process the received response data
+    console.log(responseData);
+  })
+  .catch(error => {
+    // Handle any errors that occurred during the request
+    console.error(error);
+  });
