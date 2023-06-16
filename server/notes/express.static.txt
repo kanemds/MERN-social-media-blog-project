@@ -1,0 +1,30 @@
+express.static:
+a built-in middleware function in Express.js that is used to serve static files,
+ such as HTML, CSS, JavaScript, images, and other assets, from a specified directory. 
+ It is a convenient way to make static files accessible to clients.
+
+Here's an overview of express.static:
+
+express.static takes a directory path as its first argument and returns a middleware function.
+The middleware function can be used with app.use() or app.get() (or similar) methods to handle incoming requests for static files.
+When a request is made for a static file, Express will check if the requested file exists in the specified directory.
+If a matching file is found, it will be sent as a response to the client.
+The static files can be accessed by clients using their URL path relative to the root URL of the application.
+Express will automatically set the appropriate headers (such as Content-Type) based on the file's extension.
+The express.static middleware handles all the necessary logic for serving static files, including caching and conditional requests.
+
+
+example:
+
+  - localhost:3000
+  - app.use('/', express.static(path.join(__dirname, '/public')))
+
+  localhost:3000/
+  
+  +
+  __dirname:
+  /home/kanem/lighthouse/ownProject/projects/react/mern techNotes/server
+
+  +
+  '/public' folder:
+  /public/css/style.css
