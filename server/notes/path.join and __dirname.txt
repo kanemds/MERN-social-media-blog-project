@@ -1,0 +1,37 @@
+
+__dirname:
+
+It is a global variable available in Node.js.
+It contains the full path of the directory in which the current module file is located.
+The value of __dirname is determined at runtime and is not affected by where the script is called from.
+It can be used to construct file paths or reference files relative to the current module's directory.
+The path provided by __dirname is always an absolute path, not a relative path.
+
+example if run console.log(__dirname) in server.js
+
+absolute path:
+  /home/kanem/lighthouse/ownProject/projects/react/mern techNotes/server
+
+path.join(__dirname, '/public')
+
+absolute + '/public':
+
+  /home/kanem/lighthouse/ownProject/projects/react/mern techNotes/server/public
+
+========================================================================================================
+
+path.join:
+  create file or directory paths in a cross-platform (window, mac, etc)
+
+  it is used to concatenate the directory and filename variables to create the filePath:
+    const directory = 'myDirectory';
+    const filename = 'myFile.txt';
+
+    const filePath = path.join(directory, filename);
+
+Windows output: myDirectory\myFile.txt
+
+Unix-like systems output: myDirectory/myFile.txt
+
+path.join helps ensure that file paths are correctly constructed regardless of the operating system,
+making your code more portable and resilient to platform differences.
