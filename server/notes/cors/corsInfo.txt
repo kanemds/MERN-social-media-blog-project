@@ -1,0 +1,21 @@
+Configuration Options
+origin: Configures the Access-Control-Allow-Origin CORS header. Possible values include:
+
+Boolean: Set origin to true to reflect the request origin (req.header('Origin')), or false to disable CORS.
+String: Set origin to a specific origin. For example, "http://example.com" allows requests only from that origin.
+RegExp: Set origin to a regular expression pattern to test the request origin. Matches reflect the request origin. For example, /example\.com$/ reflects origins ending with "example.com".
+Array: Set origin to an array of valid origins, each specified as a string or a RegExp. For example, ["http://example1.com", /\.example2\.com$/] accepts requests from "http://example1.com" and subdomains of "example2.com".
+Function: Set origin to a function that implements custom logic. The function takes the request origin as the first parameter and a callback (callback(err, origin)) as the second, where origin is a non-function value representing the origin option.
+methods: Configures the Access-Control-Allow-Methods CORS header. Expects a comma-delimited string ('GET,PUT,POST') or an array (['GET', 'PUT', 'POST']) specifying the allowed HTTP methods.
+
+allowedHeaders: Configures the Access-Control-Allow-Headers CORS header. Expects a comma-delimited string ('Content-Type,Authorization') or an array (['Content-Type', 'Authorization']). If not specified, defaults to reflecting the headers specified in the request's Access-Control-Request-Headers header.
+
+exposedHeaders: Configures the Access-Control-Expose-Headers CORS header. Expects a comma-delimited string ('Content-Range,X-Content-Range') or an array (['Content-Range', 'X-Content-Range']). If not specified, no custom headers are exposed.
+
+credentials: Configures the Access-Control-Allow-Credentials CORS header. Set to true to include the header, or omit it otherwise.
+
+maxAge: Configures the Access-Control-Max-Age CORS header. Set to an integer to include the header, or omit it otherwise.
+
+preflightContinue: Allows passing the CORS preflight response to the next handler.
+
+optionsSuccessStatus: Provides a status code to use for successful OPTIONS requests. This is useful for avoiding issues with legacy browsers that may not handle a 204 No Content response properly.
