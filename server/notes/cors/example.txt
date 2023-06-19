@@ -1,6 +1,7 @@
 The word CORS stands for “Cross-Origin Resource Sharing”
 
  allows a server or an API(Application Programming Interface) gets permission to access and load resources.
+==================================================================================================
 
  enabling CORS for some specific origins only.
     let corsOptions = {
@@ -8,6 +9,8 @@ The word CORS stands for “Cross-Origin Resource Sharing”
     }    
   
 
+ ==================================================================================================
+ 
   const corsOptions = {
   origin: (origin, callback) => {
     // !origin 
@@ -24,9 +27,22 @@ The word CORS stands for “Cross-Origin Resource Sharing”
   optionSuccessStatus: 200
 }
 
+  The code snippet you provided sets up the configuration options for CORS using the corsOptions object. Here's a breakdown of each option:
 
+origin: This option specifies the function that will be called to determine if the request origin is allowed. In this case, the function checks if the origin is included in the allowedOrigins array or if the origin is not defined (!origin). If the origin is allowed, the callback is called with null as the error parameter and true as the second parameter, indicating that the request is allowed. If the origin is not allowed, the callback is called with an error as the first parameter, indicating that the request is not allowed.
+
+credentials: This option is set to true, indicating that the Access-Control-Allow-Credentials header should be included in the response. This allows the server to respond to requests that include credentials, such as cookies or authorization headers.
+
+optionsSuccessStatus: This option sets the status code to be used for successful OPTIONS requests. In this case, it is set to 200, indicating a successful response.
+
+The corsOptions object is then exported using module.exports to make it available for use in other parts of the code.
+
+Please note that there is a minor typo in your code: credential should be credentials.
+
+==================================================================================================
   app.use(cors(corsOptions))
 
+==================================================================================================
 
 due to credential: true, 
 
@@ -41,3 +57,6 @@ fetch('http://example.com/api', {
   .catch(error => {
     // Handle any errors
   });
+
+
+

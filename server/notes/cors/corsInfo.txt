@@ -19,3 +19,13 @@ maxAge: Configures the Access-Control-Max-Age CORS header. Set to an integer to 
 preflightContinue: Allows passing the CORS preflight response to the next handler.
 
 optionsSuccessStatus: Provides a status code to use for successful OPTIONS requests. This is useful for avoiding issues with legacy browsers that may not handle a 204 No Content response properly.
+
+
+The default configuration is the equivalent of:
+
+{
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
+}
