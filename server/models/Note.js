@@ -17,7 +17,7 @@ const noteSchema = new mongoose.Schema({
   },
   completed: {
     type: Boolean,
-    default: fault
+    default: false
   }
 },
   {

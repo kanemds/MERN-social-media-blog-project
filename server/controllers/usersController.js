@@ -8,8 +8,9 @@ const bcrypt = require('bcrypt')
 // route Get /users
 // @access Private
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = Users.find().select('-password').lean()
-  if (!users) {
+  const users = await User.find().select('-password').lean()
+
+  if (!users?.length) {
     return res.status(400).json({ message: 'No users found' })
   }
   res.status(200).json(users)
@@ -28,8 +29,8 @@ const createNewUser = asyncHandler(async (req, res) => {
   const lowerCase = email.toLowerCase()
 
   // check exist username and email
-  const userExist = User.findOne({ username }).lean().exec()
-  const emailExist = User.findOne({ email: lowerCase }).lean().exec()
+  const userExist = await User.findOne({ username }).lean().exec()
+  const emailExist = await User.findOne({ email: lowerCase }).lean().exec()
 
   if (userExist) {
     return res.status(409).json({ message: 'Username is taken' })
@@ -40,7 +41,7 @@ const createNewUser = asyncHandler(async (req, res) => {
   }
 
   // bcrypt
-  const hashedPassword = bcrypt.hash(password, 10)
+  const hashedPassword = await bcrypt.hash(password, 10)
 
   const userInfo = {
     username,
@@ -67,7 +68,7 @@ const createNewUser = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const { id, username, email, roles, active, password } = req.body
 
-  if (!id || !username || !email || Array.isArray(roles) || !roles.length || typeof active !== 'boolean') {
+  if (!id || !username || !email || !Array.isArray(roles) || !roles.length || typeof active !== 'boolean') {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
@@ -115,8 +116,8 @@ const deleteUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: 'User ID Required' })
   }
 
-  const notes = await Note.findOne({ user: id }).lean().exec()
-  if (notes?.length) {
+  const note = await Note.findOne({ user: id }).lean().exec()
+  if (note) {
     return res.status(400).json({ message: 'User has assigned notes' })
   }
 
