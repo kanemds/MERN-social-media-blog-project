@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt')
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = Users.find().select('-password').lean()
   if (!users) {
-    return res.status(400).json({ message: 'No Users Found' })
+    return res.status(400).json({ message: 'No users found' })
   }
   res.status(200).json(users)
 })
@@ -32,11 +32,11 @@ const createNewUser = asyncHandler(async (req, res) => {
   const emailExist = User.findOne({ email: lowerCase }).lean().exec()
 
   if (userExist) {
-    return res.status(409).json({ message: 'Duplicate username' })
+    return res.status(409).json({ message: 'Username is taken' })
   }
 
   if (emailExist) {
-    return res.status(409).json({ message: 'Duplicate email' })
+    return res.status(409).json({ message: 'Email is taken' })
   }
 
   // bcrypt
@@ -71,17 +71,66 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
+  const lowerCase = email.toLowerCase()
+
   const user = await User.findById(id).exec()
 
   if (!user) {
-    return res.status(400).json({ message: 'User Not Found' })
+    return res.status(400).json({ message: 'User not found' })
   }
+
+  // check if username or email exist in mongoDB
+  const userExist = await User.findOne({ username }).lean().exec()
+  const emailExist = await User.findOne({ email: lowerCase }).lean().exec()
+
+  if (userExist && userExist?._id.toString() !== id) {
+    return res.status(409).json({ message: 'Username is taken' })
+  }
+
+  if (emailExist && emailExist?._id.toString() !== id) {
+    return res.status(409).json({ message: 'Email is taken' })
+  }
+
+  user.username = username
+  user.email = lowerCase
+  user.roles = roles
+  user.active = active
+
+  if (password) {
+    user.password = await bcrypt.hash(password, 10)
+  }
+
+  const updatedUser = await user.save()
+
+  res.json({ message: `${updatedUser.username} updated` })
 })
 
 // @desc Delete a user
 // route Delete /users
 // @access Private
 const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.body
+
+  if (!id) {
+    return res.status(400).json({ message: 'User ID Required' })
+  }
+
+  const notes = await Note.findOne({ user: id }).lean().exec()
+  if (notes?.length) {
+    return res.status(400).json({ message: 'User has assigned notes' })
+  }
+
+  const user = await User.findById(id).exec()
+
+  if (!user) {
+    return res.status(400).json({ message: 'User not found' })
+  }
+
+  const result = await user.deleteOne()
+
+  const reply = `Username ${result.username} with ID ${result._id} is deleted`
+
+  res.json(reply)
 
 })
 
