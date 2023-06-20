@@ -3,8 +3,8 @@ const { getAllNotes, updateNote, createNote, deleteNote } = require('../controll
 
 router.route('/')
   .get(getAllNotes)
-  .post(updateNote)
-  .patch(createNote)
+  .post(createNote)
+  .patch(updateNote)
   .delete(deleteNote)
 
 module.exports = router
