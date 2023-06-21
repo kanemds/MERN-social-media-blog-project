@@ -1,12 +1,32 @@
 import { Routes, Route } from 'react-router-dom'
-
+import Layout from './components/Layout'
+import MainPage from './pages/mainPage/MainPage'
+import LoginPage from './pages/auth/LoginPage'
+import BlogsList from './pages/blogs/BlogsList'
+import UsersList from './pages/users/UsersList'
+import Dashboard from './pages/dashboard/Dashboard'
 
 function App() {
   return (
-    <div className="App">
+    <Routes>
+      <Route path='/' element={<Layout />}>
+        <Route index element={<MainPage />} />
+        <Route path='login' element={<LoginPage />} />
 
-    </div>
+        <Route path='dash' element={<Dashboard />}>
+          <Route path='blogs'>
+            <Route index element={<BlogsList />} />
+          </Route>
+
+          <Route path='users'>
+            <Route index element={<UsersList />} />
+          </Route>
+        </Route>
+
+      </Route>
+    </Routes>
   )
+
 }
 
 export default App
