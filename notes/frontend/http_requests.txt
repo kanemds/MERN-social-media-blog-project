@@ -1,0 +1,23 @@
+HTTP (Hypertext Transfer Protocol)
+
+  HTTP requests (CRUD) sent by a client to request data or perform actions on a server.
+
+  CRUD:    
+    create/post
+    read/get
+    update/patch/put
+    delete
+
+  requests can include headers to provide additional information or customization:
+    authentication tokens (jwt token, cookie, local/session storage etc...)
+    content type
+    caching directives
+    req.body (data, image etc... to the server.)
+
+
+  server response (receive HTTP requests from client)
+
+    status code
+    headers
+    res.status(200)json(request data) 
+    res.status(400)json({message:'error message'}) 
