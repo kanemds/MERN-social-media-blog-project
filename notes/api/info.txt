@@ -1,0 +1,15 @@
+API stands for Application Programming Interface.
+
+    APIs define rules and protocols for how software components can interact and communicate.
+
+    APIs enable different software applications to exchange data and functionality.
+
+    Web APIs facilitate communication over the internet using standard protocols like HTTP.
+
+    Library APIs provide functions, classes, and methods for interacting with a library or framework.
+
+    Operating system APIs allow developers to utilize system resources and services.
+
+    Database APIs enable communication between applications and databases.
+
+APIs promote integration, interoperability, and code reusability in software development.
