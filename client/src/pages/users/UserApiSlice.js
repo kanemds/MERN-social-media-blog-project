@@ -14,6 +14,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       },
       // specifies that unused data will be retained for 5 seconds.
       keepUnusedDataFor: 5,
+      // change format from  [{id,username}, {…}]
+      // to  {ids: Array(2), entities: {…}}
       transformResponse: responseData => {
         const loadedUsers = responseData.map(user => {
           user.id = user._id
@@ -41,41 +43,67 @@ export const {
 } = usersApiSlice
 
 
-// selector function retrieves the result of the getUsers endpoint query from the Redux store
 
-// if the getUsers query has been executed and completed successfully, it returns an object with the following properties:
+// using builder.query() it automatically generates a set of hooks and selectors, including the select() method for that endpoint
+// The select() method takes no arguments and returns a selector function. 
 
-// data: The data received from the API response.
-// status: The status of the query, such as 'fulfilled' for a successful request.
-// error: If an error occurred during the query, this property will hold the error object.
-// If the getUsers query is still in progress or has not been executed yet, the selector will return an object with the following properties:
 
-// data: undefined or the previously fetched data if available.
-// status: The status of the query, such as 'pending' or 'idle'.
-// error: undefined.
 
-// gets the query result data
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select()
-console.log('selectUsersResult', selectUsersResult)
+
+// By calling this selector function with useSelector, you can access the result of the getUsers query from the Redux store's state in your component.
+
+// const usersResult = useSelector(selectUsersResult);
+// return:
+// data: { ids: Array(2), entities: {… } }
+// endpointName: "getUsers"
+// fulfilledTimeStamp: 1687638568305
+// isError: false
+// isLoading: false
+// isSuccess: true
+// isUninitialized: false
+// requestId: "b5vnBUgZeat8KoqsOQJBL"
+// startedTimeStamp: 1687638568265
+// status: "fulfilled"
 
 
-// If the inputs remain the same between consecutive calls, the selector will return the cached result instead of recomputing it
-// access the extracted data property from the usersResult object in your Redux-connected components.
-//  The selector will only recalculate its value if the selectUsersResult result changes
+// the second arg stores data from the first arg.
+// the stored data from second arg will changed only the first arg update
+// else the request data will send from the stored data object 
+
 const selectUsersData = createSelector(
   selectUsersResult,
-  usersResult => usersResult.data
+  // the stored data is specific from  selectUsersResult.data which is data: { ids: Array(2), entities: {… } }
+  selectUsersResultObject => selectUsersResultObject.data
 )
-console.log('selectUsersData', selectUsersData)
+
 
 export const {
   selectAll: selectAllUsers,
-  selectById: selectById,
+  selectById: selectUserById,
   selectIds: selectUserIds
-  // The state argument passed to the selectUsersData selector represents the current state of the Redux store. 
-  // It is provided automatically by the Redux store when the selector is called. 
-  // The state argument allows the selector to access the relevant data from the Redux store,
-  //  in this case, the usersResult object.
 } = usersAdapter.getSelectors(state => selectUsersData(state) ?? initialState)
 
-console.log(usersAdapter.getSelectors(state))
+// in this case, selectUsersData(state) is used to check if the state contains the desired data.
+
+// The selectUsersData selector is created using createSelector, and its purpose is to extract the data property from the selectUsersResult object. 
+// By invoking selectUsersData(state), you are checking if the data property exists in the provided state.
+
+// If the data property exists and is not undefined or null, selectUsersData(state) will return the value of the data property. Otherwise, it will return undefined.
+
+// The ?? operator is then used to provide a fallback value (initialState) in case the data property is not present or is undefined in the state.
+
+
+
+// other case
+
+// By passing selectTodos to todosAdapter.getSelectors, you ensure that the selectors are based on the correct slice of the state containing the todos data.
+
+// export const selectTodos = (state) => state.todos;
+// export const {
+//   selectAll: selectAllTodos,
+//   selectById: selectTodoById,
+//   selectIds: selectTodoIds,
+//   selectEntities: selectTodoEntities,
+// } = todosAdapter.getSelectors(selectTodos);
+
