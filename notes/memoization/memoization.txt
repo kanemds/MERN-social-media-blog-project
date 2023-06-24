@@ -1,0 +1,8 @@
+
+Memoization is a technique used in programming to optimize the performance of expensive computations or function calls by caching the results. When a function is memoized, it remembers (or memorizes) the result of previous invocations for a given set of inputs, allowing subsequent calls with the same inputs to return the cached result instead of recomputing it.
+
+In the context of Redux and selector functions, memoization plays a crucial role in preventing unnecessary recomputations and improving performance. Selector functions are typically used to derive data from the Redux store or combine multiple selectors. When the state changes, these selectors can potentially be called multiple times within a single render cycle.
+
+By applying memoization to selectors using libraries like Reselect or the createSelector function provided by Redux Toolkit, the selector's return value is cached based on its inputs. If the inputs remain the same between consecutive calls, the selector will return the cached result instead of recomputing it. This avoids unnecessary computations and can significantly improve the performance of Redux-connected components.
+
+Memoization is particularly useful when dealing with complex or computationally expensive selectors that depend on large data sets or perform complex computations. It helps ensure that selectors are only recalculated when necessary, reducing unnecessary rendering and optimizing application performance.
