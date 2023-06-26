@@ -5,7 +5,6 @@ import LoginPage from './pages/auth/LoginPage'
 import BlogsList from './pages/blogs/BlogsList'
 import UsersList from './pages/users/UsersList'
 import Dashboard from './pages/dashboard/Dashboard'
-import UserTable from './pages/users/UserTable'
 
 
 function App() {
@@ -22,7 +21,7 @@ function App() {
 
           <Route path='users'>
             <Route index element={<UsersList />} />
-            <Route path='table' element={<UserTable />} />
+
           </Route>
         </Route>
 
