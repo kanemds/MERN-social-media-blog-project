@@ -54,6 +54,7 @@ export const selectUsersResult = usersApiSlice.endpoints.getUsers.select()
 // By calling this selector function with useSelector, you can access the result of the getUsers query from the Redux store's state in your component.
 
 // const usersResult = useSelector(selectUsersResult);
+
 // return:
 // data: { ids: Array(2), entities: {… } }
 // endpointName: "getUsers"
