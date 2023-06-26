@@ -4,24 +4,40 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectUserById } from './UserApiSlice'
 
-import { selectUsersResult } from './UserApiSlice'
+
 
 const User = ({ userId }) => {
 
   const navigate = useNavigate()
 
-  const user = useSelector(state => selectUserById(state, userId)
-  )
+  const user = useSelector(state => selectUserById(state, userId))
+
+  let content
+
+  if (user) {
+    const handleEdit = () => navigate(`/dash/users/${userId}`)
+
+    const userRolesString = user.roles.toString().replaceAll(',', ', ')
+
+    const activeStatus = user.active ? 'Yes' : 'No'
+
+    content = (
+      <>
+
+        {userRolesString}
+        {activeStatus}
+      </>
+    )
+
+  } else content = null
+
+  return content
 
 
-  const usersResult = useSelector(selectUsersResult)
-
-  console.log(usersResult.data)
 
 
-  return (
-    <div>{user.username}</div>
-  )
+
+
 }
 
 export default User

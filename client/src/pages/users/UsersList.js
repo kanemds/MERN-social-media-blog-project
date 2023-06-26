@@ -2,6 +2,7 @@ import React from 'react'
 import { useGetUsersQuery } from './UserApiSlice'
 import { Typography } from '@mui/material'
 import User from './User'
+import UserTable from './UserTable'
 
 
 const UsersList = () => {
@@ -30,7 +31,12 @@ const UsersList = () => {
       ids.map(userId => <User key={userId} userId={userId} />)
       : null
 
-    content = tableContent
+    content = (
+      <>
+        {tableContent}
+        <UserTable />
+      </>
+    )
   }
 
 
@@ -39,6 +45,7 @@ const UsersList = () => {
       <div>UsersList</div>
 
       {content}
+
     </>
 
   )
