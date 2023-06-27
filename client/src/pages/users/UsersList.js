@@ -1,40 +1,23 @@
 import React from 'react'
 import { useGetUsersQuery } from './UserApiSlice'
-import { Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 
-const columns = [
-  { field: 'id', headerName: 'ID', width: 130 },
-  { field: 'userName', headerName: 'User Name', width: 130 },
-  { field: 'email', headerName: 'E-mail', width: 130 },
-  { field: 'roles', headerName: 'Roles', width: 130 },
-  { field: 'active', headerName: 'State', width: 130 },
-  {
-    field: 'createAt',
-    headerName: 'Created At',
-    type: 'number',
-    width: 130,
-  },
-  {
-    field: 'updateAt',
-    headerName: 'Last Updated',
-    type: 'number',
-    width: 130,
-  },
-  // {
-  //   field: 'fullName',
-  //   headerName: 'Full name',
-  //   description: 'This column has a value getter and is not sortable.',
-  //   sortable: false,
-  //   width: 160,
-  //   valueGetter: (params) =>
-  //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  // },
-]
+
 
 
 
 const UsersList = () => {
+
+
+  const handleCell = (e) => {
+    e.stopPropagation()
+  }
+
+  const handleEdit = (e) => {
+    e.preventDefault()
+
+  }
 
   const {
     data: users,
@@ -43,6 +26,46 @@ const UsersList = () => {
     isError,
     error
   } = useGetUsersQuery()
+
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 130 },
+    { field: 'userName', headerName: 'User Name', width: 130 },
+    { field: 'email', headerName: 'E-mail', width: 130 },
+    { field: 'roles', headerName: 'Roles', width: 130 },
+    { field: 'active', headerName: 'State', width: 130 },
+    {
+      field: 'createAt',
+      headerName: 'Created At',
+      type: 'number',
+      width: 130,
+    },
+    {
+      field: 'updateAt',
+      headerName: 'Last Updated',
+      type: 'number',
+      width: 130,
+    },
+
+    {
+      field: 'edit',
+      renderCell: (cellValues) => {
+        return (
+          <Button variant='contained' onClick={handleEdit}>
+            Edit
+          </Button>
+        )
+      }
+    },
+    // {
+    //   field: 'fullName',
+    //   headerName: 'Full name',
+    //   description: 'This column has a value getter and is not sortable.',
+    //   sortable: false,
+    //   width: 160,
+    //   valueGetter: (params) =>
+    //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    // },
+  ]
 
 
 
@@ -74,11 +97,12 @@ const UsersList = () => {
         roles: userRolesString,
         active: user?.active ? 'Active' : 'Inactive',
         createAt: createDay,
-        updateAt: updateAt
+        updateAt: updateAt,
+
       }
     })
 
-    console.log(eachUser)
+
 
     content = (
       <>
@@ -89,16 +113,21 @@ const UsersList = () => {
             columns={columns}
             initialState={{
               pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
+                paginationModel: { page: 0, pageSize: 10 },
               },
             }}
             pageSizeOptions={[5, 10]}
-            checkboxSelection
+            autoPageSize={true}
+            autoHeight={true}
+            onCellClick={handleCell}
+          // onRowClick={handleCell}
           />
         </div>
       </>
     )
   }
+
+
 
 
   return (

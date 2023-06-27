@@ -108,4 +108,3 @@ export const {
 //   selectEntities: selectTodoEntities,
 // } = todosAdapter.getSelectors(selectTodos);
 
-console.log(usersApiSlice)
