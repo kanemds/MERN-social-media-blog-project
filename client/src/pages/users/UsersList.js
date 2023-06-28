@@ -1,23 +1,74 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useGetUsersQuery } from './UserApiSlice'
-import { Button, Typography } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
+import { Avatar, Button, Typography, ToggleButton } from '@mui/material'
+import { alpha, styled } from '@mui/material/styles'
+import { DataGrid, gridClasses, GridCellParams } from '@mui/x-data-grid'
+import PersonIcon from '@mui/icons-material/Person'
+import { grey, blue } from '@mui/material/colors'
 
 
+const ODD_OPACITY = 0.2
 
+const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+  [`& .${gridClasses.row}.odd`]: {
+    backgroundColor: theme.palette.grey[200],
+
+    // '&:hover, &.Mui-hovered': {
+    //   backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
+    //   '@media (hover: none)': {
+    //     backgroundColor: 'transparent',
+    //   },
+    // },
+    // '&.Mui-selected': {
+    //   backgroundColor: alpha(
+    //     theme.palette.primary.main,
+    //     ODD_OPACITY + theme.palette.action.selectedOpacity,
+    //   ),
+    //   '&:hover, &.Mui-hovered': {
+    //     backgroundColor: alpha(
+    //       theme.palette.primary.main,
+    //       ODD_OPACITY +
+    //       theme.palette.action.selectedOpacity +
+    //       theme.palette.action.hoverOpacity,
+    //     ),
+    //     // Reset on touch devices, it doesn't add specificity
+    //     '@media (hover: none)': {
+    //       backgroundColor: alpha(
+    //         theme.palette.primary.main,
+    //         ODD_OPACITY + theme.palette.action.selectedOpacity,
+    //       ),
+    //     },
+    //   },
+    // },
+  },
+  '&.Mui-selected': {
+    backgroundColor: 'primary.main'
+  }
+}))
 
 
 const UsersList = () => {
 
+  const options = { year: 'numeric', month: 'short', day: 'numeric' }
 
-  const handleCell = (e) => {
-    e.stopPropagation()
+
+  const handleToggle = (params: GridCellParams) => {
+    // Handle the toggle logic based on the row data
+    console.log(params.row.active) // Example: Log the current active state
   }
 
-  const handleEdit = (e) => {
-    e.preventDefault()
+  const ToggleButtonCell = (params: GridCellParams) => (
+    <ToggleButton
+      value={params.row.active ? 'Active' : 'Inactive'}
+      selected={params.row.active}
+      onChange={() => handleToggle(params)}
+      size="small"
+      color="primary"
+    >
+      {params.row.active ? 'Active' : 'Inactive'}
+    </ToggleButton>
+  )
 
-  }
 
   const {
     data: users,
@@ -28,34 +79,56 @@ const UsersList = () => {
   } = useGetUsersQuery()
 
   const columns = [
+
+    {
+      field: 'avatar',
+      headerName: 'Avatar',
+      width: 80,
+      renderCell: (params) => params.row.avatar ?
+        <Avatar src={params.row.avatar} />
+        :
+        <Avatar><PersonIcon /></Avatar>
+      ,
+      sortable: false,
+      filterable: false,
+    },
     { field: 'id', headerName: 'ID', width: 130 },
     { field: 'userName', headerName: 'User Name', width: 130 },
     { field: 'email', headerName: 'E-mail', width: 130 },
-    { field: 'roles', headerName: 'Roles', width: 130 },
-    { field: 'active', headerName: 'State', width: 130 },
+    {
+      field: 'roles',
+      headerName: 'Roles',
+      width: 130,
+      type: 'singleSelect',
+      valueOptions: ['Employee', 'Admin', 'Client'],
+      editable: true
+    },
+    {
+      field: 'active',
+      headerName: 'State',
+      width: 130,
+      type: 'boolean',
+      editable: true,
+      renderCell: params => params.row.active ? 'Active' : 'Inactive',
+      sortable: true,
+      filterable: true
+    },
     {
       field: 'createAt',
       headerName: 'Created At',
       type: 'number',
       width: 130,
+      renderCell: params => new Intl.DateTimeFormat('en-US', options).format(new Date(params.row.createAt))
     },
     {
       field: 'updateAt',
       headerName: 'Last Updated',
       type: 'number',
       width: 130,
+      renderCell: params => new Intl.DateTimeFormat('en-US', options).format(new Date(params.row.updateAt))
     },
 
-    {
-      field: 'edit',
-      renderCell: (cellValues) => {
-        return (
-          <Button variant='contained' onClick={handleEdit}>
-            Edit
-          </Button>
-        )
-      }
-    },
+
     // {
     //   field: 'fullName',
     //   headerName: 'Full name',
@@ -84,20 +157,15 @@ const UsersList = () => {
     const reducerArray = Object.values(entities)
 
     const eachUser = reducerArray.map(user => {
-      const userRolesString = user?.roles.toString().replaceAll(',', ', ')
-      const createDate = new Date(user?.createdAt)
-      const updateDate = new Date(user?.updatedAt)
-      const options = { year: 'numeric', month: 'short', day: 'numeric' }
-      const createDay = new Intl.DateTimeFormat('en-US', options).format(createDate)
-      const updateAt = new Intl.DateTimeFormat('en-US', options).format(updateDate)
+
       return {
         id: user?._id,
         userName: user?.username,
         email: user?.email,
-        roles: userRolesString,
+        roles: user?.roles,
         active: user?.active ? 'Active' : 'Inactive',
-        createAt: createDay,
-        updateAt: updateAt,
+        createAt: user?.createdAt,
+        updateAt: user?.updatedAt,
 
       }
     })
@@ -113,14 +181,45 @@ const UsersList = () => {
             columns={columns}
             initialState={{
               pagination: {
-                paginationModel: { page: 0, pageSize: 10 },
+                paginationModel: { page: 0, pageSize: 5 },
               },
             }}
-            pageSizeOptions={[5, 10]}
-            autoPageSize={true}
-            autoHeight={true}
-            onCellClick={handleCell}
-          // onRowClick={handleCell}
+            pageSizeOptions={[5, 10, 20]}
+            getRowClassName={(params) =>
+              params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+            }
+
+            sx={{
+              boxShadow: 2,
+              border: 2,
+              borderColor: 'primary.light',
+              '.MuiDataGrid-cell:hover': {
+                color: 'white',
+              },
+              // odd row background
+              [`& .${gridClasses.row}.odd`]: {
+                backgroundColor: grey[300],
+              },
+              //  rows css
+              [`& .${gridClasses.row}`]: {
+                '&.Mui-selected': {
+                  backgroundColor: blue[500],
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: blue[500]
+                  },
+                  '& .MuiDataGrid-cell:hover': {
+                    color: 'black',
+                  },
+                },
+                '&:hover': {
+                  backgroundColor: blue[200],
+                },
+              }
+            }}
+
+
+
           />
         </div>
       </>
