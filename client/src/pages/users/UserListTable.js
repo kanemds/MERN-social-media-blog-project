@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useGetUsersQuery } from './UserApiSlice'
 import { Avatar, Button, Typography, Switch, FormGroup, FormControlLabel } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
@@ -6,9 +6,13 @@ import { DataGrid, gridClasses, GridCellParams } from '@mui/x-data-grid'
 import PersonIcon from '@mui/icons-material/Person'
 import { grey, blue } from '@mui/material/colors'
 import ToggleButton from '../../components/ToggleButton'
+import SaveActionFromUsersList from './SaveActionFromUsersList'
 
 
 const UserListTable = ({ usersList }) => {
+
+  const [rowId, setRowId] = useState(null)
+
 
   const user = usersList.map(user => {
     return {
@@ -23,9 +27,11 @@ const UserListTable = ({ usersList }) => {
     }
   })
 
+
+
   const options = { year: 'numeric', month: 'short', day: 'numeric' }
 
-  const columns = [
+  const columns = useMemo(() => [
 
     {
       field: 'avatar',
@@ -64,8 +70,10 @@ const UserListTable = ({ usersList }) => {
       field: 'active',
       headerName: 'State',
       width: 170,
-      type: 'boolean',
+      type: 'actions',
+
       renderCell: params => {
+        console.log('toggleButton did not change state', params.row.active)
         return (
           <ToggleButton active={params.row.active} />
         )
@@ -87,6 +95,16 @@ const UserListTable = ({ usersList }) => {
       width: 130,
       renderCell: params => new Intl.DateTimeFormat('en-US', options).format(new Date(params.row.updateAt))
     },
+    {
+      field: 'actions',
+      headerName: 'actions',
+      type: 'actions',
+      renderCell:
+        params => (
+          <SaveActionFromUsersList {...{ params, rowId, setRowId }} />
+        )
+
+    },
 
 
     // {
@@ -98,7 +116,9 @@ const UserListTable = ({ usersList }) => {
     //   valueGetter: (params) =>
     //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     // },
-  ]
+  ],
+    [rowId]
+  )
 
   return (
     <div style={{ height: 400, width: '100%' }}>

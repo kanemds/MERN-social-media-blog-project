@@ -23,8 +23,6 @@ export default function ToggleButton(props) {
 
   const [checked, setChecked] = React.useState(active)
 
-  console.log(checked)
-
   const handleChange = (event) => {
     setChecked(event.target.checked)
   }
