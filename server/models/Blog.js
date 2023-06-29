@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const AutoIncrement = require('mongoose-sequence')(mongoose)
+
 
 const blogSchema = new mongoose.Schema(
   {
@@ -16,9 +16,9 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    completed: {
+    private: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   {
