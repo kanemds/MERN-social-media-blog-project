@@ -61,7 +61,7 @@ const UserListTable = ({ usersList }) => {
       headerName: 'Roles',
       width: 130,
       type: 'singleSelect',
-      valueOptions: ['Employee', 'Admin', 'Client'],
+      valueOptions: ['User', 'Employee', 'Admin'],
       editable: true
     },
     {
