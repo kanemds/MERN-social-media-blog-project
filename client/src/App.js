@@ -5,6 +5,7 @@ import LoginPage from './pages/auth/LoginPage'
 import BlogsList from './pages/blogs/BlogsList'
 import UsersList from './pages/users/UsersList'
 import Dashboard from './pages/dashboard/Dashboard'
+import EditUser from './pages/users/EditUser'
 
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
 
           <Route path='users'>
             <Route index element={<UsersList />} />
-
+            <Route path='edit/:id' element={<EditUser />} />
           </Route>
         </Route>
 

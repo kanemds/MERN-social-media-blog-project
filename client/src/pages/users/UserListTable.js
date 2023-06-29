@@ -1,15 +1,19 @@
 import React, { useMemo, useState } from 'react'
 import { useGetUsersQuery } from './UserApiSlice'
-import { Avatar, Button, Typography, Switch, FormGroup, FormControlLabel } from '@mui/material'
+import { Avatar, Button, Typography, Switch, FormGroup, FormControlLabel, Link, IconButton } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
 import { DataGrid, gridClasses, GridCellParams } from '@mui/x-data-grid'
 import PersonIcon from '@mui/icons-material/Person'
-import { grey, blue } from '@mui/material/colors'
+import { grey, blue, orange } from '@mui/material/colors'
 import ToggleButton from '../../components/ToggleButton'
 import SaveActionFromUsersList from './SaveActionFromUsersList'
-
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import ViewCompactIcon from '@mui/icons-material/ViewCompact'
+import GridViewIcon from '@mui/icons-material/GridView'
 
 const UserListTable = ({ usersList }) => {
+
+  const navigate = useNavigate()
 
   const [rowId, setRowId] = useState(null)
 
@@ -31,6 +35,10 @@ const UserListTable = ({ usersList }) => {
 
   const options = { year: 'numeric', month: 'short', day: 'numeric' }
 
+  const handleEdit = (userId) => {
+    navigate(`/dash/users/edit/${userId}`)
+  }
+
   const columns = useMemo(() => [
 
     {
@@ -40,7 +48,7 @@ const UserListTable = ({ usersList }) => {
       renderCell: (params) => params.row.avatar ?
         <Avatar src={params.row.avatar} />
         :
-        <Avatar><PersonIcon /></Avatar>
+        <Avatar sx={{ backgroundColor: grey[600] }}><PersonIcon /></Avatar>
       ,
       sortable: false,
       filterable: false,
@@ -56,22 +64,23 @@ const UserListTable = ({ usersList }) => {
       valueOptions: ['Employee', 'Admin', 'Client'],
       editable: true
     },
-    // {
-    //   field: 'active',
-    //   headerName: 'State',
-    //   width: 130,
-    //   type: 'boolean',
-    //   editable: true,
-    //   renderCell: params => params.row.active ? 'Active' : 'Inactive',
-    //   sortable: true,
-    //   filterable: true
-    // },
+    {
+      field: 'view',
+      headerName: 'View',
+      width: 130,
+      renderCell: params => (
+        <IconButton
+          sx={{ fontSize: 35, backgroundColor: orange[400], '&:hover': { color: 'white' } }}
+          onClick={() => handleEdit(params.id)}
+        >
+          <GridViewIcon sx={{ color: 'white', '&:hover': { color: orange[400] } }} />
+        </IconButton>
+      )
+    },
     {
       field: 'active',
       headerName: 'State',
       width: 170,
-      type: 'actions',
-
       renderCell: params => {
         console.log('toggleButton did not change state', params.row.active)
         return (

@@ -1,7 +1,11 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit"
 import { apiSlice } from "../../app/api/apiSlice"
 
-const usersAdapter = createEntityAdapter({})
+const usersAdapter = createEntityAdapter({
+  // this sortCompare to sort ids:[] array only not entities:{...}
+  // 0: same order 1: to the front -1: to the back
+  sortComparer: (a, b) => (a.roles < b.roles) ? 1 : (a.roles > b.roles) ? -1 : 0
+})
 
 const initialState = usersAdapter.getInitialState()
 
@@ -29,8 +33,12 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         console.log('tagResult', result)
 
         if (result?.ids) {
+          // const example = result.ids.map(id => ({ type: 'User', id:id }))
+          // console.log(...example)
+          // {type: 'User', id: '6491ff902633c1ed798e648e'}
           return [
             { type: 'User', id: 'LIST' },
+            // spread each tag, id = {id:id}
             ...result.ids.map(id => ({ type: 'User', id }))
           ]
         } else return [{ type: 'User', id: 'LIST' }]
@@ -52,9 +60,12 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: 'PATCH',
         body: updateData
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: 'User', id: arg.id }
-      ]
+      invalidatesTags: (result, error, arg) => {
+        console.log('invalidatesTags-arg', arg)
+        return [
+          { type: 'User', id: arg.id }
+        ]
+      }
     }),
     deleteUser: builder.mutation({
       query: ({ id }) => ({
