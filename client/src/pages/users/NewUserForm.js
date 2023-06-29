@@ -24,17 +24,18 @@ const NewUserForm = () => {
       setUsername('')
       setEmail('')
       setPassword('')
+      setRole('')
       navigate('/')
     }
   }, [isSuccess, navigate])
 
   //  ======================REGEX=============================
 
-  USER_REGEX = /^[A-z]{4,20}$/
+  const USER_REGEX = /^[A-z]{4,20}$/
 
-  PASSWORD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
+  const PASSWORD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
 
-  EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+  const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
   //  ======================REGEX=============================
 
@@ -66,6 +67,22 @@ const NewUserForm = () => {
 
   //  ======================check validation=============================
 
+  //  ======================handler=============================
+
+  const handleUsername = (e) => { setUsername(e.target.value) }
+  const handleEmail = (e) => { setEmail(e.target.value) }
+  const handlePassword = (e) => { setPassword(e.target.value) }
+
+  const canSave = [role, validEmail, validPassword, validUsername].every(Boolean) && !isLoading
+
+  const handleSave = async (e) => {
+    e.preventDefault()
+    if (canSave) {
+      await addNewUser({ username, email, password, role })
+    }
+  }
+
+  //  ======================handler=============================
 
   return (
     <div>NewUserForm</div>
