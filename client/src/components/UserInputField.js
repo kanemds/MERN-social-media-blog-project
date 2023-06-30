@@ -21,7 +21,6 @@ export default function UserInputField({ inputs, state, setState, validation }) 
 
   const handleBlur = () => {
     setFocusedInput(null)
-
   }
 
   const handleChange = (e) => {
@@ -37,7 +36,7 @@ export default function UserInputField({ inputs, state, setState, validation }) 
 
   return (
 
-    <FormControl sx={{ width: '85%' }}>
+    <FormControl sx={{ width: '85%', height: `${type === 'password' ? '150px' : '110px'}` }}>
       <FormLabel
         error={state.length && !validation && focusedInput === null ? true : false}
       >{placeholder}*</FormLabel>
@@ -62,13 +61,15 @@ export default function UserInputField({ inputs, state, setState, validation }) 
       <FormHelperText>
         {validation ? correct : state.length && !validation && focusedInput === null ? error : text}
       </FormHelperText>
+      <Box sx={{ pb: '50px' }}>
+        {placeholder === 'Password' ?
+          <FormControlLabel control={<Checkbox onChange={handleShowPassword} />} label="Show Password" /> :
+          placeholder === 'Confirm Password' ?
+            <FormControlLabel control={<Checkbox onChange={handleShowConfirm} />} label="Show Confirm Password" />
+            : ''
+        }
+      </Box>
 
-      {placeholder === 'Password' ?
-        <FormControlLabel control={<Checkbox onChange={handleShowPassword} />} label="Show Password" /> :
-        placeholder === 'Confirm Password' ?
-          <FormControlLabel control={<Checkbox onChange={handleShowConfirm} />} label="Show Confirm Password" />
-          : ''
-      }
     </FormControl>
 
   )
