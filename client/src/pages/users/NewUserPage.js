@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useAddNewUserMutation } from './UserApiSlice'
-import { useNavigate } from 'react-router-dom'
-import { FormControl, MenuItem, Paper, Box, FormHelperText, InputLabel, FormGroup, FormLabel, Select, Typography } from '@mui/material'
+import { Link, useNavigate } from 'react-router-dom'
+import { FormControl, MenuItem, Paper, Box, FormHelperText, InputLabel, FormGroup, FormLabel, Select, Typography, Button } from '@mui/material'
 import UserInputField from '../../components/UserInputField'
+import LinkButton from '../../components/LinkButton'
 
 
 const USER_REGEX = /^[A-z]{4,}$/
 
 // const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
-const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-zA-Z]).{4,}$/
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
@@ -82,6 +83,10 @@ const NewUserPage = () => {
   const [validConfirm, setValidConfirm] = useState(false)
   const [role, setRole] = useState('User')
 
+  console.log(username)
+  console.log(email)
+  console.log(password)
+  console.log(role)
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
@@ -105,7 +110,7 @@ const NewUserPage = () => {
   }, [confirm, password])
 
 
-  const canSave = [role, validEmail, validPassword, validUsername].every(Boolean) && !isLoading
+  const canSave = [role, validEmail, validPassword, validUsername, validConfirm].every(Boolean) && !isLoading
 
   const handleSave = async (e) => {
     e.preventDefault()
@@ -135,6 +140,10 @@ const NewUserPage = () => {
       <Box sx={{ pb: '40px' }}>
         <Typography variant='h4'>CREATE AN ACCOUNT</Typography>
       </Box>
+      {isError ?
+        <Typography>{error}</Typography>
+        : ''
+      }
       <Box
         sx={{
           display: 'flex',
@@ -151,7 +160,7 @@ const NewUserPage = () => {
         <UserInputField inputs={inputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
 
 
-        <FormControl sx={{ m: 1, width: 120 }}>
+        <FormControl sx={{ m: 3, width: 120 }}>
           <InputLabel>Select Role</InputLabel>
           <Select
             value={role}
@@ -167,7 +176,19 @@ const NewUserPage = () => {
             <MenuItem value='Admin'>Admin</MenuItem>
           </Select>
         </FormControl>
+        <Box sx={{ mt: '30px' }}>
+          <Button
+            variant='contained'
+            sx={{ mr: '10px' }}
+            disabled={canSave ? false : true}
+            onClick={handleSave}
+          >Submit</Button>
+          <LinkButton name={'cancel'} />
+        </Box>
+
       </Box>
+
+
     </Paper >
 
   )

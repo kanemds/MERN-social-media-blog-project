@@ -20,9 +20,9 @@ const getAllUsers = asyncHandler(async (req, res) => {
 // route Post /users
 // @access Private
 const createNewUser = asyncHandler(async (req, res) => {
-  const { username, email, password, roles } = req.body
+  const { username, email, password, role } = req.body
 
-  if (!username || !email || !password || !roles) {
+  if (!username || !email || !password || !role.length) {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
@@ -47,7 +47,7 @@ const createNewUser = asyncHandler(async (req, res) => {
     username,
     email: lowerCase,
     'password': hashedPassword,
-    roles
+    role
   }
 
   const newUser = await User.create(userInfo)
@@ -66,9 +66,9 @@ const createNewUser = asyncHandler(async (req, res) => {
 // route Patch /users
 // @access Private
 const updateUser = asyncHandler(async (req, res) => {
-  const { id, username, email, roles, active, password } = req.body
+  const { id, username, email, role, active, password } = req.body
 
-  if (!id || !username || !email || !Array.isArray(roles) || !roles.length || typeof active !== 'boolean') {
+  if (!id || !username || !email || !role.length || typeof active !== 'boolean') {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
@@ -94,7 +94,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
   user.username = username
   user.email = lowerCase
-  user.roles = roles
+  user.role = role
   user.active = active
 
   if (password) {
