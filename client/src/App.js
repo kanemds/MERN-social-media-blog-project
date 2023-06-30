@@ -5,8 +5,9 @@ import LoginPage from './pages/auth/LoginPage'
 import BlogsList from './pages/blogs/BlogsList'
 import UsersList from './pages/users/UsersList'
 import Dashboard from './pages/dashboard/Dashboard'
-import EditUser from './pages/users/EditUser'
-import NewUserForm from './pages/users/NewUserForm'
+import EditUserPage from './pages/users/EditUserPage'
+import NewUserPage from './pages/users/NewUserPage'
+import RegisterPage from './pages/auth/RegisterPage'
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route path='/' element={<Layout />}>
         <Route index element={<MainPage />} />
         <Route path='login' element={<LoginPage />} />
+        <Route path='register' element={<RegisterPage />} />
 
         <Route path='dash' element={<Dashboard />}>
           <Route path='blogs'>
@@ -23,8 +25,8 @@ function App() {
 
           <Route path='users'>
             <Route index element={<UsersList />} />
-            <Route path='edit/:id' element={<EditUser />} />
-            <Route path='new' element={<NewUserForm />} />
+            <Route path='edit/:id' element={<EditUserPage />} />
+            <Route path='new' element={<NewUserPage />} />
           </Route>
         </Route>
 
