@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useAddNewUserMutation } from './UserApiSlice'
 import { useNavigate } from 'react-router-dom'
-import { FormControl, MenuItem, Paper, Box, FormHelperText, InputLabel, FormGroup, FormLabel, Select } from '@mui/material'
+import { FormControl, MenuItem, Paper, Box, FormHelperText, InputLabel, FormGroup, FormLabel, Select, Typography } from '@mui/material'
 import UserInputField from '../../components/UserInputField'
 
 
@@ -126,38 +126,48 @@ const NewUserPage = () => {
       noValidate
       autoComplete="off"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
         width: '50%',
+        p: '50px',
+        pb: '100px',
 
       }}
-
     >
-      <UserInputField inputs={inputs.username} state={username} setState={setUsername} validation={validUsername} />
-      <UserInputField inputs={inputs.email} state={email} setState={setEmail} validation={validEmail} />
-      <UserInputField inputs={inputs.password} state={password} setState={setPassword} validation={validPassword} />
-      <UserInputField inputs={inputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
+      <Box sx={{ pb: '40px' }}>
+        <Typography variant='h4'>CREATE AN ACCOUNT</Typography>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
 
 
-      <FormControl sx={{ m: 1, width: 120 }}>
-        <InputLabel>Select Role</InputLabel>
-        <Select
-          value={role}
-          onChange={handleChange}
-          autoWidth
-          label="Select Role"
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value='User'>User</MenuItem>
-          <MenuItem value='Employee'>Employee</MenuItem>
-          <MenuItem value='Admin'>Admin</MenuItem>
-        </Select>
-      </FormControl>
+        <UserInputField inputs={inputs.username} state={username} setState={setUsername} validation={validUsername} />
+        <UserInputField inputs={inputs.email} state={email} setState={setEmail} validation={validEmail} />
+        <UserInputField inputs={inputs.password} state={password} setState={setPassword} validation={validPassword} />
+        <UserInputField inputs={inputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
 
+
+        <FormControl sx={{ m: 1, width: 120 }}>
+          <InputLabel>Select Role</InputLabel>
+          <Select
+            value={role}
+            onChange={handleChange}
+            autoWidth
+            label="Select Role"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value='User'>User</MenuItem>
+            <MenuItem value='Employee'>Employee</MenuItem>
+            <MenuItem value='Admin'>Admin</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
     </Paper >
 
   )
