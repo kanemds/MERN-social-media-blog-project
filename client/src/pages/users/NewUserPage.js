@@ -1,13 +1,51 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useAddNewUserMutation } from './UserApiSlice'
 import { useNavigate } from 'react-router-dom'
-import { FormControl, OutlinedInput, Box, FormHelperText, InputLabel, FormGroup, FormLabel } from '@mui/material'
+import { FormControl, MenuItem, Paper, Box, FormHelperText, InputLabel, FormGroup, FormLabel, Select } from '@mui/material'
 import UserInputField from '../../components/UserInputField'
 
 
+const USER_REGEX = /^[A-z]{4,}$/
+
+// const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/
+
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
+const inputs = {
+  username: {
+    placeholder: 'Username',
+    text: 'Please enter a username with at least 4 characters',
+    error: 'Please enter a valid username',
+    correct: '',
+    type: 'text'
+  },
+  email: {
+    placeholder: 'Email',
+    text: 'Please enter a valid email',
+    error: 'Invalid email, please try again',
+    correct: '',
+    type: 'email'
+  },
+  password: {
+    placeholder: 'Password',
+    text: 'Password must be at least 8 characters, and contain both letters and numbers.',
+    error: 'Invalid password, please include at least one capital character and one number',
+    correct: '',
+    type: 'password'
+  },
+  confirm: {
+    placeholder: 'Confirm Password',
+    text: 'Please enter your password again',
+    error: 'Please match with your password',
+    correct: '',
+    type: 'password'
+  },
+}
 
 
 const NewUserPage = () => {
+
 
   const [
     addNewUser,
@@ -22,10 +60,6 @@ const NewUserPage = () => {
   const navigate = useNavigate()
 
 
-
-
-
-
   useEffect(() => {
     if (isSuccess) {
       setUsername('')
@@ -36,66 +70,39 @@ const NewUserPage = () => {
     }
   }, [isSuccess, navigate])
 
-  //  ======================REGEX=============================
 
-  const USER_REGEX = /^[A-z]{4,20}$/
 
-  const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
-
-  const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
-
-  //  ======================REGEX=============================
-
-  //  ======================store input=============================
-
-  const [focused, setFocused] = useState(false)
-  const [focusedInput, setFocusedInput] = useState(null)
   const [username, setUsername] = useState('')
   const [validUsername, setValidUsername] = useState(false)
   const [email, setEmail] = useState('')
   const [validEmail, setValidEmail] = useState(false)
   const [password, setPassword] = useState('')
   const [validPassword, setValidPassword] = useState(false)
+  const [confirm, setConfirm] = useState('')
+  const [validConfirm, setValidConfirm] = useState(false)
   const [role, setRole] = useState('User')
 
-  //  ======================store input=============================
-
-  //  ======================check validation=============================
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
   }, [username])
 
   useEffect(() => {
-    setEmail(EMAIL_REGEX.test(email))
+    setValidEmail(EMAIL_REGEX.test(email))
   }, [email])
 
   useEffect(() => {
-    setPassword(PASSWORD_REGEX.test(password))
+    setValidPassword(PASSWORD_REGEX.test(password))
   }, [password])
 
-  //  ======================check validation=============================
-
-  //  ======================handler=============================
-
-  const handleFocus = (inputName) => {
-    setFocusedInput(inputName)
-  }
-
-  const handleBlur = () => {
-    setFocusedInput(null)
-
-  }
-
-  const isInputFocused = (inputName) => {
-    return focusedInput === inputName
-  }
-
-
-
-  const handleUsername = (e) => { setUsername(e.target.value) }
-  const handleEmail = (e) => { setEmail(e.target.value) }
-  const handlePassword = (e) => { setPassword(e.target.value) }
+  useEffect(() => {
+    if (confirm.length) {
+      const match = confirm === password
+      setValidConfirm(match)
+    } else {
+      setValidConfirm(false)
+    }
+  }, [confirm, password])
 
 
   const canSave = [role, validEmail, validPassword, validUsername].every(Boolean) && !isLoading
@@ -107,64 +114,52 @@ const NewUserPage = () => {
     }
   }
 
-  //  ======================handler=============================
 
-  //  ======================messages=============================
-  const inputs = {
-    username: {
-      placeholder: 'Username',
-      text: 'Please enter your username',
-      error: 'Username must be at least 4 characters'
-    },
-    email: {
-      placeholder: 'Email',
-      text: 'Please enter your email',
-      error: 'Invalid email, please try again'
-    },
-    password: {
-      placeholder: 'Password',
-      text: 'Please enter your password',
-      error: 'Invalid password, please include at least one capital character and one number'
-    },
-    confirm: {
-      placeholder: 'Confirm Password',
-      text: 'Please enter your password again',
-      error: 'Please match with your password'
-    },
+  const handleChange = (event) => {
+    setRole(event.target.value)
   }
 
-  //  ======================messages=============================
-
-
-
-  const inputKeys = Object.keys(inputs)
-
-
-
-  // console.log(sortedKeys)
-
   return (
-    <>
-      <Box component="form" noValidate autoComplete="off">
-        {inputKeys.map(keyName => {
 
-          console.log(inputs[keyName])
-          return (
-            < FormControl key={keyName} sx={{ width: '25ch' }
-            }>
-              <FormLabel>{inputs[keyName]?.placeholder}</FormLabel>
-              <OutlinedInput
-                placeholder={inputs[keyName]?.placeholder}
-                onFocus={() => handleFocus(inputs[keyName]?.username)}
-                onBlur={handleBlur}
+    <Paper
+      component="form"
+      noValidate
+      autoComplete="off"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '50%',
 
-              />
-              <FormHelperText> {inputs[keyName]?.text}</FormHelperText>
-            </FormControl>)
-        })}
+      }}
 
-      </Box >
-    </>
+    >
+      <UserInputField inputs={inputs.username} state={username} setState={setUsername} validation={validUsername} />
+      <UserInputField inputs={inputs.email} state={email} setState={setEmail} validation={validEmail} />
+      <UserInputField inputs={inputs.password} state={password} setState={setPassword} validation={validPassword} />
+      <UserInputField inputs={inputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
+
+
+      <FormControl sx={{ m: 1, width: 120 }}>
+        <InputLabel>Select Role</InputLabel>
+        <Select
+          value={role}
+          onChange={handleChange}
+          autoWidth
+          label="Select Role"
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value='User'>User</MenuItem>
+          <MenuItem value='Employee'>Employee</MenuItem>
+          <MenuItem value='Admin'>Admin</MenuItem>
+        </Select>
+      </FormControl>
+
+    </Paper >
+
   )
 }
 
