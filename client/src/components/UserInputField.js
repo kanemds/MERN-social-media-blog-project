@@ -7,9 +7,11 @@ import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
 import { green, blue, red } from '@mui/material/colors'
 
-export default function UserInputField({ inputs, state, setState, validation }) {
+export default function UserInputField({ userInputs, state, setState, validation }) {
 
-  const { placeholder, text, error, correct, type } = inputs
+
+
+  const { placeholder, text, error, correct, type } = userInputs
 
   const [focusedInput, setFocusedInput] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
@@ -38,7 +40,7 @@ export default function UserInputField({ inputs, state, setState, validation }) 
 
     <FormControl sx={{ width: '85%', height: `${type === 'password' ? '150px' : '110px'}` }}>
       <FormLabel
-        error={state.length && !validation && focusedInput === null ? true : false}
+        error={state?.length && !validation && focusedInput === null ? true : false}
       >{placeholder}*</FormLabel>
       <OutlinedInput
         required
@@ -46,12 +48,13 @@ export default function UserInputField({ inputs, state, setState, validation }) 
         onFocus={() => handleFocus(placeholder)}
         onBlur={handleBlur}
         onChange={handleChange}
+        value={state}
         type={
           type === 'password' && showPassword ? 'text' :
             type === 'password' && showConfirm ? 'text' :
               type
         }
-        error={state.length && !validation && focusedInput === null ? true : false}
+        error={state?.length && !validation && focusedInput === null ? true : false}
 
         endAdornment={
           validation ? <RadioButtonCheckedIcon position="end" sx={{ color: green[500] }} />
@@ -62,7 +65,7 @@ export default function UserInputField({ inputs, state, setState, validation }) 
         {validation ? correct : state.length && !validation && focusedInput === null ? error : text}
       </FormHelperText>
       <Box sx={{ pb: '50px' }}>
-        {placeholder === 'Password' ?
+        {placeholder === 'Password' || placeholder === 'New Password' ?
           <FormControlLabel control={<Checkbox onChange={handleShowPassword} />} label="Show Password" /> :
           placeholder === 'Confirm Password' ?
             <FormControlLabel control={<Checkbox onChange={handleShowConfirm} />} label="Show Confirm Password" />

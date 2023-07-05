@@ -4,45 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FormControl, MenuItem, Paper, Box, FormHelperText, InputLabel, FormGroup, FormLabel, Select, Typography, Button } from '@mui/material'
 import UserInputField from '../../components/UserInputField'
 import LinkButton from '../../components/LinkButton'
-
-
-const USER_REGEX = /^[A-z]{4,}$/
-
-// const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
-const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-zA-Z]).{4,}$/
-
-const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
-
-const inputs = {
-  username: {
-    placeholder: 'Username',
-    text: 'Please enter a username with at least 4 characters',
-    error: 'Please enter a valid username',
-    correct: '',
-    type: 'text'
-  },
-  email: {
-    placeholder: 'Email',
-    text: 'Please enter a valid email',
-    error: 'Invalid email, please try again',
-    correct: '',
-    type: 'email'
-  },
-  password: {
-    placeholder: 'Password',
-    text: 'Password must be at least 8 characters, and contain both letters and numbers.',
-    error: 'Invalid password, please include at least one capital character and one number',
-    correct: '',
-    type: 'password'
-  },
-  confirm: {
-    placeholder: 'Confirm Password',
-    text: 'Please enter your password again',
-    error: 'Please match with your password',
-    correct: '',
-    type: 'password'
-  },
-}
+import { USER_REGEX, PASSWORD_REGEX, EMAIL_REGEX } from '../../config/regex'
+import userInputs from '../../config/userInputs'
 
 
 const NewUserPage = () => {
@@ -83,10 +46,6 @@ const NewUserPage = () => {
   const [validConfirm, setValidConfirm] = useState(false)
   const [role, setRole] = useState('User')
 
-  console.log(username)
-  console.log(email)
-  console.log(password)
-  console.log(role)
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
@@ -154,10 +113,10 @@ const NewUserPage = () => {
       >
 
 
-        <UserInputField inputs={inputs.username} state={username} setState={setUsername} validation={validUsername} />
-        <UserInputField inputs={inputs.email} state={email} setState={setEmail} validation={validEmail} />
-        <UserInputField inputs={inputs.password} state={password} setState={setPassword} validation={validPassword} />
-        <UserInputField inputs={inputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
+        <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
+        <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
+        <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
+        <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
 
 
         <FormControl sx={{ m: 3, width: 120 }}>
@@ -185,9 +144,7 @@ const NewUserPage = () => {
           >Submit</Button>
           <LinkButton name={'cancel'} />
         </Box>
-
       </Box>
-
 
     </Paper >
 
