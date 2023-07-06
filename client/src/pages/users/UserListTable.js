@@ -11,25 +11,26 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import ViewCompactIcon from '@mui/icons-material/ViewCompact'
 import GridViewIcon from '@mui/icons-material/GridView'
 
-const UserListTable = ({ usersList }) => {
+const UserListTable = ({ user }) => {
+
+
 
   const navigate = useNavigate()
 
   const [rowId, setRowId] = useState(null)
+  const [active, setActive] = useState(user?.active)
 
 
-  const user = usersList.map(user => {
-    return {
-      id: user?._id,
-      userName: user?.username,
-      email: user?.email,
-      roles: user?.roles,
-      active: user?.active,
-      createAt: user?.createdAt,
-      updateAt: user?.updatedAt,
+  const userRow = [{
+    id: user?._id,
+    userName: user?.username,
+    email: user?.email,
+    role: user?.role,
+    active: active,
+    createAt: user?.createdAt,
+    updateAt: user?.updatedAt,
+  }]
 
-    }
-  })
 
 
 
@@ -38,6 +39,8 @@ const UserListTable = ({ usersList }) => {
   const handleEdit = (userId) => {
     navigate(`/dash/users/edit/${userId}`)
   }
+
+  console.log(active)
 
   const columns = useMemo(() => [
 
@@ -57,8 +60,8 @@ const UserListTable = ({ usersList }) => {
     { field: 'userName', headerName: 'User Name', width: 130 },
     { field: 'email', headerName: 'E-mail', width: 130 },
     {
-      field: 'roles',
-      headerName: 'Roles',
+      field: 'role',
+      headerName: 'Role',
       width: 130,
       type: 'singleSelect',
       valueOptions: ['User', 'Employee', 'Admin'],
@@ -81,10 +84,10 @@ const UserListTable = ({ usersList }) => {
       field: 'active',
       headerName: 'State',
       width: 170,
+      type: 'boolean',
       renderCell: params => {
-        console.log('toggleButton did not change state', params.row.active)
         return (
-          <ToggleButton active={params.row.active} />
+          <ToggleButton active={params.row.active} setActive={setActive} />
         )
       },
       sortable: true,
@@ -132,13 +135,14 @@ const UserListTable = ({ usersList }) => {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={user}
+        rows={userRow}
         columns={columns}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
+        onRowEditCommit={params => setRowId(params.id)}
         pageSizeOptions={[5, 10, 20]}
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'

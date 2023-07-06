@@ -9,6 +9,7 @@ import { selectUserById } from './UserApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { USER_REGEX, PASSWORD_REGEX, EMAIL_REGEX } from '../../config/regex'
 import userInputs from '../../config/userInputs'
+import ToggleButton from '../../components/ToggleButton'
 
 
 
@@ -39,16 +40,18 @@ const EditUserForm = ({ currentUser }) => {
 
 
 
-  const [username, setUsername] = useState(`${currentUser?.username}` || '')
+  const [username, setUsername] = useState(currentUser?.username)
   const [validUsername, setValidUsername] = useState(false)
-  const [email, setEmail] = useState(`${currentUser?.email}` || '')
+  const [email, setEmail] = useState(currentUser?.email)
   const [validEmail, setValidEmail] = useState(false)
   const [password, setPassword] = useState('')
   const [validPassword, setValidPassword] = useState(false)
   const [confirm, setConfirm] = useState('')
   const [validConfirm, setValidConfirm] = useState(false)
-  const [role, setRole] = useState(`${currentUser?.role}` || '')
+  const [role, setRole] = useState(currentUser?.role)
+  const [active, setActive] = useState(currentUser?.active)
 
+  console.log('user', active)
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
@@ -92,8 +95,6 @@ const EditUserForm = ({ currentUser }) => {
 
   if (username && email && role) {
 
-
-
     content = (
       <Paper
         component="form"
@@ -124,29 +125,30 @@ const EditUserForm = ({ currentUser }) => {
           }}
         >
 
-
           <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
           <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
           <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
           <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
 
+          <Typography>Status</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <FormControl sx={{ m: 3, width: 120 }}>
+              <InputLabel>Select Role</InputLabel>
+              <Select
+                value={role}
+                onChange={handleChange}
+                autoWidth
+                label="Select Role"
+              >
 
-          <FormControl sx={{ m: 3, width: 120 }}>
-            <InputLabel>Select Role</InputLabel>
-            <Select
-              value={role}
-              onChange={handleChange}
-              autoWidth
-              label="Select Role"
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value='User'>User</MenuItem>
-              <MenuItem value='Employee'>Employee</MenuItem>
-              <MenuItem value='Admin'>Admin</MenuItem>
-            </Select>
-          </FormControl>
+                <MenuItem value='User'>User</MenuItem>
+                <MenuItem value='Employee'>Employee</MenuItem>
+                <MenuItem value='Admin'>Admin</MenuItem>
+              </Select>
+            </FormControl>
+            <ToggleButton active={active} setActive={setActive} />
+          </Box>
+
           <Box sx={{ mt: '30px' }}>
             <Button
               variant='contained'

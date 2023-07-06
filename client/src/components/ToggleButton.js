@@ -17,24 +17,24 @@ const ColorSwitch = styled(Switch)(({ theme }) => ({
   },
 }))
 
-export default function ToggleButton(props) {
+export default function ToggleButton({ active, setActive }) {
 
-  const { active } = props
-
-  const [checked, setChecked] = React.useState(active)
 
   const handleChange = (event) => {
-    setChecked(event.target.checked)
+    console.log('event', event.target.checked)
+    return setActive(event.target.checked)
   }
+
+
 
   return (
     <FormControlLabel
-      sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}
+      sx={{ display: 'flex', alignItems: 'center', width: 120, justifyContent: 'space-between' }}
       control={<ColorSwitch
-        checked={checked}
+        checked={active}
         onChange={handleChange}
       />}
-      label={checked ? 'Active' : 'Inactive'}
+      label={active ? 'Active' : 'Inactive'}
     />
 
 
