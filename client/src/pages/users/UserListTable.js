@@ -46,7 +46,7 @@ const UserListTable = ({ user }) => {
     setRole(event.target.value)
   }
 
-  console.log(role)
+
 
 
   const columns = useMemo(() => [
@@ -179,7 +179,7 @@ const UserListTable = ({ user }) => {
     //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     // },
   ],
-    [rowId]
+    [user]
   )
 
   return (
