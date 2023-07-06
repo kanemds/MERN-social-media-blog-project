@@ -19,9 +19,9 @@ const ColorSwitch = styled(Switch)(({ theme }) => ({
 
 export default function ToggleButton({ active, setActive }) {
 
-  console.log('button', active)
+  // console.log('button', active)
   const handleChange = (event) => {
-    console.log('event', event.target.checked)
+    // console.log('event', event.target.checked)
     return setActive(event.target.checked)
   }
 
