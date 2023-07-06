@@ -4,7 +4,7 @@ import { Avatar, FormControl, MenuItem, Paper, Box, InputLabel, Select, Typograp
 import { alpha, styled } from '@mui/material/styles'
 import { DataGrid, gridClasses, GridCellParams } from '@mui/x-data-grid'
 import PersonIcon from '@mui/icons-material/Person'
-import { grey, blue, orange } from '@mui/material/colors'
+import { grey, blue, orange, green, yellow } from '@mui/material/colors'
 import ToggleButton from '../../components/ToggleButton'
 import SaveActionFromUsersList from './SaveActionFromUsersList'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
@@ -35,7 +35,7 @@ const UserListTable = ({ user }) => {
 
 
 
-
+  const roleColor = role === 'admin'
   const options = { year: 'numeric', month: 'short', day: 'numeric' }
 
   const handleEdit = (userId) => {
@@ -46,7 +46,8 @@ const UserListTable = ({ user }) => {
     setRole(event.target.value)
   }
 
-  console.log(active)
+  console.log(role)
+
 
   const columns = useMemo(() => [
 
@@ -79,8 +80,24 @@ const UserListTable = ({ user }) => {
       // setRole(params.formattedValue)
       (
 
-
         <Select
+
+          sx={{
+            width: 120,
+            color: 'white',
+            backgroundColor: green[700],
+            notchedOutline: 'none',
+            border: 'transparent',
+            border: 'none',
+            "&& fieldset": {
+              border: "none"
+            },
+            // "&:hover": {
+            //   "&& fieldset": {
+            //     border: "none"
+            //   }
+            // }
+          }}
           value={params.row.role}
           onChange={handleChange}
         >
@@ -97,10 +114,11 @@ const UserListTable = ({ user }) => {
       width: 130,
       renderCell: params => (
         <IconButton
-          sx={{ fontSize: 35, backgroundColor: orange[400], '&:hover': { color: 'white' } }}
+          sx={{ fontSize: 35, color: 'white', backgroundColor: orange[400], '&:hover': { color: orange[400], backgroundColor: 'white' } }}
           onClick={() => handleEdit(params.id)}
         >
-          <GridViewIcon sx={{ color: 'white', '&:hover': { color: orange[400] } }} />
+          {/* <GridViewIcon sx={{ color: 'white', '&:hover': { color: orange[400] } }} /> */}
+          <GridViewIcon />
         </IconButton>
       )
     },

@@ -7,8 +7,9 @@ import SaveIcon from '@mui/icons-material/Save'
 
 const SaveActionFromUsersList = ({ params, rowId, setRowId, stateActive, stateRole }) => {
 
-  console.log(stateActive)
-  console.log(stateRole)
+  // console.log(stateActive)
+  // console.log(stateRole)
+  console.log(params)
 
   const canSave = stateActive && stateRole ? true : false
 
@@ -32,15 +33,20 @@ const SaveActionFromUsersList = ({ params, rowId, setRowId, stateActive, stateRo
               width: 40,
               height: 40,
               backgroundColor: green[500],
-              '&:hover': { backgroundColor: 'white' }
+              '&:hover': { color: green[500], backgroundColor: 'white' }
             }}
           >
-            <CheckCircleOutlineIcon sx={{ fontSize: 35, '&:hover': { color: green[500] } }} />
+            <CheckCircleOutlineIcon sx={{ fontSize: 35 }} />
           </Fab>)
           : (
             <Fab
-              color='primary'
+              // color='primary'
               sx={{
+                backgroundColor: 'black',
+                color: 'white',
+                '&:hover': {
+                  color: 'black'
+                },
                 width: 40,
                 height: 40,
               }}
