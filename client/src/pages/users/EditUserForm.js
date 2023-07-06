@@ -50,7 +50,7 @@ const EditUserForm = ({ currentUser }) => {
   const [validConfirm, setValidConfirm] = useState(false)
   const [role, setRole] = useState(currentUser?.role)
   const [active, setActive] = useState(currentUser?.active)
-
+  const [showPassword, setShowPassword] = useState(false)
 
 
   useEffect(() => {
@@ -74,13 +74,18 @@ const EditUserForm = ({ currentUser }) => {
     }
   }, [confirm, password])
 
+  useEffect(() => {
+    setPassword('')
+    setConfirm('')
+  }, [showPassword])
 
-  const canSave = [role, validEmail, validPassword, validUsername, validConfirm].every(Boolean) && !isLoading
+
+  const canSave = showPassword ? [role, validEmail, validPassword, validUsername, validConfirm, typeof active === 'boolean'].every(Boolean) && !isLoading : [role, validEmail, validUsername, typeof active === 'boolean'].every(Boolean) && !isLoading
 
   const handleSave = async (e) => {
     e.preventDefault()
     if (canSave) {
-      await updateUser({ username, email, password, role })
+      await updateUser({ id: currentUser.id, username, email, password, role, active })
     }
   }
 
@@ -89,11 +94,15 @@ const EditUserForm = ({ currentUser }) => {
     setRole(event.target.value)
   }
 
+  const handleShowPassword = () => {
+    setShowPassword(prev => !prev)
+  }
+
   let content
 
-  if (!username.length || !email.length || !role.length) content = <LoadingSpinner />
+  if (!username.length || !email.length || !role.length || typeof active !== 'boolean') content = <LoadingSpinner />
 
-  if (username && email && role) {
+  if (username && email && role && typeof active === 'boolean') {
 
     content = (
       <Paper
@@ -127,9 +136,18 @@ const EditUserForm = ({ currentUser }) => {
 
           <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
           <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
-          <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
-          <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
 
+          <Button onClick={handleShowPassword}>
+            Update Password
+          </Button>
+          {showPassword ?
+            (<>
+              <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
+              <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
+            </>
+            )
+            : ''
+          }
           <Typography>Status</Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <FormControl sx={{ m: 3, width: 120 }}>
