@@ -5,8 +5,12 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { green, blue } from '@mui/material/colors'
 import SaveIcon from '@mui/icons-material/Save'
 
-const SaveActionFromUsersList = ({ params, rowId, setRowId }) => {
+const SaveActionFromUsersList = ({ params, rowId, setRowId, stateActive, stateRole }) => {
 
+  console.log(stateActive)
+  console.log(stateRole)
+
+  const canSave = stateActive && stateRole ? true : false
 
 
   const [loading, setLoading] = useState(false)
@@ -40,8 +44,7 @@ const SaveActionFromUsersList = ({ params, rowId, setRowId }) => {
                 width: 40,
                 height: 40,
               }}
-              disabled={params.id !== rowId || loading}
-              // disabled={false}
+              disabled={canSave || loading}
               onClick={handleSubmit}
             >
               <SaveIcon sx={{ fontSize: 35 }} />
