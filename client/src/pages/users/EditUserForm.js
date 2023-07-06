@@ -51,7 +51,7 @@ const EditUserForm = ({ currentUser }) => {
   const [role, setRole] = useState(currentUser?.role)
   const [active, setActive] = useState(currentUser?.active)
 
-  console.log('user', active)
+
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
