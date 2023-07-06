@@ -34,10 +34,9 @@ const UsersList = () => {
     const usersList = Object.values(entities)
 
 
-    content = (
-      <>
-        <UserListTable usersList={usersList} />
-      </>
+    content = usersList.map(user => <UserListTable key={user._id} user={user} />
+
+
     )
   }
 

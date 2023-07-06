@@ -135,6 +135,7 @@ const NewUserPage = () => {
             <MenuItem value='Admin'>Admin</MenuItem>
           </Select>
         </FormControl>
+
         <Box sx={{ mt: '30px' }}>
           <Button
             variant='contained'

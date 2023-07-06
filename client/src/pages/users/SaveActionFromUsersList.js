@@ -41,6 +41,7 @@ const SaveActionFromUsersList = ({ params, rowId, setRowId }) => {
                 height: 40,
               }}
               disabled={params.id !== rowId || loading}
+              // disabled={false}
               onClick={handleSubmit}
             >
               <SaveIcon sx={{ fontSize: 35 }} />
