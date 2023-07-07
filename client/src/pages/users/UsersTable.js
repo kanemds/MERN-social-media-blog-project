@@ -19,20 +19,9 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import ViewCompactIcon from '@mui/icons-material/ViewCompact'
 import GridViewIcon from '@mui/icons-material/GridView'
 import { createTheme } from '@mui/material'
-
-const themeInstance = createTheme({
-  components: {
-    MuiTableRow: {
-      styleOverrides: {
-        root: {
-          '&.Mui-selected': {
-            backgroundColor: "#f09628"
-          }
-        }
-      }
-    }
-  }
-})
+import DeleteActionButton from './DeleteActionButton'
+import { useDeleteUserMutation } from './UserApiSlice'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 export default function UsersTable({ user }) {
 
@@ -132,7 +121,9 @@ export default function UsersTable({ user }) {
           role={role}
         />
       </TableCell>
-      <TableCell align="left">Delete</TableCell>
+      <TableCell align="left">
+        <DeleteActionButton userId={user._id} />
+      </TableCell>
     </ TableRow>
   )
 
