@@ -6,14 +6,9 @@ import { green, blue } from '@mui/material/colors'
 import SaveIcon from '@mui/icons-material/Save'
 import { useUpdateUserMutation } from './UserApiSlice'
 
-const SaveActionFromUsersList = ({ params, rowId, setRowId, stateActive, stateRole }) => {
-
-  console.log(stateActive)
-  // console.log(stateRole)
-  // console.log(params.row)
+const SaveActionFromUsersList = ({ user, stateActive, stateRole, role, active }) => {
 
   const canSave = stateActive && stateRole ? true : false
-
 
 
 
@@ -26,18 +21,17 @@ const SaveActionFromUsersList = ({ params, rowId, setRowId, stateActive, stateRo
     }
   ] = useUpdateUserMutation()
 
-
   const [loading, setLoading] = useState(isLoading)
   const [success, setSuccess] = useState(isSuccess)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     await updateUser({
-      id: params.row.id,
-      username: params.row.userName,
-      email: params.row.email,
-      role: params.row.role,
-      active: params.row.active
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      role: role,
+      active: active
     })
   }
 
@@ -53,7 +47,7 @@ const SaveActionFromUsersList = ({ params, rowId, setRowId, stateActive, stateRo
       setTimeout(() => {
         setSuccess(false)
       },
-        1500)
+        800)
     }
   }, [success])
 

@@ -10,15 +10,15 @@ import SaveActionFromUsersList from './SaveActionFromUsersList'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import ViewCompactIcon from '@mui/icons-material/ViewCompact'
 import GridViewIcon from '@mui/icons-material/GridView'
-import { render } from 'react-dom'
 
-const UserListTable = ({ user }) => {
+
+const UserListTable = ({ user, usersList }) => {
 
 
 
   const navigate = useNavigate()
 
-  const [rowId, setRowId] = useState(null)
+
   const [active, setActive] = useState(user?.active)
   const [role, setRole] = useState(user?.role)
 
@@ -35,7 +35,7 @@ const UserListTable = ({ user }) => {
 
 
 
-  const roleColor = role === 'admin'
+
   const options = { year: 'numeric', month: 'short', day: 'numeric' }
 
   const handleEdit = (userId) => {
@@ -85,10 +85,7 @@ const UserListTable = ({ user }) => {
           sx={{
             width: 120,
             color: 'white',
-            backgroundColor: green[700],
-            notchedOutline: 'none',
-            border: 'transparent',
-            border: 'none',
+            backgroundColor: role === 'Admin' ? green[700] : role === 'Employee' ? orange[700] : yellow[700],
             "&& fieldset": {
               border: "none"
             },
@@ -160,8 +157,6 @@ const UserListTable = ({ user }) => {
           return (
             < SaveActionFromUsersList
               params={params}
-              rowId={rowId}
-              setRowId={setRowId}
               stateActive={stateActive}
               stateRole={stateRole}
             />)
@@ -179,7 +174,7 @@ const UserListTable = ({ user }) => {
     //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     // },
   ],
-    [user]
+    [user, role]
   )
 
   return (
@@ -192,7 +187,6 @@ const UserListTable = ({ user }) => {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
-        onRowEditCommit={params => setRowId(params.id)}
         pageSizeOptions={[5, 10, 20]}
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
