@@ -1,7 +1,7 @@
 const USER_REGEX = /^[A-z]{4,}$/
 
 // const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
-const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-zA-Z]).{4,}$/
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-zA-Z]).{1,}$/
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 

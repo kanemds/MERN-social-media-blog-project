@@ -35,6 +35,8 @@ const UsersList = () => {
     error
   } = useGetUsersQuery()
 
+
+
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
@@ -51,6 +53,7 @@ const UsersList = () => {
   let content
 
   if (isLoading) return content = <LoadingSpinner />
+
 
   if (isError) return content = <ErrorMessage error={error} />
 

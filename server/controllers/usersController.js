@@ -111,7 +111,6 @@ const updateUser = asyncHandler(async (req, res) => {
 // @access Private
 const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.body
-
   if (!id) {
     return res.status(400).json({ message: 'User ID Required' })
   }
