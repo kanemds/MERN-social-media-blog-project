@@ -6,7 +6,8 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import { useNavigate } from 'react-router-dom'
 import Typography from '@mui/material/Typography'
 import LoadingSpinner from '../../components/LoadingSpinner'
-
+import { useLocation } from 'react-router-dom'
+import ClearIcon from '@mui/icons-material/Clear'
 
 const style = {
   position: 'absolute',
@@ -26,7 +27,7 @@ const style = {
 
 const DeleteActionButton = ({ userId }) => {
 
-
+  const location = useLocation()
 
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -53,7 +54,7 @@ const DeleteActionButton = ({ userId }) => {
   useEffect(() => {
     if (isSuccess) {
       setOpen(false)
-      navigate('/dash/users')
+      navigate('/')
     }
   }, [isSuccess])
 
@@ -74,7 +75,9 @@ const DeleteActionButton = ({ userId }) => {
         }}
         onClick={handleOpen}
       >
-        <DeleteForeverIcon sx={{ fontSize: 35 }} />
+        {location.pathname === '/dash/users' ? <DeleteForeverIcon sx={{ fontSize: 35 }} /> : <ClearIcon sx={{ fontSize: 35 }} />}
+
+
       </Fab >
 
       <Modal
