@@ -10,6 +10,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import { USER_REGEX, PASSWORD_REGEX, EMAIL_REGEX } from '../../config/regex'
 import userInputs from '../../config/userInputs'
 import ToggleButton from '../../components/ToggleButton'
+import DeleteActionButton from './DeleteActionButton'
 
 
 
@@ -111,13 +112,18 @@ const EditUserForm = ({ currentUser }) => {
         autoComplete="off"
         sx={{
           width: '50%',
-          p: '50px',
+          p: '10px',
           pb: '100px',
 
         }}
       >
-        <Box sx={{ pb: '40px' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+          <DeleteActionButton userId={currentUser.id} />
+        </Box>
+
+        <Box sx={{ pb: '40px', ml: '5%' }}>
           <Typography variant='h4'>EDIT ACCOUNT</Typography>
+
         </Box>
         {isError ?
           <Typography>{error}</Typography>
@@ -174,7 +180,7 @@ const EditUserForm = ({ currentUser }) => {
               disabled={canSave ? false : true}
               onClick={handleSave}
             >Submit</Button>
-            <LinkButton name={'cancel'} />
+            <LinkButton visit='/' name={'cancel'} />
           </Box>
         </Box>
       </Paper >
