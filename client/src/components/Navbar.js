@@ -13,16 +13,15 @@ export default function Navbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <LinkButton visit='/' name='K-Blog' style='outlined' fontSize='2rem' />
 
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            K-Blog
-          </Typography>
-
-          <LinkButton visit='/login' name='Login' />
-          <LinkButton visit='/register' name='Signup' />
-          <LinkButton visit='/dash/users' name='users' />
-          <LinkButton visit='/dash/users/new' name='new user' />
+          <Box>
+            <LinkButton visit='/login' name='Login' />
+            <LinkButton visit='/register' name='Signup' />
+            <LinkButton visit='/dash/users' name='users' />
+            <LinkButton visit='/dash/users/new' name='new user' />
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>
