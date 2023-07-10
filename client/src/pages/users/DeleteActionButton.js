@@ -29,6 +29,9 @@ const DeleteActionButton = ({ userId }) => {
 
   const location = useLocation()
 
+  const isDashUsers = location.pathname === '/dash/users'
+
+
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
@@ -70,12 +73,12 @@ const DeleteActionButton = ({ userId }) => {
           '&:hover': {
             color: red[600]
           },
-          width: 40,
-          height: 40,
+          width: isDashUsers ? 40 : 36,
+          height: isDashUsers ? 40 : 36,
         }}
         onClick={handleOpen}
       >
-        {location.pathname === '/dash/users' ? <DeleteForeverIcon sx={{ fontSize: 35 }} /> : <ClearIcon sx={{ fontSize: 35 }} />}
+        {isDashUsers ? <DeleteForeverIcon sx={{ fontSize: 35 }} /> : <ClearIcon sx={{ fontSize: 20 }} />}
 
 
       </Fab >
@@ -90,31 +93,34 @@ const DeleteActionButton = ({ userId }) => {
 
         <Box sx={style}>
           {isLoading ? <LoadingSpinner /> :
-            <>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Delete user:{userId}
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ m: 2 }}>
-                Select "Yes" to delete or "No" back to Previous page
-              </Typography>
+            isError ? <Typography id="modal-modal-description" sx={{ m: 2 }}>
+              {error?.data.message}
+            </Typography> :
+              <>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Delete user:{userId}
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ m: 2 }}>
+                  Select "Yes" to delete or "No" back to Previous page
+                </Typography>
 
-              <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 3, width: '100%' }}>
-                <Button variant='contained'
-                  sx={{
-                    backgroundColor: red[600],
-                    color: 'white',
-                    '&:hover': {
-                      backgroundColor: red[800]
-                    }
-                  }}
-                  onClick={handleSubmit}
-                >
-                  Yes
-                </Button>
+                <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 3, width: '100%' }}>
+                  <Button variant='contained'
+                    sx={{
+                      backgroundColor: red[600],
+                      color: 'white',
+                      '&:hover': {
+                        backgroundColor: red[800]
+                      }
+                    }}
+                    onClick={handleSubmit}
+                  >
+                    Yes
+                  </Button>
 
-                <Button variant='contained' onClick={handleClose}>No</Button>
-              </Box>
-            </>
+                  <Button variant='contained' onClick={handleClose}>No</Button>
+                </Box>
+              </>
           }
         </Box>
 

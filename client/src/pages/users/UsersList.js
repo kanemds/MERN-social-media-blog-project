@@ -1,6 +1,5 @@
 
 import LoadingSpinner from '../../components/LoadingSpinner'
-import UserListTable from './UserListTable'
 import ErrorMessage from '../../components/ErrorMessage'
 import React, { useMemo, useState } from 'react'
 import { useGetUsersQuery } from './UserApiSlice'
@@ -35,7 +34,7 @@ const UsersList = () => {
     error
   } = useGetUsersQuery()
 
-  console.log(users)
+
 
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)

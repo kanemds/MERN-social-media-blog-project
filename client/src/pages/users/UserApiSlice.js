@@ -26,6 +26,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         return response.status === 200 && !result.isError
       },
       // specifies that unused data will be retained for 5 seconds.
+      // default as 60s if it has not been set
+      // data will be gone after when using  useSelector(state => selectUserById(state, id))
       keepUnusedDataFor: 5,
       // change format from  [{id,username}, {…}]
       // to  {ids: Array(…), entities: {…}}
