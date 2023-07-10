@@ -126,7 +126,7 @@ const EditUserForm = ({ currentUser }) => {
 
         </Box>
         {isError ?
-          <Typography>{error}</Typography>
+          <Typography>{error?.data?.message}</Typography>
           : ''
         }
 

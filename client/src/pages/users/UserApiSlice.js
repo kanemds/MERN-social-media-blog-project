@@ -2,45 +2,60 @@ import { createSelector, createEntityAdapter } from "@reduxjs/toolkit"
 import { apiSlice } from "../../app/api/apiSlice"
 
 const usersAdapter = createEntityAdapter({
+
   // this sortCompare to sort ids:[] array only not entities:{...}
   // 0: same order 1: to the front -1: to the back
   sortComparer: (a, b) => (a.roles < b.roles) ? 1 : (a.roles > b.roles) ? -1 : 0
 })
 
+// console.log('usersAdapter', usersAdapter) // provided list of method : {selectId: ƒ, sortComparer: ƒ, getInitialState: ƒ, getSelectors: ƒ, removeOne: ƒ, …}
+
 const initialState = usersAdapter.getInitialState()
 
+// // usersAdapter.getInitialState() one of the createEntityAdapter method
+// console.log('initialState', initialState) // return {ids:[], entities:[]}
+
 export const usersApiSlice = apiSlice.injectEndpoints({
+  // The build object contains various methods and utilities that allow you to define and configure different parts of your API.
   endpoints: builder => ({
+    //  The build.query() method is used to define a query endpoint, which typically retrieves data from the server.
     getUsers: builder.query({
       query: () => '/users',
       validateStatus: (response, result) => {
+        // prevent fetch error with stateCode === 200
         return response.status === 200 && !result.isError
       },
       // specifies that unused data will be retained for 5 seconds.
       keepUnusedDataFor: 5,
       // change format from  [{id,username}, {…}]
-      // to  {ids: Array(2), entities: {…}}
+      // to  {ids: Array(…), entities: {…}}
       transformResponse: responseData => {
+        // before transformResponse: user.id is no exist
         const loadedUsers = responseData.map(user => {
           user.id = user._id
+          // added extra value to each user:{id: "64a8a25ada03bef05ab843dc"}
           return user
         })
         // setAll(currentState,replace the currentState)
         return usersAdapter.setAll(initialState, loadedUsers)
+        //  mongoDB default .id as ._id
+        // redux toolkit can only read id as .id to transform as  {ids: Array(…), entities: {…}} for usersAdapter.getInitialState() formate
       },
       providesTags: (result, error, arg) => {
         // auto refetch if list or specific id changed
-        console.log('tagResult', result)
+        // console.log('tagResult', result) // {ids: Array([…]), entities: {…}}
         console.log('tagArg', arg)
 
         if (result?.ids) {
           // const example = result.ids.map(id => ({ type: 'User', id:id }))
           // console.log(...example)
           // {type: 'User', id: '6491ff902633c1ed798e648e'}
+
           return [
             { type: 'User', id: 'LIST' },
             // spread each tag, id = {id:id}
-            ...result.ids.map(id => ({ type: 'User', id }))
+
+            ...result.ids.map(({ id }) => ({ type: 'User', id }))
           ]
         } else return [{ type: 'User', id: 'LIST' }]
       }
