@@ -32,7 +32,13 @@ const UsersList = () => {
     isSuccess,
     isError,
     error
-  } = useGetUsersQuery()
+  } = useGetUsersQuery(undefined, {
+    // consider if multiples people using same app, shorten the pollingInterval will get the latest update info
+    pollingInterval: 1000 * 60, // set period of time refetch 
+    refetchOnFocus: true, // refetch data after user is back to this app window
+    refetchOnMountOrArgChange: true // remount data cause refetch
+
+  })
 
 
 
