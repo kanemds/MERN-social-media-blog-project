@@ -58,7 +58,39 @@ const login = asyncHandler(async (req, res) => {
 // @route GET /auth/refresh
 // @access Public send new accessToken when it is expired
 const refresh = asyncHandler(async (req, res) => {
+  const cookies = req.cookies
 
+  if (!cookies) return res.status(401).json({ message: 'User is not authorized' })
+
+  const refreshToken = cookies.jwt
+
+  // verify if the refreshToken is validate
+
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    asyncHandler(async (error, decoded) => {
+      console.log(decoded)
+      if (error) return res.status(403).json({ message: 'User is not authorized' })
+
+      const loginUser = User.findOne({ username: decoded.username }).exec()
+
+      if (!loginUser) return res.status(401).json({ message: 'User is not authorized' })
+
+      const accessToken = jwt.sign(
+        {
+          'userInfo': {
+            'username': loginUser.username,
+            'role': loginUser.role
+          }
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: '10s' }
+      )
+
+      res.status(200).json({ accessToken })
+    })
+  )
 })
 
 
@@ -66,7 +98,12 @@ const refresh = asyncHandler(async (req, res) => {
 // @route POST /auth/logout
 // @access Public clear cookie if exists
 const logout = asyncHandler(async (req, res) => {
+  const cookies = req.cookies
+  if (!cookies?.jwt) return res.sendStatus(204) //request has been processed successfully, but there is no content to be sent back in the response.
 
+  // when clearing cookie, needs to be the same object key and value
+  res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
+  res.status(200).json({ message: 'Cookie cleared' })
 })
 
 module.exports = { login, refresh, logout }
