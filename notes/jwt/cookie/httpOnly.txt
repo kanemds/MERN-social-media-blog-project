@@ -1,0 +1,16 @@
+// 
+
+httpOnly: true: Setting httpOnly to true ensures that the cookie can only be accessed by the web server and is not accessible by client-side JavaScript.
+This helps enhance security by preventing certain types of cross-site scripting attacks.
+
+
+Client-side JavaScript runs within a web browser environment.
+It is executed directly by the web browser on the client's machine.
+It enhances the user experience and interactivity of a website.
+JavaScript code is delivered from the web server to the client's browser.
+The browser interprets and executes the JavaScript code locally.
+Client-side JavaScript operates on the client's machine, not the server.
+It enables dynamic and interactive functionality on the website.
+Examples of client-side JavaScript functionality include form validation, user interface interactions, AJAX requests, and DOM manipulation.
+Client-side JavaScript is distinct from server-side programming languages like Node.js, Python, or PHP.
+Server-side languages generate the HTML, CSS, and JavaScript code sent to the client.

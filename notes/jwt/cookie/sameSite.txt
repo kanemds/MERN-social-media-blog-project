@@ -1,0 +1,24 @@
+Certainly! Here's a further explanation of the sameSite: 'None' attribute:
+
+sameSite: 'None' allows the cookie to be sent in cross-site requests.
+The sameSite attribute of a cookie defines whether the cookie can be sent in a cross-site (third-party) context.
+When set to 'None', it means the cookie can be sent in cross-site requests, even when the request originates from a different website.
+This attribute is particularly useful for scenarios where the server needs to receive the cookie from cross-origin requests to maintain the session or authentication state.
+Without sameSite: 'None', cookies are restricted to the same-site context by default, meaning they are only sent with requests originating from the same domain.
+By allowing the cookie to be sent in cross-site requests, it enables scenarios such as single sign-on (SSO) across multiple domains or allowing embedded content from different sites to share authentication information.
+It's important to note that using sameSite: 'None' should be done with caution and in compliance with security best practices.
+When enabling cross-site cookies, additional security measures, such as secure transport via HTTPS, should be in place to mitigate potential risks associated with cross-site request forgery (CSRF) attacks or cross-site scripting (XSS) vulnerabilities.
+Cross-site cookies should be used judiciously and only in scenarios where they are necessary for the intended functionality and security requirements.
+
+
+
+When using sameSite: 'None' to allow cross-site cookies, it is strongly recommended to use the secure: true attribute as well. Here's an explanation of why sameSite: 'None' is typically used in conjunction with secure: true:
+
+When sameSite: 'None' is set, it allows the cookie to be sent in cross-site requests, even when the request originates from a different website or domain.
+However, to mitigate security risks and ensure the confidentiality and integrity of the cookie, it is crucial to transmit the cookie over a secure HTTPS connection.
+By setting secure: true, the cookie is restricted to be sent over HTTPS connections only.
+Combining sameSite: 'None' with secure: true ensures that the cookie is transmitted securely and can only be accessed in a cross-site context when the request is made over a secure HTTPS connection.
+This combination is considered a best practice to protect the cookie from potential interception or tampering during transmission.
+It helps to prevent certain attacks, such as man-in-the-middle attacks or cookie theft over insecure networks.
+Therefore, when using sameSite: 'None', it is recommended to set secure: true to enforce the usage of HTTPS and provide a higher level of security.
+It's important to note that without using secure: true, the browser may reject the cookie when sameSite: 'None' is set, as it could pose a security risk to transmit sensitive information in an unencrypted manner. Therefore, using sameSite: 'None' should be accompanied by secure: true to ensure proper security measures are in place.

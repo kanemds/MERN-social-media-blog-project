@@ -1,11 +1,3 @@
-const User = require('../models/User')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const asyncHandler = require('express-async-handler')
-
-// @desc Login
-// @route POST /auth
-// @access Public
 const login = asyncHandler(async (req, res) => {
   const { username, password } = req.body
 
@@ -49,24 +41,16 @@ const login = asyncHandler(async (req, res) => {
     sameSite: 'None', // cross-site cookie
     maxAge: 1000 * 60 * 60 * 24 * 1
   })
-    %
-    res.status(200).json({ accessToken })
 
-})
-
-// @desc Refresh
-// @route GET /auth/refresh
-// @access Public send new accessToken when it is expired
-const refresh = asyncHandler(async (req, res) => {
+  res.status(200).json({ accessToken })
 
 })
 
 
-// @desc Logout
-// @route POST /auth/logout
-// @access Public clear cookie if exists
-const logout = asyncHandler(async (req, res) => {
+// httpOnly: true: Setting httpOnly to true ensures that the cookie can only be accessed by the web server and is not accessible by client-side JavaScript. This helps enhance security by preventing certain types of cross-site scripting attacks.
 
-})
+// secure: true: By setting secure to true, the cookie is only sent over HTTPS connections. This ensures that the cookie is encrypted during transmission, providing an additional layer of security.
 
-module.exports = { login, refresh, logout }
+// sameSite: 'None': The sameSite attribute is set to 'None', which allows the cookie to be sent in cross-site requests. This is useful for scenarios where the server needs to receive the cookie even when the request originates from a different website.
+
+// maxAge: 1000 * 60 * 60 * 24 * 1: The maxAge option specifies the maximum age of the cookie in milliseconds. In this case, the cookie is set to expire after 1 day (24 hours).
