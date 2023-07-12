@@ -9,11 +9,12 @@ const asyncHandler = require('express-async-handler')
 const login = asyncHandler(async (req, res) => {
   const { username, password } = req.body
 
+
   if (!username || !password) {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
-  const loginUser = User.find({ username }).exec()
+  const loginUser = await User.findOne({ username }).exec()
 
   if (!loginUser || !loginUser.active) {
     return res.status(401).json({ message: 'User is not authorized' })
@@ -43,6 +44,7 @@ const login = asyncHandler(async (req, res) => {
     { expiresIn: '1d' }
   )
 
+  // set cookie only contain username prevent extra info may leak
   res.cookie('jwt', refreshToken, {
     httpOnly: true, // accessibly only by web server
     secure: true, // https only
@@ -73,7 +75,7 @@ const refresh = asyncHandler(async (req, res) => {
       console.log(decoded)
       if (error) return res.status(403).json({ message: 'User is not authorized' })
 
-      const loginUser = User.findOne({ username: decoded.username }).exec()
+      const loginUser = await User.findOne({ username: decoded.username }).exec()
 
       if (!loginUser) return res.status(401).json({ message: 'User is not authorized' })
 

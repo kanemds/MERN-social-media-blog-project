@@ -44,7 +44,7 @@ const NewUserPage = () => {
   const [validPassword, setValidPassword] = useState(false)
   const [confirm, setConfirm] = useState('')
   const [validConfirm, setValidConfirm] = useState(false)
-  const [role, setRole] = useState('User')
+  const [role, setRole] = useState('')
 
 
   useEffect(() => {
@@ -119,7 +119,7 @@ const NewUserPage = () => {
         <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
 
 
-        <FormControl sx={{ m: 3, width: 120 }}>
+        <FormControl sx={{ m: 3, width: 130 }}>
           <InputLabel>Select Role</InputLabel>
           <Select
             value={role}

@@ -5,11 +5,11 @@ const loginLimiter = require('../middleware/loginLimiter')
 router.route('/')
   .post(loginLimiter, login)
 
-router.route('/refresh', refresh)
-  .get()
+router.route('/refresh')
+  .get(refresh)
 
-router.route('/logout', logout)
-  .post()
+router.route('/logout')
+  .post(logout)
 
 
 

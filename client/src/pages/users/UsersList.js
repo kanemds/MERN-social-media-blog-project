@@ -88,7 +88,7 @@ const UsersList = () => {
             </TableRow>
           </TableHead>
           <TableBody >
-            {usersList.map(user => <UsersTable key={user._id} user={user} />)}
+            {usersList.map(user => <UsersTable user={user} />)}
           </TableBody>
         </Table>
       </TableContainer>
