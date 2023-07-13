@@ -7,7 +7,7 @@ import UsersList from './pages/users/UsersList'
 import Dashboard from './pages/dashboard/Dashboard'
 import EditUserPage from './pages/users/EditUserPage'
 import NewUserPage from './pages/users/NewUserPage'
-import RegisterPage from './pages/auth/RegisterPage'
+import RegisterPage from './pages/users/RegisterPage'
 import Prefetch from './pages/auth/Prefetch'
 
 
@@ -18,6 +18,7 @@ function App() {
         <Route index element={<MainPage />} />
         <Route path='login' element={<LoginPage />} />
         <Route path='register' element={<RegisterPage />} />
+
         <Route element={<Prefetch />}>
           <Route path='dash' element={<Dashboard />}>
             <Route path='blogs'>
