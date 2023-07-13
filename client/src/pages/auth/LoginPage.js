@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from './authSlice'
 import { useLoginMutation } from './authApiSlice'
@@ -9,6 +9,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import ErrorMessage from '../../components/ErrorMessage'
 import { FormControl, OutlinedInput, MenuItem, Paper, Box, FormControlLabel, FormHelperText, Checkbox, InputLabel, FormGroup, FormLabel, Select, Typography, Button } from '@mui/material'
 import LinkButton from '../../components/LinkButton'
+import { USER_REGEX, PASSWORD_REGEX } from '../../config/regex'
 
 const LoginPage = () => {
 
@@ -16,32 +17,34 @@ const LoginPage = () => {
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
+  const [checkUsername, setCheckUsername] = useState(false)
   const [password, setPassword] = useState('')
+  const [checkPassword, setCheckPassword] = useState(false)
   const [focusedUser, setFocusedUser] = useState('')
   const [focusedPassword, setFocusedPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   // testing purpose
   // const [loading, setLoading] = useState(true)
 
+  useEffect(() => {
+    setCheckUsername(USER_REGEX.test(username))
+  }, [username])
+
+  useEffect(() => {
+    setCheckPassword(PASSWORD_REGEX.test(password))
+  }, [password])
+
   const [
     login,
     {
-      isSuccess,
       isLoading,
-      isError,
-      error
     }
   ] = useLoginMutation()
 
-  const canSave = [username, password].every(Boolean) && !isLoading
+  const canSave = [username, checkUsername, checkPassword, password].every(Boolean) && !isLoading
 
-  const handleSave = async (e) => {
-    e.preventDefault()
-    if (canSave) {
-      await login({ username, password })
-    }
-  }
 
   const handleFocusUser = () => {
     setFocusedUser(username)
@@ -70,6 +73,36 @@ const LoginPage = () => {
     setShowPassword(e.target.checked)
   }
 
+  const handleSave = async (e) => {
+    e.preventDefault()
+    if (!username) {
+      setFocusedUser(null)
+    }
+    if (!password) {
+      setFocusedPassword(null)
+    }
+
+    if (canSave) {
+      try {
+        const { accessToken } = await login({ username, password }).unwrap()
+        dispatch(setCredentials({ accessToken }))
+        setUsername('')
+        setPassword('')
+        navigate('/dash')
+      } catch (error) {
+        if (!error.status) {
+          setErrorMessage('No server response at the moment, please try again later')
+        } else if (error.status === 400) {
+          setErrorMessage('Missing username or password')
+        } else if (error.status === 401) {
+          setErrorMessage('User is not authorized')
+        } else {
+          setErrorMessage(error.data?.message)
+        }
+      }
+    }
+  }
+
 
   let content
 
@@ -95,8 +128,8 @@ const LoginPage = () => {
       <Box sx={{ pb: '40px' }}>
         <Typography variant='h4'>Login</Typography>
       </Box>
-      {isError ?
-        <Typography>{error}</Typography>
+      {errorMessage ?
+        <Typography>{errorMessage}</Typography>
         : ''
       }
       <Box
@@ -110,7 +143,7 @@ const LoginPage = () => {
 
         <FormControl sx={{ minWidth: '420px', width: '85%', height: '130px' }}>
           <FormLabel
-            error={!username?.length && focusedUser === null ? true : false}
+            error={!username?.length && focusedUser === null ? true : username.length && focusedUser === null && !checkUsername ? true : false}
           >Username</FormLabel>
           <OutlinedInput
             required
@@ -120,10 +153,10 @@ const LoginPage = () => {
             onChange={handleChangeUser}
             value={username}
             type='text'
-            error={!username?.length && focusedUser === null ? true : false}
+            error={!username?.length && focusedUser === null ? true : username.length && focusedUser === null && !checkUsername ? true : false}
           />
           <FormHelperText error>
-            {!username.length && focusedUser === null ? 'Please enter username' : ''}
+            {!username.length && focusedUser === null ? 'Please enter a username' : username.length && focusedUser === null && !checkUsername ? 'Please enter a valid username, it must be with at least 4 characters' : ''}
           </FormHelperText>
         </FormControl>
 
@@ -143,7 +176,7 @@ const LoginPage = () => {
             error={!password?.length && focusedPassword === null ? true : false}
           />
           <FormHelperText error>
-            {!password.length && focusedPassword === null ? 'Please enter password' : ''}
+            {!password.length && focusedPassword === null ? 'Please enter a password' : password.length && focusedPassword === null && !checkPassword ? 'Invalid password, it must be at least 8 characters and contain both letters and numbers' : ''}
           </FormHelperText>
 
           <Box sx={{ pb: '50px' }}>
@@ -151,14 +184,13 @@ const LoginPage = () => {
           </Box>
         </FormControl>
 
-        <Box sx={{ mt: '30px' }}>
+        <Box sx={{ mt: '40px' }}>
           <Button
             variant='contained'
             sx={{ mr: '10px' }}
-            disabled={canSave ? false : true}
             onClick={handleSave}
           >Submit</Button>
-          <LinkButton name={'cancel'} />
+          <LinkButton name={'cancel'} visit='/' />
         </Box>
       </Box>
 

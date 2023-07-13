@@ -90,6 +90,7 @@ const NewUserPage = () => {
       noValidate
       autoComplete="off"
       sx={{
+        minWidth: '500px',
         width: '50%',
         p: '50px',
         pb: '100px',

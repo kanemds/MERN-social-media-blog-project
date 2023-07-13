@@ -15,15 +15,15 @@ const userInputs = {
   },
   password: {
     placeholder: 'Password',
-    text: 'Password must be at least 8 characters, and contain both letters and numbers.',
-    error: 'Invalid password, please include at least one capital character and one number',
+    text: 'Password must be at least 8 characters and contain both letters and numbers',
+    error: 'Invalid password, please try again',
     correct: '',
     type: 'password'
   },
   newPassword: {
     placeholder: 'New Password',
-    text: 'Password must be at least 8 characters, and contain both letters and numbers.',
-    error: 'Invalid password, please include at least one capital character and one number',
+    text: 'Password must be at least 8 characters and contain both letters and numbers',
+    error: 'Invalid password, please try again',
     correct: '',
     type: 'password'
   },

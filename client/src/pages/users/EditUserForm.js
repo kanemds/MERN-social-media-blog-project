@@ -111,6 +111,7 @@ const EditUserForm = ({ currentUser }) => {
         noValidate
         autoComplete="off"
         sx={{
+          minWidth: '500px',
           width: '50%',
           p: '10px',
           pb: '100px',
