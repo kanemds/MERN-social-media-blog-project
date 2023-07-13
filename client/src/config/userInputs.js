@@ -14,6 +14,13 @@ const userInputs = {
     type: 'email'
   },
   password: {
+    placeholder: 'Password',
+    text: 'Password must be at least 8 characters, and contain both letters and numbers.',
+    error: 'Invalid password, please include at least one capital character and one number',
+    correct: '',
+    type: 'password'
+  },
+  newPassword: {
     placeholder: 'New Password',
     text: 'Password must be at least 8 characters, and contain both letters and numbers.',
     error: 'Invalid password, please include at least one capital character and one number',
