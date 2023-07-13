@@ -148,7 +148,7 @@ const EditUserForm = ({ currentUser }) => {
           </Button>
           {showPassword ?
             (<>
-              <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
+              <UserInputField userInputs={userInputs.newPassword} state={password} setState={setPassword} validation={validPassword} />
               <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
             </>
             )

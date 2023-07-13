@@ -6,9 +6,9 @@ import FormHelperText from '@mui/material/FormHelperText'
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
 import { green, blue, red } from '@mui/material/colors'
+import { useLocation } from 'react-router-dom'
 
 export default function UserInputField({ userInputs, state, setState, validation }) {
-
 
 
   const { placeholder, text, error, correct, type } = userInputs
@@ -38,7 +38,7 @@ export default function UserInputField({ userInputs, state, setState, validation
 
   return (
 
-    <FormControl sx={{ width: '85%', height: `${type === 'password' ? '150px' : '110px'}` }}>
+    <FormControl sx={{ minWidth: '420px', width: '85%', height: `${type === 'password' ? '160px' : '110px'}` }}>
       <FormLabel
         error={state?.length && !validation && focusedInput === null ? true : false}
       >{placeholder}*</FormLabel>
