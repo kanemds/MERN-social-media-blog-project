@@ -9,12 +9,13 @@ const verifyJWT = (req, res, next) => {
 
   console.log(authHeader)
   const accessToken = authHeader.split(' ')[1] // 'bearer jwt...
-  console.log(token)
+  console.log(accessToken)
 
   jwt.verify(
     accessToken,
     process.env.ACCESS_TOKEN_SECRET,
     (error, decoded) => {
+      console.log(decoded)
       if (error) return res.status(403).json({ message: 'User is not authorized' })
       req.user = decoded.userInfo.username
       req.role = decoded.userInfo.role
