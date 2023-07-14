@@ -41,7 +41,7 @@ const login = asyncHandler(async (req, res) => {
     'username': loginUser.username
   },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: '15s' }
+    { expiresIn: '1d' }
   )
 
   // set cookie only contain username prevent extra info may leak
@@ -51,8 +51,8 @@ const login = asyncHandler(async (req, res) => {
     sameSite: 'None', // cross-site cookie
     maxAge: 1000 * 60 * 60 * 24 * 1
   })
-    %
-    res.status(200).json({ accessToken })
+
+  res.status(200).json({ accessToken })
 
 })
 
