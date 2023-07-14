@@ -13,15 +13,17 @@ import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
 
 export default function Navbar({ handleLogout, isSuccess }) {
 
+  // export default function Navbar() {
+
   const navigate = useNavigate()
   const { pathname } = useLocation()
+
 
   useEffect(() => {
     if (isSuccess) {
       navigate('/')
     }
   }, [isSuccess, navigate])
-
 
 
   return (
@@ -36,7 +38,7 @@ export default function Navbar({ handleLogout, isSuccess }) {
             <LinkButton visit='/dash/users' name='users' />
             <LinkButton visit='/dash/users/new' name='new user' />
             <LinkButton visit='/' name='Logout' />
-            <Button onClick={handleLogout}>out</Button>
+            <Button sx={{ color: 'white' }} onClick={handleLogout}>Logout</Button>
           </Box>
         </Toolbar>
       </AppBar>

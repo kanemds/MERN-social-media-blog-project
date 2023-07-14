@@ -59,7 +59,7 @@ const login = asyncHandler(async (req, res) => {
 // @desc Refresh
 // @route GET /auth/refresh
 // @access Public send new accessToken when it is expired
-const refresh = asyncHandler(async (req, res) => {
+const refresh = (req, res) => {
   const cookies = req.cookies
 
   if (!cookies) return res.status(401).json({ message: 'User is not authorized' })
@@ -93,19 +93,19 @@ const refresh = asyncHandler(async (req, res) => {
       res.status(200).json({ accessToken })
     })
   )
-})
+}
 
 
 // @desc Logout
 // @route POST /auth/logout
 // @access Public clear cookie if exists
-const logout = asyncHandler(async (req, res) => {
+const logout = (req, res) => {
   const cookies = req.cookies
   if (!cookies?.jwt) return res.sendStatus(204) //request has been processed successfully, but there is no content to be sent back in the response.
 
   // when clearing cookie, needs to be the same object key and value
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
-  res.status(200).json({ message: 'Cookie cleared' })
-})
+  res.json({ message: 'Cookie cleared' })
+}
 
 module.exports = { login, refresh, logout }
