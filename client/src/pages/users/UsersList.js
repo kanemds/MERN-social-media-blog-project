@@ -13,7 +13,6 @@ import SaveActionFromUsersList from './SaveActionFromUsersList'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import ViewCompactIcon from '@mui/icons-material/ViewCompact'
 import GridViewIcon from '@mui/icons-material/GridView'
-import useUserData from '../../hooks/useUserData'
 import UsersTable from './UsersTable'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -88,7 +87,7 @@ const UsersList = () => {
             </TableRow>
           </TableHead>
           <TableBody >
-            {usersList.map(user => <UsersTable user={user} />)}
+            {usersList.map(user => <UsersTable key={user._id} user={user} />)}
           </TableBody>
         </Table>
       </TableContainer>
