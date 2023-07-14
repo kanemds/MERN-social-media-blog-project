@@ -32,7 +32,7 @@ const login = asyncHandler(async (req, res) => {
   },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: '1m'
+      expiresIn: '10s'
     }
   )
 
@@ -41,7 +41,7 @@ const login = asyncHandler(async (req, res) => {
     'username': loginUser.username
   },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: '1d' }
+    { expiresIn: '15s' }
   )
 
   // set cookie only contain username prevent extra info may leak
@@ -87,7 +87,7 @@ const refresh = (req, res) => {
           }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '1m' }
+        { expiresIn: '10s' }
       )
 
       res.status(200).json({ accessToken })
