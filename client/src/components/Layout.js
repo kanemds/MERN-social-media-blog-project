@@ -1,16 +1,17 @@
 import { Outlet } from "react-router-dom"
-import React, { useEffect } from 'react'
+import React from 'react'
 import Navbar from "./Navbar"
 import Footer from "./Footer"
 import { Container } from "@mui/material"
 import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
 import LoadingSpinner from "./LoadingSpinner"
+import ErrorMessage from './ErrorMessage'
 
 
 const Layout = () => {
 
   const [
-    logOut, {
+    sendLogOut, {
       isLoading,
       isSuccess,
       isError,
@@ -19,16 +20,22 @@ const Layout = () => {
   ] = useSendLogOutMutation()
 
 
+  const handleLogout = () => sendLogOut()
 
-  const handleLogout = () => logOut()
+  let content
+
+  if (isError) return content = <ErrorMessage error={error} />
+
+  if (isLoading) return content = <LoadingSpinner />
 
 
   return (
     <>
       <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
       <Container maxWidth='true' sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', mt: '100px' }}>
-        {isLoading ?
-          <LoadingSpinner /> :
+        {isLoading || isError ?
+          { content }
+          :
           <Outlet />
         }
 
