@@ -10,6 +10,7 @@ import ErrorMessage from '../../components/ErrorMessage'
 import { FormControl, OutlinedInput, MenuItem, Paper, Box, FormControlLabel, FormHelperText, Checkbox, InputLabel, FormGroup, FormLabel, Select, Typography, Button } from '@mui/material'
 import LinkButton from '../../components/LinkButton'
 import { USER_REGEX, PASSWORD_REGEX } from '../../config/regex'
+import usePersist from '../../hooks/usePersist'
 
 const LoginPage = () => {
 
@@ -24,6 +25,9 @@ const LoginPage = () => {
   const [focusedPassword, setFocusedPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [persist, setPersist] = usePersist()
+
+  console.log('persist', persist)
 
   // testing purpose
   // const [loading, setLoading] = useState(true)
@@ -71,6 +75,10 @@ const LoginPage = () => {
 
   const handleShowPassword = (e) => {
     setShowPassword(e.target.checked)
+  }
+
+  const handlePersist = () => {
+    setPersist(prev => !prev)
   }
 
   const handleSave = async (e) => {
@@ -184,6 +192,17 @@ const LoginPage = () => {
           <Box sx={{ pb: '50px' }}>
             <FormControlLabel control={<Checkbox onChange={handleShowPassword} />} label="Show Password" />
           </Box>
+
+        </FormControl>
+
+        <FormControl sx={{ width: '100%' }}>
+          <FormControlLabel
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+            value='end'
+            control={<Checkbox onChange={handlePersist} checked={persist} />}
+            label='Keep me logged in'
+            labelPlacement="end"
+          />
         </FormControl>
 
         <Box sx={{ mt: '40px' }}>
