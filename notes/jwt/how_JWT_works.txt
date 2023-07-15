@@ -1,0 +1,65 @@
+
+
+1. backend: set login controller generate access and refresh tokens when login success
+
+   const accessToken = jwt.sign({
+    'userInfo': {
+      'username': loginUser.username,
+      'role': loginUser.role
+    }
+  },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: '10s'
+    }
+  )
+
+    const refreshToken = jwt.sign({
+    'username': loginUser.username
+  },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: '1d' }
+  )
+
+  main idea: 
+
+    accessToken:
+      The access token holds confidential information, which helps the frontend identify the user and grant permissions based on their role.  
+      like: role === user || employee || admin   
+
+    refreshToken:
+      when accessToken is expired, refreshToken will generate a new accessToken  
+
+
+
+2. frontend: after login successfully, immediately store accessToken to auth.token 
+
+   const { accessToken } = await login({ username, password }).unwrap()
+   dispatch(setCredentials({ accessToken }))
+
+3. set accessToken to headers for every request
+
+    const baseQuery = fetchBaseQuery({
+      baseUrl: 'http://localhost:4567',
+      credentials: 'include',
+      prepareHeaders: (headers, { getState }) => {
+        const token = getState().auth.token
+
+        if (token) {
+          headers.set("authorization", `Bearer ${token}`)
+        }
+        return headers
+      }
+    })
+
+4. verifyJTW middleware: a middleware which to check or to require the accessToken
+
+        router.use(verifyJWT)
+
+        router.route('/')
+          .get(getAllUsers)
+          .post(createNewUser)
+          .patch(updateUser)
+          .delete(deleteUser)
+
+          

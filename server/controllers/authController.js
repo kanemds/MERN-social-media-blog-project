@@ -24,6 +24,8 @@ const login = asyncHandler(async (req, res) => {
 
   if (!isPasswordMatch) return res.status(401).json({ message: 'User is not authorized' })
 
+  // ===============================create access and refresh token========================================================
+
   const accessToken = jwt.sign({
     'userInfo': {
       'username': loginUser.username,
@@ -37,12 +39,17 @@ const login = asyncHandler(async (req, res) => {
   )
 
   // user is not required to login if the while the refresh token is validate
+  // refreshToken only provide username prevent data leak
+  //    
   const refreshToken = jwt.sign({
     'username': loginUser.username
   },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: '1d' }
   )
+
+  // ====================================================================================================================
+
 
   // set cookie only contain username prevent extra info may leak
   res.cookie('jwt', refreshToken, {

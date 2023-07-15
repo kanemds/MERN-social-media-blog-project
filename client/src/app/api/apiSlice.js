@@ -12,48 +12,70 @@ const baseQuery = fetchBaseQuery({
     if (token) {
       headers.set("authorization", `Bearer ${token}`)
     }
+
     return headers
   }
 })
 
-// const baseQueryWithTokenGeneration = async (args, api, extraOptions) => {
 
-//   console.log(args) // request url, method, body
-//   // console.log(api) // signal, dispatch, getState()
-//   // console.log(extraOptions) //custom like {shout: true}
+// first to check if accessToken exist, if not send request to /auth/refresh to get one or fail to nothing
+const baseQueryWithTokenGeneration = async (args, api, extraOptions) => {
 
-//   let result = await baseQuery(args, api, extraOptions)
-//   console.log(result)
+  // console.log(args) // print current request url, method, body  
+  // console.log(api) // signal, dispatch, getState()
+  // console.log(extraOptions) //custom like {shout: true}
 
-//   if (result?.error?.status === 403) {
-//     console.log('New token is generating')
+  let result = await baseQuery(args, api, extraOptions) // baseQuery is the the function above
+  // console.log(result) // result will depends on the endpoint query CRUD
 
-//     const refreshToken = await baseQuery('/auth/refresh', api, extraOptions)
+  if (result?.error?.status === 403) {
+    console.log('New token is generating')
 
-//     if (refreshToken?.data) {
+    const newGenerateToken = await baseQuery('/auth/refresh', api, extraOptions)
 
-//       console.log(refreshToken)
-//       console.log(refreshToken?.data)
+    // if fulfilled 
+    // {
+    //   data: {… },
+    //   meta: {… }
+    // }
 
-//       api.dispatch(setCredentials({ ...refreshToken.data }))
+    // if rejected 
+    // {
+    //   error: { status: 401, data: { message: '' } },
+    //   meta: { request: Request, response: Response }
+    // }
 
-//       result = await baseQuery(args, api, extraOptions)
-//     } else {
-//       if (refreshToken?.error?.status === 403) {
-//         refreshToken.error.data.message = 'Login has expired'
-//       }
-//       return refreshToken
-//     }
-//   }
-//   return result
-// }
+
+    if (newGenerateToken?.data) {
+
+      api.dispatch(setCredentials({ ...newGenerateToken.data }))
+
+      result = await baseQuery(args, api, extraOptions)
+    } else {
+      if (newGenerateToken?.error?.status === 403) {
+        newGenerateToken.error.data.message = 'Login has expired'
+      }
+      return newGenerateToken
+    }
+  }
+  return result
+}
+
 
 
 export const apiSlice = createApi({
   // reducerPath: 'api', default
-  // baseQuery: baseQueryWithTokenGeneration,
-  baseQuery,
+  // baseQuery:fetchBaseQuery({baseUrl: 'http://localhost:4567'}) origin 
+  // baseQuery, // set accessToken to headers for every request
+  baseQuery: baseQueryWithTokenGeneration, // add additional handling for every request   
   tagTypes: ['Blog', 'User'],
   endpoints: builder => ({})
 })
+
+
+// baseQuery:
+// Consistent API Requests: Establishes a uniform approach for making API requests throughout the application.
+// Customizable Behavior: Allows customization of default request behavior, such as modifying headers, handling authentication tokens, or adding common request modifications.
+// Reusability: Enables reuse of the same configuration across multiple API endpoints, reducing redundancy and promoting code efficiency.
+// Centralized Maintenance: Updates or modifications to the baseQuery configuration are reflected across all endpoints that utilize it, simplifying maintenance and promoting code consistency.
 
