@@ -1,0 +1,20 @@
+401 (Unauthorized):
+
+Indicates that the requested resource requires authentication.
+Typically occurs when the client (frontend) fails to provide valid credentials or authentication.
+The client may need to redirect the user to a login page or prompt them to provide valid authentication credentials.
+
+
+
+403 (Forbidden):
+
+Indicates that the client is authenticated but lacks sufficient permissions to access the requested resource.
+Occurs when the server understands the client's identity but denies access to the requested operation.
+The client may need to display an error message indicating the lack of necessary permissions.
+Handling:
+
+In the provided code, there is logic to handle token expiration and refresh when receiving a 403 status code.
+To handle a 401 status code, you may need to extend the logic to check for it and implement appropriate actions, such as redirecting the user to the login page or displaying an error message for authentication.
+Handling these status codes should align with your application's authentication and authorization requirements.
+Remember that the specific implementation of error handling for these status codes depends on your application's design and security needs.
+

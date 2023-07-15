@@ -85,6 +85,8 @@ const LoginPage = () => {
     if (canSave) {
       try {
         const { accessToken } = await login({ username, password }).unwrap()
+        // after login success, will get accessToken generate by backend login controller and the refresh token will store in the cookie  
+        // set auth.token = accessToken
         dispatch(setCredentials({ accessToken }))
         setUsername('')
         setPassword('')

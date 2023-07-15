@@ -19,6 +19,9 @@ function App() {
         <Route path='login' element={<LoginPage />} />
         <Route path='register' element={<RegisterPage />} />
 
+
+        {/* prefetch will only execute when user is browsing routes below */}
+
         <Route element={<Prefetch />}>
           <Route path='dash' element={<Dashboard />}>
             <Route path='blogs'>
