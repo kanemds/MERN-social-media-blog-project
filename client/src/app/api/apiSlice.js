@@ -53,7 +53,7 @@ const baseQueryWithTokenGeneration = async (args, api, extraOptions) => {
       result = await baseQuery(args, api, extraOptions)
     } else {
       if (newGenerateToken?.error?.status === 403) {
-        newGenerateToken.error.data.message = 'Login has expired'
+        newGenerateToken.error.data.message = 'Login has expired '
       }
       return newGenerateToken
     }
