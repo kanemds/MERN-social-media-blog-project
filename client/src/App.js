@@ -9,6 +9,8 @@ import EditUserPage from './pages/users/EditUserPage'
 import NewUserPage from './pages/users/NewUserPage'
 import RegisterPage from './pages/users/RegisterPage'
 import Prefetch from './pages/auth/Prefetch'
+import PersistLogina from './pages/auth/PersistLogin'
+import PersistLogin from './pages/auth/PersistLogin'
 
 
 function App() {
@@ -21,17 +23,18 @@ function App() {
 
 
         {/* prefetch will only execute when user is browsing routes below */}
+        <Route element={<PersistLogin />}>
+          <Route element={<Prefetch />}>
+            <Route path='dash' element={<Dashboard />}>
+              <Route path='blogs'>
+                <Route index element={<BlogsList />} />
+              </Route>
 
-        <Route element={<Prefetch />}>
-          <Route path='dash' element={<Dashboard />}>
-            <Route path='blogs'>
-              <Route index element={<BlogsList />} />
-            </Route>
-
-            <Route path='users'>
-              <Route index element={<UsersList />} />
-              <Route path='edit/:id' element={<EditUserPage />} />
-              <Route path='new' element={<NewUserPage />} />
+              <Route path='users'>
+                <Route index element={<UsersList />} />
+                <Route path='edit/:id' element={<EditUserPage />} />
+                <Route path='new' element={<NewUserPage />} />
+              </Route>
             </Route>
           </Route>
         </Route>

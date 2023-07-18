@@ -214,7 +214,6 @@ const LoginPage = () => {
           <LinkButton name={'cancel'} visit='/' />
         </Box>
       </Box>
-
     </Paper >
   )
 
