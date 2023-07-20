@@ -9,6 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import LinkButton from './LinkButton'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
+import useAuth from '../hooks/useAuth'
 
 
 export default function Navbar({ handleLogout, isSuccess }) {
@@ -18,6 +19,7 @@ export default function Navbar({ handleLogout, isSuccess }) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
+  const { username } = useAuth()
 
   useEffect(() => {
     if (isSuccess) {
@@ -33,12 +35,24 @@ export default function Navbar({ handleLogout, isSuccess }) {
           <LinkButton visit='/' name='K-Blog' style='outlined' fontSize='2rem' />
 
           <Box>
-            <LinkButton visit='/login' name='Login' />
-            <LinkButton visit='/register' name='Signup' />
             <LinkButton visit='/dash/users' name='users' />
             <LinkButton visit='/dash/users/new' name='new user' />
-            <LinkButton visit='/' name='Logout' />
-            <Button sx={{ color: 'white' }} onClick={handleLogout}>Logout</Button>
+
+            {username ?
+              (<>
+                <Button sx={{ color: 'white' }}>{username}</Button>
+                <Button sx={{ color: 'white' }} onClick={handleLogout}>Logout</Button>
+              </>)
+              :
+              <>
+                <LinkButton visit='/login' name='Login' />
+                <LinkButton visit='/register' name='Signup' />
+              </>
+            }
+
+
+
+
           </Box>
         </Toolbar>
       </AppBar>
