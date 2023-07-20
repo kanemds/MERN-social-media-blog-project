@@ -1,0 +1,33 @@
+In RESTful APIs, "statelessness" means the server doesn't retain any information about the client's state between requests.
+
+Each client request is treated as an independent and complete transaction.
+The server doesn't remember the client's past interactions, preferences, or session history.
+There is no server-side session storage; relevant information is passed in request headers or parameters.
+Statelessness simplifies the server's architecture, making it easier to scale.
+Each client request is standalone and self-contained; the server doesn't rely on previous requests to handle subsequent ones.
+Clients must include all necessary data and authentication details in each request.
+Security measures like authentication tokens or API keys are used to ensure authorized access to resources.
+
+Tokens in stateless RESTful APIs play a crucial role in security, authentication, and authorization.
+Two common types of tokens used are Authentication Tokens and Access Tokens.
+
+Authentication Tokens: user login, identify current login user and send back user's data from database
+
+  Used to authenticate the client's identity when accessing protected resources.
+  Clients include the authentication token in request headers for verification by the server.
+  Common authentication tokens include JSON Web Tokens (JWT) and OAuth tokens.
+  JWT is a compact, self-contained token format with user-related information and a digital signature for authenticity.
+
+
+
+
+Access Tokens: provide the limit access base on the current login user's role such as: admin, employee, user.
+
+  Specific to OAuth, they authorize client access to protected resources after user authorization.
+  Clients request tokens during authentication and use them in subsequent requests until they expire or get revoked.
+  Tokens eliminate the need to send sensitive credentials like usernames and passwords with each request, enhancing security.
+  Token-based authentication allows clients to work with multiple servers in a distributed system without sharing sessions or user-specific data, promoting scalability and security.
+  Proper implementation and security measures are essential to prevent unauthorized access and vulnerabilities.
+
+
+Developers must handle token expiration and refreshing appropriately for a smooth and secure user experience.

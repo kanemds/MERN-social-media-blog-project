@@ -1,0 +1,18 @@
+Let's say you visit an online shopping website. When you first land on the website, it assigns you a unique session ID and stores it in a cookie.
+ This session ID is used to maintain your shopping session while you browse and interact with the website.
+
+Here's how it works:
+
+You open your browser and navigate to the online shopping website.
+The website's server generates a session ID for you and sends a "Set-Cookie" header to your browser, instructing it to store the session ID in a cookie.
+
+Your browser stores the cookie in memory or temporary storage, specifically tied to the current browser session.
+
+As you browse the website, any subsequent requests to the server include the session cookie in the "Cookie" header, allowing the server to recognize your session and provide personalized information.
+
+If you close the browser window or end your browsing session, the session cookie is deleted automatically. The next time you visit the website, 
+a new session ID will be generated, and a new session cookie will be created.
+
+The purpose of a session cookie is to maintain session-specific information temporarily. 
+It allows the website to remember your preferences and keep track of your activities during a single browsing session. Once you close the browser window, 
+the session cookie is discarded, and the website will not be able to recognize your previous session when you return.

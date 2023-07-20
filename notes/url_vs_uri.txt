@@ -1,0 +1,23 @@
+URL (Uniform Resource Locator) and URI (Uniform Resource Identifier) 
+
+
+URL:
+  https://www.example.com/index.html
+
+  Explanation: This is a URL that provides the complete address to access a web page. 
+  It includes the scheme "https" for secure communication, 
+  the hostname "www.example.com," 
+  and the path "/index.html" to the specific web page.
+
+
+URI:
+  URN (Uniform Resource Name) URI: urn:isbn:0451450523
+  Represents a unique identifier for a book based on its ISBN.
+  Data URI: data:text/plain;charset=utf-8;base64,SGVsbG8gV29ybGQh
+  Allows embedding data directly in a URL, in this case, the text "Hello World!" encoded in Base64.
+  FTP URI: ftp://ftp.example.com/files/document.pdf
+  Specifies a resource located on an FTP server, like a PDF document.
+  LDAP URI: ldap://ldap.example.com/dc=example,dc=com
+  Points to an entry in a directory server using the LDAP protocol.
+  Magnet URI: magnet:?xt=urn:btih:ab12cd34ef56gh78ij90kl12mn34op56
+  Commonly used in peer-to-peer file sharing to identify specific files in the BitTorrent network.

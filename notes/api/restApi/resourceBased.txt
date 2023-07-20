@@ -1,0 +1,10 @@
+Resource-Based is a fundamental principle of the REST architectural style.
+Everything in a RESTful API is treated as a resource.
+Each resource is uniquely identified by a URL (Uniform Resource Locator).
+Resources can be data objects, images, videos, user profiles, services, etc.
+CRUD operations (Create, Read, Update, Delete) are performed on resources using standard HTTP methods (POST, GET, PUT, DELETE).
+Clients interact with the API by sending requests to specific URLs representing resources.
+The URL itself carries all the information needed to identify the resource and the action to be performed.
+RESTful APIs are resource-oriented, centered around exposing resources and their URLs.
+Resource hierarchy can be established by organizing resources in parent-child relationships using URLs.
+The Resource-Based principle promotes a clear separation of concerns and scalability in API design and implementation.
