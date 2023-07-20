@@ -30,7 +30,6 @@ const PersistLogin = () => {
   ] = useRefreshMutation()
 
   useEffect(() => {
-
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
 
       const verifyRefreshToken = async () => {
@@ -48,6 +47,11 @@ const PersistLogin = () => {
 
       if (!token && persist) verifyRefreshToken()
     }
+
+    // react strict mode runs twice 
+    // set effectRan to true after first render,
+    // the code the second time will execute the code above during development
+
     return () => effectRan.current = true
 
     // disable some eslint warring
@@ -78,9 +82,6 @@ const PersistLogin = () => {
     console.log(isUninitialized)
     content = <Outlet />
   }
-
-
-
 
   return content
 }
