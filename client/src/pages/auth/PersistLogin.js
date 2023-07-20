@@ -6,7 +6,8 @@ import { useRefreshMutation } from './authApiSlice'
 import { Link, Outlet } from 'react-router-dom'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ErrorMessage from '../../components/ErrorMessage'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
+import LinkButton from '../../components/LinkButton'
 
 
 const PersistLogin = () => {
@@ -70,9 +71,11 @@ const PersistLogin = () => {
   } else if (isError) {
     console.log('error')
     content = (
-      <Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ErrorMessage error={error.data} />
-        <Link to='/login'>Please login again</Link>
+        <Box sx={{ mt: 3 }}>
+          <LinkButton visit='/login' name='Login' />
+        </Box>
       </Box>
     )
   } else if (isSuccess && success) {
