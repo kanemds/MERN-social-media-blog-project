@@ -1,54 +1,56 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
-
-const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 
 // @desc Get all users
 // route Get /users
 // @access Private
-const getAllUsers = asyncHandler(async (req, res) => {
+const getAllUsers = async (req, res) => {
   const users = await User.find().select('-password').lean()
 
   if (!users?.length) {
     return res.status(400).json({ message: 'No users found' })
   }
   res.status(200).json(users)
-})
+}
 
 // @desc Create new user
 // route Post /users
 // @access Private
-const createNewUser = asyncHandler(async (req, res) => {
+const createNewUser = async (req, res) => {
   const { username, email, password, role } = req.body
 
-  if (!username || !email || !password || !role) {
+  if (!username || !email || !password) {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
-  const lowerCase = email.toLowerCase()
-
   // check exist username and email
-  const userExist = await User.findOne({ username }).lean().exec()
-  const emailExist = await User.findOne({ email: lowerCase }).lean().exec()
+  const userExist = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+  const emailExist = await User.findOne({ email }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
   if (userExist) {
-    return res.status(409).json({ message: 'Username is taken' })
+    return res.status(409).json({ message: 'The username is already in used. Please choose another one' })
   }
 
   if (emailExist) {
-    return res.status(409).json({ message: 'Email is taken' })
+    return res.status(409).json({ message: 'The email has already been registered. Please choose another one' })
   }
 
   // bcrypt
   const hashedPassword = await bcrypt.hash(password, 10)
 
-  const userInfo = {
+  const userInfo = !role.length ? {
     username,
-    email: lowerCase,
+    email,
     'password': hashedPassword,
-    role
   }
+    :
+    {
+      username,
+      email,
+      'password': hashedPassword,
+      role
+    }
 
   const newUser = await User.create(userInfo)
 
@@ -60,19 +62,18 @@ const createNewUser = asyncHandler(async (req, res) => {
 
 
 
-})
+}
 
 // @desc Update a user
 // route Patch /users
 // @access Private
-const updateUser = asyncHandler(async (req, res) => {
+const updateUser = async (req, res) => {
   const { id, username, email, role, active, password } = req.body
 
   if (!id || !username || !email || !role.length || typeof active !== 'boolean') {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
-  const lowerCase = email.toLowerCase()
 
   const user = await User.findById(id).exec()
 
@@ -82,7 +83,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
   // check if username or email exist in mongoDB
   const userExist = await User.findOne({ username }).lean().exec()
-  const emailExist = await User.findOne({ email: lowerCase }).lean().exec()
+  const emailExist = await User.findOne({ email }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
   if (userExist && userExist?._id.toString() !== id) {
     return res.status(409).json({ message: 'Username is taken' })
@@ -93,7 +94,7 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 
   user.username = username
-  user.email = lowerCase
+  user.email = email
   user.role = role
   user.active = active
 
@@ -104,12 +105,12 @@ const updateUser = asyncHandler(async (req, res) => {
   const updatedUser = await user.save()
 
   res.json({ message: `${updatedUser.username} updated` })
-})
+}
 
 // @desc Delete a user
 // route Delete /users
 // @access Private
-const deleteUser = asyncHandler(async (req, res) => {
+const deleteUser = async (req, res) => {
   const { id } = req.body
   if (!id) {
     return res.status(400).json({ message: 'User ID Required' })
@@ -132,6 +133,6 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   res.json(reply)
 
-})
+}
 
 module.exports = { getAllUsers, updateUser, createNewUser, deleteUser }

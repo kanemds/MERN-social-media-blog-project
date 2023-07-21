@@ -1,12 +1,12 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const asyncHandler = require('express-async-handler')
+
 
 // @desc Login
 // @route POST /auth
 // @access Public
-const login = asyncHandler(async (req, res) => {
+const login = async (req, res) => {
   const { username, password } = req.body
 
 
@@ -61,7 +61,7 @@ const login = asyncHandler(async (req, res) => {
 
   res.status(200).json({ accessToken })
 
-})
+}
 
 // @desc Refresh
 // @route GET /auth/refresh
@@ -78,7 +78,7 @@ const refresh = (req, res) => {
   jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
-    asyncHandler(async (error, decoded) => {
+    async (error, decoded) => {
       console.log(decoded)
       if (error) return res.status(403).json({ message: 'User is not authorized' })
 
@@ -99,7 +99,6 @@ const refresh = (req, res) => {
 
       res.status(200).json({ accessToken })
     })
-  )
 }
 
 
