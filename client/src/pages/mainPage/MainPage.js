@@ -5,6 +5,7 @@ import { Box, Paper } from '@mui/material'
 import ViewYourOwn from './ViewYourOwn'
 import { ViewOthers } from './ViewOthers'
 import Grid from '@mui/material/Unstable_Grid2'
+import BodyElements from './BodyElements'
 
 const MainPage = () => {
 
@@ -16,22 +17,21 @@ const MainPage = () => {
   // const currentDay = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
   return (
-    <Grid
-      container spacing={2}
-      sx={{ width: '100%' }
-      }>
-      <Grid xs={7}>
-        <ViewYourOwn />
-        <ViewOthers />
-      </Grid>
-      <Grid xs={5}>
-        <Paper>
-          {/* <ActiveCalender /> */}
-          <BasicCalendar />
-        </Paper>
-      </Grid>
-    </Grid >
-
+    <Box sx={{ width: '100%' }}>
+      <Grid container spacing={2}>
+        <Grid xs={7}>
+          <ViewYourOwn />
+          <ViewOthers />
+        </Grid>
+        <Grid xs={5}>
+          <Paper>
+            {/* <ActiveCalender /> */}
+            <BasicCalendar />
+          </Paper>
+        </Grid>
+      </Grid >
+      <BodyElements />
+    </Box>
   )
 }
 
