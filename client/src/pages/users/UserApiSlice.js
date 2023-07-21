@@ -52,12 +52,11 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           // const example = result.ids.map(id => ({ type: 'User', id:id }))
           // console.log(...example)
           // {type: 'User', id: '6491ff902633c1ed798e648e'}
-
           return [
             { type: 'User', id: 'LIST' },
             // spread each tag, id = {id:id}
 
-            ...result.ids.map(({ id }) => ({ type: 'User', id }))
+            ...result.ids.map((id) => ({ type: 'User', id }))
           ]
         } else return [{ type: 'User', id: 'LIST' }]
       }
