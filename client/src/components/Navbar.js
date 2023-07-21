@@ -29,33 +29,29 @@ export default function Navbar({ handleLogout, isSuccess }) {
 
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <LinkButton visit='/' name='K-Blog' style='outlined' fontSize='2rem' />
 
-          <Box>
-            <LinkButton visit='/dash/users' name='users' />
-            <LinkButton visit='/dash/users/new' name='new user' />
+    <AppBar position="static" sx={{ flexGrow: 1, height: '70px' }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <LinkButton visit='/' name='K-Blog' style='outlined' fontSize='2rem' />
 
-            {username ?
-              (<>
-                <Button sx={{ color: 'white' }}>{username}</Button>
-                <Button sx={{ color: 'white' }} onClick={handleLogout}>Logout</Button>
-              </>)
-              :
-              <>
-                <LinkButton visit='/login' name='Login' />
-                <LinkButton visit='/register' name='Signup' />
-              </>
-            }
+        <Box>
+          <LinkButton visit='/dash/users' name='users' />
+          <LinkButton visit='/dash/users/new' name='new user' />
 
+          {username ?
+            (<>
+              <Button sx={{ color: 'white' }}>{username}</Button>
+              <Button sx={{ color: 'white' }} onClick={handleLogout}>Logout</Button>
+            </>)
+            :
+            <>
+              <LinkButton visit='/login' name='Login' />
+              <LinkButton visit='/register' name='Signup' />
+            </>
+          }
+        </Box>
+      </Toolbar>
+    </AppBar>
 
-
-
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
   )
 }
