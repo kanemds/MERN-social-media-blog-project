@@ -16,13 +16,17 @@ const PersistLogin = () => {
 
   const token = useSelector(selectCurrentToken)
 
+  console.log('selectCurrentToken', token)
+
   const effectRan = useRef(false) // due to strict mode runs twice
+
+
 
   const [success, setSuccess] = useState(false)
 
   const [
     refresh, {
-      isUninitialized,
+      isUninitialized, // When true, indicates that the query has not started yet
       isSuccess,
       isLoading,
       isError,
@@ -42,7 +46,6 @@ const PersistLogin = () => {
           setSuccess(true)
         }
         catch (error) {
-          console.log(error)
         }
       }
 
@@ -53,7 +56,10 @@ const PersistLogin = () => {
     // set effectRan to true after first render,
     // the code the second time will execute the code above during development
 
-    return () => effectRan.current = true
+    return () => {
+      console.log('clean up')
+      effectRan.current = true
+    }// clean up which the second time will run clean up first before execute the code
 
     // disable some eslint warring
     // eslint-disable-next-line

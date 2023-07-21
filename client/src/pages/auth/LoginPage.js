@@ -27,7 +27,6 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [persist, setPersist] = usePersist()
 
-  console.log('persist', persist)
 
   // testing purpose
   // const [loading, setLoading] = useState(true)
