@@ -20,11 +20,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     //  The build.query() method is used to define a query endpoint, which typically retrieves data from the server.
     getUsers: builder.query({
-      query: () => '/users',
-      validateStatus: (response, result) => {
-        // prevent fetch error with stateCode === 200
-        return response.status === 200 && !result.isError
-      },
+      query: () => ({
+        url: '/users',
+        validateStatus: (response, result) => {
+          // prevent fetch error with stateCode === 200
+          return response.status === 200 && !result.isError // set isError:true in the middleware errorMessage for unexpected error
+        }
+      }),
       // specifies that unused data will be retained for 5 seconds.
       // default as 60s if it has not been set
       // data will be gone after when using  useSelector(state => selectUserById(state, id))

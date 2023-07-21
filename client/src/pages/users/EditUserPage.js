@@ -4,16 +4,25 @@ import { useParams } from 'react-router-dom'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import EditUserForm from './EditUserForm'
 import { useSelector } from 'react-redux'
+import { memo } from 'react'
 
 const EditUserPage = () => {
 
   const { id } = useParams()
 
-  const user = useSelector(state => selectUserById(state, id))
-  // keepUnusedDataFor: 5,
-  // data will be gone after 5 sec
-  // const isExist = user ? 'do something' : 'loading'
-  console.log(user)
+
+  // ================================================================================
+
+  // const user = useSelector(state => selectUserById(state, id))
+  // // keepUnusedDataFor: 5,
+  // // data will be gone after 5 sec
+  // // const isExist = user ? 'do something' : 'loading'
+  // console.log(user)
+
+
+  // ================================================================================
+
+  // selected data from result(prefetch), no need extra query
 
   const { currentUser } = useGetUsersQuery('usersList', {
     selectFromResult: ({ data }) => ({
@@ -21,6 +30,7 @@ const EditUserPage = () => {
     })
   })
 
+  // ================================================================================
   let content
 
   if (!currentUser) return <LoadingSpinner />
@@ -31,4 +41,6 @@ const EditUserPage = () => {
 
 }
 
-export default EditUserPage
+const memoizedEditUser = memo(EditUserPage)
+
+export default memoizedEditUser
