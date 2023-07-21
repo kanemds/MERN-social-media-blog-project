@@ -10,7 +10,7 @@ const demo = () => {
     setCount(count + 1)
     // countRef.current++
 
-    console.log("State:", count)
+    console.log("State:", count) // this count is the previous count due to 
     // console.log("Ref:", countRef.current)
   }
 
@@ -37,7 +37,10 @@ const demo2 = () => {
 
   return (
     <div className="tutorial">
-      Count: {countRef.current} // due to the useRef() will not cause any re-render, it won't display the actual value
+      {/* due to the useRef() will not cause any re-render, it won't display the actual value */}
+      {/* while if refresh the page it will back to initial state */}
+
+      Count: {countRef.current}
       <button onClick={handleIncrement}>Increment</button>
     </div>
   )

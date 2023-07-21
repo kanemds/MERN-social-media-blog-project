@@ -4,15 +4,29 @@ import { usersApiSlice } from '../users/UserApiSlice'
 import { Outlet } from 'react-router-dom'
 
 const Prefetch = () => {
+
+  // ========================================================================================================================
+
+  // redux prefetch
+
+  // useEffect(() => {
+  //   console.log('subscribing')
+  //   const users = store.dispatch(usersApiSlice.endpoints.getUsers.initiate())
+  //   console.log(users)
+  //   return () => {
+  //     console.log('unsubscribing')
+  //     users.unsubscribe()
+  //   }
+  // }, []) 
+
+
+  // ========================================================================================================================
+
+  // rtk query prefetch
+
   useEffect(() => {
-    console.log('subscribing')
-    const users = store.dispatch(usersApiSlice.endpoints.getUsers.initiate())
-    console.log(users)
-    return () => {
-      console.log('unsubscribing')
-      users.unsubscribe()
-    }
-  }, [])
+    store.dispatch(usersApiSlice.util.prefetch('getUsers', 'usersList', { force: true }))
+  })
 
   return <Outlet />
 

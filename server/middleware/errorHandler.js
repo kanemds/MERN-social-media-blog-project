@@ -8,7 +8,7 @@ const errorHandler = (error, req, res, next) => {
 
   res.status(status)
 
-  res.json({ message: error.message })
+  res.json({ message: error.message, isError: true }) // rtk query handle unexpected error set isError to true
 }
 
 module.exports = errorHandler

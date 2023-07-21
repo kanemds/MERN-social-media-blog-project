@@ -13,9 +13,13 @@ import PersistLogina from './pages/auth/PersistLogin'
 import PersistLogin from './pages/auth/PersistLogin'
 import RequireAuth from './pages/auth/RequireAuth'
 import { ROLES } from './config/roles'
+import useTitle from './hooks/useTitle'
 
 
 function App() {
+
+  useTitle('K-Blog')
+
   return (
     <Routes>
 
