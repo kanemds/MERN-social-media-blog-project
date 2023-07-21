@@ -1,4 +1,10 @@
 import React from 'react'
+import ActiveCalender from './ActiveCalender'
+import BasicCalendar from './BasicCalender'
+import { Box, Paper } from '@mui/material'
+import ViewYourOwn from './ViewYourOwn'
+import { ViewOthers } from './ViewOthers'
+import Grid from '@mui/material/Unstable_Grid2'
 
 const MainPage = () => {
 
@@ -10,10 +16,21 @@ const MainPage = () => {
   // const currentDay = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
   return (
-    <>
-      <div>K-Blog</div>
-      {currentDay}
-    </>
+    <Grid
+      container spacing={2}
+      sx={{ width: '100%' }
+      }>
+      <Grid xs={7}>
+        <ViewYourOwn />
+        <ViewOthers />
+      </Grid>
+      <Grid xs={5}>
+        <Paper>
+          {/* <ActiveCalender /> */}
+          <BasicCalendar />
+        </Paper>
+      </Grid>
+    </Grid >
 
   )
 }
