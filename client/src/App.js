@@ -18,6 +18,7 @@ import { ROLES } from './config/roles'
 function App() {
   return (
     <Routes>
+
       <Route path='/' element={<Layout />}>
         <Route index element={<MainPage />} />
         <Route path='login' element={<LoginPage />} />

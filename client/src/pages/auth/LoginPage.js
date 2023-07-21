@@ -97,7 +97,7 @@ const LoginPage = () => {
         dispatch(setCredentials({ accessToken }))
         setUsername('')
         setPassword('')
-        navigate('/dash')
+        navigate('/')
       } catch (error) {
         if (!error.status) {
           setErrorMessage('No server response at the moment, please try again later')

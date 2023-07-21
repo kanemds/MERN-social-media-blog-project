@@ -1,11 +1,11 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
-const asyncHandler = require('express-async-handler')
+
 
 // @desc Get all blogs
 // route Get /blogs
 // @access Private
-const getAllBlogs = asyncHandler(async (req, res) => {
+const getAllBlogs = async (req, res) => {
   const blogs = await Blog.find().lean()
 
   if (!blogs?.length) {
@@ -19,19 +19,19 @@ const getAllBlogs = asyncHandler(async (req, res) => {
   }))
 
   res.status(200).json(blogsWithUsers)
-})
+}
 
 // @desc Create a blog
 // route Post /blogs
 // @access Private
-const createBlog = asyncHandler(async (req, res) => {
+const createBlog = async (req, res) => {
   const { user, title, text } = req.body
 
   if (!user || !title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
-  const titleExist = await Blog.findOne({ title }).lean().exec()
+  const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
   if (titleExist) {
     return res.status(400).json({ message: 'Title has been used' })
@@ -45,12 +45,12 @@ const createBlog = asyncHandler(async (req, res) => {
   } else {
     return res.status(400).json({ message: 'Invalid blog data received' })
   }
-})
+}
 
 // @desc Update a blog
 // route Patch /blogs
 // @access Private
-const updateBlog = asyncHandler(async (req, res) => {
+const updateBlog = async (req, res) => {
 
   const { id, user, title, text, completed } = req.body
 
@@ -65,7 +65,7 @@ const updateBlog = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: 'Blog not found' })
   }
 
-  const titleExist = await Blog.findOne({ title }).lean().exec()
+  const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
   if (titleExist && titleExist._id.toString() !== id) {
     return res.status(409).json({ message: 'Title has been used' })
@@ -78,12 +78,12 @@ const updateBlog = asyncHandler(async (req, res) => {
   const updatedBlog = await blog.save()
 
   res.json(`${updatedBlog.title} updated`)
-})
+}
 
 // @desc Delete a blog
 // route Delete /blogs
 // @access Private
-const deleteBlog = asyncHandler(async (req, res) => {
+const deleteBlog = async (req, res) => {
   const { id } = req.body
 
   // Confirm data
@@ -105,6 +105,6 @@ const deleteBlog = asyncHandler(async (req, res) => {
   res.json(reply)
 
 
-})
+}
 
 module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog }
