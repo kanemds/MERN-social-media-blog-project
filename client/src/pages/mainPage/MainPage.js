@@ -1,7 +1,7 @@
 import React from 'react'
 import ActiveCalender from './ActiveCalender'
 import BasicCalendar from './BasicCalender'
-import { Box, Paper } from '@mui/material'
+import { Box, Button, Paper } from '@mui/material'
 import ViewYourOwn from './ViewYourOwn'
 import { ViewOthers } from './ViewOthers'
 import Grid from '@mui/material/Unstable_Grid2'
@@ -17,19 +17,36 @@ const MainPage = () => {
   // const currentDay = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
   return (
+    // <Box sx={{ width: '100%' }}>
+    //   <Grid container spacing={2}>
+    //     <Grid xs={7}>
+    //       <ViewYourOwn />
+    //       <ViewOthers />
+    //     </Grid>
+    //     <Grid xs={5}>
+    //       <Paper>
+    //         {/* <ActiveCalender /> */}
+    //         <BasicCalendar />
+    //       </Paper>
+    //     </Grid>
+    //   </Grid >
+    //   <BodyElements />
+    // </Box>
+
     <Box sx={{ width: '100%' }}>
-      <Grid container spacing={2}>
-        <Grid xs={7}>
+      <div className='container'>
+        <section className='one'>
           <ViewYourOwn />
+        </section>
+        <section className='two'>
           <ViewOthers />
-        </Grid>
-        <Grid xs={5}>
-          <Paper>
-            {/* <ActiveCalender /> */}
-            <BasicCalendar />
-          </Paper>
-        </Grid>
-      </Grid >
+        </section>
+        <section className='three'>
+          <ViewYourOwn />
+        </section>
+      </div>
+
+
       <BodyElements />
     </Box>
   )
