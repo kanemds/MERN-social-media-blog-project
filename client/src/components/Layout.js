@@ -1,8 +1,8 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 import React from 'react'
 import Navbar from "./Navbar"
 import Footer from "./Footer"
-import { Container } from "@mui/material"
+import { Box, Container } from "@mui/material"
 import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
 import LoadingSpinner from "./LoadingSpinner"
 import ErrorMessage from './ErrorMessage'
@@ -19,6 +19,7 @@ const Layout = () => {
     }
   ] = useSendLogOutMutation()
 
+  const { pathname } = useLocation()
 
   const handleLogout = () => sendLogOut()
 
@@ -28,21 +29,46 @@ const Layout = () => {
 
   if (isLoading) return content = <LoadingSpinner />
 
+  let main
 
-  return (
-    <>
-      <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-      <Container maxWidth='true' sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'center', mt: '100px', height: 'calc(100vh - 70px)', mt: 0 }}>
-        {isLoading || isError ?
-          { content }
-          :
-          <Outlet />
-        }
+  if (pathname === '/') {
+    return main = (
+      <>
+        <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
+        <Box>
+          {isLoading || isError ?
+            { content }
+            :
+            <Outlet />
+          }
+        </Box>
+        <Footer />
+      </>
+    )
+  }
 
-      </Container>
+  if (pathname !== '/') {
+    return main = (
+      <>
+        <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
+        <Container maxWidth='true' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: 'calc(100vh - 70px)', mt: '100px' }}>
+          {isLoading || isError ?
+            { content }
+            :
+            <Outlet />
+          }
 
-      <Footer />
-    </>)
+        </Container>
+        <Footer />
+      </>)
+
+  }
+
+
+
+  return { main }
+
+
 }
 
 export default Layout
