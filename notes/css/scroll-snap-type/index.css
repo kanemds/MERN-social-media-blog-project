@@ -2,7 +2,7 @@
   outline: none !important;
 }
 
-.container {
+.scroll-container {
   height: calc(100vh - 70px);
   /* y = vertical x = horizontal */
   scroll-snap-type: y mandatory;
