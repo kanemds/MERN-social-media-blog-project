@@ -1,9 +1,9 @@
-import { Paper } from '@mui/material'
+import { Paper, Box, Button } from '@mui/material'
 import React from 'react'
 
 const ViewYourOwn = () => {
   return (
-    <Paper>ViewYourOwn</Paper>
+    <Button sx={{ height: '100%', width: '100%' }}>ViewYourOwn</Button>
 
   )
 }
