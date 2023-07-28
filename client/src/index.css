@@ -2,41 +2,6 @@
   outline: none !important;
 }
 
-.container {
-  height: calc(100vh - 70px);
-  /* y = vertical x = horizontal */
-  scroll-snap-type: y mandatory;
-  /* scroll-snap-type: y proximity; */
-  overflow-y: scroll;
-  /* Necessary for mobile scrolling */
-  -webkit-overflow-scrolling: touch;
-
-  scroll-padding-top: 70px;
-}
-
-nav {
+.navbar {
   position: fixed;
-}
-
-section {
-  height: calc(100vh - 70px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  scroll-snap-align: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-
-.one {
-  background-color: yellow;
-}
-
-.two {
-  background-color: green;
-}
-
-.three {
-  background-color: orange;
 }
