@@ -30,7 +30,7 @@ export default function Navbar({ handleLogout, isSuccess }) {
 
   return (
 
-    <AppBar position="static" sx={{ flexGrow: 1, height: '70px' }}>
+    <AppBar position="fixed" sx={{ flexGrow: 1, height: '70px' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <LinkButton visit='/' name='K-Blog' style='outlined' fontSize='2rem' />
 

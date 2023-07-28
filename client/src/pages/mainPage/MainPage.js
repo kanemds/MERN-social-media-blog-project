@@ -6,6 +6,7 @@ import ViewYourOwn from './ViewYourOwn'
 import { ViewOthers } from './ViewOthers'
 import Grid from '@mui/material/Unstable_Grid2'
 import BodyElements from './BodyElements'
+import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 
 const MainPage = () => {
 
@@ -20,7 +21,7 @@ const MainPage = () => {
 
 
     <Box sx={{ width: '100%' }} >
-
+      <HorizontalSwiper />
 
 
       <BodyElements />

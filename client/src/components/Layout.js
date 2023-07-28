@@ -10,6 +10,8 @@ import MainPage from "../pages/mainPage/MainPage"
 import ViewYourOwn from "../pages/mainPage/ViewYourOwn"
 import { ViewOthers } from "../pages/mainPage/ViewOthers"
 import BodyElements from "../pages/mainPage/BodyElements"
+import VerticalSwiper from "./swiper/VerticalSwiper"
+
 
 const Layout = () => {
 
@@ -36,46 +38,27 @@ const Layout = () => {
 
   if (pathname === '/') {
     return main = (
-      // <>
-      //   <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-      //   <Box>
-      //     {isLoading || isError ?
-      //       { content }
-      //       :
-      //       <Outlet />
-      //     }
-      //   </Box>
-      //   <Footer />
-      // </>
 
-
-
-      <Box>
+      <Box className='scrollBar'>
         {isLoading || isError ?
           { content }
           :
-
-          <Box sx={{ width: '100%' }} >
-            <div className='container'>
-              <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-              <section className='one'>
-                <ViewYourOwn />
-              </section>
-              <section className='two'>
-                <ViewOthers />
-              </section>
-              <section className='three'>
-                <ViewYourOwn />
-              </section>
-            </div>
-
-
+          <>
+            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
+            <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
+              <VerticalSwiper />
+            </Box>
             <BodyElements />
-          </Box>
+            <BodyElements />
+            <BodyElements />
+            <BodyElements />
+            <BodyElements />
+          </>
         }
 
         <Footer />
       </Box>
+
     )
   }
 
