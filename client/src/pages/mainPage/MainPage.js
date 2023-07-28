@@ -14,41 +14,13 @@ const MainPage = () => {
   const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
   const currentDay = new Intl.DateTimeFormat('en-US', options).format(date)
 
-
-
-
   // const currentDay = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
   return (
-    // <Box sx={{ width: '100%' }}>
-    //   <Grid container spacing={2}>
-    //     <Grid xs={7}>
-    //       <ViewYourOwn />
-    //       <ViewOthers />
-    //     </Grid>
-    //     <Grid xs={5}>
-    //       <Paper>
-    //         {/* <ActiveCalender /> */}
-    //         <BasicCalendar />
-    //       </Paper>
-    //     </Grid>
-    //   </Grid >
-    //   <BodyElements />
-    // </Box>
+
 
     <Box sx={{ width: '100%' }} >
-      <div className='scroll-container'>
 
-        <section className='one scroll-item'>
-          <ViewYourOwn />
-        </section>
-        <section className='two scroll-item'>
-          <ViewOthers />
-        </section>
-        <section className='three scroll-item'>
-          <ViewYourOwn />
-        </section>
-      </div>
 
 
       <BodyElements />

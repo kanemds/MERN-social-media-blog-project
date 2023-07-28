@@ -10,7 +10,7 @@ import 'swiper/css/navigation'
 // import required modules
 import { Keyboard, Pagination, Navigation } from 'swiper/modules'
 
-export default function Horizontal() {
+export default function HorizontalSwiper() {
   return (
     <>
       <Swiper
