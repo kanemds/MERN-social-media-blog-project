@@ -22,8 +22,6 @@ const MainPage = () => {
 
     <Box sx={{ width: '100%' }} >
       <HorizontalSwiper />
-
-
       <BodyElements />
     </Box>
   )

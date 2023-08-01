@@ -13,8 +13,6 @@ import { Keyboard, Pagination, Navigation } from 'swiper/modules'
 
 export default function HorizontalSwiper({ row }) {
 
-  console.log(row)
-
   return (
     <>
       <Swiper
@@ -35,12 +33,10 @@ export default function HorizontalSwiper({ row }) {
           return (
             <SwiperSlide key={index}>
               <img src={each} />
-              <div class="swiper-lazy-preloader"></div>
+              <div className="swiper-lazy-preloader"></div>
             </SwiperSlide>
           )
         })}
-
-
       </Swiper>
     </>
   )
