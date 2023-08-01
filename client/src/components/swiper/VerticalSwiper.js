@@ -28,35 +28,39 @@ export default function VerticalSwiper() {
 
   const [isLast, setIsLast] = useState('')
   const [isAllow, setIsAllow] = useState(false)
+  const [scroll, setScroll] = useState(0)
 
   console.log(isLast)
   console.log(isAllow)
-
+  // console.log("Vertical Scroll Position: " + scroll)
 
   useEffect(() => {
     const lastElement = document.querySelector('.lastElement')
 
-    console.log(lastElement)
-
     const wheelControl = e => {
-
-
-      if (e.deltaY < 0) {
+      if (e.deltaY <= 0 && scroll === 0) {
         setIsAllow(false)
-        isLast.enable()
-        console.log("Scrolling Up")
-      } else if (e.deltaY > 0 && isAllow) {
-        isLast.disable()
-        console.log("Scrolling Down")
+        isLast.mousewheel.enable()
+
+      } else if (e.deltaY >= 0 && isAllow) {
+        isLast.mousewheel.disable()
       }
     }
 
+    const handleWindowScroll = () => {
+      // Get the current vertical scroll position
+      setScroll(window.scrollY)
+
+    }
+
     lastElement.addEventListener('wheel', wheelControl)
+    window.addEventListener("scroll", handleWindowScroll)
 
     return () => {
       lastElement.removeEventListener('wheel', wheelControl)
+      window.removeEventListener("scroll", handleWindowScroll)
     }
-  }, [isAllow])
+  }, [isAllow, scroll])
 
   const handleReachEnd = (swiper) => {
     console.log('reachEnd')
