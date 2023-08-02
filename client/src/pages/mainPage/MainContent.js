@@ -1,11 +1,24 @@
 import React from 'react'
 import ActiveCalender from './ActiveCalender'
 import { Box, Button, Paper } from '@mui/material'
-
-
+import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import BodyElements from './BodyElements'
-import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
+
+
+
+const Root = styled(Grid)(({ theme }) => ({
+  [theme.breakpoints.up('sm')]: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  [theme.breakpoints.down('sm')]: {
+    justifyContent: 'center'
+  },
+}))
+
+
+
 
 const MainContent = () => {
 
@@ -17,12 +30,17 @@ const MainContent = () => {
   // const currentDay = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
   return (
-    <Box  >
+    <Box sx={{ flexGrow: 1 }}>
 
-      <Box sx={{ width: '300px' }}>
-        <ActiveCalender />
-      </Box>
+      <Grid container  >
+        <Grid xs={12} sm={9} md={9}>
+          <Button>abc</Button>
+        </Grid>
 
+        <Root xs={12} sm={3} md={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <ActiveCalender />
+        </Root >
+      </Grid>
     </Box>
   )
 }

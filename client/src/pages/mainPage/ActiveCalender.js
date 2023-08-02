@@ -1,6 +1,6 @@
 import * as React from 'react'
 import dayjs from 'dayjs'
-import List from '@mui/material/List'
+import { List, Box } from '@mui/material'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
@@ -34,6 +34,7 @@ function ActionList(props) {
 
 export default function ActiveCalender() {
   return (
+
     <LocalizationProvider dateAdapter={AdapterDayjs} >
       <StaticDatePicker
         defaultValue={dayjs()}
@@ -42,9 +43,19 @@ export default function ActiveCalender() {
         slotProps={{
           layout: {
             sx: {
+              maxWidth: '320px',
+              padding: 0,
+              margin: 0,
+              [`.MuiGrid2-root}`]: {
+                display: 'none'
+              },
               [`.${pickersLayoutClasses.actionBar}`]: {
                 gridColumn: 2,
                 gridRow: 3,
+              },
+              [`.${pickersLayoutClasses.toolbar}`]: {
+                gridColumn: 2,
+                gridRow: 1,
               },
             },
           },
@@ -54,5 +65,6 @@ export default function ActiveCalender() {
         }}
       />
     </LocalizationProvider>
+
   )
 }
