@@ -52,6 +52,11 @@ export default function ActiveCalender() {
               [`.${pickersLayoutClasses.actionBar}`]: {
                 gridColumn: 2,
                 gridRow: 3,
+
+              },
+
+              [`.${pickersLayoutClasses.contentWrapper}`]: {
+                height: '280px',
               },
               [`.${pickersLayoutClasses.toolbar}`]: {
                 gridColumn: 2,
