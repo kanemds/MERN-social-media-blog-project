@@ -1,6 +1,6 @@
 import React from 'react'
 import ActiveCalender from './ActiveCalender'
-import { Box, Button, Paper } from '@mui/material'
+import { Box, Button, Paper, Container } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import BodyElements from './BodyElements'
@@ -30,8 +30,7 @@ const MainContent = () => {
   // const currentDay = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-
+    <Container sx={{ flexGrow: 1 }} maxWidth={true}>
       <Grid container  >
         <Grid xs={12} sm={9} md={9}>
           <Button>abc</Button>
@@ -41,7 +40,7 @@ const MainContent = () => {
           <ActiveCalender />
         </Root >
       </Grid>
-    </Box>
+    </Container>
   )
 }
 

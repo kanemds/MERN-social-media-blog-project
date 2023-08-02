@@ -45,6 +45,7 @@ const Layout = () => {
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
+
             <MainContent />
           </>
         }
@@ -59,7 +60,7 @@ const Layout = () => {
     return main = (
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-        <Container maxWidth='true' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: 'calc(100vh - 70px)', mt: '100px' }}>
+        <Container maxWidth={true} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: 'calc(100vh - 70px)', mt: '100px' }}>
           {isLoading || isError ?
             { content }
             :
