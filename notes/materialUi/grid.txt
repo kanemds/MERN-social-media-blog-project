@@ -1,0 +1,20 @@
+ <Box sx={{ flexGrow: 1 }}>
+      
+      <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}> 
+        <Grid xs={4} sm={4} md={4} >
+          <ActiveCalender />
+        </Grid >
+        <Grid xs={2} sm={4} md={4}>
+          <Button>abc</Button>
+        </Grid>
+        <Grid xs={2} sm={4} md={4}>
+          <Button>abc</Button>
+        </Grid>
+      </Grid>
+    </Box>
+
+
+define how many columns when window size change to specific size 
+
+      <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>   
+      

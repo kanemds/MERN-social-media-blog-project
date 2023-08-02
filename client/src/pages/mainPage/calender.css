@@ -1,0 +1,27 @@
+.MuiCalendarOrClockPicker-root,
+.MuiCalendarOrClockPicker-root>div {
+  width: 190px;
+}
+
+.MuiCalendarPicker-root {
+  width: 250px;
+}
+
+.MuiCalendarPicker-root>div:first-child {
+  padding-left: 12px;
+  padding-right: 8px;
+  margin-bottom: 0px;
+}
+
+.MuiCalendarPicker-root>div:first-child>div:last-child>div {
+  width: 4px;
+}
+
+.PrivatePickersSlideTransition-root {
+  min-height: 130px;
+}
+
+button.MuiPickersDay-root.Mui-selected {
+  width: 15px;
+  height: 11px;
+}
