@@ -6,11 +6,8 @@ import { Box, Container } from "@mui/material"
 import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
 import LoadingSpinner from "./LoadingSpinner"
 import ErrorMessage from './ErrorMessage'
-import MainPage from "../pages/mainPage/MainPage"
-import ViewYourOwn from "../pages/mainPage/ViewYourOwn"
-import { ViewOthers } from "../pages/mainPage/ViewOthers"
-import BodyElements from "../pages/mainPage/BodyElements"
 import VerticalSwiper from "./swiper/VerticalSwiper"
+import MainContent from "../pages/mainPage/MainContent"
 
 
 const Layout = () => {
@@ -39,7 +36,7 @@ const Layout = () => {
   if (pathname === '/') {
     return main = (
 
-      <Box className='scrollBar'>
+      <Box >
         {isLoading || isError ?
           { content }
           :
@@ -48,11 +45,7 @@ const Layout = () => {
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
-            <BodyElements />
-            <BodyElements />
-            <BodyElements />
-            <BodyElements />
-            <BodyElements />
+            <MainContent />
           </>
         }
 

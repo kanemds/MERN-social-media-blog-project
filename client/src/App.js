@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
-import MainPage from './pages/mainPage/MainPage'
 import LoginPage from './pages/auth/LoginPage'
 import BlogsList from './pages/blogs/BlogsList'
 import UsersList from './pages/users/UsersList'
@@ -24,11 +23,8 @@ function App() {
     <Routes>
 
       <Route path='/' element={<Layout />}>
-        <Route index element={<MainPage />} />
         <Route path='login' element={<LoginPage />} />
         <Route path='register' element={<RegisterPage />} />
-
-
 
         {/* prefetch will only execute when user is browsing routes below */}
         <Route element={<PersistLogin />}>
