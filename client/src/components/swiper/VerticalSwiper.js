@@ -30,8 +30,8 @@ export default function VerticalSwiper() {
   const [isAllow, setIsAllow] = useState(false)
   const [scroll, setScroll] = useState(0)
 
-  console.log(isLast)
-  console.log(isAllow)
+  // console.log(isLast)
+  // console.log(isAllow)
   // console.log("Vertical Scroll Position: " + scroll)
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function VerticalSwiper() {
   }, [isAllow, scroll])
 
   const handleReachEnd = (swiper) => {
-    console.log('reachEnd')
+    // console.log('reachEnd')
     setIsLast(swiper)
     setIsAllow(true)
   }

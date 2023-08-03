@@ -1,9 +1,23 @@
 import React from 'react'
 import ActiveCalender from './ActiveCalender'
 import { Box, Button, Paper, Container } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import BodyElements from './BodyElements'
+import Note from './Note'
+
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+      xxl: 1950
+    },
+  },
+})
 
 
 
@@ -19,7 +33,6 @@ const Root = styled(Grid)(({ theme }) => ({
 
 
 
-
 const MainContent = () => {
 
   const date = new Date()
@@ -30,7 +43,7 @@ const MainContent = () => {
   // const currentDay = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date)
 
   return (
-    <Container sx={{ flexGrow: 1 }} maxWidth={true}>
+    <Container sx={{ flexGrow: 1 }} maxWidth='true'>
       <Grid container  >
         <Grid xs={12} sm={9} md={9}>
           <Button>abc</Button>
@@ -40,7 +53,23 @@ const MainContent = () => {
           <ActiveCalender />
         </Root >
       </Grid>
-    </Container>
+      <Box sx={{ flexGrow: 1 }}  >
+        <ThemeProvider theme={theme}  >
+          <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 15, xxl: 12 }}>
+
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+
+
+          </Grid>
+        </ThemeProvider>
+      </Box>
+    </Container >
   )
 }
 
