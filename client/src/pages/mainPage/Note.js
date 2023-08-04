@@ -21,7 +21,7 @@ export default function Note() {
           image={noteBook}
           alt="green iguana"
         />
-        <CardContent sx={{ maxHeight: '140px' }} >
+        <CardContent sx={{ maxHeight: '160px' }} >
           <Box sx={{ display: 'flex' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', mr: '16px' }}>
               <Avatar />
@@ -29,11 +29,13 @@ export default function Note() {
 
 
             <Box>
-              <Typography variant="h6" sx={{
+              <Typography variant="body1" sx={{
                 wordBreak: "break-word", display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
                 WebkitLineClamp: 2,
+                fontWeight: 'bold',
+                mb: 2
               }}>
                 {title + '...'}
               </Typography>
@@ -41,7 +43,7 @@ export default function Note() {
                 wordBreak: "break-word", display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 2,
+                WebkitLineClamp: 3,
               }}>
                 {paragraph + '...'}
               </Typography>
