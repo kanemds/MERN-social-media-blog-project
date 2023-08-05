@@ -12,18 +12,22 @@ import TextField from '@mui/material/TextField'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import SearchIcon from '@mui/icons-material/Search'
-
+import { Button } from '@mui/material'
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
 export default function SearchBar() {
   return (
 
-    <FormControl fullWidth sx={{ m: 1 }}>
+    <FormControl fullWidth sx={{ m: 1, display: 'flex', flexDirection: 'row', width: '100%' }}>
 
       <OutlinedInput
+        sx={{ width: '100%' }}
         autoComplete='true'
         placeholder='Search Posts...'
         startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
-
       />
+      <Button variant='contained'><KeyboardReturnIcon /></Button>
+
+
     </FormControl>
 
   )

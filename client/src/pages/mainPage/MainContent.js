@@ -14,6 +14,7 @@ const theme = createTheme({
       sm: 600,
       md: 900,
       lg: 1200,
+      ll: 1400,
       xl: 1536,
       xxl: 1950
     },
@@ -23,14 +24,27 @@ const theme = createTheme({
 
 
 const Root = styled(Grid)(({ theme }) => ({
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up('md')]: {
     display: 'flex',
     justifyContent: 'flex-end'
   },
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     justifyContent: 'center'
   },
 }))
+
+
+const SearchBarWidth = styled(Box)(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    width: '80%'
+  },
+  [theme.breakpoints.down('md')]: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '80%'
+  },
+}))
+
 
 
 
@@ -46,23 +60,33 @@ const MainContent = () => {
   return (
     <Container sx={{ flexGrow: 1 }} maxWidth='true'>
       <Grid container  >
-        <Grid xs={12} sm={9} md={8} >
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-            <SearchBar />
-
-          </Box>
 
 
-        </Grid>
+        <ThemeProvider theme={theme}  >
+          <Grid xs={12} sm={12} md={7.3} lg={8.5} xl={9} xxl={10}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+              <SearchBarWidth >
+                <SearchBar />
+              </SearchBarWidth>
 
-        <Root xs={12} sm={3} md={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <ActiveCalender />
-        </Root >
-      </Grid>      <Box sx={{ flexGrow: 1 }}  >
+              <Box>
+                <Button>Your Posts</Button>
+                <Button>From Friend List</Button>
+                <Button>Others</Button>
+              </Box>
+            </Box>
+          </Grid>
 
-        <Button>Your Posts</Button>
-        <Button>From Friend List</Button>
-        <Button>Others</Button>
+          <Root xs={12} sm={12} md={4.7} lg={3.5} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ActiveCalender />
+          </Root >
+        </ThemeProvider>
+
+      </Grid>
+
+      <Box sx={{ flexGrow: 1 }}  >
+
+
 
         <ThemeProvider theme={theme}  >
           <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 15, xxl: 12 }}>
