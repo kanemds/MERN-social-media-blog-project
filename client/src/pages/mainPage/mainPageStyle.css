@@ -1,0 +1,8 @@
+.MuiPickersFadeTransitionGroup-root,
+
+.MuiPickersDay-root,
+.MuiButtonBase-root,
+.MuiDateCalendar-root,
+.css-qa7bje-MuiButtonBase-root-MuiPickersDay-root {
+  font-size: .1rem;
+}
