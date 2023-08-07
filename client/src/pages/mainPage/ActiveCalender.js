@@ -8,6 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout'
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker'
+import './mainPageStyle.css'
 
 function ActionList(props) {
   const { onAccept, onClear, onCancel, onSetToday, className } = props
@@ -35,19 +36,32 @@ function ActionList(props) {
 export default function ActiveCalender() {
   return (
 
+
+
     <LocalizationProvider dateAdapter={AdapterDayjs} >
       <StaticDatePicker
         defaultValue={dayjs()}
-        orientation='portrait'
+        orientation='landscape'
         // disablePast={true}
         slotProps={{
           layout: {
             sx: {
-              maxWidth: '320px',
-              padding: 0,
-              margin: 0,
+              maxWidth: '500px',
               [`.MuiGrid2-root}`]: {
-                display: 'none'
+                display: 'none',
+
+              },
+              [`.MuiButtonBase-root}`]: {
+                fontSize: '.5rem'
+
+              },
+              [`.MuiDateCalendar-root}`]: {
+                fontSize: '.5rem'
+
+              },
+              [`.MuiPickersDay-root}`]: {
+                fontSize: '.5rem'
+
               },
               [`.${pickersLayoutClasses.actionBar}`]: {
                 gridColumn: 2,
