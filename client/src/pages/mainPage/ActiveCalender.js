@@ -38,31 +38,85 @@ export default function ActiveCalender() {
 
 
 
-    <LocalizationProvider dateAdapter={AdapterDayjs} >
+    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ maxWidth: '240px', minWidth: '240px', }}>
       <StaticDatePicker
         defaultValue={dayjs()}
-        orientation='landscape'
+        orientation='portrait'
         // disablePast={true}
         slotProps={{
           layout: {
             sx: {
-              maxWidth: '500px',
-              [`.MuiGrid2-root}`]: {
+              minWidth: '240px',
+              maxWidth: '240px',
+              [`.MuiGrid2-root`]: {
                 display: 'none',
 
               },
-              [`.MuiButtonBase-root}`]: {
-                fontSize: '.5rem'
-
+              [`.MuiPickersLayout-root`]: {
+                display: 'none',
               },
-              [`.MuiDateCalendar-root}`]: {
-                fontSize: '.5rem'
-
+              [`.MuiPickersLayout-contentWrapper `]: {
+                minWidth: '240px',
+                maxWidth: '240px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                p: 0,
+                m: 0
               },
-              [`.MuiPickersDay-root}`]: {
-                fontSize: '.5rem'
-
+              [`.MuiTypography-overline`]: {
+                display: 'none',
               },
+              [`.MuiPickersCalendarHeader-label`]: {
+                m: 0,
+                P: 0
+              },
+              [`.MuiPickersCalendarHeader-root`]: {
+                display: 'flex',
+                justifyContent: 'space-between',
+                m: 0,
+                P: 0
+              },
+              [`.css-nk89i7-MuiPickersCalendarHeader-root`]: {
+                display: 'flex',
+                justifyContent: 'space-between',
+                m: 0,
+                P: 0
+              },
+              [`.MuiTypography-root`]: {
+                fontSize: '1rem',
+              },
+              [`.MuiButtonBase-root`]: {
+                fontSize: '.7rem',
+
+                height: '25px'
+              },
+              [`.MuiPickersActionBar-root`]: {
+                width: '25px',
+                height: '25px'
+              },
+              [`.MuiDateCalendar-root`]: {
+                width: 220,
+              },
+              [`.MuiPickersLayout-actionBar`]: {
+                width: '240px',
+              },
+              [`.MuiPickersLayout-root`]: {
+                width: '240px',
+              },
+              [`.MuiPickersLayout-toolbar`]: {
+                width: '240px',
+              },
+              [`.MuiPickersToolbar-root`]: {
+                display: 'none',
+                // alignItems: 'center',
+                // width: '240px',
+              },
+              // [`.MuiDatePickerToolbar-title`]: {
+              //   alignItems: 'center',
+              //   width: '240px',
+              // },
+
               [`.${pickersLayoutClasses.actionBar}`]: {
                 gridColumn: 2,
                 gridRow: 3,
@@ -70,7 +124,7 @@ export default function ActiveCalender() {
               },
 
               [`.${pickersLayoutClasses.contentWrapper}`]: {
-                height: '280px',
+                height: '290px',
               },
               [`.${pickersLayoutClasses.toolbar}`]: {
                 gridColumn: 2,
