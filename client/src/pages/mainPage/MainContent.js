@@ -6,7 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import BodyElements from './BodyElements'
 import Note from './Note'
 import SearchBar from '../../components/SearchBar'
-import './mainPageStyle.css'
+
 
 const theme = createTheme({
   breakpoints: {
