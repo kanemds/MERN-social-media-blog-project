@@ -8,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout'
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker'
-import './mainPageStyle.css'
+
 
 function ActionList(props) {
   const { onAccept, onClear, onCancel, onSetToday, className } = props
@@ -43,6 +43,7 @@ export default function ActiveCalender() {
         defaultValue={dayjs()}
         orientation='portrait'
         // disablePast={true}
+        disableFuture={true}
         slotProps={{
           layout: {
             sx: {
@@ -68,27 +69,44 @@ export default function ActiveCalender() {
                 display: 'none',
               },
               [`.MuiPickersCalendarHeader-label`]: {
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
                 m: 0,
                 P: 0
               },
-              [`.MuiPickersCalendarHeader-root`]: {
-                display: 'flex',
-                justifyContent: 'space-between',
+
+              [`.MuiPickersYear-root`]: {
+
+                maxWidth: '180px',
+
+                overflow: 'hidden',
+
+                '-webkit-flex-basis': '33%',
+              },
+              [`.css-1lkpf4l-MuiYearCalendar-root`]: {
+                width: '200px',
+                '-webkit-flex-basis': '33%',
+              },
+              [`.css-1beqopj-MuiPickersYear-yearButton`]: {
+                width: '50px',
+                alignItems: 'center',
+                fontSize: '.8rem',
                 m: 0,
                 P: 0
               },
               [`.css-nk89i7-MuiPickersCalendarHeader-root`]: {
+                width: '100%',
                 display: 'flex',
                 justifyContent: 'space-between',
                 m: 0,
-                P: 0
+                p: 0
               },
               [`.MuiTypography-root`]: {
                 fontSize: '1rem',
               },
               [`.MuiButtonBase-root`]: {
                 fontSize: '.7rem',
-
                 height: '25px'
               },
               [`.MuiPickersActionBar-root`]: {
