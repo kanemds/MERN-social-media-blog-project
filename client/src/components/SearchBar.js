@@ -19,10 +19,9 @@ export default function SearchBar() {
 
 
 
-    <FormControl fullWidth sx={{ m: 1, display: 'flex', flexDirection: 'row', width: '100%' }}>
+    <FormControl fullWidth sx={{ display: 'flex', flexDirection: 'row' }}>
 
       <OutlinedInput
-        sx={{ width: '100%' }}
         autoComplete='true'
         placeholder='Search Posts...'
         startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
