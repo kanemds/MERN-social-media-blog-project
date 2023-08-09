@@ -3,7 +3,7 @@ import ActiveCalender from './ActiveCalender'
 import { Box, Button, Paper, Container, Typography, AppBar, Toolbar } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
-import Note from './Note'
+import Note from '../../components/Note'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 
 import { blue } from '@mui/material/colors'

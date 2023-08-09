@@ -12,6 +12,7 @@ import SideBar from "./FrontPageSideBar"
 import BodyElements from "../pages/mainPage/BodyElements"
 import ClientSideBar from "./ClientSideBar"
 import ClientSearchBar from "./ClientSearchBar"
+import BlogLayout from "../pages/blogs/BlogLayout"
 
 const Layout = () => {
 
@@ -68,17 +69,9 @@ const Layout = () => {
           :
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-            <Box sx={{ display: 'flex', mt: '50px', mb: '50px', }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', mt: '50px', mb: '50px', }}>
               <ClientSideBar />
-
-              <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', ml: '280px' }} maxWidth='true'>
-                <Box sx={{ position: 'sticky', top: '90px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', display: 'flex', justifyContent: 'center', }}>
-                  <Box sx={{ width: '96%' }}>
-                    <ClientSearchBar />
-                  </Box>
-                </Box>
-                <Outlet />
-              </Container >
+              <BlogLayout />
             </Box>
           </>
         }
