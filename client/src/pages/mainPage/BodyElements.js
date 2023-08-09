@@ -15,8 +15,8 @@ const theme = createTheme({
       sm: 600,
       md: 900,
       lg: 1200,
-      ll: 1400,
-      xl: 1536,
+      ll: 1460,
+      xl: 1670,
       xxl: 1950
     },
   },
@@ -80,34 +80,19 @@ const BodyElements = () => {
 
       <Box sx={{ flexGrow: 1, width: '96%', mt: '30px' }}  >
         <ThemeProvider theme={theme}  >
-          <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 15, xxl: 12 }}>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+          <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+            <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+            <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+
+
+
+
+
           </Grid>
         </ThemeProvider>
 
