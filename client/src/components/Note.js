@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import { CardActionArea, Avatar, Box } from '@mui/material'
-import noteBook from './noteBook.jpg'
+import noteBook from '../images/noteBook.jpg'
 
 export default function Note() {
   const title = "B.C. man's swoon-worthy proposal at van Gogh art exhibit to be cherished after his death"

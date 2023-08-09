@@ -8,6 +8,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import PostAddIcon from '@mui/icons-material/PostAdd'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
+import { useNavigate } from 'react-router-dom'
 
 
 const SideButton = styled(Button)({
@@ -39,8 +40,10 @@ const Divider = styled(Box)({
 
 
 const ClientSideBar = () => {
+
+  const navigate = useNavigate()
   return (
-    <Box sx={{ position: 'fixed', top: '70px', width: '280x', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 11 }}>
+    <Box sx={{ position: 'sticky', top: '70px', width: '280x', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }} >
 
@@ -69,7 +72,7 @@ const ClientSideBar = () => {
 
         <SideButton  >
           <ArticleOutlinedIcon />
-          <ButtonInfo>My Post(s)</ButtonInfo>
+          <ButtonInfo onClick={() => navigate('/blogs')}>My Post(s)</ButtonInfo>
         </SideButton>
         <SideButton >
           <PostAddIcon />
