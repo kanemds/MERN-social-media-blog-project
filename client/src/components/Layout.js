@@ -8,7 +8,10 @@ import LoadingSpinner from "./LoadingSpinner"
 import ErrorMessage from './ErrorMessage'
 import VerticalSwiper from "./swiper/VerticalSwiper"
 import MainContent from "../pages/mainPage/MainContent"
-
+import SideBar from "./FrontPageSideBar"
+import BodyElements from "../pages/mainPage/BodyElements"
+import ClientSideBar from "./ClientSideBar"
+import ClientSearchBar from "./ClientSearchBar"
 
 const Layout = () => {
 
@@ -56,6 +59,36 @@ const Layout = () => {
     )
   }
 
+  if (pathname === '/blogs') {
+    return main = (
+
+      <Box >
+        {isLoading || isError ?
+          { content }
+          :
+          <>
+            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
+            <Box sx={{ display: 'flex', mt: '50px', mb: '50px', }}>
+              <ClientSideBar />
+
+              <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', ml: '280px' }} maxWidth='true'>
+                <Box sx={{ position: 'sticky', top: '90px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', display: 'flex', justifyContent: 'center', }}>
+                  <Box sx={{ width: '96%' }}>
+                    <ClientSearchBar />
+                  </Box>
+                </Box>
+                <Outlet />
+              </Container >
+            </Box>
+          </>
+        }
+
+        <Footer />
+      </Box>
+
+    )
+  }
+
   if (pathname !== '/') {
     return main = (
       <>
@@ -64,6 +97,7 @@ const Layout = () => {
           {isLoading || isError ?
             { content }
             :
+
             <Outlet />
           }
 

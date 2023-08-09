@@ -16,7 +16,7 @@ import { Button, AppBar } from '@mui/material'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
 
 
-export default function SearchBar() {
+export default function FrontPageSearchBar() {
   return (
 
     <FormControl sx={{ display: 'flex', flexDirection: 'row' }}>

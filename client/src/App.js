@@ -13,6 +13,7 @@ import PersistLogin from './pages/auth/PersistLogin'
 import RequireAuth from './pages/auth/RequireAuth'
 import { ROLES } from './config/roles'
 import useTitle from './hooks/useTitle'
+import NewBlog from './pages/blogs/NewBlog'
 
 
 function App() {
@@ -28,13 +29,18 @@ function App() {
 
         {/* prefetch will only execute when user is browsing routes below */}
         <Route element={<PersistLogin />}>
+
+          <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
+            <Route path='blogs'>
+              <Route index element={<BlogsList />} />
+              <Route path='new' element={<NewBlog />} />
+            </Route>
+          </Route>
+
           {/* <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}> */}
           <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
             <Route element={<Prefetch />}>
               <Route path='dash' element={<Dashboard />}>
-                <Route path='blogs'>
-                  <Route index element={<BlogsList />} />
-                </Route>
 
                 <Route path='users'>
                   <Route index element={<UsersList />} />
@@ -46,7 +52,7 @@ function App() {
           </Route>
         </Route>
       </Route>
-    </Routes>
+    </Routes >
   )
 
 }
