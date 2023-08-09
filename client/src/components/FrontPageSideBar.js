@@ -8,7 +8,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import PostAddIcon from '@mui/icons-material/PostAdd'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
-import { blue, lightBlue } from '@mui/material/colors'
+
 
 const SideButton = styled(Button)({
 
@@ -38,7 +38,7 @@ const Divider = styled(Box)({
 })
 
 
-const SideBar = () => {
+const FrontPageSideBar = () => {
   return (
     <Box sx={{ position: 'sticky', top: '70px', width: '280x', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
@@ -97,4 +97,4 @@ const SideBar = () => {
   )
 }
 
-export default SideBar
+export default FrontPageSideBar
