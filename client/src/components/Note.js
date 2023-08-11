@@ -12,12 +12,12 @@ export default function Note() {
 
 
   return (
+
     <Card sx={{ maxWidth: 345, maxHeight: 380 }}>
       <CardActionArea>
         <CardMedia
           sx={{ minHeight: 200 }}
           component="img"
-
           image={noteBook}
           alt="green iguana"
         />
