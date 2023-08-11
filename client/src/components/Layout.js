@@ -60,7 +60,7 @@ const Layout = () => {
     )
   }
 
-  if (pathname === '/blogs') {
+  if (pathname.includes('/blogs')) {
     return main = (
 
       <Box >
@@ -69,7 +69,7 @@ const Layout = () => {
           :
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-            <Box sx={{ display: 'flex', flexDirection: 'row', mt: '50px', mb: '50px', }}>
+            <Box sx={{ display: 'flex', mt: '70px', mb: '70px', }}>
               <ClientSideBar />
               <BlogLayout />
             </Box>
