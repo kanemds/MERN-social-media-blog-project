@@ -76,7 +76,7 @@ const ClientSideBar = () => {
         </SideButton>
         <SideButton >
           <PostAddIcon />
-          <ButtonInfo > Create a Post</ButtonInfo>
+          <ButtonInfo onClick={() => navigate('/blogs/new')}> Create a Post</ButtonInfo>
         </SideButton>
       </Section>
       <Divider />
