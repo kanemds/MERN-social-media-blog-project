@@ -6,6 +6,7 @@ import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
 import Grid from '@mui/material/Unstable_Grid2'
 import noteBook from '../../images/noteBook.jpg'
 import ark from '../../images/ark.jpg'
+import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -51,56 +52,11 @@ const NewBlog = () => {
         </Box>
 
 
-
         {/* image list */}
 
         <Box sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', justifyContent: 'center', mt: 10 }}>
+          <Drag_N_DropImages />
 
-          <Card sx={{ display: 'flex', width: 120, height: 120, m: 1 }}>
-            <CardMedia
-              component="img"
-              image={noteBook}
-              alt="green iguana"
-            />
-          </Card>
-          <Card sx={{ display: 'flex', width: 120, height: 120, m: 1 }}>
-            <CardMedia
-              component="img"
-              image={noteBook}
-              alt="green iguana"
-            />
-          </Card>
-          <Card sx={{ display: 'flex', width: 120, height: 120, m: 1 }}>
-            <CardMedia
-              component="img"
-              image={noteBook}
-              alt="green iguana"
-            />
-          </Card>
-          <Card sx={{ display: 'flex', width: 120, height: 120, m: 1 }}>
-            <CardMedia
-              component="img"
-              image={noteBook}
-              alt="green iguana"
-            />
-          </Card>
-
-          <Card sx={{ display: 'flex', width: 120, height: 120, m: 1 }}>
-            <CardMedia
-              component="img"
-              image={noteBook}
-              alt="green iguana"
-            />
-          </Card>
-
-
-
-          {/* add image */}
-          <Box sx={{ m: 1, width: 120, height: 120, border: '1px dashed black', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <IconButton color='primary'>
-              <AddAPhotoOutlinedIcon />
-            </IconButton>
-          </Box>
 
         </Box>
 
@@ -108,7 +64,7 @@ const NewBlog = () => {
 
 
       <Grid xs={12} md={12} lg={7}>
-        {/* input area */}
+
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <OutlinedInput autoComplete='true' />
           <TextField
