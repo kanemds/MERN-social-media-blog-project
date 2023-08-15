@@ -9,24 +9,21 @@ import './drag_n_drop.css'
 
 
 
-const Drag_N_DropImages = () => {
+const Drag_N_DropImages = ({ setSelectedImage }) => {
 
   const [data, setData] = useState([])
   const [isDragging, setIsDragging] = useState(false)
-  const [currentIndex, setCurrentIndex] = useState(undefined)
-  const [onMove, setOnMove] = useState(false)
 
   const fileInputRef = useRef(null)
   const dragItem = useRef(null)
   const dragOver = useRef(null)
-
-  console.log('currentIndex', currentIndex)
 
 
   // console.log(imageDrag)
   // console.log(data)
   const selectedData = () => {
     fileInputRef.current.click()
+    setSelectedImage()
   }
 
   console.log('fileInputRef.current', fileInputRef.current)
@@ -109,16 +106,17 @@ const Drag_N_DropImages = () => {
 
     // update list 
     setData(items)
-    setCurrentIndex(undefined)
   }
 
 
 
   const handleOnDragStart = (e, index) => {
-    console.log(index)
-    setCurrentIndex(index)
     dragItem.current = index
+  }
 
+  const handleSelectImage = (e, image) => {
+    e.preventDefault()
+    setSelectedImage(image)
   }
 
 
@@ -132,6 +130,7 @@ const Drag_N_DropImages = () => {
         data?.map((image, index) => {
           return (
             <Box key={index}
+              onClick={(e) => handleSelectImage(e, image)}
               className='card'
               component='div'
               sx={{ display: 'flex', width: 120, height: 120, p: 1, position: 'relative' }}
@@ -163,7 +162,7 @@ const Drag_N_DropImages = () => {
         {isDragging ? (
           <Button>Drop images here</Button>
         ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} >
             <Typography variant='caption'>Drop Image(s)</Typography>
             <Typography variant='caption'>or</Typography>
             {/* <Button onClick={selectedData} >Browse</Button> */}
