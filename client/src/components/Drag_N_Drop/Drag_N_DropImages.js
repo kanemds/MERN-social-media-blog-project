@@ -9,22 +9,32 @@ import './drag_n_drop.css'
 
 
 
-const Drag_N_DropImages = ({ setSelectedImage }) => {
+const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
 
   const [data, setData] = useState([])
+  const [isClick, setIsClick] = useState(false)
   const [selected, setSelected] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
 
-  console.log(selected)
-  console.log(data)
+
+  console.log(isClick)
 
   const dragItem = useRef(null)
   const dragOver = useRef(null)
 
   useEffect(() => {
-
-    setSelectedImage(data[0])
-    setSelected(null)
+    console.log(data)
+    console.log(selectedImage)
+    setIsClick(false)
+    if (data?.length) {
+      if (selectedImage) {
+        setSelectedImage(selectedImage)
+      } else {
+        setSelectedImage(data[0])
+      }
+    } else {
+      setSelectedImage(null)
+    }
   }, [data])
 
 
@@ -46,9 +56,16 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
     }
   }
 
+
+  // This pattern ensures current state is the most up-to-date and helps to prevent issues related to stale closures.
+  // however, this will still re-render
   const onDeleteImage = (e, index) => {
-    e.preventDefault()
-    setData(prevImages => prevImages?.filter((_, i) => i !== index))
+    if (isClick) {
+      if (data[index].name === selectedImage.name) {
+        setSelectedImage(null)
+      }
+      setData(prevImages => prevImages?.filter((_, i) => i !== index))
+    }
   }
 
   const onDragOver = e => {
@@ -110,14 +127,17 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
 
 
   const handleOnDragStart = (e, index) => {
+
     dragItem.current = index
   }
 
   const handleSelectImage = (e, image) => {
     e.preventDefault()
-    setSelected(image.name)
-    setSelectedImage(image)
+    if (!isClick) {
+      setSelectedImage(image)
+    }
   }
+
 
 
 
@@ -133,8 +153,6 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
 
           return (
             <Box key={index}
-
-
               onClick={(e) => handleSelectImage(e, image)}
               className='card'
               component='div'
@@ -145,12 +163,17 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
               onDragEnd={handleNewOrder}
               onDragOver={e => e.preventDefault()}
             >
-              <IconButton size='small' color='primary' onClick={(e) => onDeleteImage(e, index)} sx={{ position: 'absolute', top: 5, right: 5, zIndex: 20 }}>
+              <IconButton
+                size='small'
+                color='primary'
+                onClick={(e) => onDeleteImage(e, index)}
+                sx={{ position: 'absolute', top: 12, right: 12, zIndex: 20, p: 0 }}
+                onMouseOver={() => setIsClick(true)}
+                onMouseOut={() => setIsClick(false)}>
                 <ClearOutlinedIcon />
               </IconButton>
               <CardMedia
-
-                sx={{ borderRadius: 2, border: selected === null && index === 0 ? '3px solid #1976d2' : selected === image.name ? '3px solid #1976d2' : '2px solid grey' }}
+                sx={{ borderRadius: 2, border: selectedImage === null && index === 0 ? '3px solid #1976d2' : selectedImage?.name === image.name ? '3px solid #1976d2' : '2px solid grey' }}
                 className='img'
                 component="img"
                 image={image.url}
@@ -171,12 +194,11 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} >
             <Typography variant='caption'>Drop Image(s)</Typography>
             <Typography variant='caption'>or</Typography>
-            <IconButton color="primary" component="label" onClick={onDataSelect}>
+            <IconButton color="primary" component="label" onChange={onDataSelect}>
               <AddPhotoAlternateOutlinedIcon />
               {/* <input type="file" hidden multiple ref={fileInputRef} /> */}
-              <input type="file" hidden multiple
+              <input type="file" hidden multiple />
 
-              />
             </IconButton>
           </Box>
 
