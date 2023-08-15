@@ -23,7 +23,7 @@ const NewBlog = () => {
   return (
 
 
-    <Grid container spacing={1} sx={{ width: '100%', minHeight: '100vh' }}>
+    <Grid container spacing={2} sx={{ width: '100%', minHeight: '100vh' }}>
       <Grid xs={12} md={12} lg={5} sx={{ display: 'flex', flexDirection: 'column' }}>
         {/* picture area */}
 

@@ -38,6 +38,7 @@ export default function VerticalSwiper() {
     const lastElement = document.querySelector('.lastElement')
 
     const wheelControl = e => {
+      e.preventDefault()
       if (e.deltaY <= 0 && scroll === 0) {
         setIsAllow(false)
         isLast.mousewheel.enable()
@@ -53,11 +54,11 @@ export default function VerticalSwiper() {
 
     }
 
-    lastElement.addEventListener('wheel', wheelControl)
+    lastElement.addEventListener('wheel', wheelControl, { passive: false })
     window.addEventListener("scroll", handleWindowScroll)
 
     return () => {
-      lastElement.removeEventListener('wheel', wheelControl)
+      lastElement.removeEventListener('wheel', wheelControl, { passive: false })
       window.removeEventListener("scroll", handleWindowScroll)
     }
   }, [isAllow, scroll])
