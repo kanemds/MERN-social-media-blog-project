@@ -27,9 +27,10 @@ const NewBlog = () => {
 
   console.log(matches)
 
-  const [selectedImage, setSelectedImage] = useState()
+  const [selectedImage, setSelectedImage] = useState(null)
 
   console.log(selectedImage)
+
 
 
   return (
@@ -40,7 +41,7 @@ const NewBlog = () => {
         {/* picture area */}
 
         {/* preveiw */}
-        {!selectedImage ? 'No content ' :
+        {!selectedImage ? '' :
           <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', width: 400, height: 400 }}>
             <CardMedia
               component="img"
