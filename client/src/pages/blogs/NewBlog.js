@@ -8,6 +8,8 @@ import noteBook from '../../images/noteBook.jpg'
 import ark from '../../images/ark.jpg'
 import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
 
+import useMediaQuery from '@mui/material/useMediaQuery'
+
 const SideButton = styled(Button)({
   textTransform: 'none',
   justifyContent: "flex-start",
@@ -20,47 +22,50 @@ const ButtonInfo = styled(Typography)({
 
 
 const NewBlog = () => {
+
+  const matches = useMediaQuery('(min-width:1200px)')
+
+  console.log(matches)
+
   return (
 
 
-    <Grid container spacing={2} sx={{ width: '100%', minHeight: '100vh' }}>
-      <Grid xs={12} md={12} lg={5} sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%', }}>
+      <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: matches ? '200px' : '120px' }}>
         {/* picture area */}
 
         {/* preveiw */}
-        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-          <Card sx={{ p: 2, maxWidth: 400, maxHeight: 400, minWidth: 280, minHeight: 280, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <CardMedia
-              component="img"
-              image={noteBook}
-              alt="green iguana"
-            />
-          </Card>
-        </Box>
 
-        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-          <Card sx={{ p: 2, maxWidth: 400, maxHeight: 400, minWidth: 280, minHeight: 280, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 400, maxHeight: 400, minWidth: 380, minHeight: 380 }}>
+          <CardMedia
+            component="img"
+            image={noteBook}
+            alt="green iguana"
+          />
+        </Card>
+
+
+        {/* <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+          <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 400, maxHeight: 400, minWidth: 380, minHeight: 380 }}>
             <CardMedia
               component="img"
               image={ark}
               alt="green iguana"
             />
           </Card>
-        </Box>
+        </Box> */}
 
 
         {/* image list */}
 
-        <Box sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', justifyContent: 'center', mt: 5 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, alignItems: 'center' }}>
           <Drag_N_DropImages />
-
-
         </Box>
 
       </Grid>
 
 
-      <Grid xs={12} md={12} lg={7} >
+      <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', mt: '160px' }}>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           <TextField

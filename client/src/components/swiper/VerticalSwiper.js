@@ -17,6 +17,7 @@ import notebook from './images/note_book.jpg'
 // import required modules
 import { Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import HorizontalSwiper from './HorizontalSwiper'
+import { useForkRef } from '@mui/material'
 
 
 export default function VerticalSwiper() {
@@ -29,6 +30,9 @@ export default function VerticalSwiper() {
   const [isLast, setIsLast] = useState('')
   const [isAllow, setIsAllow] = useState(false)
   const [scroll, setScroll] = useState(0)
+  const contentRef = useRef()
+
+  console.log(contentRef)
 
   // console.log(isLast)
   // console.log(isAllow)
@@ -38,7 +42,7 @@ export default function VerticalSwiper() {
     const lastElement = document.querySelector('.lastElement')
 
     const wheelControl = e => {
-      e.preventDefault()
+
       if (e.deltaY <= 0 && scroll === 0) {
         setIsAllow(false)
         isLast.mousewheel.enable()
@@ -54,11 +58,11 @@ export default function VerticalSwiper() {
 
     }
 
-    lastElement.addEventListener('wheel', wheelControl, { passive: false })
+    lastElement.addEventListener('wheel', wheelControl)
     window.addEventListener("scroll", handleWindowScroll)
 
     return () => {
-      lastElement.removeEventListener('wheel', wheelControl, { passive: false })
+      lastElement.removeEventListener('wheel', wheelControl)
       window.removeEventListener("scroll", handleWindowScroll)
     }
   }, [isAllow, scroll])
@@ -74,6 +78,7 @@ export default function VerticalSwiper() {
   return (
     <>
       <Swiper
+        ref={contentRef}
         direction={'vertical'}
         slidesPerView={1}
         spaceBetween={0}

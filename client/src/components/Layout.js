@@ -69,7 +69,7 @@ const Layout = () => {
           :
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-            <Box sx={{ display: 'flex', mt: '70px', mb: '70px', }}>
+            <Box sx={{ display: 'flex', mt: '70px', mb: '70px', width: '100%', minHeight: 'calc(100vh - 140px)' }}>
               <ClientSideBar />
               <BlogLayout />
             </Box>

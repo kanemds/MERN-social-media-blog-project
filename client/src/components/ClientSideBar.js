@@ -24,14 +24,14 @@ const ButtonInfo = styled(Typography)({
 })
 
 const Section = styled(Box)({
-  height: '100%',
+
   display: 'flex',
   flexDirection: 'column',
   width: '100%'
 })
 
 const Divider = styled(Box)({
-  height: '100%',
+
   width: '100%',
   borderTop: '1px solid lightGrey',
   marginTop: 12,
@@ -43,7 +43,7 @@ const ClientSideBar = () => {
 
   const navigate = useNavigate()
   return (
-    <Box sx={{ position: 'sticky', top: '70px', width: '280x', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <Box sx={{ position: 'sticky', top: '70px', width: '280x', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
 
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }} >
 
