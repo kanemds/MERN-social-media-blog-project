@@ -123,62 +123,63 @@ const Drag_N_DropImages = () => {
 
 
   return (
-    <Box>
 
-      <Box className='container' sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', justifyContent: 'flex-start', mt: 10 }}>
-        {!data?.length ? ''
-          :
 
-          data?.map((image, index) => {
-            return (
-              <Card key={index}
-                className='card'
-                component='div'
-                sx={{ display: 'flex', width: 120, height: 120, m: 1, position: 'relative' }}
-                draggable
-                onDragStart={e => handleOnDragStart(e, index)}
-                onDragEnter={e => dragOver.current = index}
-                onDragEnd={handleNewOrder}
-                onDragOver={e => e.preventDefault()}
-              >
-                <IconButton size='small' color='primary' onClick={() => onDeleteImage(index)} sx={{ position: 'absolute', top: 0, right: 0, zIndex: 20 }}>
-                  <ClearOutlinedIcon />
-                </IconButton>
-                <CardMedia
-                  className='img'
-                  component="img"
-                  image={image.url}
-                  alt={image.name}
-                />
-              </Card>
-            )
-          }
+    <Box className='container' sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+      {!data?.length ? ''
+        :
+
+        data?.map((image, index) => {
+          return (
+            <Box key={index}
+              className='card'
+              component='div'
+              sx={{ display: 'flex', width: 120, height: 120, p: 1, position: 'relative' }}
+              draggable
+              onDragStart={e => handleOnDragStart(e, index)}
+              onDragEnter={e => dragOver.current = index}
+              onDragEnd={handleNewOrder}
+              onDragOver={e => e.preventDefault()}
+            >
+              <IconButton size='small' color='primary' onClick={() => onDeleteImage(index)} sx={{ position: 'absolute', top: 0, right: 0, zIndex: 20 }}>
+                <ClearOutlinedIcon />
+              </IconButton>
+              <CardMedia
+                sx={{ borderRadius: 2 }}
+                className='img'
+                component="img"
+                image={image.url}
+                alt={image.name}
+              />
+            </Box>
           )
         }
-        <Card
-          sx={{ width: 120, height: 120, m: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', border: '1px dashed grey' }}
-          onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}
-        >
-          {isDragging ? (
-            <Button>Drop images here</Button>
-          ) : (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <Typography>Drop Image(s)</Typography>
-              <Typography>or</Typography>
-              {/* <Button onClick={selectedData} >Browse</Button> */}
-              <IconButton color="primary" component="label" onChange={onDataSelect}>
-                <AddPhotoAlternateOutlinedIcon />
-                {/* <input type="file" hidden multiple ref={fileInputRef} /> */}
-                <input type="file" hidden multiple />
-              </IconButton>
-            </Box>
+        )
+      }
+      <Box
+        sx={{ width: 104, height: 104, m: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', border: '2px dashed grey', borderRadius: 2 }}
+        onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}
+      >
+        {isDragging ? (
+          <Button>Drop images here</Button>
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <Typography variant='caption'>Drop Image(s)</Typography>
+            <Typography variant='caption'>or</Typography>
+            {/* <Button onClick={selectedData} >Browse</Button> */}
+            <IconButton color="primary" component="label" onChange={onDataSelect}>
+              <AddPhotoAlternateOutlinedIcon />
+              {/* <input type="file" hidden multiple ref={fileInputRef} /> */}
+              <input type="file" hidden multiple />
+            </IconButton>
+          </Box>
 
-          )}
-        </Card>
-
+        )}
       </Box>
 
-    </Box >
+    </Box>
+
+
   )
 }
 

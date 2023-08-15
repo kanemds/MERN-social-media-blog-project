@@ -66,16 +66,16 @@ const BlogLayout = () => {
   let content
 
   if (pathname === '/blogs/new') {
-    return content = (
-      <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }} maxWidth='true'>
-        <Box sx={{ flexGrow: 1, width: '96%', mt: '20px' }}  >
+    content = (
+      <Container sx={{ width: '100%', height: '100%' }} maxWidth='true'>
+        <Box sx={{ flexGrow: 1, width: '96%', height: '100%' }}  >
           <Outlet />
         </Box >
       </Container >
     )
   } else {
-    return content = (
-      <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }} maxWidth='true'>
+    content = (
+      <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }} maxWidth='true'>
 
         <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', display: 'flex', justifyContent: 'center', }}>
           <Box sx={{ width: '96%' }}>
