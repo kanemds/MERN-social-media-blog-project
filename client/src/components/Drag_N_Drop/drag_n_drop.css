@@ -1,0 +1,23 @@
+.container {
+  touch-action: none;
+  -ms-touch-action: none;
+}
+
+.container .dragging {
+  pointer-events: none;
+  touch-action: none;
+  -ms-touch-action: none;
+  cursor: grabbing;
+}
+
+.container .card {
+  cursor: grab;
+  /* default value auto, none: can not be selected  */
+  user-select: none;
+  overflow: hidden;
+}
+
+.container .card .img {
+  /* default value auto, none: pointer will not change to pointer or grab  */
+  pointer-events: none;
+}
