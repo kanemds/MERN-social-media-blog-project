@@ -20,7 +20,7 @@ const Drag_N_DropImages = () => {
   const dragItem = useRef(null)
   const dragOver = useRef(null)
 
-  // console.log('currentIndex', currentIndex)
+  console.log('currentIndex', currentIndex)
 
 
   // console.log(imageDrag)
@@ -114,10 +114,9 @@ const Drag_N_DropImages = () => {
 
 
 
-  const handleOnDragStart = index => {
+  const handleOnDragStart = (e, index) => {
     console.log(index)
     setCurrentIndex(index)
-
     dragItem.current = index
 
   }
@@ -133,10 +132,11 @@ const Drag_N_DropImages = () => {
           data?.map((image, index) => {
             return (
               <Card key={index}
+                className='card'
                 component='div'
                 sx={{ display: 'flex', width: 120, height: 120, m: 1, position: 'relative' }}
                 draggable
-                onDragStart={e => handleOnDragStart(index)}
+                onDragStart={e => handleOnDragStart(e, index)}
                 onDragEnter={e => dragOver.current = index}
                 onDragEnd={handleNewOrder}
                 onDragOver={e => e.preventDefault()}
