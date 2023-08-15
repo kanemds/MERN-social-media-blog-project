@@ -29,6 +29,8 @@ const NewBlog = () => {
 
   const [selectedImage, setSelectedImage] = useState()
 
+  console.log(selectedImage)
+
 
   return (
 
@@ -39,7 +41,7 @@ const NewBlog = () => {
 
         {/* preveiw */}
         {!selectedImage ? 'No content ' :
-          <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 400, maxHeight: 400, minWidth: 380, minHeight: 380 }}>
+          <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', width: 400, height: 400 }}>
             <CardMedia
               component="img"
               image={selectedImage.url}
@@ -62,7 +64,7 @@ const NewBlog = () => {
         {/* image list */}
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, alignItems: 'center' }}>
-          <Drag_N_DropImages setSelectedImage={setSelectedImage} />
+          <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} />
         </Box>
 
       </Grid>
