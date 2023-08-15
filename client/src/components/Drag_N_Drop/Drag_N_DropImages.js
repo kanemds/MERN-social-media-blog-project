@@ -1,5 +1,5 @@
 import { Input, Box, Paper, IconButton, Button, Icon, Typography, Card, CardMedia } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined'
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined'
@@ -12,22 +12,21 @@ import './drag_n_drop.css'
 const Drag_N_DropImages = ({ setSelectedImage }) => {
 
   const [data, setData] = useState([])
+  const [selected, setSelected] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
 
-  const fileInputRef = useRef(null)
+  console.log(selected)
+  console.log(data)
+
   const dragItem = useRef(null)
   const dragOver = useRef(null)
 
+  useEffect(() => {
 
-  // console.log(imageDrag)
-  // console.log(data)
-  const selectedData = () => {
-    fileInputRef.current.click()
-    setSelectedImage()
-  }
+    setSelectedImage(data[0])
+    setSelected(null)
+  }, [data])
 
-  console.log('fileInputRef.current', fileInputRef.current)
-  console.log('click', selectedData)
 
   const onDataSelect = (e) => {
     const files = e.target.files
@@ -47,9 +46,9 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
     }
   }
 
-  const onDeleteImage = (index) => {
-    setData(prevImages => prevImages?.filter((_, i) => i !== index)
-    )
+  const onDeleteImage = (e, index) => {
+    e.preventDefault()
+    setData(prevImages => prevImages?.filter((_, i) => i !== index))
   }
 
   const onDragOver = e => {
@@ -116,8 +115,11 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
 
   const handleSelectImage = (e, image) => {
     e.preventDefault()
+    setSelected(image.name)
     setSelectedImage(image)
   }
+
+
 
 
   return (
@@ -128,8 +130,11 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
         :
 
         data?.map((image, index) => {
+
           return (
             <Box key={index}
+
+
               onClick={(e) => handleSelectImage(e, image)}
               className='card'
               component='div'
@@ -140,11 +145,12 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
               onDragEnd={handleNewOrder}
               onDragOver={e => e.preventDefault()}
             >
-              <IconButton size='small' color='primary' onClick={() => onDeleteImage(index)} sx={{ position: 'absolute', top: 0, right: 0, zIndex: 20 }}>
+              <IconButton size='small' color='primary' onClick={(e) => onDeleteImage(e, index)} sx={{ position: 'absolute', top: 5, right: 5, zIndex: 20 }}>
                 <ClearOutlinedIcon />
               </IconButton>
               <CardMedia
-                sx={{ borderRadius: 2 }}
+
+                sx={{ borderRadius: 2, border: selected === null && index === 0 ? '3px solid #1976d2' : selected === image.name ? '3px solid #1976d2' : '2px solid grey' }}
                 className='img'
                 component="img"
                 image={image.url}
@@ -165,11 +171,12 @@ const Drag_N_DropImages = ({ setSelectedImage }) => {
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} >
             <Typography variant='caption'>Drop Image(s)</Typography>
             <Typography variant='caption'>or</Typography>
-            {/* <Button onClick={selectedData} >Browse</Button> */}
-            <IconButton color="primary" component="label" onChange={onDataSelect}>
+            <IconButton color="primary" component="label" onClick={onDataSelect}>
               <AddPhotoAlternateOutlinedIcon />
               {/* <input type="file" hidden multiple ref={fileInputRef} /> */}
-              <input type="file" hidden multiple />
+              <input type="file" hidden multiple
+
+              />
             </IconButton>
           </Box>
 
