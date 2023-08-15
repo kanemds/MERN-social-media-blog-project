@@ -5,6 +5,7 @@ import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import Note from '../../components/Note'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
+import { useLocation } from 'react-router-dom'
 
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
@@ -57,21 +58,39 @@ const PreView = styled(Button)({
 
 
 const BlogLayout = () => {
-  return (
-    <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }} maxWidth='true'>
 
-      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', display: 'flex', justifyContent: 'center', }}>
-        <Box sx={{ width: '96%' }}>
-          <ClientSearchBar />
+  const { pathname } = useLocation()
+
+  console.log(pathname)
+
+  let content
+
+  if (pathname === '/blogs/new') {
+    return content = (
+      <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }} maxWidth='true'>
+        <Box sx={{ flexGrow: 1, width: '96%', mt: '20px' }}  >
+          <Outlet />
+        </Box >
+      </Container >
+    )
+  } else {
+    return content = (
+      <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }} maxWidth='true'>
+
+        <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', display: 'flex', justifyContent: 'center', }}>
+          <Box sx={{ width: '96%' }}>
+            <ClientSearchBar />
+          </Box>
         </Box>
 
-      </Box>
+        <Box sx={{ flexGrow: 1, width: '96%', mt: '20px' }}  >
+          <Outlet />
+        </Box >
+      </Container >
+    )
+  }
 
-      <Box sx={{ flexGrow: 1, width: '96%', mt: '20px' }}  >
-        <Outlet />
-      </Box >
-    </Container >
-  )
+  return content
 }
 
 export default BlogLayout
