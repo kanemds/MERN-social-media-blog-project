@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
-import './swiperStyle.css'
+// import './swiperStyle.css'
 
 
 
@@ -33,7 +33,7 @@ export default function HorizontalSwiper({ row }) {
           return (
             <SwiperSlide key={index}>
               <img src={each} />
-              <div className="swiper-lazy-preloader"></div>
+
             </SwiperSlide>
           )
         })}

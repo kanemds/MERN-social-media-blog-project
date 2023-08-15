@@ -4,6 +4,7 @@ import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternate
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined'
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
+import './drag_n_drop.css'
 
 
 
@@ -12,11 +13,18 @@ const Drag_N_DropImages = () => {
 
   const [data, setData] = useState([])
   const [isDragging, setIsDragging] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(undefined)
+  const [onMove, setOnMove] = useState(false)
+
   const fileInputRef = useRef(null)
   const dragItem = useRef(null)
   const dragOver = useRef(null)
 
-  console.log(data)
+  // console.log('currentIndex', currentIndex)
+
+
+  // console.log(imageDrag)
+  // console.log(data)
   const selectedData = () => {
     fileInputRef.current.click()
   }
@@ -82,6 +90,7 @@ const Drag_N_DropImages = () => {
   }
 
   const handleNewOrder = () => {
+
     // duplicate items 
     let items = [...data]
 
@@ -100,34 +109,34 @@ const Drag_N_DropImages = () => {
 
     // update list 
     setData(items)
+    setCurrentIndex(undefined)
   }
 
-  const handleCursor = image => {
-    console.log(image)
-    // image.style.cursor = 'grabbing'
+
+
+  const handleOnDragStart = index => {
+    console.log(index)
+    setCurrentIndex(index)
+
+    dragItem.current = index
+
   }
+
 
   return (
     <Box>
 
-
-
-
-      <Box sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', justifyContent: 'flex-start', mt: 10 }}>
+      <Box className='container' sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', justifyContent: 'flex-start', mt: 10 }}>
         {!data?.length ? ''
           :
 
           data?.map((image, index) => {
-
-            console.log(image, index)
-            console.log(data)
             return (
               <Card key={index}
-
+                component='div'
                 sx={{ display: 'flex', width: 120, height: 120, m: 1, position: 'relative' }}
-                onPointerDown={e => handleCursor(image)}
                 draggable
-                onDragStart={e => dragItem.current = index}
+                onDragStart={e => handleOnDragStart(index)}
                 onDragEnter={e => dragOver.current = index}
                 onDragEnd={handleNewOrder}
                 onDragOver={e => e.preventDefault()}
@@ -136,6 +145,7 @@ const Drag_N_DropImages = () => {
                   <ClearOutlinedIcon />
                 </IconButton>
                 <CardMedia
+                  className='img'
                   component="img"
                   image={image.url}
                   alt={image.name}
