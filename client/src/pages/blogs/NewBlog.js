@@ -1,5 +1,5 @@
 import { Box, Input, OutlinedInput, Paper, CardMedia, TextField, Typography, Button, FormControl, InputLabel, CardActionArea, Select, MenuItem, IconButton, Card, Container } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
@@ -27,6 +27,9 @@ const NewBlog = () => {
 
   console.log(matches)
 
+  const [selectedImage, setSelectedImage] = useState()
+
+
   return (
 
 
@@ -35,15 +38,15 @@ const NewBlog = () => {
         {/* picture area */}
 
         {/* preveiw */}
-
-        <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 400, maxHeight: 400, minWidth: 380, minHeight: 380 }}>
-          <CardMedia
-            component="img"
-            image={noteBook}
-            alt="green iguana"
-          />
-        </Card>
-
+        {!selectedImage ? 'No content ' :
+          <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 400, maxHeight: 400, minWidth: 380, minHeight: 380 }}>
+            <CardMedia
+              component="img"
+              image={selectedImage.url}
+              alt={selectedImage.name}
+            />
+          </Card>
+        }
 
         {/* <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
           <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 400, maxHeight: 400, minWidth: 380, minHeight: 380 }}>
@@ -59,7 +62,7 @@ const NewBlog = () => {
         {/* image list */}
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, alignItems: 'center' }}>
-          <Drag_N_DropImages />
+          <Drag_N_DropImages setSelectedImage={setSelectedImage} />
         </Box>
 
       </Grid>
