@@ -16,9 +16,9 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    images: {
-      type: [String],
-    },
+    // images: {
+    //   type: [String],
+    // },
     private: {
       type: Boolean,
       default: true

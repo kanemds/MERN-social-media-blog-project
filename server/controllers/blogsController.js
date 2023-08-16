@@ -2,6 +2,7 @@ const User = require('../models/User')
 const Blog = require('../models/Blog')
 
 
+
 // @desc Get all blogs
 // route Get /blogs
 // @access Private
@@ -25,19 +26,28 @@ const getAllBlogs = async (req, res) => {
 // route Post /blogs
 // @access Private
 const createBlog = async (req, res) => {
-  const { user, title, text, images } = req.body
+  console.log('start')
+  // const { username, title, text, images } = req.body
+  const { username, title, text } = req.body
+  console.log(username, title, text)
 
-  if (!user || !title || !text) {
+  if (!title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
+  const currentUser = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+  console.log(currentUser)
   const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
   if (titleExist) {
     return res.status(400).json({ message: 'Title has been used' })
   }
 
-  const newBlog = await Blog.create({ user, title, text, images })
+
+
+  console.log()
+
+  const newBlog = await Blog.create({ user: currentUser._id, title, text })
 
   // res.status(201).json({ message: 'New blog created' })
   if (newBlog) {
