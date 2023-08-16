@@ -1,5 +1,5 @@
 import { Box, Input, OutlinedInput, Paper, CardMedia, TextField, Typography, Button, FormControl, InputLabel, CardActionArea, Select, MenuItem, IconButton, Card, Container } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
@@ -9,6 +9,8 @@ import ark from '../../images/ark.jpg'
 import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
 
 import useMediaQuery from '@mui/material/useMediaQuery'
+import { useAddNewBlogMutation } from './blogsApiSlice'
+import useAuth from '../../hooks/useAuth'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -27,10 +29,53 @@ const NewBlog = () => {
 
   console.log(matches)
 
+  const { username } = useAuth()
+
+  console.log(username)
+
   const [selectedImage, setSelectedImage] = useState(null)
+  const [title, setTitle] = useState('')
+  const [text, setText] = useState('')
 
   console.log(selectedImage)
+  console.log(title)
+  console.log(typeof title)
+  console.log(text)
 
+  useEffect(() => {
+    if (isSuccess) {
+      setText('')
+      setTitle('')
+    }
+  }, [title, text])
+
+  const [
+    addNewBlog,
+    {
+      isLoading,
+      isSuccess,
+      isError,
+      error
+    }
+  ] = useAddNewBlogMutation()
+
+  console.log(error)
+
+  const handleTitle = e => {
+    setTitle(e.target.value)
+  }
+
+  const handleText = e => {
+    setText(e.target.value)
+  }
+
+  const canSave = [title.length || text.length].every(Boolean) && !isLoading
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await addNewBlog({ username, title, text })
+  }
 
 
   return (
@@ -74,12 +119,23 @@ const NewBlog = () => {
       <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', mt: '160px' }}>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          {isError ?
+            <OutlinedInput defaultValue={error.data.message} color='error' disabled />
+            :
+            ''
+          }
+
           <TextField
+            value={title}
+            onChange={handleTitle}
             autoComplete='true'
-            fullWidth sx={{ width: '80%' }}
+            fullWidth
+            sx={{ width: '80%' }}
             placeholder='Story Title'
           />
           <TextField
+            value={text}
+            onChange={handleText}
             placeholder='what would you like to share today?'
             sx={{ mt: 10, width: '80%' }}
             fullWidth
@@ -115,6 +171,7 @@ const NewBlog = () => {
               </Select>
             </FormControl>
           </Box>
+          <Button onClick={handleSubmit} disabled={!canSave}>Create </Button>
         </Box>
       </Grid>
 
