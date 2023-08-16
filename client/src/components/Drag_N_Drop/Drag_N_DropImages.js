@@ -9,7 +9,7 @@ import './drag_n_drop.css'
 
 
 
-const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
+const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgImages }) => {
 
   const [data, setData] = useState([])
   const [isClick, setIsClick] = useState(false)
@@ -46,6 +46,7 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
     for (let i = 0;i < files.length;i++) {
       if (files[i].type.split('/')[0] !== 'image') continue
       if (!data?.some((e) => e?.name === files[i]?.name)) {
+        setOrgImages(prev => [...prev, files[i]])
         setData(prevImages => [
           ...prevImages,
           {
@@ -66,6 +67,8 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
         setSelectedImage(null)
       }
       setData(prevImages => prevImages?.filter((_, i) => i !== index))
+      setOrgImages(prevImages => prevImages?.filter((_, i) => i !== index))
+
     }
   }
 
@@ -103,6 +106,7 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
       if (arrayFiles[i].type.split('/')[0] !== 'image') continue // type: "image/png" into array ['image','png']
 
       if (!data?.some((e) => e?.name === arrayFiles[i]?.name)) {
+        setOrgImages(prev => [...prev, files[i]])
         await setData(prevImages => [
           ...prevImages,
           {
@@ -120,15 +124,18 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
 
     // duplicate items 
     let items = [...data]
+    let orgs = [...orgImages]
 
     // remove and save the dragged item
     // splice giving items new list of array
     // draggedItem is the item that remove from also the selected item
-    const selectedItem = items.splice(dragItem.current, 1)[0]
+    const selectedItem = items.splice(dragItem.current, 1)[0] // selected object 
+    const selectedOrg = orgs.splice(dragItem.current, 1)[0]
 
     // create a new list with new position
     // the selectedItem will be insert to new position
     items.splice(dragOver.current, 0, selectedItem)
+    orgs.splice(dragOver.current, 0, selectedOrg)
 
     // reset position
     dragItem.current = null
@@ -136,6 +143,7 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
 
     // update list 
     setData(items)
+    setOrgImages(orgs)
   }
 
 

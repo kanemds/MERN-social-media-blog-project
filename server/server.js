@@ -19,9 +19,10 @@ connectDB()
 app.use(logger)
 
 app.use(cors(corsOptions))
+app.use(fileUpload()) // reading req.files && object from data object
 app.use(express.json())
 app.use(cookieParser())
-app.use(fileUpload()) // reading req.files && object from data object
+
 
 // // for parsing application/json
 // app.use(

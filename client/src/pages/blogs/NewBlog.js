@@ -32,8 +32,11 @@ const NewBlog = () => {
 
 
   const [selectedImage, setSelectedImage] = useState(null)
+  const [orgImages, setOrgImages] = useState([])
   const [title, setTitle] = useState('')
   const [text, setText] = useState('')
+
+  console.log(orgImages)
 
   useEffect(() => {
     if (isSuccess) {
@@ -65,11 +68,16 @@ const NewBlog = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const formData = await new FormData()
+    const formData = new FormData()
 
     formData.append('username', username)
     formData.append('title', title)
     formData.append('text', text)
+    for (const image of orgImages) {
+      formData.append("images", image)
+    }
+    // formData.append('file', orgImages)
+
     await addNewBlog(formData)
     // await addNewBlog({ username, title, text })
 
@@ -108,7 +116,7 @@ const NewBlog = () => {
         {/* image list */}
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, alignItems: 'center' }}>
-          <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} />
+          <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} />
         </Box>
 
       </Grid>
