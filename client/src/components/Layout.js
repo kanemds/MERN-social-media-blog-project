@@ -85,7 +85,7 @@ const Layout = () => {
     return main = (
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-        <Container maxWidth={true} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', mt: '100px' }}>
+        <Container maxWidth='true' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', mt: '100px' }}>
           {isLoading || isError ?
             { content }
             :
