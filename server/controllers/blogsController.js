@@ -31,6 +31,9 @@ const createBlog = async (req, res) => {
   const { username, title, text } = req.body
   console.log(username, title, text)
 
+  const images = await req.files.images
+  console.log(images)
+
   if (!title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
   }
