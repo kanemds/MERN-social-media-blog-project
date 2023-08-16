@@ -25,7 +25,7 @@ const getAllBlogs = async (req, res) => {
 // route Post /blogs
 // @access Private
 const createBlog = async (req, res) => {
-  const { user, title, text } = req.body
+  const { user, title, text, images } = req.body
 
   if (!user || !title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
@@ -37,7 +37,7 @@ const createBlog = async (req, res) => {
     return res.status(400).json({ message: 'Title has been used' })
   }
 
-  const newBlog = await Blog.create({ user, title, text })
+  const newBlog = await Blog.create({ user, title, text, images })
 
   // res.status(201).json({ message: 'New blog created' })
   if (newBlog) {
@@ -52,9 +52,9 @@ const createBlog = async (req, res) => {
 // @access Private
 const updateBlog = async (req, res) => {
 
-  const { id, user, title, text, completed } = req.body
+  const { id, user, title, text, images } = req.body
 
-  if (!id || !user || !title || !text || typeof completed !== 'boolean') {
+  if (!id || !user || !title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
@@ -74,6 +74,7 @@ const updateBlog = async (req, res) => {
   blog.user = user
   blog.title = title
   blog.text = text
+  blog.images = images
 
   const updatedBlog = await blog.save()
 
