@@ -17,14 +17,13 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
   const [isDragging, setIsDragging] = useState(false)
 
 
-  console.log(isClick)
+
 
   const dragItem = useRef(null)
   const dragOver = useRef(null)
 
   useEffect(() => {
-    console.log(data)
-    console.log(selectedImage)
+
     setIsClick(false)
     if (data?.length) {
       if (selectedImage) {
@@ -35,6 +34,8 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
     } else {
       setSelectedImage(null)
     }
+
+    console.log(data.length)
   }, [data])
 
 
@@ -79,28 +80,41 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
     setIsDragging(false)
   }
 
-  const onDrop = e => {
+  const onDrop = async e => {
+
     e.preventDefault()
     setIsDragging(false)
     const files = e.dataTransfer.files
-    for (let i = 0;i < files.length;i++) {
-      if (files[i].type.split('/')[0] !== 'image') continue
-      if (!data?.some((e) => e?.name === files[i]?.name)) {
-        setData(prevImages => [
+
+    let arrayFiles = []
+
+    // arrayFiles = Object.entries(files) // [position,file object]
+    //  [File, File, File, File, File]
+    for (const file of files) {
+      arrayFiles.push(file)
+    }
+    if (data.length + arrayFiles.length <= 4) {
+      // No need to modify arrayFiles
+    } else if (data.length + arrayFiles.length > 4) {
+      arrayFiles = arrayFiles.slice(0, 4 - data.length)
+    }
+
+    for (let i = 0;i < arrayFiles.length;i++) {
+      if (arrayFiles[i].type.split('/')[0] !== 'image') continue // type: "image/png" into array ['image','png']
+
+      if (!data?.some((e) => e?.name === arrayFiles[i]?.name)) {
+        await setData(prevImages => [
           ...prevImages,
           {
-            name: files[i]?.name,
-            url: URL.createObjectURL(files[i])
+            name: arrayFiles[i]?.name,
+            url: URL.createObjectURL(arrayFiles[i])
           }
         ])
       }
     }
   }
 
-  const uploadImages = () => {
-    console.log('images', data)
-    alert('file(s) upload')
-  }
+
 
   const handleNewOrder = () => {
 
@@ -149,6 +163,7 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
       {!data?.length ? ''
         :
 
+
         data?.map((image, index) => {
 
           return (
@@ -185,8 +200,9 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
         )
       }
       <Box
-        sx={{ width: 104, height: 104, m: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', border: '2px dashed grey', borderRadius: 2 }}
+        sx={{ width: 104, height: 104, m: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', border: '2px dashed grey', borderRadius: 2, display: data.length < 4 ? '' : 'none' }}
         onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}
+        disabled={data?.length <= 5 ? false : true}
       >
         {isDragging ? (
           <Button>Drop images here</Button>
@@ -194,7 +210,7 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage }) => {
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} >
             <Typography variant='caption'>Drop Image(s)</Typography>
             <Typography variant='caption'>or</Typography>
-            <IconButton color="primary" component="label" onChange={onDataSelect}>
+            <IconButton color="primary" component="label" onChange={onDataSelect} disabled={data?.length <= 4 ? false : true}>
               <AddPhotoAlternateOutlinedIcon />
               {/* <input type="file" hidden multiple ref={fileInputRef} /> */}
               <input type="file" hidden multiple />

@@ -27,20 +27,13 @@ const NewBlog = () => {
 
   const matches = useMediaQuery('(min-width:1200px)')
 
-  console.log(matches)
 
   const { username } = useAuth()
 
-  console.log(username)
 
   const [selectedImage, setSelectedImage] = useState(null)
   const [title, setTitle] = useState('')
   const [text, setText] = useState('')
-
-  console.log(selectedImage)
-  console.log(title)
-  console.log(typeof title)
-  console.log(text)
 
   useEffect(() => {
     if (isSuccess) {
@@ -58,8 +51,6 @@ const NewBlog = () => {
       error
     }
   ] = useAddNewBlogMutation()
-
-  console.log(error)
 
   const handleTitle = e => {
     setTitle(e.target.value)
