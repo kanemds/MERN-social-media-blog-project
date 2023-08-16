@@ -65,7 +65,14 @@ const NewBlog = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    await addNewBlog({ username, title, text })
+    const formData = await new FormData()
+
+    formData.append('username', username)
+    formData.append('title', title)
+    formData.append('text', text)
+    await addNewBlog(formData)
+    // await addNewBlog({ username, title, text })
+
   }
 
 
@@ -162,7 +169,12 @@ const NewBlog = () => {
               </Select>
             </FormControl>
           </Box>
-          <Button onClick={handleSubmit} disabled={!canSave}>Create </Button>
+          <Button
+            onClick={handleSubmit}
+          // disabled={!canSave}
+          >
+            Create
+          </Button>
         </Box>
       </Grid>
 

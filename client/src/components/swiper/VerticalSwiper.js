@@ -32,8 +32,6 @@ export default function VerticalSwiper() {
   const [scroll, setScroll] = useState(0)
   const contentRef = useRef()
 
-  console.log(contentRef)
-
   // console.log(isLast)
   // console.log(isAllow)
   // console.log("Vertical Scroll Position: " + scroll)

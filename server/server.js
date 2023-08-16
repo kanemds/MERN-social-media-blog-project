@@ -6,6 +6,8 @@ const path = require('path')
 const { logger, logEvents } = require('./middleware/logger')
 const errorHandler = require('./middleware/errorHandler')
 const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
+const fileUpload = require('express-fileupload') // reading req.files && object from data object
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
 const connectDB = require('./config/dbConnection')
@@ -19,6 +21,21 @@ app.use(logger)
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
+app.use(fileUpload()) // reading req.files && object from data object
+
+// // for parsing application/json
+// app.use(
+//   bodyParser.json({
+//     limit: "50mb",
+//   })
+// )
+// // for parsing application/xwww-form-urlencoded
+// app.use(
+//   bodyParser.urlencoded({
+//     limit: "50mb",
+//     extended: true,
+//   })
+// )
 
 // '/public' not needed
 app.use('/', express.static(path.join(__dirname, 'public')))
