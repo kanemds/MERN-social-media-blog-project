@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
+const storage = require('../config/firebaseConfig')
 const { ref, uploadBytes, getDownloadURL, deleteObject } = require('firebase/storage')
 
 
@@ -26,13 +27,12 @@ const getAllBlogs = async (req, res) => {
 // route Post /blogs
 // @access Private
 const createBlog = async (req, res) => {
-  console.log('start')
+
   // const { username, title, text, images } = req.body
   const { username, title, text } = req.body
-  console.log(username, title, text)
+
 
   const images = await req.files.images // same order from how frontend formData append
-  console.log(images)
 
   if (!title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
@@ -46,7 +46,64 @@ const createBlog = async (req, res) => {
     return res.status(400).json({ message: 'Title has been used' })
   }
 
-  const newBlog = await Blog.create({ user: currentUser, user_id: currentUser._id, title, text })
+  let getImages = []
+
+
+  // if (images) {
+  //   const singleFile = new Date().getTime() + images.name
+  //   // console.log(singleFile)
+  //   const imageRef = ref(storage, `blogs/${singleFile}`)
+  //   // console.log("imageRef", imageRef)
+  //   const uploadImage = await uploadBytes(imageRef, images.data)
+  //   // console.log(uploadImage)
+  //   getImages = await getDownloadURL(uploadImage.ref)
+  // }
+
+
+
+  // if (images) {
+  //   console.log('start')
+  //   for (i = 0;i < images.length;i++) {
+  //     const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
+  //     console.log("name", name)
+  //     const uploadImage = await uploadBytes(name, images[i].data)
+  //     console.log('uploadImage', uploadImage)
+  //     downloadImage = await getDownloadURL(uploadImage.ref)
+  //     console.log('getDownloadURL', getDownloadURL)
+  //     getImages.push(downloadImage)
+  //   }
+
+  //   return getImages
+  // }
+
+  // console.log(getImages)
+
+  const processImages = async (images) => {
+    const getImages = []
+
+    for (let i = 0;i < images.length;i++) {
+      const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
+      console.log("name", name)
+
+      const uploadImage = await uploadBytes(name, images[i].data)
+      console.log('uploadImage', uploadImage)
+
+      const downloadImage = await getDownloadURL(uploadImage.ref)
+      console.log('downloadImage', downloadImage)
+      getImages.push(downloadImage)
+    }
+
+    return getImages
+  }
+
+
+  const processedImages = await processImages(images)
+  console.log('Processed images:', processedImages)
+
+
+
+
+  const newBlog = await Blog.create({ user: currentUser, images: processedImages, user_id: currentUser._id, title, text })
 
   // res.status(201).json({ message: 'New blog created' })
   if (newBlog) {
