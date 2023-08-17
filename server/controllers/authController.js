@@ -15,6 +15,7 @@ const login = async (req, res) => {
   }
 
   const loginUser = await User.findOne({ username }).exec()
+  console.log(loginUser)
 
   if (!loginUser || !loginUser.active) {
     return res.status(401).json({ message: 'User is not authorized' })
@@ -24,11 +25,13 @@ const login = async (req, res) => {
 
   if (!isPasswordMatch) return res.status(401).json({ message: 'User is not authorized' })
 
+
   // ===============================create access and refresh token========================================================
 
   const accessToken = jwt.sign({
     'userInfo': {
       'username': loginUser.username,
+      'userId': loginUser._id.toString(),
       'role': loginUser.role
     }
   },

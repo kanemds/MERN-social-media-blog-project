@@ -31,8 +31,8 @@ const createBlog = async (req, res) => {
   const { username, title, text } = req.body
   console.log(username, title, text)
 
-  const images = await req.files.images
-  console.log(images)
+  const images = await req.files.images // same order from how frontend formData append
+
 
   if (!title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
@@ -40,6 +40,7 @@ const createBlog = async (req, res) => {
 
   const currentUser = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
   console.log(currentUser)
+  console.log(currentUser._id)
   const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
   if (titleExist) {
@@ -50,7 +51,7 @@ const createBlog = async (req, res) => {
 
   console.log()
 
-  const newBlog = await Blog.create({ user: currentUser._id, title, text })
+  const newBlog = await Blog.create({ user: currentUser, user_id: currentUser._id, title, text })
 
   // res.status(201).json({ message: 'New blog created' })
   if (newBlog) {

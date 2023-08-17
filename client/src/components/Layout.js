@@ -70,7 +70,9 @@ const Layout = () => {
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
             <Box sx={{ display: 'flex', mt: '70px', mb: '70px', width: '100%', minHeight: 'calc(100vh - 140px)' }}>
-              <ClientSideBar />
+              <Box sx={{ position: 'sticky', top: '70px', width: '280x', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+                <ClientSideBar />
+              </Box>
               <BlogLayout />
             </Box>
           </>
