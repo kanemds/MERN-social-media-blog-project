@@ -36,8 +36,6 @@ const NewBlog = () => {
   const [title, setTitle] = useState('')
   const [text, setText] = useState('')
 
-  console.log(orgImages)
-
   useEffect(() => {
     if (isSuccess) {
       setText('')

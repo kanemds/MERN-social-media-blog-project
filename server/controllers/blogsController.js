@@ -52,13 +52,14 @@ const createBlog = async (req, res) => {
   console.log()
 
   const newBlog = await Blog.create({ user: currentUser, user_id: currentUser._id, title, text })
-
+  await currentUser.insert({ _id: newBlog._id })
   // res.status(201).json({ message: 'New blog created' })
   if (newBlog) {
     return res.status(201).json({ message: 'New blog created' })
   } else {
     return res.status(400).json({ message: 'Invalid blog data received' })
   }
+
 }
 
 // @desc Update a blog

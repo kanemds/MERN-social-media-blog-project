@@ -59,7 +59,7 @@ const PreView = styled(Button)({
 
 const BlogsList = () => {
 
-  const { username, userId, role } = useAuth()
+  const { username } = useAuth()
   const {
     data,
     isLoading,
@@ -69,17 +69,18 @@ const BlogsList = () => {
   } = useGetBlogsQuery()
 
 
-  console.log(username, userId, role)
-
-
-
-  // const { currentUser } = useGetBlogsQuery('blogsList', {
+  // const { entities } = useGetBlogsQuery('blogsList', {
   //   selectFromResult: ({ data }) => ({
-  //     currentUser: data?.entities
+  //     entities: data?.entities
   //   })
   // })
 
-  // console.log(currentUser)
+  if (isSuccess) {
+    const blogs = Object.values(data?.entities)
+    const userBlogs = blogs.filter(blog => blog.user === username)
+    console.log(userBlogs)
+  }
+
 
   return (
 

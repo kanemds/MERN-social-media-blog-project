@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: true
+  },
+  blogs: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Blog'
   }
 }, {
   timestamps: true
