@@ -8,6 +8,9 @@ import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
+import { useGetBlogsQuery, useGetUserBlogsQuery } from './blogsApiSlice'
+import useAuth from '../../hooks/useAuth'
+
 
 const theme = createTheme({
   breakpoints: {
@@ -55,6 +58,29 @@ const PreView = styled(Button)({
 
 
 const BlogsList = () => {
+
+  const { username, userId, role } = useAuth()
+  const {
+    data,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetBlogsQuery()
+
+
+  console.log(username, userId, role)
+
+
+
+  // const { currentUser } = useGetBlogsQuery('blogsList', {
+  //   selectFromResult: ({ data }) => ({
+  //     currentUser: data?.entities
+  //   })
+  // })
+
+  // console.log(currentUser)
+
   return (
 
     <ThemeProvider theme={theme}  >

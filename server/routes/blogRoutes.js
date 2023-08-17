@@ -7,4 +7,5 @@ router.route('/')
   .patch(updateBlog)
   .delete(deleteBlog)
 
+
 module.exports = router

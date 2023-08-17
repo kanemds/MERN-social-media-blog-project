@@ -73,6 +73,7 @@ const NewBlog = () => {
     formData.append('username', username)
     formData.append('title', title)
     formData.append('text', text)
+    // will be sent in the order they were appended.
     for (const image of orgImages) {
       formData.append("images", image)
     }
