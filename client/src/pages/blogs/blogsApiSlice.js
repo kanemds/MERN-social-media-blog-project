@@ -18,10 +18,12 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         }
       }),
       transformResponse: responseData => {
+
         const loadedBlogs = responseData.map(blog => {
           blog.id = blog._id
           return blog
         })
+
         return blogsAdapter.setAll(initialState, loadedBlogs)
       },
       providesTags: (result, error, arg) => {

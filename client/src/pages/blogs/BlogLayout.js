@@ -61,8 +61,6 @@ const BlogLayout = () => {
 
   const { pathname } = useLocation()
 
-  console.log(pathname)
-
   let content
 
   if (pathname === '/blogs/new') {

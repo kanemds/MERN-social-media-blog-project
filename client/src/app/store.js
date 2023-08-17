@@ -14,8 +14,8 @@ export const store = configureStore({
 })
 
 
-console.log('apiSlice.reducerPath', apiSlice.reducerPath)
-console.log('apiSlice.reducer', apiSlice.reducer)
+// console.log('apiSlice.reducerPath', apiSlice.reducerPath)
+// console.log('apiSlice.reducer', apiSlice.reducer)
 
 setupListeners(store.dispatch)
 

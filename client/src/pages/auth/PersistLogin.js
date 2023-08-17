@@ -16,7 +16,7 @@ const PersistLogin = () => {
 
   const token = useSelector(selectCurrentToken)
 
-  console.log('selectCurrentToken', token)
+  // console.log('selectCurrentToken', token)
 
   const effectRan = useRef(false) // due to strict mode runs twice
 
@@ -38,7 +38,7 @@ const PersistLogin = () => {
     if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
 
       const verifyRefreshToken = async () => {
-        console.log('verifying refresh token')
+        // console.log('verifying refresh token')
         try {
 
           await refresh()
@@ -57,7 +57,7 @@ const PersistLogin = () => {
     // the code the second time will execute the code above during development
 
     return () => {
-      console.log('clean up')
+      // console.log('clean up')
       effectRan.current = true
     }// clean up which the second time will run clean up first before execute the code
 
@@ -69,13 +69,13 @@ const PersistLogin = () => {
   let content
 
   if (!persist) {
-    console.log('Account did not set to persist')
+    // console.log('Account did not set to persist')
     content = <Outlet />
   } else if (isLoading) {
-    console.log('Loading')
+    // console.log('Loading')
     content = <LoadingSpinner />
   } else if (isError) {
-    console.log('error')
+    // console.log('error')
     content = (
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ErrorMessage error={error.data} />
@@ -85,12 +85,12 @@ const PersistLogin = () => {
       </Box>
     )
   } else if (isSuccess && success) {
-    console.log('success')
+    // console.log('success')
     content = <Outlet />
   } else if (token && isUninitialized) {
 
-    console.log('token and uninit')
-    console.log(isUninitialized)
+    // console.log('token and uninit')
+    // console.log(isUninitialized)
     content = <Outlet />
   }
 

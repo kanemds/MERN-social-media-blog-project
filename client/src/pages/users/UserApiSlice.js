@@ -36,6 +36,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       transformResponse: responseData => {
         // before transformResponse: user.id is no exist
         const loadedUsers = responseData.map(user => {
+
           user.id = user._id
           // added extra value to each user:{id: "64a8a25ada03bef05ab843dc"}
           return user
@@ -48,7 +49,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       providesTags: (result, error, arg) => {
         // auto refetch if list or specific id changed
         // console.log('tagResult', result) // {ids: Array([…]), entities: {…}}
-        console.log('tagArg', arg)
+        // console.log('tagArg', arg)
 
         if (result?.ids) {
           // const example = result.ids.map(id => ({ type: 'User', id:id }))
@@ -81,7 +82,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => {
         // the updated user info: {id: '64a5fa16c6aa3ed5b30e837d', username: 'John', email: 'john@gmail.com', role: 'Admin', active: false}
-        console.log('invalidatesTags-arg', arg)
+        // console.log('invalidatesTags-arg', arg)
         return [
           { type: 'User', id: arg.id }
         ]

@@ -35,13 +35,12 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
       setSelectedImage(null)
     }
 
-    console.log(data.length)
   }, [data])
 
 
   const onDataSelect = (e) => {
     const files = e.target.files
-    console.log('files', files)
+    // console.log('files', files)
     if (files.length === 0) return
     for (let i = 0;i < files.length;i++) {
       if (files[i].type.split('/')[0] !== 'image') continue

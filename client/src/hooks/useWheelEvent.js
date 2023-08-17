@@ -5,15 +5,15 @@ const useWheelEvent = (element) => {
   useEffect(() => {
     const lastElement = document.querySelector(element)
 
-    console.log(lastElement)
+    // console.log(lastElement)
 
     const wheelControl = e => {
       if (e.deltaY < 0) {
 
-        console.log("Scrolling Up")
+        // console.log("Scrolling Up")
       } else if (e.deltaY > 0) {
 
-        console.log("Scrolling Down")
+        // console.log("Scrolling Down")
       }
     }
 
