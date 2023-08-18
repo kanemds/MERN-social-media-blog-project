@@ -4,13 +4,15 @@ import { Box, CircularProgress, Typography } from '@mui/material'
 
 const LoadingSpinner = () => {
   return (
-    <Box sx={{
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      hight: '100vh'
-    }}>
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        hight: '100vh'
+      }}
+    >
 
 
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
