@@ -46,8 +46,6 @@ const createBlog = async (req, res) => {
     return res.status(400).json({ message: 'Title has been used' })
   }
 
-  let getImages = []
-
 
   const processMultipleImages = async (images) => {
     const multipleImages = []
@@ -71,10 +69,13 @@ const createBlog = async (req, res) => {
   }
 
   let processedImages
+  // using typeof array === 'object' true since array is object
+  // instead Array.isArray(images) is to check if it's array
+
   if (!Array.isArray(images)) {
-    processedImages = await processSingleImage(images)
+    processedImages = await processSingleImage(images)   // object 
   } else {
-    processedImages = await processMultipleImages(images)
+    processedImages = await processMultipleImages(images) // array
   }
 
   // console.log('Processed images:', processedImages)
