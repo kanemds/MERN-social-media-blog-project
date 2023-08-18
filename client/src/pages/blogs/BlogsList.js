@@ -79,7 +79,7 @@ const BlogsList = () => {
 
   if (isLoading) {
     content = (
-      <Box sx={{ position: 'relative', height: 'calc(100vh - 166px)' }} >
+      <Box sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         <LoadingSpinner />
       </Box>
     )
@@ -92,7 +92,7 @@ const BlogsList = () => {
     content = (
       <ThemeProvider theme={theme}  >
         <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
-          <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}><Note /></Grid>
+
           {userBlogs?.map(blog => (
             <Grid xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
               <Note blog={blog} />
