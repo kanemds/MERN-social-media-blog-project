@@ -73,7 +73,10 @@ const Layout = () => {
               <Box sx={{ position: 'sticky', top: '70px', width: '280x', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                 <ClientSideBar />
               </Box>
-              <BlogLayout />
+              <Box sx={{ minHeight: '100%', width: '100%' }}>
+                <BlogLayout />
+              </Box>
+
             </Box>
           </>
         }

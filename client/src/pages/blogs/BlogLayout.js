@@ -81,7 +81,7 @@ const BlogLayout = () => {
           </Box>
         </Box>
 
-        <Box sx={{ flexGrow: 1, width: '96%', mt: '20px' }}  >
+        <Box sx={{ flexGrow: 1, width: '96%', mt: '20px', hight: '100%' }}  >
           <Outlet />
         </Box >
       </Container >
