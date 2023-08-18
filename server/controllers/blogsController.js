@@ -49,59 +49,35 @@ const createBlog = async (req, res) => {
   let getImages = []
 
 
-  // if (images) {
-  //   const singleFile = new Date().getTime() + images.name
-  //   // console.log(singleFile)
-  //   const imageRef = ref(storage, `blogs/${singleFile}`)
-  //   // console.log("imageRef", imageRef)
-  //   const uploadImage = await uploadBytes(imageRef, images.data)
-  //   // console.log(uploadImage)
-  //   getImages = await getDownloadURL(uploadImage.ref)
-  // }
-
-
-
-  // if (images) {
-  //   console.log('start')
-  //   for (i = 0;i < images.length;i++) {
-  //     const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
-  //     console.log("name", name)
-  //     const uploadImage = await uploadBytes(name, images[i].data)
-  //     console.log('uploadImage', uploadImage)
-  //     downloadImage = await getDownloadURL(uploadImage.ref)
-  //     console.log('getDownloadURL', getDownloadURL)
-  //     getImages.push(downloadImage)
-  //   }
-
-  //   return getImages
-  // }
-
-  // console.log(getImages)
-
-  const processImages = async (images) => {
-    const getImages = []
+  const processMultipleImages = async (images) => {
+    const multipleImages = []
 
     for (let i = 0;i < images.length;i++) {
       const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
-      console.log("name", name)
-
       const uploadImage = await uploadBytes(name, images[i].data)
-      console.log('uploadImage', uploadImage)
-
       const downloadImage = await getDownloadURL(uploadImage.ref)
-      console.log('downloadImage', downloadImage)
-      getImages.push(downloadImage)
+      multipleImages.push(downloadImage)
     }
-
-    return getImages
+    return multipleImages
   }
 
+  const processSingleImage = async images => {
+    let singleImage = []
+    const singleFile = new Date().getTime() + images.name
+    const imageRef = ref(storage, `blogs/${singleFile}`)
+    const uploadImage = await uploadBytes(imageRef, images.data)
+    singleImage = await getDownloadURL(uploadImage.ref)
+    return singleImage
+  }
 
-  const processedImages = await processImages(images)
-  console.log('Processed images:', processedImages)
+  let processedImages
+  if (!Array.isArray(images)) {
+    processedImages = await processSingleImage(images)
+  } else {
+    processedImages = await processMultipleImages(images)
+  }
 
-
-
+  // console.log('Processed images:', processedImages)
 
   const newBlog = await Blog.create({ user: currentUser, images: processedImages, user_id: currentUser._id, title, text })
 
