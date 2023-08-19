@@ -12,7 +12,11 @@ export default function Note({ blog }) {
 
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
-  const [images, setImage] = useState(blog?.images)
+  const [images, setImage] = useState(blog?.images[0] || noteBook)
+
+  const optionOne = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
+  const optionTwo = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
+  const currentDay = new Intl.DateTimeFormat('en-US', optionOne).format(new Date(blog?.createdAt))
 
   return (
 
@@ -54,7 +58,7 @@ export default function Note({ blog }) {
               </Typography>
             </Box>
           </Box>
-
+          {currentDay}
 
         </CardContent>
       </CardActionArea>
