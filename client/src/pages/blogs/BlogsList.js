@@ -95,7 +95,6 @@ const BlogsList = () => {
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
   }
-  console.log('currentUserBlogs', currentUserBlogs)
 
   let content
 
@@ -134,33 +133,6 @@ const BlogsList = () => {
 
     content = (
       <ThemeProvider theme={theme}  >
-        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-          <Box>
-            {dataList?.map(category => {
-              return (
-                <Button key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} value={category.type} onClick={handleSelect} sx={{ minWidth: 0, mr: 1 }}>{category.type}</Button>
-              )
-            }
-            )}
-          </Box>
-          <Box>
-            {isDesc ?
-              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleAscendent}>
-                <ReorderOutlinedIcon />
-                <ExpandLessOutlinedIcon />
-                DESC
-              </Button>
-              :
-              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleDescendent}>
-                <ReorderOutlinedIcon />
-                <ExpandMoreOutlinedIcon />
-                ACES
-              </Button>
-            }
-
-          </Box>
-        </Box>
-
         <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
 
           {
@@ -192,7 +164,45 @@ const BlogsList = () => {
 
 
   }
-  return content
+  return (
+
+    <Container sx={{ width: '100%' }} maxWidth='true'>
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
+        <Box sx={{ width: '100%' }}>
+          <ClientSearchBar />
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
+          <Box>
+            {dataList?.map(category => {
+              return (
+                <Button key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} value={category.type} onClick={handleSelect} sx={{ minWidth: 0, mr: 1 }}>{category.type}</Button>
+              )
+            }
+            )}
+          </Box>
+          <Box>
+            {isDesc ?
+              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleAscendent}>
+                <ReorderOutlinedIcon />
+                <ExpandLessOutlinedIcon />
+                DESC
+              </Button>
+              :
+              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleDescendent}>
+                <ReorderOutlinedIcon />
+                <ExpandMoreOutlinedIcon />
+                ACES
+              </Button>
+            }
+          </Box>
+        </Box>
+      </Box>
+      <Box sx={{ p: 1 }}>
+        {content}
+      </Box>
+    </Container >
+
+  )
 }
 
 export default BlogsList

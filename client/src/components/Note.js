@@ -20,14 +20,14 @@ export default function Note({ blog }) {
   const optionThree = { year: 'numeric', month: 'short', day: 'numeric' }
   // const currentDay = new Intl.DateTimeFormat('en-US', optionOne).format(new Date(blog?.createdAt))
 
-  console.log(new Date())
+
 
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
   const sevenDays = 60 * 60 * 24 * 1000 * 7
 
   const timeInMillisecond = current - postedDay
-  console.log(timeInMillisecond)
+
 
 
   return (

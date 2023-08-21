@@ -12,7 +12,7 @@ import SideBar from "./FrontPageSideBar"
 import BodyElements from "../pages/mainPage/BodyElements"
 import ClientSideBar from "./ClientSideBar"
 import ClientSearchBar from "./ClientSearchBar"
-import BlogLayout from "../pages/blogs/BlogLayout"
+
 
 const Layout = () => {
 
@@ -74,7 +74,7 @@ const Layout = () => {
                 <ClientSideBar />
               </Box>
               <Box sx={{ minHeight: '100%', width: '100%' }}>
-                <BlogLayout />
+                <Outlet />
               </Box>
 
             </Box>

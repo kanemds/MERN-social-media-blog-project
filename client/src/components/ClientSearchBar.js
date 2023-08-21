@@ -14,9 +14,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import SearchIcon from '@mui/icons-material/Search'
 import { Button, AppBar } from '@mui/material'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
+import useAuth from '../hooks/useAuth'
 
 
 export default function ClientSearchBar() {
+
   return (
 
     <FormControl sx={{ display: 'flex', flexDirection: 'row' }}>
