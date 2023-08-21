@@ -18,6 +18,7 @@ export default function Note({ blog }) {
   const optionTwo = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
   const currentDay = new Intl.DateTimeFormat('en-US', optionOne).format(new Date(blog?.createdAt))
 
+  { new Date(Date.parse(blog.createdAt)).toLocaleString() }
   return (
 
     <Card sx={{ width: 345, height: 380 }}>
@@ -59,6 +60,7 @@ export default function Note({ blog }) {
             </Box>
           </Box>
           {currentDay}
+
 
         </CardContent>
       </CardActionArea>

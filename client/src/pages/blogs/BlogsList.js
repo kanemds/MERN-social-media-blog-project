@@ -70,7 +70,7 @@ const BlogsList = () => {
 
   const { username } = useAuth()
 
-  const [isSelected, setIsSelected] = useState(false)
+  const [isSelected, setIsSelected] = useState('All')
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentUserBlogs, setCurrentUserBlogs] = useState(null)
 
@@ -167,7 +167,6 @@ const BlogsList = () => {
             isSelected === 'All' ?
               (
                 currentUserBlogs?.map(blog =>
-
                   <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Note blog={blog} />
                   </Grid>)
