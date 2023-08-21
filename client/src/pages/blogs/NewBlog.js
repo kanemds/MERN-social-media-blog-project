@@ -36,8 +36,9 @@ const NewBlog = () => {
   const [orgImages, setOrgImages] = useState([])
   const [title, setTitle] = useState('')
   const [text, setText] = useState('')
+  const [status, setStatus] = useState('public')
 
-
+  console.log(status)
 
   const [
     addNewBlog,
@@ -58,6 +59,7 @@ const NewBlog = () => {
     }
   }, [isSuccess])
 
+  const canSave = [title.length && text.length].every(Boolean) && !isLoading
 
   const handleTitle = e => {
     setTitle(e.target.value)
@@ -67,7 +69,11 @@ const NewBlog = () => {
     setText(e.target.value)
   }
 
-  const canSave = [title.length || text.length].every(Boolean) && !isLoading
+
+
+  const handlePostTo = (e) => {
+    setStatus(e.target.value)
+  }
 
 
   const handleSubmit = async (e) => {
@@ -77,6 +83,7 @@ const NewBlog = () => {
     formData.append('username', username)
     formData.append('title', title)
     formData.append('text', text)
+    formData.append('visibleTo', status)
     // will be sent in the order they were appended.
     for (const image of orgImages) {
       formData.append("images", image)
@@ -175,16 +182,17 @@ const NewBlog = () => {
                   },
                 }}
                 autoWidth
-                defaultValue='Public'
+                defaultValue='public'
+                onChange={handlePostTo}
               >
-                <MenuItem value='Public'>Public</MenuItem>
-                <MenuItem value='Private'>Private</MenuItem>
+                <MenuItem value='public' >Public</MenuItem>
+                <MenuItem value='private'>Private</MenuItem>
               </Select>
             </FormControl>
           </Box>
           <Button
             onClick={handleSubmit}
-          // disabled={!canSave}
+            disabled={!canSave}
           >
             Create
           </Button>

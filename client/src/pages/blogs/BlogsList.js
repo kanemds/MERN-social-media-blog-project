@@ -68,8 +68,6 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Public' }, { id: 3
 const BlogsList = () => {
 
 
-
-
   const { username } = useAuth()
 
   const [isSelected, setIsSelected] = useState(false)
@@ -130,8 +128,8 @@ const BlogsList = () => {
 
   if (isSuccess) {
 
-    const publicBlogs = currentUserBlogs?.filter(blog => blog.private === false)
-    const privateBlogs = currentUserBlogs?.filter(blog => blog.private === true)
+    const publicBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'public')
+    const privateBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'private')
 
 
     content = (
