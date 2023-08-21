@@ -101,17 +101,17 @@ const BlogsList = () => {
   if (isSuccess) {
     const blogs = Object.values(data?.entities)
 
-
+    const two = Object.values(data?.entities)
 
     console.log(blogs)
     const ascendingOrder = blogs?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    console.log('ascendingOrder', ascendingOrder)
     const descendingOrder = blogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    console.log('descendingOrder', descendingOrder)
 
 
-    console.log(ascendingOrder)
-    console.log(descendingOrder)
 
-    const userBlogs = descendingOrder.filter(blog => blog.user === username)
+    const userBlogs = ascendingOrder.filter(blog => blog.user === username)
     const publicBlogs = userBlogs.filter(blog => blog.private === false)
     const privateBlogs = userBlogs.filter(blog => blog.private === true)
 
