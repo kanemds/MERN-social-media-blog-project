@@ -24,9 +24,9 @@ const blogSchema = new mongoose.Schema(
     images: {
       type: [String],
     },
-    private: {
-      type: Boolean,
-      default: true
+    visible_to: {
+      type: String,
+      default: 'public'
     }
   },
   {

@@ -29,7 +29,7 @@ const getAllBlogs = async (req, res) => {
 const createBlog = async (req, res) => {
 
   // const { username, title, text, images } = req.body
-  const { username, title, text } = req.body
+  const { username, title, text, visibleTo } = req.body
 
 
   const images = await req.files.images // same order from how frontend formData append
@@ -80,7 +80,7 @@ const createBlog = async (req, res) => {
 
   // console.log('Processed images:', processedImages)
 
-  const newBlog = await Blog.create({ user: currentUser, images: processedImages, user_id: currentUser._id, title, text })
+  const newBlog = await Blog.create({ user: currentUser, images: processedImages, user_id: currentUser._id, title, text, visible_to: visibleTo })
 
   // res.status(201).json({ message: 'New blog created' })
   if (newBlog) {
