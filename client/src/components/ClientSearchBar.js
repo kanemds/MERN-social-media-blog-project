@@ -14,10 +14,18 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import SearchIcon from '@mui/icons-material/Search'
 import { Button, AppBar } from '@mui/material'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined'
 import useAuth from '../hooks/useAuth'
 
 
-export default function ClientSearchBar() {
+export default function ClientSearchBar({ setSearchInput, searchInput, handleSearch }) {
+
+  const handleChange = (e) => {
+    setSearchInput(e.target.value)
+  }
+  const handleClear = (e) => {
+    setSearchInput('')
+  }
 
   return (
 
@@ -25,11 +33,18 @@ export default function ClientSearchBar() {
 
       <OutlinedInput
         sx={{ width: '100%' }}
+        value={searchInput}
+        onChange={handleChange}
         autoComplete='true'
         placeholder='Search Posts...'
         startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
+        endAdornment={<InputAdornment position="end">
+          <IconButton onClick={handleClear}>
+            <ClearOutlinedIcon />
+          </IconButton>
+        </InputAdornment>}
       />
-      <Button variant='contained'><SearchIcon /></Button>
+      <Button variant='contained' onClick={handleSearch}><SearchIcon /></Button>
 
     </FormControl>
 
