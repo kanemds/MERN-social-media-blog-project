@@ -73,6 +73,9 @@ const BlogsList = () => {
   const [isSelected, setIsSelected] = useState('All')
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentUserBlogs, setCurrentUserBlogs] = useState(null)
+  const [searchInput, setSearchInput] = useState('')
+
+  console.log(searchInput)
 
   const {
     data,
@@ -111,7 +114,6 @@ const BlogsList = () => {
     if (isDesc) {
       const ascendingOrder = currentUserBlogs?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       setCurrentUserBlogs(ascendingOrder)
-      console.log(currentUserBlogs)
       setIsDesc(false)
     }
   }
@@ -120,9 +122,12 @@ const BlogsList = () => {
     if (!isDesc) {
       const descendingOrder = currentUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       setCurrentUserBlogs(descendingOrder)
-      console.log(currentUserBlogs)
       setIsDesc(true)
     }
+  }
+
+  const handleSearch = () => {
+    if (!searchInput.length) return console.log('nothing')
   }
 
   if (isSuccess) {
@@ -169,7 +174,7 @@ const BlogsList = () => {
     <Container sx={{ width: '100%' }} maxWidth='true'>
       <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
         <Box sx={{ width: '100%' }}>
-          <ClientSearchBar />
+          <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
           <Box>
@@ -181,16 +186,16 @@ const BlogsList = () => {
             )}
           </Box>
           <Box>
-            {isDesc ?
-              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleAscendent}>
-                <ReorderOutlinedIcon />
-                <ExpandLessOutlinedIcon />
-                DESC
-              </Button>
-              :
+            {!isDesc ?
               <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleDescendent}>
                 <ReorderOutlinedIcon />
                 <ExpandMoreOutlinedIcon />
+                DESC
+              </Button>
+              :
+              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleAscendent}>
+                <ReorderOutlinedIcon />
+                <ExpandLessOutlinedIcon />
                 ACES
               </Button>
             }
