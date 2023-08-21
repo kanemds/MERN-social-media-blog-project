@@ -4,6 +4,7 @@ import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
 import Grid from '@mui/material/Unstable_Grid2'
+import { useNavigate } from 'react-router-dom'
 import noteBook from '../../images/noteBook.jpg'
 import ark from '../../images/ark.jpg'
 import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
@@ -29,19 +30,14 @@ const NewBlog = () => {
 
 
   const { username } = useAuth()
-
+  const navigate = useNavigate()
 
   const [selectedImage, setSelectedImage] = useState(null)
   const [orgImages, setOrgImages] = useState([])
   const [title, setTitle] = useState('')
   const [text, setText] = useState('')
 
-  useEffect(() => {
-    if (isSuccess) {
-      setText('')
-      setTitle('')
-    }
-  }, [title, text])
+
 
   const [
     addNewBlog,
@@ -52,6 +48,16 @@ const NewBlog = () => {
       error
     }
   ] = useAddNewBlogMutation()
+
+  useEffect(() => {
+    if (isSuccess) {
+      setText('')
+      setTitle('')
+      setOrgImages([])
+      navigate('/blogs')
+    }
+  }, [isSuccess])
+
 
   const handleTitle = e => {
     setTitle(e.target.value)
