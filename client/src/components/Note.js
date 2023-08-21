@@ -5,6 +5,7 @@ import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import { CardActionArea, Avatar, Box } from '@mui/material'
 import noteBook from '../images/noteBook.jpg'
+import moment from 'moment'
 
 export default function Note({ blog }) {
   // const title = "B.C. man's swoon-worthy proposal at van Gogh art exhibit to be cherished after his death"
@@ -16,9 +17,19 @@ export default function Note({ blog }) {
 
   const optionOne = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
   const optionTwo = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
-  const currentDay = new Intl.DateTimeFormat('en-US', optionOne).format(new Date(blog?.createdAt))
+  const optionThree = { year: 'numeric', month: 'short', day: 'numeric' }
+  // const currentDay = new Intl.DateTimeFormat('en-US', optionOne).format(new Date(blog?.createdAt))
 
-  { new Date(Date.parse(blog.createdAt)).toLocaleString() }
+  console.log(new Date())
+
+  const current = Date.parse(new Date())
+  const postedDay = Date.parse(blog.createdAt)
+  const sevenDays = 60 * 60 * 24 * 1000 * 7
+
+  const timeInMillisecond = current - postedDay
+  console.log(timeInMillisecond)
+
+
   return (
 
     <Card sx={{ width: 345, height: 380 }}>
@@ -59,10 +70,15 @@ export default function Note({ blog }) {
               </Typography>
             </Box>
           </Box>
-          {currentDay}
-
-
+          <Box>
+            {
+              timeInMillisecond <= sevenDays ?
+                moment(Date.parse(blog.createdAt)).fromNow()
+                :
+                new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, optionThree)
+            }</Box>
         </CardContent>
+
       </CardActionArea>
 
     </Card>
