@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Box, Button, Paper, Container, Typography, AppBar, Toolbar, useScrollTrigger, IconButton } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
@@ -63,15 +63,18 @@ const PreView = styled(Button)({
 })
 
 
-
+const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Public' }, { id: 3, 'type': 'Private' }]
 
 const BlogsList = () => {
-  const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Public' }, { id: 3, 'type': 'Private' }]
+
+
+
+
   const { username } = useAuth()
 
   const [isSelected, setIsSelected] = useState(false)
   const [isDesc, setIsDesc] = useState(true) // high to low
-
+  const [currentUserBlogs, setCurrentUserBlogs] = useState(null)
 
   const {
     data,
@@ -82,11 +85,19 @@ const BlogsList = () => {
   } = useGetBlogsQuery()
 
 
+  useEffect(() => {
+    if (isSuccess) {
+      const findUserBlogs = Object.values(data?.entities)?.filter(blog => blog.user === username)
+      const descendingOrder = findUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      setCurrentUserBlogs(descendingOrder)
+    }
+  }, [isSuccess])
+
+
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
   }
-
-
+  console.log('currentUserBlogs', currentUserBlogs)
 
   let content
 
@@ -98,22 +109,29 @@ const BlogsList = () => {
     )
   }
 
+
+  const handleAscendent = () => {
+    if (isDesc) {
+      const ascendingOrder = currentUserBlogs?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      setCurrentUserBlogs(ascendingOrder)
+      console.log(currentUserBlogs)
+      setIsDesc(false)
+    }
+  }
+
+  const handleDescendent = () => {
+    if (!isDesc) {
+      const descendingOrder = currentUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      setCurrentUserBlogs(descendingOrder)
+      console.log(currentUserBlogs)
+      setIsDesc(true)
+    }
+  }
+
   if (isSuccess) {
-    const blogs = Object.values(data?.entities)
 
-    const two = Object.values(data?.entities)
-
-    console.log(blogs)
-    const ascendingOrder = blogs?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-    console.log('ascendingOrder', ascendingOrder)
-    const descendingOrder = blogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    console.log('descendingOrder', descendingOrder)
-
-
-
-    const userBlogs = ascendingOrder.filter(blog => blog.user === username)
-    const publicBlogs = userBlogs.filter(blog => blog.private === false)
-    const privateBlogs = userBlogs.filter(blog => blog.private === true)
+    const publicBlogs = currentUserBlogs?.filter(blog => blog.private === false)
+    const privateBlogs = currentUserBlogs?.filter(blog => blog.private === true)
 
 
     content = (
@@ -129,14 +147,13 @@ const BlogsList = () => {
           </Box>
           <Box>
             {isDesc ?
-
-              <Button size='small' sx={{ minWidth: 0, p: 0 }}>
+              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleAscendent}>
                 <ReorderOutlinedIcon />
                 <ExpandLessOutlinedIcon />
                 DESC
               </Button>
               :
-              <Button size='small' sx={{ minWidth: 0, p: 0 }}>
+              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleDescendent}>
                 <ReorderOutlinedIcon />
                 <ExpandMoreOutlinedIcon />
                 ACES
@@ -151,7 +168,7 @@ const BlogsList = () => {
           {
             isSelected === 'All' ?
               (
-                userBlogs?.map(blog =>
+                currentUserBlogs?.map(blog =>
 
                   <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Note blog={blog} />
