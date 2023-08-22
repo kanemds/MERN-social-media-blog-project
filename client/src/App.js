@@ -14,6 +14,8 @@ import RequireAuth from './pages/auth/RequireAuth'
 import { ROLES } from './config/roles'
 import useTitle from './hooks/useTitle'
 import NewBlog from './pages/blogs/NewBlog'
+import SingleBlog from './pages/blogs/SingleBlog'
+import SingleBlogEdit from './pages/blogs/SingleBlogEdit'
 
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
           <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
             <Route path='blogs'>
               <Route index element={<BlogsList />} />
+              <Route path='post/:id' element={<SingleBlog />} />
+              <Route path='post/edit/:id' element={<SingleBlogEdit />} />
               <Route path='new' element={<NewBlog />} />
             </Route>
           </Route>
