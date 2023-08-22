@@ -50,8 +50,5 @@ export default function ClientSearchBar({ setSearchInput, searchInput, handleSea
       <Button variant='contained' onClick={handleSearch}><SearchIcon /></Button>
 
     </FormControl>
-
-
-
   )
 }
