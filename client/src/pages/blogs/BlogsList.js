@@ -74,8 +74,10 @@ const BlogsList = () => {
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentUserBlogs, setCurrentUserBlogs] = useState(null)
   const [searchInput, setSearchInput] = useState('')
+  const [searchResult, setSearchResult] = useState(null)
+  const [isSearch, setIsSearch] = useState(false)
 
-  console.log(searchInput)
+  console.log(searchResult)
 
   const {
     data,
@@ -128,13 +130,31 @@ const BlogsList = () => {
 
   const handleSearch = () => {
     if (!searchInput.length) return console.log('nothing')
+    const inputLowerCase = searchInput.toLowerCase()
+    // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
+    const result = currentUserBlogs.filter(blog =>
+      [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
+    )
+
+    if (!result.length) {
+      setSearchInput('')
+      setIsSearch(true)
+      return setSearchResult('No search results found for blog(s)')
+    } else {
+      setSearchInput('')
+      setIsSearch(true)
+      return setSearchResult(result)
+    }
+
   }
 
+  const searchPublicBlogs = Array.isArray(searchResult) && searchResult?.filter(blog => blog.visible_to === 'public')
+  const searchPrivateBlogs = Array.isArray(searchResult) && searchResult?.filter(blog => blog.visible_to === 'private')
+
+  const publicBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'public')
+  const privateBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'private')
+
   if (isSuccess) {
-
-    const publicBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'public')
-    const privateBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'private')
-
 
     content = (
       <ThemeProvider theme={theme}  >
@@ -203,7 +223,45 @@ const BlogsList = () => {
         </Box>
       </Box>
       <Box sx={{ p: 1 }}>
-        {content}
+
+        {Array.isArray(searchResult) && searchResult.length && isSearch ?
+          <ThemeProvider theme={theme}  >
+            <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+
+              {
+                isSelected === 'All' ?
+                  (
+                    searchResult?.map(blog =>
+                      <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Note blog={blog} />
+                      </Grid>)
+                  ) :
+                  isSelected === 'Public' ?
+                    (
+                      searchPublicBlogs?.map(blog =>
+
+                        <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                          <Note blog={blog} />
+                        </Grid>)
+                    ) :
+                    (
+                      searchPrivateBlogs?.map(blog =>
+                        <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                          <Note blog={blog} />
+                        </Grid>)
+                    )
+              }
+            </Grid>
+          </ThemeProvider >
+
+
+          :
+          typeof searchResult === 'string' && searchResult.length && isSearch ?
+            <Box> {searchResult}</Box>
+            :
+            content
+        }
+
       </Box>
     </Container >
 

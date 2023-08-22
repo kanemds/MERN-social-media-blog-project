@@ -38,11 +38,14 @@ export default function ClientSearchBar({ setSearchInput, searchInput, handleSea
         autoComplete='true'
         placeholder='Search Posts...'
         startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
-        endAdornment={<InputAdornment position="end">
-          <IconButton onClick={handleClear}>
-            <ClearOutlinedIcon />
-          </IconButton>
-        </InputAdornment>}
+        endAdornment={
+          searchInput.length ?
+            <InputAdornment position="end">
+              <IconButton onClick={handleClear}>
+                <ClearOutlinedIcon />
+              </IconButton>
+            </InputAdornment>
+            : ''}
       />
       <Button variant='contained' onClick={handleSearch}><SearchIcon /></Button>
 
