@@ -38,7 +38,8 @@ const NewBlog = () => {
   const [text, setText] = useState('')
   const [status, setStatus] = useState('public')
 
-  console.log(status)
+
+  console.log(text)
 
   const [
     addNewBlog,
@@ -136,6 +137,7 @@ const NewBlog = () => {
             value={title}
             onChange={handleTitle}
             autoComplete='true'
+            multiline
             fullWidth
             sx={{ width: '80%' }}
             placeholder='Story Title'

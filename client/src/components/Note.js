@@ -12,6 +12,7 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useNavigate } from 'react-router-dom'
+import { timeDisplayOptions } from '../config/timeDisplayOptions'
 
 export default function Note({ blog, username = null }) {
 
@@ -27,33 +28,29 @@ export default function Note({ blog, username = null }) {
   const [isVertical, setIsVertical] = useState(true)
 
 
-  useEffect(() => {
-    // Create a new image element
-    const img = new Image()
 
-    // Set the src attribute to the URL of the image you want to detect
-    img.src = images
+  // useEffect(() => {
+  //   // Create a new image element
+  //   const img = new Image()
 
-    // Add an event listener for when the image has loaded
-    img.onload = () => {
-      // Access the width and height properties of the image
-      const imageWidth = img.width
-      const imageHeight = img.height
+  //   // Set the src attribute to the URL of the image you want to detect
+  //   img.src = images
 
-      // Update state with the width and height
-      setWidth(imageWidth)
-      setHeight(imageHeight)
-    }
-  }, [])
+  //   // Add an event listener for when the image has loaded
+  //   img.onload = () => {
+  //     // Access the width and height properties of the image
+  //     const imageWidth = img.width
+  //     const imageHeight = img.height
 
+  //     // Update state with the width and height
+  //     setWidth(imageWidth)
+  //     setHeight(imageHeight)
+  //   }
+  // }, [])
 
-
-
-
-
-  console.log('width', width)
-  console.log('height', height)
-  console.log('isClick', isClick)
+  // console.log('width', width)
+  // console.log('height', height)
+  // console.log('isClick', isClick)
 
   const optionOne = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
   const optionTwo = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
@@ -189,7 +186,7 @@ export default function Note({ blog, username = null }) {
                 timeInMillisecond <= sevenDays ?
                   moment(Date.parse(blog.createdAt)).fromNow()
                   :
-                  new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, optionThree)
+                  new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
               }
             </Box>
             <IconButton
