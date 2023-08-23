@@ -114,17 +114,6 @@ const NewBlog = () => {
           </Card>
         }
 
-        {/* <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-          <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: 400, maxHeight: 400, minWidth: 380, minHeight: 380 }}>
-            <CardMedia
-              component="img"
-              image={ark}
-              alt="green iguana"
-            />
-          </Card>
-        </Box> */}
-
-
         {/* image list */}
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, alignItems: 'center' }}>

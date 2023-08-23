@@ -34,7 +34,7 @@ export default function ImagesDisplaySlider({ row }) {
           return (
 
             <SwiperSlide key={index}>
-              <img src={each} />
+              <img className='contain' src={each} />
             </SwiperSlide>
 
           )
