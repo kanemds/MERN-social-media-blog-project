@@ -78,7 +78,7 @@ const SingleBlog = () => {
 
     content = (
       <ThemeProvider theme={theme}  >
-        <Container sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} maxWidth='xxxl'>
+        <Container sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 6, mb: 6 }} maxWidth='xxxl'>
           <Paper sx={{ width: 500, height: 500 }}>
             <ImagesDisplaySlider row={currentBlog?.images} />
 
@@ -93,10 +93,17 @@ const SingleBlog = () => {
               }
             </Typography>
           </Box>
-          <Box sx={{ width: '60%' }}>
+          <Box sx={{ width: '60%', minWidth: 500 }}>
             <TextField
               sx={{
                 mb: 1,
+                '.css-1rcvvn7-MuiInputBase-root-MuiInput-root:before': {
+                  border: 'hidden'
+                },
+                '.css-1rcvvn7-MuiInputBase-root-MuiInput-root.Mui-disabled:before': {
+                  borderBottomStyle: 'hidden',
+                  border: 'hidden'
+                },
                 '& .MuiInputBase-input.Mui-disabled': {
                   fontSize: 26,
                   WebkitTextFillColor: 'black',
@@ -104,7 +111,8 @@ const SingleBlog = () => {
                     cursor: 'text'
                   }
                 },
-              }}
+              }
+              }
               disabled
               variant='standard'
               fullWidth
@@ -113,6 +121,13 @@ const SingleBlog = () => {
             />
             <TextField
               sx={{
+                '.css-1rcvvn7-MuiInputBase-root-MuiInput-root:before': {
+                  border: 'hidden'
+                },
+                '.css-1rcvvn7-MuiInputBase-root-MuiInput-root.Mui-disabled:before': {
+                  borderBottomStyle: 'hidden',
+                  border: 'hidden'
+                },
                 '& .MuiInputBase-input.Mui-disabled': {
                   fontSize: 14,
                   WebkitTextFillColor: 'black',
@@ -121,7 +136,6 @@ const SingleBlog = () => {
                   }
                 },
               }}
-
               disabled
               variant='standard'
               fullWidth
@@ -131,9 +145,7 @@ const SingleBlog = () => {
           </Box>
         </Container>
       </ThemeProvider>
-
     )
-
   }
 
   return content
