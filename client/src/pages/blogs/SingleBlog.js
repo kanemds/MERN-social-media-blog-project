@@ -1,4 +1,4 @@
-import { Box, Container, Paper } from '@mui/material'
+import { Box, Container, Paper, Typography, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 import { useParams } from 'react-router-dom'
@@ -7,6 +7,8 @@ import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ImagesDisplaySlider from './ImagesDisplaySlider'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
+import { timeDisplayOptions } from '../../config/timeDisplayOptions'
+import moment from 'moment'
 
 const theme = createTheme({
   breakpoints: {
@@ -49,7 +51,14 @@ const SingleBlog = () => {
     }
   }, [isSuccess])
 
+  const current = Date.parse(new Date())
+  const postedDay = Date.parse(currentBlog?.createdAt)
+  const sevenDays = 60 * 60 * 24 * 1000 * 7
 
+  const timeInMillisecond = current - postedDay
+  const localTime = new Date(Date.parse(currentBlog?.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+
+  console.log(currentBlog.text)
 
   let content
 
@@ -63,21 +72,62 @@ const SingleBlog = () => {
   }
 
   if (isSuccess) {
+
+
+
+
     content = (
       <ThemeProvider theme={theme}  >
         <Container sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} maxWidth='xxxl'>
-          <Box sx={{ width: 500, maxWidth: 1200, height: 'auto' }}>
-
+          <Paper sx={{ width: 500, height: 500 }}>
             <ImagesDisplaySlider row={currentBlog?.images} />
 
+          </Paper>
+          <Box sx={{ m: 2 }}>
+            <Typography>
+              {
+                timeInMillisecond <= sevenDays ?
+                  moment(Date.parse(currentBlog?.createdAt)).fromNow()
+                  :
+                  localTime
+              }
+            </Typography>
           </Box>
-          <Box>
-            <Box>
-              {currentBlog.title}
-            </Box>
-            <Box>
-              {currentBlog.text}
-            </Box>
+          <Box sx={{ width: '60%' }}>
+            <TextField
+              sx={{
+                mb: 1,
+                '& .MuiInputBase-input.Mui-disabled': {
+                  fontSize: 26,
+                  WebkitTextFillColor: 'black',
+                  '&:hover': {
+                    cursor: 'text'
+                  }
+                },
+              }}
+              disabled
+              variant='standard'
+              fullWidth
+              multiline
+              defaultValue={currentBlog.title}
+            />
+            <TextField
+              sx={{
+                '& .MuiInputBase-input.Mui-disabled': {
+                  fontSize: 14,
+                  WebkitTextFillColor: 'black',
+                  '&:hover': {
+                    cursor: 'text'
+                  }
+                },
+              }}
+
+              disabled
+              variant='standard'
+              fullWidth
+              multiline
+              defaultValue={currentBlog.text}
+            />
           </Box>
         </Container>
       </ThemeProvider>
