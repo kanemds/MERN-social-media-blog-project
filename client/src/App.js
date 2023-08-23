@@ -16,6 +16,7 @@ import useTitle from './hooks/useTitle'
 import NewBlog from './pages/blogs/NewBlog'
 import SingleBlog from './pages/blogs/SingleBlog'
 import SingleBlogEdit from './pages/blogs/SingleBlogEdit'
+import BloggerHomePage from './pages/blogs/BloggerHomePage'
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
               <Route index element={<BlogsList />} />
               <Route path='post/:id' element={<SingleBlog />} />
               <Route path='post/edit/:id' element={<SingleBlogEdit />} />
+              <Route path='user/:id' element={<BloggerHomePage />} />
               <Route path='new' element={<NewBlog />} />
             </Route>
           </Route>

@@ -58,8 +58,21 @@ export default function Note({ blog, username = null }) {
       navigate(`/blogs/post/${blog.id}`)
     }
   }
+
+  const handleLook = () => {
+    if (isClick) {
+      navigate(`/blogs/post/${blog.id}`)
+    }
+  }
+
   const handleEdit = () => {
     navigate(`/blogs/post/edit/${blog.id}`)
+  }
+
+  const handleUserPage = () => {
+    if (isClick) {
+      navigate(`/blogs/user/${blog.id}`)
+    }
 
   }
 
@@ -68,6 +81,16 @@ export default function Note({ blog, username = null }) {
     <Card sx={{ width: 345, height: 380 }} >
       <CardActionArea
 
+        sx={{
+          color: "white",
+          backgroundColor: "white",
+          "&:hover": {
+            backgroundColor: "white"
+          }
+        }}
+        disableElevation='true'
+        disableFocusRipple='true'
+        disableRipple='true'
         onClick={handleView}
       >
         <CardMedia
@@ -77,21 +100,30 @@ export default function Note({ blog, username = null }) {
           alt={title}
         />
         <CardContent sx={{ height: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }} >
-          <Box sx={{ display: 'flex' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mr: '16px' }}>
-              <Avatar />
+          <Box sx={{ display: 'flex', height: 120 }}>
+            <Box>
+              <IconButton
+                onMouseOver={() => setIsClick(true)}
+                onMouseOut={() => setIsClick(false)}
+                onClick={handleUserPage}
+                sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
+              >
+                <Avatar sx={{ '&:hover': { backgroundColor: '#1976d2' } }} />
+              </IconButton>
             </Box>
+
 
 
             <Box>
               <Typography variant="body1" sx={{
+                color: 'black',
                 wordBreak: "break-word", display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
                 WebkitLineClamp: 3,
                 fontWeight: 'bold',
                 textOverflow: 'ellipsis',
-                mb: 2
+                mb: 1
               }}>
                 {title}
               </Typography>
@@ -107,8 +139,8 @@ export default function Note({ blog, username = null }) {
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 28 }}>
+            <Box color='black'>
               {
                 timeInMillisecond <= sevenDays ?
                   moment(Date.parse(blog.createdAt)).fromNow()
@@ -140,11 +172,9 @@ export default function Note({ blog, username = null }) {
                 horizontal: 'right',
               }}
             >
-
-
               <Button><DeleteForeverOutlinedIcon /></Button>
               <Button onClick={handleEdit}><EditNoteOutlinedIcon /></Button>
-              <Button onClick={handleView}><RemoveRedEyeOutlinedIcon /></Button>
+              <Button onClick={handleLook}><RemoveRedEyeOutlinedIcon /></Button>
             </Popover>
           </Box>
         </CardContent>
