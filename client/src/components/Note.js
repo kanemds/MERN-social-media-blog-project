@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
@@ -22,7 +22,37 @@ export default function Note({ blog, username = null }) {
   const [images, setImage] = useState(blog?.images[0] || noteBook)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
+  const [width, setWidth] = useState(null)
+  const [height, setHeight] = useState(null)
+  const [isVertical, setIsVertical] = useState(true)
 
+
+  useEffect(() => {
+    // Create a new image element
+    const img = new Image()
+
+    // Set the src attribute to the URL of the image you want to detect
+    img.src = images
+
+    // Add an event listener for when the image has loaded
+    img.onload = () => {
+      // Access the width and height properties of the image
+      const imageWidth = img.width
+      const imageHeight = img.height
+
+      // Update state with the width and height
+      setWidth(imageWidth)
+      setHeight(imageHeight)
+    }
+  }, [])
+
+
+
+
+
+
+  console.log('width', width)
+  console.log('height', height)
   console.log('isClick', isClick)
 
   const optionOne = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
@@ -78,14 +108,22 @@ export default function Note({ blog, username = null }) {
 
   return (
 
-    <Card sx={{ width: 345, height: 380 }} >
+    <Card
+      sx={{
+        width: 355, height: 360,
+        "&:hover": {
+          boxShadow: 2,
+          border: '2px solid #1976d2'
+        }
+      }}
+    >
       <CardActionArea
 
         sx={{
           color: "white",
           backgroundColor: "white",
           "&:hover": {
-            backgroundColor: "white"
+            backgroundColor: "white",
           }
         }}
         disableElevation='true'
@@ -93,12 +131,14 @@ export default function Note({ blog, username = null }) {
         disableRipple='true'
         onClick={handleView}
       >
+
         <CardMedia
-          sx={{ height: 200, width: '100%' }}
+          sx={{ height: 180, width: '100%' }}
           component="img"
           image={images}
           alt={title}
         />
+
         <CardContent sx={{ height: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }} >
           <Box sx={{ display: 'flex', height: 120 }}>
             <Box>
@@ -106,9 +146,13 @@ export default function Note({ blog, username = null }) {
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
                 onClick={handleUserPage}
+                disableElevation='true'
+                disableFocusRipple='true'
+                disableRipple='true'
+
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
               >
-                <Avatar sx={{ '&:hover': { backgroundColor: '#1976d2' } }} />
+                <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
               </IconButton>
             </Box>
 
@@ -120,7 +164,7 @@ export default function Note({ blog, username = null }) {
                 wordBreak: "break-word", display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 3,
+                WebkitLineClamp: 2,
                 fontWeight: 'bold',
                 textOverflow: 'ellipsis',
                 mb: 1
@@ -131,7 +175,7 @@ export default function Note({ blog, username = null }) {
                 wordBreak: "break-word", display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 2,
+                WebkitLineClamp: 1,
                 textOverflow: 'ellipsis',
               }}>
                 {text}
@@ -153,8 +197,12 @@ export default function Note({ blog, username = null }) {
               onMouseOut={() => setIsClick(false)}
               aria-describedby={id}
               variant="contained"
-              onClick={handleClick} >
+              onClick={handleClick}
+              sx={{ p: 0, '&:hover': { backgroundColor: 'white', color: '#1976d2' } }}
+
+            >
               <MoreVertOutlinedIcon />
+
             </IconButton>
             <Popover
               onMouseOver={() => setIsClick(true)}
@@ -181,6 +229,6 @@ export default function Note({ blog, username = null }) {
 
       </CardActionArea>
 
-    </Card>
+    </Card >
   )
 }
