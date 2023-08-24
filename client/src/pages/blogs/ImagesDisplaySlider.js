@@ -3,16 +3,17 @@ import './imagesDisplaySlider.css'
 
 // Import Swiper styles
 import 'swiper/css'
+import 'swiper/css/zoom'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 // import './swiperStyle.css'
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 
 
 // import required modules
 import { Keyboard, Pagination, Navigation } from 'swiper/modules'
 
-export default function ImagesDisplaySlider({ row }) {
+export default function ImagesDisplaySlider({ row, handleClose, open }) {
 
   return (
     < >
@@ -36,9 +37,9 @@ export default function ImagesDisplaySlider({ row }) {
             <SwiperSlide key={index}>
               <img className='contain' src={each} />
             </SwiperSlide>
-
           )
         })}
+
       </Swiper>
     </>
   )
