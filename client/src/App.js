@@ -17,6 +17,7 @@ import NewBlog from './pages/blogs/NewBlog'
 import SingleBlog from './pages/blogs/SingleBlog'
 import SingleBlogEdit from './pages/blogs/SingleBlogEdit'
 import BloggerHomePage from './pages/blogs/BloggerHomePage'
+import ScrollToTop from './components/ScrollToTop'
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
     <Routes>
 
       <Route path='/' element={<Layout />}>
+
         <Route path='login' element={<LoginPage />} />
         <Route path='register' element={<RegisterPage />} />
 
