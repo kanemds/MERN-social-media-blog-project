@@ -7,7 +7,6 @@ const blogsAdapter = createEntityAdapter()
 const initialState = blogsAdapter.getInitialState()
 
 
-
 export const blogsApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getBlogs: builder.query({
@@ -17,6 +16,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
           return response.status === 200 && !result.isError
         }
       }),
+      keepUnusedDataFor: 300,
       transformResponse: responseData => {
 
         const loadedBlogs = responseData.map(blog => {
@@ -35,6 +35,23 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         } else {
           return [{ type: 'Blog', id: 'LIST' }]
         }
+      }
+    }),
+    getSingleBlog: builder.query({
+      query: id => ({
+        url: `/blogs/${id}`,
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      keepUnusedDataFor: 300,
+      transformResponse: (response, meta, arg) => {
+        const id = response._doc._id
+        const blog = { ...response._doc, id: id }
+        return blog
+      },
+      providesTags: (result, error, arg) => {
+        return [{ type: 'Blog', id: arg.id }]
       }
     }),
     addNewBlog: builder.mutation({
@@ -76,6 +93,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetBlogsQuery,
+  useGetSingleBlogQuery,
   useAddNewBlogMutation,
   useUpdateBlogMutation,
   useDeleteUserMutation

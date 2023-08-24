@@ -22,6 +22,28 @@ const getAllBlogs = async (req, res) => {
 
   res.status(200).json(blogsWithUsers)
 }
+// @desc Get single blog
+// route Get /blogs/post
+// @access Private
+const getSingleBlog = async (req, res) => {
+  const { id } = req.params
+
+  const blog = await Blog.findById(id).exec()
+  console.log(blog)
+
+  if (!blog) {
+    return res.status(404).json({ message: 'No blog found' })
+  }
+
+
+  const blogUser = await User.findById(blog.user).lean().exec()
+  console.log(blogUser)
+  const blogWithUser = await { ...blog, user: blogUser.username }
+
+
+  // console.log(blogWithUser)
+  res.status(200).json(blogWithUser)
+}
 
 // @desc Create a blog
 // route Post /blogs
@@ -152,4 +174,4 @@ const deleteBlog = async (req, res) => {
 
 }
 
-module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog }
+module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog, getSingleBlog }

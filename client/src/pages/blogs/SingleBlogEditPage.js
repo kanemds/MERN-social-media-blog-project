@@ -1,28 +1,48 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { useGetBlogsQuery } from './blogsApiSlice'
+import { useGetSingleBlogQuery } from './blogsApiSlice'
+import { Button } from '@mui/material'
 
 const SingleBlogEditPage = () => {
 
   const { id } = useParams()
-  const location = useLocation()
+  const { state } = useLocation()
+
+
+
+  const [blog, setBlog] = useState('')
+  const [check, setCheck] = useState('')
+  const [isSkip, setIsSkip] = useState(true)
   // console.log(id)
-  console.log(location)
+
+
+  const { data, isLoading, isSuccess, isError } = useGetSingleBlogQuery(id, { skip: isSkip })
+
+  console.log('state', state)
+  console.log('data', data)
+
+  useEffect(() => {
+    if (state) {
+      setBlog(state)
+    } else {
+      setIsSkip(false)
+    }
+  }, [state])
+
+  useEffect(() => {
+    if (!isSkip && isSuccess) {
+      setBlog(data)
+    }
+  }, [isSuccess, isSkip, data])
 
 
 
-  const { currentBlog } = useGetBlogsQuery('usersList', {
-    selectFromResult: ({ data }) => ({
-      currentBlog: data?.entities[id]
-    })
-  })
-
-  console.log(currentBlog)
+  let content
 
 
-  return (
-    <div>SingleBlogEditPage</div>
-  )
+
+
+  return content
 }
 
 export default SingleBlogEditPage
