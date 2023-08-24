@@ -6,6 +6,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { CssBaseline } from '@mui/material'
 import { store } from './app/store'
 import { Provider } from 'react-redux'
+import ScrollToTop from './components/ScrollToTop'
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
@@ -14,6 +16,7 @@ root.render(
     <Provider store={store}>
       <CssBaseline />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path='/*' element={<App />} />
         </Routes>
