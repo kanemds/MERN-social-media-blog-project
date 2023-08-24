@@ -1,4 +1,4 @@
-import { Box, Container, Paper, Typography, TextField } from '@mui/material'
+import { Box, Container, Paper, Typography, TextField, Modal, Button } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 import { useParams } from 'react-router-dom'
@@ -25,6 +25,19 @@ const theme = createTheme({
   },
 })
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '100%',
+  height: '100%',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+}
+
 
 const SingleBlog = () => {
 
@@ -32,6 +45,7 @@ const SingleBlog = () => {
   const { username } = useAuth()
 
   const [currentBlog, setCurrentBlog] = useState('')
+  const [open, setOpen] = useState(false)
 
 
 
@@ -50,6 +64,9 @@ const SingleBlog = () => {
       setCurrentBlog(...blog) // using filter became array, spread out become object
     }
   }, [isSuccess])
+
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   const current = Date.parse(new Date())
   const postedDay = Date.parse(currentBlog?.createdAt)
@@ -73,16 +90,22 @@ const SingleBlog = () => {
 
   if (isSuccess) {
 
-
-
-
     content = (
       <ThemeProvider theme={theme}  >
         <Container sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 6, mb: 6 }} maxWidth='xxxl'>
-          <Paper sx={{ width: 500, height: 500 }}>
+          <Paper onClick={handleOpen} sx={{ width: 500, height: 500 }}>
             <ImagesDisplaySlider row={currentBlog?.images} />
-
           </Paper>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <ImagesDisplaySlider row={currentBlog?.images} handleClose={handleClose} on={open} />
+            </Box>
+          </Modal>
           <Box sx={{ m: 2 }}>
             <Typography>
               {
@@ -105,7 +128,7 @@ const SingleBlog = () => {
                   border: 'hidden'
                 },
                 '& .MuiInputBase-input.Mui-disabled': {
-                  fontSize: 26,
+                  fontSize: 20,
                   WebkitTextFillColor: 'black',
                   '&:hover': {
                     cursor: 'text'
