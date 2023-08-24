@@ -15,9 +15,9 @@ import { ROLES } from './config/roles'
 import useTitle from './hooks/useTitle'
 import NewBlog from './pages/blogs/NewBlog'
 import SingleBlog from './pages/blogs/SingleBlog'
-import SingleBlogEdit from './pages/blogs/SingleBlogEdit'
+import SingleBlogEditPage from './pages/blogs/SingleBlogEditPage'
 import BloggerHomePage from './pages/blogs/BloggerHomePage'
-import ScrollToTop from './components/ScrollToTop'
+
 
 
 function App() {
@@ -39,7 +39,7 @@ function App() {
             <Route path='blogs'>
               <Route index element={<BlogsList />} />
               <Route path='post/:id' element={<SingleBlog />} />
-              <Route path='post/edit/:id' element={<SingleBlogEdit />} />
+              <Route path='post/edit/:id' element={<SingleBlogEditPage />} />
               <Route path='user/:id' element={<BloggerHomePage />} />
               <Route path='new' element={<NewBlog />} />
             </Route>
