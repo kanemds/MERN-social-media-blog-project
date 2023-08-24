@@ -23,9 +23,6 @@ export default function Note({ blog, username = null }) {
   const [images, setImage] = useState(blog?.images[0] || noteBook)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
-  const [width, setWidth] = useState(null)
-  const [height, setHeight] = useState(null)
-  const [isVertical, setIsVertical] = useState(true)
 
 
   const current = Date.parse(new Date())
@@ -62,7 +59,7 @@ export default function Note({ blog, username = null }) {
   }
 
   const handleEdit = () => {
-    navigate(`/blogs/post/edit/${blog.id}`)
+    navigate(`/blogs/post/edit/${blog.id}`, { state: blog })
   }
 
   const handleUserPage = () => {
