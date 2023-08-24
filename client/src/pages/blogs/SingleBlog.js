@@ -103,7 +103,7 @@ const SingleBlog = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <ImagesDisplaySlider row={currentBlog?.images} handleClose={handleClose} />
+              <ImagesDisplaySlider row={currentBlog?.images} handleClose={handleClose} on={open} />
             </Box>
           </Modal>
           <Box sx={{ m: 2 }}>

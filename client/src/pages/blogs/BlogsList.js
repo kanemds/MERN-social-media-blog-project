@@ -77,8 +77,6 @@ const BlogsList = () => {
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
 
-  console.log(searchResult)
-
   const {
     data,
     isLoading,

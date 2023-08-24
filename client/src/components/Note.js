@@ -28,37 +28,6 @@ export default function Note({ blog, username = null }) {
   const [isVertical, setIsVertical] = useState(true)
 
 
-
-  // useEffect(() => {
-  //   // Create a new image element
-  //   const img = new Image()
-
-  //   // Set the src attribute to the URL of the image you want to detect
-  //   img.src = images
-
-  //   // Add an event listener for when the image has loaded
-  //   img.onload = () => {
-  //     // Access the width and height properties of the image
-  //     const imageWidth = img.width
-  //     const imageHeight = img.height
-
-  //     // Update state with the width and height
-  //     setWidth(imageWidth)
-  //     setHeight(imageHeight)
-  //   }
-  // }, [])
-
-  // console.log('width', width)
-  // console.log('height', height)
-  // console.log('isClick', isClick)
-
-  const optionOne = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
-  const optionTwo = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour24: true }
-  const optionThree = { year: 'numeric', month: 'short', day: 'numeric' }
-  // const currentDay = new Intl.DateTimeFormat('en-US', optionOne).format(new Date(blog?.createdAt))
-
-
-
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -123,9 +92,7 @@ export default function Note({ blog, username = null }) {
             backgroundColor: "white",
           }
         }}
-        disableElevation='true'
-        disableFocusRipple='true'
-        disableRipple='true'
+        disableRipple={true}
         onClick={handleView}
       >
 
@@ -143,9 +110,7 @@ export default function Note({ blog, username = null }) {
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
                 onClick={handleUserPage}
-                disableElevation='true'
-                disableFocusRipple='true'
-                disableRipple='true'
+                disableRipple={true}
 
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
               >
