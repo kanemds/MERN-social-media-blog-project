@@ -29,7 +29,7 @@ const getSingleBlog = async (req, res) => {
   const { id } = req.params
 
   const blog = await Blog.findById(id).exec()
-  console.log(blog)
+
 
   if (!blog) {
     return res.status(404).json({ message: 'No blog found' })
@@ -37,7 +37,7 @@ const getSingleBlog = async (req, res) => {
 
 
   const blogUser = await User.findById(blog.user).lean().exec()
-  console.log(blogUser)
+
   const blogWithUser = await { ...blog, user: blogUser.username }
 
 
@@ -87,8 +87,8 @@ const createBlog = async (req, res) => {
     const singleFile = new Date().getTime() + images.name
     const imageRef = ref(storage, `blogs/${singleFile}`)
     const uploadImage = await uploadBytes(imageRef, images.data)
-    singleImage = await getDownloadURL(uploadImage.ref)
-    return singleImage
+    const url = await getDownloadURL(uploadImage.ref)
+    return singleImage = [{ url, name: images.name }]
   }
 
   let processedImages
@@ -119,35 +119,116 @@ const createBlog = async (req, res) => {
 // @access Private
 const updateBlog = async (req, res) => {
 
-  const { id, user, title, text, images } = req.body
 
-  if (!id || !user || !title || !text) {
-    return res.status(400).json({ message: 'All fields are required' })
-  }
+  const inputObject = { ...req.body }
+  const fileObject = { ...req.files }
 
-  const blog = await Blog.findById(id).exec()
-  console.log(blog)
+  const images = []
+  const fromBody = {}
 
-  if (!blog) {
-    return res.status(400).json({ message: 'Blog not found' })
-  }
+  await Object.keys(inputObject).forEach((key) => {
+    if (!isNaN(key)) {
+      images.push({ [key]: JSON.parse(inputObject[key]) })
+    } else {
+      fromBody[key] = inputObject[key]
+    }
+  })
 
-  const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
+  const { id, title, text, visibleTo } = fromBody
+  console.log('fromBody', fromBody)
 
-  if (titleExist && titleExist._id.toString() !== id) {
-    return res.status(409).json({ message: 'Title has been used' })
-  }
+  await Object.keys(fileObject).forEach((key) => {
+    images.push({ [key]: fileObject[key] })
+  })
 
-  blog.user = user
-  blog.title = title
-  blog.text = text
-  blog.images = images
 
-  const updatedBlog = await blog.save()
+  await images.sort((a, b) => {
+    const keyA = parseInt(Object.keys(a)[0])
+    const keyB = parseInt(Object.keys(b)[0])
+    return keyA - keyB
+  })
 
-  res.json(`${updatedBlog.title} updated`)
+  console.log('images', images)
+
+
+
+
+  // console.log('images', images)
+  // // const imagesURL = images
+
+  // const imagesURL = images.map((item) => {
+  //   try {
+  //     return JSON.parse(item)
+  //   } catch (error) {
+  //     return // Invalid JSON, you can handle this as needed
+  //   }
+  // })
+
+  // console.log('imagesURL', imagesURL)
+  // const imageFiles = await req.files.images
+
+
+  // console.log('imageFiles', imageFiles)
+
+
+  // if (!id || !title || !text || !visibleTo) {
+  //   return res.status(400).json({ message: 'All fields are required' })
+  // }
+
+  // const blog = await Blog.findById(id).exec()
+
+
+  // if (!blog) {
+  //   return res.status(400).json({ message: 'Blog not found' })
+  // }
+
+  // const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
+
+  // if (titleExist && titleExist._id.toString() !== id) {
+  //   return res.status(409).json({ message: 'Title has been used' })
+  // }
+
+  // const processMultipleImages = async images => {
+  //   const multipleImages = []
+
+  //   for (let i = 0;i < images.length;i++) {
+  //     if (images[i].type.split('/')[0] !== 'image') multipleImages.push(images[i])
+  //     const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
+  //     const uploadImage = await uploadBytes(name, images[i].data)
+  //     const downloadImage = await getDownloadURL(uploadImage.ref)
+  //     multipleImages.push({ url: downloadImage, name: images[i].name })
+  //   }
+  //   return multipleImages
+  // }
+
+  // const processSingleImage = async images => {
+  //   let singleImage = []
+  //   const singleFile = new Date().getTime() + images.name
+  //   const imageRef = ref(storage, `blogs/${singleFile}`)
+  //   const uploadImage = await uploadBytes(imageRef, images.data)
+  //   const url = await getDownloadURL(uploadImage.ref)
+  //   return singleImage = [{ url, name: images.name }]
+
+  //   let processedImages
+  //   // using typeof array === 'object' true since array is object
+  //   // instead Array.isArray(images) is to check if it's array
+
+  //   if (!Array.isArray(images)) {
+  //     processedImages = await processSingleImage(images)   // object 
+  //   } else {
+  //     processedImages = await processMultipleImages(images) // array
+  //   }
+
+  //   blog.title = title
+  //   blog.text = text
+  //   blog.images = processedImages
+  //   blog.visibleTo = visibleTo
+
+  //   const updatedBlog = await blog.save()
+
+  //   res.json(`${updatedBlog.title} updated`)
+  // }
 }
-
 // @desc Delete a blog
 // route Delete /blogs
 // @access Private

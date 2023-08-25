@@ -28,7 +28,7 @@ const SingleBlogEditForm = ({ blog }) => {
 
   const matches = useMediaQuery('(min-width:1200px)')
 
-  const { username } = useAuth()
+
   const navigate = useNavigate()
 
   const [selectedImage, setSelectedImage] = useState([])
@@ -76,21 +76,41 @@ const SingleBlogEditForm = ({ blog }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // const transformedData = []
+
+    // orgImages.forEach((item, index) => {
+    //   transformedData.push({ [index + 1]: item })
+    // })
+
+    // console.log('transformedData', transformedData)
+
     const formData = new FormData()
-    formData.append('username', username)
+    formData.append('id', blog.id)
     formData.append('title', title)
     formData.append('text', text)
     formData.append('visibleTo', status)
     // will be sent in the order they were appended.
-    for (const image of orgImages) {
-      formData.append("images", image)
+
+    // for (const image of transformedData) {
+    //   formData.append("images", JSON.stringify(image))
+    // }
+
+
+    for (let i = 0;i < orgImages.length;i++) {
+      if (orgImages[i] instanceof File) {
+        formData.append(`${i + 1}`, orgImages[i])
+      } else if (typeof orgImages[i] === 'object') {
+        const imageJson = JSON.stringify(orgImages[i])
+        formData.append(`${i + 1}`, imageJson)
+      }
     }
-    // formData.append('file', orgImages)
 
     await updateBlog(formData)
     // await addNewBlog({ username, title, text })
-
   }
+
+
 
 
   return (
