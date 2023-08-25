@@ -96,7 +96,7 @@ export default function Note({ blog, username = null }) {
         <CardMedia
           sx={{ height: 180, width: '100%' }}
           component="img"
-          image={images}
+          image={images.url}
           alt={title}
         />
 

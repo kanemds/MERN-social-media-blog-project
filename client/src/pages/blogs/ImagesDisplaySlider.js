@@ -40,7 +40,7 @@ export default function ImagesDisplaySlider({ row, handleClose, on }) {
         {row?.map((each, index) => {
           return (
             <SwiperSlide key={index}>
-              <img className='contain' src={each} />
+              <img className='contain' src={each.url} alt={each.title} />
             </SwiperSlide>
           )
         })}

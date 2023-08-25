@@ -16,6 +16,8 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
   const [selected, setSelected] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
 
+  console.log('selectedImage', selectedImage)
+  console.log('orgImages', orgImages)
 
 
 

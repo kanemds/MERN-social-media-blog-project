@@ -24,29 +24,18 @@ const ButtonInfo = styled(Typography)({
 })
 
 
-const SingleBlogEditForm = () => {
+const SingleBlogEditForm = ({ blog }) => {
 
   const matches = useMediaQuery('(min-width:1200px)')
 
-
-
-  const { id } = useParams()
   const { username } = useAuth()
   const navigate = useNavigate()
 
-  const { currentBlog } = useGetBlogsQuery('blogsList', {
-    selectFromResult: ({ data }) => ({
-      currentBlog: data?.entities[id]
-    })
-  })
-
-  const [selectedImage, setSelectedImage] = useState(currentBlog?.images)
-  const [orgImages, setOrgImages] = useState(currentBlog?.images)
-  const [title, setTitle] = useState(currentBlog?.title)
-  const [text, setText] = useState(currentBlog?.text)
-  const [status, setStatus] = useState(currentBlog?.visible_to)
-
-  console.log(orgImages)
+  const [selectedImage, setSelectedImage] = useState(blog?.images)
+  const [orgImages, setOrgImages] = useState(blog?.images)
+  const [title, setTitle] = useState(blog?.title)
+  const [text, setText] = useState(blog?.text)
+  const [status, setStatus] = useState(blog?.visible_to)
 
 
   const [
@@ -58,11 +47,6 @@ const SingleBlogEditForm = () => {
       error
     }
   ] = useUpdateBlogMutation()
-
-
-
-  console.log(currentBlog)
-
 
   useEffect(() => {
     if (isSuccess) {
@@ -83,17 +67,13 @@ const SingleBlogEditForm = () => {
     setText(e.target.value)
   }
 
-
-
   const handlePostTo = (e) => {
     setStatus(e.target.value)
   }
 
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData()
-
     formData.append('username', username)
     formData.append('title', title)
     formData.append('text', text)
