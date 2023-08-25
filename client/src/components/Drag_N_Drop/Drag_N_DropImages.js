@@ -9,7 +9,7 @@ import './drag_n_drop.css'
 
 
 
-const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgImages, imagesBeforeEdit }) => {
+const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgImages, imagesBeforeEdit = [] }) => {
 
   const [data, setData] = useState(imagesBeforeEdit)
   const [isClick, setIsClick] = useState(false)
