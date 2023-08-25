@@ -9,17 +9,12 @@ import './drag_n_drop.css'
 
 
 
-const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgImages }) => {
+const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgImages, imagesBeforeEdit }) => {
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState(imagesBeforeEdit)
   const [isClick, setIsClick] = useState(false)
   const [selected, setSelected] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
-
-  console.log('selectedImage', selectedImage)
-  console.log('orgImages', orgImages)
-
-
 
   const dragItem = useRef(null)
   const dragOver = useRef(null)
@@ -28,10 +23,9 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
 
     setIsClick(false)
     if (data?.length) {
-      if (selectedImage) {
-        setSelectedImage(selectedImage)
-      } else {
+      if (!selected) {
         setSelectedImage(data[0])
+        setSelected(data[0])
       }
     } else {
       setSelectedImage(null)
@@ -65,7 +59,8 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
   const onDeleteImage = (e, index) => {
     if (isClick) {
       if (data[index].name === selectedImage.name) {
-        setSelectedImage(null)
+        // setSelectedImage(null)
+        setSelected(null)
       }
       setData(prevImages => prevImages?.filter((_, i) => i !== index))
       setOrgImages(prevImages => prevImages?.filter((_, i) => i !== index))
@@ -158,23 +153,16 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
     e.preventDefault()
     if (!isClick) {
       setSelectedImage(image)
+      setSelected(image)
     }
   }
 
-
-
-
-
   return (
-
 
     <Box className='container' sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
       {!data?.length ? ''
         :
-
-
         data?.map((image, index) => {
-
           return (
             <Box key={index}
               onClick={(e) => handleSelectImage(e, image)}
