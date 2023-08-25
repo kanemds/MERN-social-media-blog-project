@@ -31,11 +31,14 @@ const SingleBlogEditForm = ({ blog }) => {
   const { username } = useAuth()
   const navigate = useNavigate()
 
-  const [selectedImage, setSelectedImage] = useState(blog?.images)
+  const [selectedImage, setSelectedImage] = useState([])
   const [orgImages, setOrgImages] = useState(blog?.images)
+  const [imagesBeforeEdit, setImagesBeforeEdit] = useState(blog?.images)
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [status, setStatus] = useState(blog?.visible_to)
+
+  console.log('orgImages', orgImages)
 
 
   const [
@@ -111,7 +114,7 @@ const SingleBlogEditForm = ({ blog }) => {
         {/* image list */}
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, alignItems: 'center' }}>
-          <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} />
+          <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} imagesBeforeEdit={imagesBeforeEdit} />
         </Box>
 
       </Grid>
