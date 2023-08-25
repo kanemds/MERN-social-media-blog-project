@@ -56,6 +56,7 @@ const createBlog = async (req, res) => {
 
   const images = await req.files.images // same order from how frontend formData append
 
+
   if (!title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
   }
@@ -76,7 +77,7 @@ const createBlog = async (req, res) => {
       const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
       const uploadImage = await uploadBytes(name, images[i].data)
       const downloadImage = await getDownloadURL(uploadImage.ref)
-      multipleImages.push(downloadImage)
+      multipleImages.push({ url: downloadImage, name: images[i].name })
     }
     return multipleImages
   }

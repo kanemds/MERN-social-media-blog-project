@@ -21,9 +21,18 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    images: {
-      type: [String],
-    },
+    images: [
+      {
+        name: {
+          type: String,
+          required: true
+        },
+        url: {
+          type: String,
+          required: true
+        },
+      }
+    ],
     visible_to: {
       type: String,
       default: 'public'

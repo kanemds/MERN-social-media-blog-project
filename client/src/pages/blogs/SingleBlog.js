@@ -2,7 +2,7 @@ import { Box, Container, Paper, Typography, TextField, Modal, Button } from '@mu
 import React, { useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 import { useParams } from 'react-router-dom'
-import { blogsApiSlice, useGetBlogsQuery } from './blogsApiSlice'
+import { blogsApiSlice, useGetBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ImagesDisplaySlider from './ImagesDisplaySlider'
@@ -55,13 +55,11 @@ const SingleBlog = () => {
     isSuccess,
     isError,
     error
-  } = useGetBlogsQuery()
+  } = useGetSingleBlogQuery(id)
 
   useEffect(() => {
     if (isSuccess) {
-      const findUserBlogs = Object.values(data?.entities)?.filter(blog => blog.user === username)
-      const blog = findUserBlogs.filter(blog => blog.id === id)
-      setCurrentBlog(...blog) // using filter became array, spread out become object
+      setCurrentBlog(data)
     }
   }, [isSuccess])
 
@@ -84,7 +82,6 @@ const SingleBlog = () => {
       <Container sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <LoadingSpinner />
       </Container>
-
     )
   }
 

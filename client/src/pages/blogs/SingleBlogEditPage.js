@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useGetSingleBlogQuery } from './blogsApiSlice'
-import { Button } from '@mui/material'
+import { Button, Container } from '@mui/material'
+import { set } from 'mongoose'
+import LoadingSpinner from '../../components/LoadingSpinner'
+import SingleBlogEditForm from './SingleBlogEditForm'
+
 
 const SingleBlogEditPage = () => {
 
@@ -11,19 +15,18 @@ const SingleBlogEditPage = () => {
 
 
   const [blog, setBlog] = useState('')
-  const [check, setCheck] = useState('')
+  const [isReady, setIsReady] = useState(true)
   const [isSkip, setIsSkip] = useState(true)
-  // console.log(id)
+
 
 
   const { data, isLoading, isSuccess, isError } = useGetSingleBlogQuery(id, { skip: isSkip })
 
-  console.log('state', state)
-  console.log('data', data)
 
   useEffect(() => {
-    if (state) {
+    if (!state) {
       setBlog(state)
+      setIsReady(false)
     } else {
       setIsSkip(false)
     }
@@ -31,6 +34,7 @@ const SingleBlogEditPage = () => {
 
   useEffect(() => {
     if (!isSkip && isSuccess) {
+      setIsReady(isLoading)
       setBlog(data)
     }
   }, [isSuccess, isSkip, data])
@@ -38,6 +42,18 @@ const SingleBlogEditPage = () => {
 
 
   let content
+
+  if (isReady) {
+    content = (
+      <Container sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <LoadingSpinner />
+      </Container>
+    )
+  }
+
+  if (blog) {
+    content = <SingleBlogEditForm blog={blog} />
+  }
 
 
 
