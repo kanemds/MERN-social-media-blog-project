@@ -1,6 +1,8 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
+const isEqual = require('lodash/isEqual')
 const storage = require('../config/firebaseConfig')
+
 const { ref, uploadBytes, getDownloadURL, deleteObject } = require('firebase/storage')
 
 
@@ -161,8 +163,6 @@ const updateBlog = async (req, res) => {
       })
 
       await Promise.all(uploadPromises) // Wait for all uploads to complete
-
-      console.log(imagesUrl)
       return imagesUrl
     } else {
       console.log('giving default image')
@@ -176,7 +176,12 @@ const updateBlog = async (req, res) => {
     return parseInt(Object.keys(a)[0]) - parseInt(Object.keys(b)[0])
   })
 
-  console.log(newImages)
+  const test = newImages.map(image => {
+    const key = Object.keys(image)[0]
+    return image[key]
+  })
+
+  // console.log('test', test)
 
 
 
@@ -185,6 +190,8 @@ const updateBlog = async (req, res) => {
   }
 
   const blog = await Blog.findById(id).exec()
+
+  // console.log(blog)
 
 
   if (!blog) {
@@ -197,53 +204,34 @@ const updateBlog = async (req, res) => {
     return res.status(409).json({ message: 'Title has been used' })
   }
 
-
-
-  // for (let i = 0;i < images.length;i++) {
-  //   if (images[i][1] instanceof File) {
-  //     console.log(file)
-  //   } else if (typeof images[i][1] === 'object') {
-  //     const imageJson = JSON.stringify(images[i])
-  //     formData.append(`${i + 1}`, imageJson)
-  //   }
+  // const isEqual = (one, two) => {
+  //   return one.url === two.url
   // }
 
+  // const isMatch = blog.images.some(orgImage => test.some(newImage => isEqual(orgImage, newImage)))
 
-  // const processMultipleImages = async images => {
-  //   const multipleImages = []
+  // const orgImages = blog.images(image => ...image, _id: _id.toString())
 
-  //   for (let i = 0;i < images.length;i++) {
-  //     if (images[i].type.split('/')[0] !== 'image') multipleImages.push(images[i])
-  //     const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
-  //     const uploadImage = await uploadBytes(name, images[i].data)
-  //     const downloadImage = await getDownloadURL(uploadImage.ref)
-  //     multipleImages.push({ url: downloadImage, name: images[i].name })
-  //   }
-  //   return multipleImages
-  // }
+  const orgImagesId = blog.images.map(image => ({
+    _id: image._id.toString()
+  }))
 
-  // const processSingleImage = async images => {
-  //   let singleImage = []
-  //   const singleFile = new Date().getTime() + images.name
-  //   const imageRef = ref(storage, `blogs/${singleFile}`)
-  //   const uploadImage = await uploadBytes(imageRef, images.data)
-  //   const url = await getDownloadURL(uploadImage.ref)
-  //   return singleImage = [{ url, name: images.name }]
+  const newImagesId = test.map(image => ({
+    _id: image._id
+  }))
 
-  //   let processedImages
-  //   // using typeof array === 'object' true since array is object
-  //   // instead Array.isArray(images) is to check if it's array
+  console.log('orgImagesId', orgImagesId)
+  console.log('newImagesId', newImagesId)
+  const isMatch = isEqual(orgImagesId, newImagesId)
 
-  //   if (!Array.isArray(images)) {
-  //     processedImages = await processSingleImage(images)   // object 
-  //   } else {
-  //     processedImages = await processMultipleImages(images) // array
-  //   }
+  console.log(isMatch)
 
-  //   blog.title = title
-  //   blog.text = text
-  //   blog.images = processedImages
-  //   blog.visibleTo = visibleTo
+
+
+  // blog.title = title
+  // blog.text = text
+  // blog.images = processedImages
+  // blog.visibleTo = visibleTo
 
   //   const updatedBlog = await blog.save()
 
