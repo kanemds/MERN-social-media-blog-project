@@ -4,6 +4,29 @@ const storage = require('../config/firebaseConfig')
 const { ref, uploadBytes, getDownloadURL, deleteObject } = require('firebase/storage')
 
 
+const processMultipleImages = async (images) => {
+  const multipleImages = []
+
+  for (let i = 0;i < images.length;i++) {
+    const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
+    const uploadImage = await uploadBytes(name, images[i].data)
+    const downloadImage = await getDownloadURL(uploadImage.ref)
+    multipleImages.push({ url: downloadImage, name: images[i].name })
+  }
+  return multipleImages
+}
+
+const processSingleImage = async images => {
+  let singleImage = []
+  const singleFile = new Date().getTime() + images.name
+  const imageRef = ref(storage, `blogs/${singleFile}`)
+  const uploadImage = await uploadBytes(imageRef, images.data)
+  const url = await getDownloadURL(uploadImage.ref)
+  singleImage.push({ url, name: images.name })
+  return singleImage
+}
+
+
 // @desc Get all blogs
 // route Get /blogs
 // @access Private
@@ -54,6 +77,7 @@ const createBlog = async (req, res) => {
   const { username, title, text, visibleTo } = req.body
 
 
+
   const images = await req.files.images // same order from how frontend formData append
 
 
@@ -70,26 +94,6 @@ const createBlog = async (req, res) => {
   }
 
 
-  const processMultipleImages = async (images) => {
-    const multipleImages = []
-
-    for (let i = 0;i < images.length;i++) {
-      const name = ref(storage, `blogs/${new Date().getTime() + images[i].name}`)
-      const uploadImage = await uploadBytes(name, images[i].data)
-      const downloadImage = await getDownloadURL(uploadImage.ref)
-      multipleImages.push({ url: downloadImage, name: images[i].name })
-    }
-    return multipleImages
-  }
-
-  const processSingleImage = async images => {
-    let singleImage = []
-    const singleFile = new Date().getTime() + images.name
-    const imageRef = ref(storage, `blogs/${singleFile}`)
-    const uploadImage = await uploadBytes(imageRef, images.data)
-    const url = await getDownloadURL(uploadImage.ref)
-    return singleImage = [{ url, name: images.name }]
-  }
 
   let processedImages
   // using typeof array === 'object' true since array is object
@@ -97,9 +101,11 @@ const createBlog = async (req, res) => {
 
   if (!Array.isArray(images)) {
     processedImages = await processSingleImage(images)   // object 
+
   } else {
     processedImages = await processMultipleImages(images) // array
   }
+
 
   // console.log('Processed images:', processedImages)
 
@@ -120,73 +126,88 @@ const createBlog = async (req, res) => {
 const updateBlog = async (req, res) => {
 
 
-  const inputObject = { ...req.body }
-  const fileObject = { ...req.files }
+  const orgImages = { ...req.body }
+  const fileObject = { ...req.files } // if [...req.files] not not iterable, prevent mapping
+  // console.log('inputObject', inputObject) // return as obj
+  // console.log('fileObject', fileObject) // return as obj single or multiples
+
+
+
+
+  const { id, title, text, visibleTo } = req.body
 
   const images = []
-  const fromBody = {}
 
-  await Object.keys(inputObject).forEach((key) => {
+  // Object.keys or Object.values return an array
+  Object.keys(orgImages).forEach((key) => {
     if (!isNaN(key)) {
-      images.push({ [key]: JSON.parse(inputObject[key]) })
-    } else {
-      fromBody[key] = inputObject[key]
+      images.push({ [key]: JSON.parse(orgImages[key]) })
     }
   })
 
-  const { id, title, text, visibleTo } = fromBody
-  console.log('fromBody', fromBody)
 
-  await Object.keys(fileObject).forEach((key) => {
-    images.push({ [key]: fileObject[key] })
+  const filesUpload = async (files) => {
+    const imagesUrl = []
+    if (files) {
+      const uploadPromises = Object.keys(files).map(async (key) => {
+        // console.log('key', key)
+        // console.log('files[key]', files[key])
+        // console.log('files[key]', files[key].name)
+
+        const name = ref(storage, `blogs/${new Date().getTime() + files[key].name}`)
+        const uploadImage = await uploadBytes(name, files[key].data)
+        const downloadImage = await getDownloadURL(uploadImage.ref)
+        imagesUrl.push({ [key]: { url: downloadImage, name: files[key].name } })
+      })
+
+      await Promise.all(uploadPromises) // Wait for all uploads to complete
+
+      console.log(imagesUrl)
+      return imagesUrl
+    } else {
+      console.log('giving default image')
+      return []
+    }
+  }
+
+  const imagesFromDL = await filesUpload(fileObject)
+
+  const newImages = images.concat(imagesFromDL).sort((a, b) => {
+    return parseInt(Object.keys(a)[0]) - parseInt(Object.keys(b)[0])
   })
 
-
-  await images.sort((a, b) => {
-    const keyA = parseInt(Object.keys(a)[0])
-    const keyB = parseInt(Object.keys(b)[0])
-    return keyA - keyB
-  })
-
-  console.log('images', images)
+  console.log(newImages)
 
 
 
+  if (!id || !title || !text || !visibleTo) {
+    return res.status(400).json({ message: 'All fields are required' })
+  }
 
-  // console.log('images', images)
-  // // const imagesURL = images
+  const blog = await Blog.findById(id).exec()
 
-  // const imagesURL = images.map((item) => {
-  //   try {
-  //     return JSON.parse(item)
-  //   } catch (error) {
-  //     return // Invalid JSON, you can handle this as needed
+
+  if (!blog) {
+    return res.status(400).json({ message: 'Blog not found' })
+  }
+
+  const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
+
+  if (titleExist && titleExist._id.toString() !== id) {
+    return res.status(409).json({ message: 'Title has been used' })
+  }
+
+
+
+  // for (let i = 0;i < images.length;i++) {
+  //   if (images[i][1] instanceof File) {
+  //     console.log(file)
+  //   } else if (typeof images[i][1] === 'object') {
+  //     const imageJson = JSON.stringify(images[i])
+  //     formData.append(`${i + 1}`, imageJson)
   //   }
-  // })
-
-  // console.log('imagesURL', imagesURL)
-  // const imageFiles = await req.files.images
-
-
-  // console.log('imageFiles', imageFiles)
-
-
-  // if (!id || !title || !text || !visibleTo) {
-  //   return res.status(400).json({ message: 'All fields are required' })
   // }
 
-  // const blog = await Blog.findById(id).exec()
-
-
-  // if (!blog) {
-  //   return res.status(400).json({ message: 'Blog not found' })
-  // }
-
-  // const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
-
-  // if (titleExist && titleExist._id.toString() !== id) {
-  //   return res.status(409).json({ message: 'Title has been used' })
-  // }
 
   // const processMultipleImages = async images => {
   //   const multipleImages = []
