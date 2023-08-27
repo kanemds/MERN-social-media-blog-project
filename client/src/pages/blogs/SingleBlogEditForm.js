@@ -77,13 +77,6 @@ const SingleBlogEditForm = ({ blog }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // const transformedData = []
-
-    // orgImages.forEach((item, index) => {
-    //   transformedData.push({ [index + 1]: item })
-    // })
-
-    // console.log('transformedData', transformedData)
 
     const formData = new FormData()
     formData.append('id', blog.id)
@@ -91,11 +84,6 @@ const SingleBlogEditForm = ({ blog }) => {
     formData.append('text', text)
     formData.append('visibleTo', status)
     // will be sent in the order they were appended.
-
-    // for (const image of transformedData) {
-    //   formData.append("images", JSON.stringify(image))
-    // }
-
 
     for (let i = 0;i < orgImages.length;i++) {
       if (orgImages[i] instanceof File) {
@@ -105,6 +93,9 @@ const SingleBlogEditForm = ({ blog }) => {
         formData.append(`${i + 1}`, imageJson)
       }
     }
+
+
+    await updateBlog(formData)
 
     await updateBlog(formData)
     // await addNewBlog({ username, title, text })

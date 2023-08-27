@@ -38,9 +38,6 @@ const NewBlog = () => {
   const [text, setText] = useState('')
   const [status, setStatus] = useState('public')
 
-
-  console.log(text)
-
   const [
     addNewBlog,
     {
