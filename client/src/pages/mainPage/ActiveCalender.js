@@ -16,7 +16,7 @@ function ActionList(props) {
     { text: 'Today', method: onSetToday },
     { text: 'Accept', method: onAccept },
     { text: 'Clear', method: onClear },
-    { text: 'Cancel', method: onCancel }
+    // { text: 'Cancel', method: onCancel }
   ]
 
   return (
@@ -144,7 +144,7 @@ export default function ActiveCalender() {
               },
 
               [`.${pickersLayoutClasses.contentWrapper}`]: {
-                height: '290px',
+                height: '240px',
               },
               [`.${pickersLayoutClasses.toolbar}`]: {
                 gridColumn: 2,
