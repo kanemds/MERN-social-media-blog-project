@@ -1,6 +1,6 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
-const { isEqual, sortBy } = require('lodash')
+const { isEqual, sortBy, find, differenceWith, differenceBy } = require('lodash')
 const storage = require('../config/firebaseConfig')
 
 const { ref, uploadBytes, getDownloadURL, deleteObject } = require('firebase/storage')
@@ -50,26 +50,13 @@ const filesUpload = async (files) => {
 }
 
 
-// const deleteImagesFromFireBase = async (files) => {
-//   const deletePromises = files.map(async (image) => { // Use map instead of forEach
-
-//     const desertRef = ref(storage, image.url)
-//     await deleteObject(desertRef)
-//   })
-
-//   await Promise.all(deletePromises) // Wait for all delete operations to complete
-//   console.log('Images have been removed from FireBase')
-// }
-
-
-
 const deleteImagesFromFirebase = async (imageUrls) => {
 
   // Create an array of promises for deleting images
   const deletePromises = imageUrls.map(async (imageUrl) => {
-    const imageRef = ref(storage, imageUrl.url)
+    const imageRef = ref(storage, imageUrl)
     await deleteObject(imageRef)
-    console.log(`Deleted image: ${imageUrl.url}`)
+    console.log(`Deleted image: ${imageUrl}`)
   })
 
   try {
@@ -86,11 +73,6 @@ const sortAndCombine = (imagesFromOrigin, imagesFromFireBase) => {
     return parseInt(Object.keys(a)[0]) - parseInt(Object.keys(b)[0])
   })
 }
-const singleSort = (images) => {
-  images.sort((a, b) => {
-    return parseInt(Object.keys(a)[0]) - parseInt(Object.keys(b)[0])
-  })
-}
 
 const removeOrderNumber = (images) => {
   return images?.map(image => {
@@ -99,8 +81,13 @@ const removeOrderNumber = (images) => {
   })
 }
 
-const findEqual = (arrayOne, arrayTwo) => {
-  return isEqual(sortBy(arrayOne, '_id'), sortBy(arrayTwo, '_id'))
+const findUnmatchedUrls = (imagesFromBD, imagesFromFE) => {
+  let notMatch = []
+  const fromDataBaseUrls = imagesFromBD.map(image => image.url)
+  const fromFrontEnd = imagesFromFE.map(image => image.url)
+  // delete from frontend data check !includes backend 
+  notMatch = fromDataBaseUrls.filter(el => !fromFrontEnd.includes(el))
+  return notMatch
 }
 
 
@@ -204,14 +191,13 @@ const updateBlog = async (req, res) => {
   const images = []
   let imagesFromDL = []
   let newImages
-  let imagesToServer
 
-  const { id, title, text, visibleTo, ...orgImages } = req.body // ...orgImages = ...req.body rename (type of orgImages === 'object')
+  // ...orgImages = ...req.body rename (type of orgImages === 'object')
+  const { id, title, text, visibleTo, ...orgImages } = req.body
   const fileObject = { ...req.files } // if [...req.files] not not iterable, prevent mapping
   // console.log('orgImages', orgImages) // return as obj even though single or multiples
   // console.log('fileObject', fileObject) // return as obj single or multiples
 
-  // console.log(orgImages)
 
   if (!id || !title || !text || !visibleTo) {
     return res.status(400).json({ message: 'All fields are required' })
@@ -239,19 +225,12 @@ const updateBlog = async (req, res) => {
     console.log('no orgImages')
   }
 
-
-
   if (Object.values(fileObject).length) {
     // // upload the update imageFiles and download from firebase
     imagesFromDL = await filesUpload(fileObject)
   } else {
     console.log('no new imageFile(s)')
   }
-
-
-  // // images with order number
-
-
 
   // handle if both or either one
   // sort the order from originImages and images dl from firebase
@@ -261,55 +240,28 @@ const updateBlog = async (req, res) => {
   // remove from [1:{},2:{}] to [{}:{}]
   const newSetOrderImages = await removeOrderNumber(newImages)
 
-
+  // find the different url between database and frontend  
+  const imagesUrlNotMatch = await findUnmatchedUrls(blog?.images, newSetOrderImages)
   console.log('blog.images', blog.images)
 
   console.log('newSetOrderImages', newSetOrderImages)
 
+  console.log('imagesUrlNotMatch', imagesUrlNotMatch)
 
-  // // check if order and file _id same
-  // const orgImagesId = blog?.images.map(image => ({
-  //   _id: image._id.toString()
-  // }))
+  // check if any un-match url found
+  if (imagesUrlNotMatch.length) {
+    // remove from firebase
+    await deleteImagesFromFirebase(imagesUrlNotMatch)
+  }
 
-  // const newImagesId = await newSetOrderImages?.map(image => ({
-  //   _id: image._id
-  // }))
+  blog.title = title
+  blog.text = text
+  blog.images = newSetOrderImages
+  blog.visibleTo = visibleTo
 
-  // const isMatch = findEqual(orgImagesId, newImagesId)
+  const updatedBlog = await blog.save()
 
-  // console.log(isMatch)
-
-
-
-  // -------------------------------------------------
-
-  // if (images.length >= 1 && !imagesFromDL.length && isMatch) {
-  //   imagesToServer = newSetOrderImages
-  // }
-
-  const imagesUrlNotMatch =
-
-
-
-
-
-  //   if (!isMatch) {
-  //     // remove all images from origin and update new set of images
-  //     await deleteImagesFromFirebase(blog.images)
-  //   } else {
-  //     console.log('same image(s)')
-  //   }
-
-  // blog.title = title
-  // blog.text = text
-  // blog.images = imagesToServer
-  // blog.visibleTo = visibleTo
-
-  // const updatedBlog = await blog.save()
-
-  // res.json(`${updatedBlog.title} updated`)
-
+  res.json(`${updatedBlog.title} updated`)
 }
 // @desc Delete a blog
 // route Delete /blogs
