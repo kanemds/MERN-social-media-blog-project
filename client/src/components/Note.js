@@ -16,11 +16,14 @@ import { timeDisplayOptions } from '../config/timeDisplayOptions'
 
 export default function Note({ blog, username = null }) {
 
+  console.log(blog)
+  console.log(blog?.images[0].url)
+
   const navigate = useNavigate()
 
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
-  const [images, setImage] = useState(blog?.images[0] || noteBook)
+  const [images, setImage] = useState(blog?.images[0]?.url)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
 
@@ -96,7 +99,7 @@ export default function Note({ blog, username = null }) {
         <CardMedia
           sx={{ height: 180, width: '100%' }}
           component="img"
-          image={images.url}
+          image={images}
           alt={title}
         />
 
