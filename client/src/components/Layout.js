@@ -12,6 +12,7 @@ import SideBar from "./FrontPageSideBar"
 import BodyElements from "../pages/mainPage/BodyElements"
 import ClientSideBar from "./ClientSideBar"
 import ClientSearchBar from "./ClientSearchBar"
+import FrontPageSideBar from "./FrontPageSideBar"
 
 
 const Layout = () => {
@@ -70,9 +71,7 @@ const Layout = () => {
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
             <Box sx={{ display: 'flex', mt: '70px', width: '100%', minHeight: 'calc(100vh - 70px)' }}>
-              <Box sx={{ position: 'sticky', top: '70px', width: '280x', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-                <ClientSideBar />
-              </Box>
+              <FrontPageSideBar />
               <Box sx={{ minHeight: '100%', width: '100%' }}>
                 <Outlet />
               </Box>

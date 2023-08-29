@@ -8,6 +8,8 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import PostAddIcon from '@mui/icons-material/PostAdd'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
+import StarRoundedIcon from '@mui/icons-material/StarRounded'
+import RecommendIcon from '@mui/icons-material/Recommend'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -42,6 +44,29 @@ const Divider = styled(Box)({
 const FrontPageSideBar = () => {
 
   const navigate = useNavigate()
+
+  const handleToHome = () => {
+    navigate('/')
+  }
+  const handleToMyPost = () => {
+    navigate('/blogs')
+  }
+  const handleToCreatePost = () => {
+    navigate('/blogs/new')
+  }
+  const handleToSubscribed = () => {
+    navigate('/blogs/subscribed')
+  }
+  const handleToFavorite = () => {
+    navigate('/blogs/favorite')
+  }
+  const handleToLiked = () => {
+    navigate('/blogs/liked')
+  }
+  const handleToSetting = () => {
+    navigate('/setting')
+  }
+
   return (
     <Box sx={{ position: 'sticky', top: '70px', width: '280x', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
@@ -55,7 +80,7 @@ const FrontPageSideBar = () => {
 
       <Divider />
       <Section >
-        <SideButton >
+        <SideButton onClick={handleToHome}>
           <HomeIcon />
           <ButtonInfo >Home</ButtonInfo>
         </SideButton>
@@ -72,27 +97,32 @@ const FrontPageSideBar = () => {
 
         <SideButton  >
           <ArticleOutlinedIcon />
-          <ButtonInfo onClick={() => navigate('/blogs')}>My Post(s)</ButtonInfo>
+          <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
         </SideButton>
         <SideButton >
           <PostAddIcon />
-          <ButtonInfo onClick={() => navigate('/blogs/new')}> Create a Post</ButtonInfo>
+          <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
         </SideButton>
       </Section>
       <Divider />
       <Section >
         <SideButton >
-          <Diversity2OutlinedIcon />
+          <Diversity2OutlinedIcon onClick={handleToSubscribed} />
           <ButtonInfo>  Friend's Post(s)</ButtonInfo>
         </SideButton>
+        <SideButton >
+          <StarRoundedIcon onClick={handleToFavorite} />
+          <ButtonInfo>  Favorite</ButtonInfo>
+        </SideButton>
+        <SideButton >
+          <RecommendIcon onClick={handleToLiked} />
+          <ButtonInfo>  Liked</ButtonInfo>
+        </SideButton>
       </Section>
-
       <Divider />
-
       <Section>
-
         <SideButton  >
-          <SettingsIcon />
+          <SettingsIcon onClick={handleToSetting} />
           <ButtonInfo >  Settings</ButtonInfo>
         </SideButton>
       </Section>

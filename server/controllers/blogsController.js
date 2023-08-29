@@ -280,7 +280,7 @@ const deleteBlog = async (req, res) => {
   if (!blog) {
     return res.status(400).json({ message: 'Blog not found' })
   }
-
+  await deleteImagesFromFirebase(blog.images)
   const result = await blog.deleteOne()
 
   const reply = `Blog '${result.title}' with ID ${result._id} deleted`

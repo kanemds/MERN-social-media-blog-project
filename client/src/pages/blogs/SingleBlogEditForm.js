@@ -38,7 +38,7 @@ const SingleBlogEditForm = ({ blog }) => {
   const [text, setText] = useState(blog?.text)
   const [status, setStatus] = useState(blog?.visible_to)
 
-  console.log('orgImages', orgImages)
+
 
 
   const [
@@ -76,8 +76,6 @@ const SingleBlogEditForm = ({ blog }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-
     const formData = new FormData()
     formData.append('id', blog.id)
     formData.append('title', title)
@@ -93,18 +91,13 @@ const SingleBlogEditForm = ({ blog }) => {
         formData.append(`${i + 1}`, imageJson)
       }
     }
-
-
     await updateBlog(formData)
-    // await addNewBlog({ username, title, text })
   }
 
 
 
 
   return (
-
-
     <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%', }}>
       <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: matches ? '200px' : '120px' }}>
         {/* picture area */}
