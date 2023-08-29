@@ -96,8 +96,6 @@ const SingleBlogEditForm = ({ blog }) => {
 
 
     await updateBlog(formData)
-
-    await updateBlog(formData)
     // await addNewBlog({ username, title, text })
   }
 
