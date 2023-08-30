@@ -18,21 +18,6 @@ import VerticalAlignTopOutlinedIcon from '@mui/icons-material/VerticalAlignTopOu
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
 
-const theme = createTheme({
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 900,
-      lg: 1200,
-      ll: 1460,
-      xl: 1670,
-      xxl: 1950
-    },
-  },
-})
-
-
 
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -155,41 +140,41 @@ const BlogsList = () => {
   if (isSuccess) {
 
     content = (
-      <ThemeProvider theme={theme}  >
-        <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
 
-          {
-            isSelected === 'All' ?
+      <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+
+        {
+          isSelected === 'All' ?
+            (
+              currentUserBlogs?.map(blog =>
+                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Note blog={blog} />
+                </Grid>)
+            ) :
+            isSelected === 'Public' ?
               (
-                currentUserBlogs?.map(blog =>
+                publicBlogs?.map(blog =>
+
                   <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Note blog={blog} />
                   </Grid>)
               ) :
-              isSelected === 'Public' ?
-                (
-                  publicBlogs?.map(blog =>
+              (
+                privateBlogs?.map(blog =>
+                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Note blog={blog} />
+                  </Grid>)
+              )
+        }
+      </Grid>
 
-                    <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Note blog={blog} />
-                    </Grid>)
-                ) :
-                (
-                  privateBlogs?.map(blog =>
-                    <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Note blog={blog} />
-                    </Grid>)
-                )
-          }
-        </Grid>
-      </ThemeProvider >
     )
 
 
   }
   return (
 
-    <Container sx={{ width: '100%' }} maxWidth='true'>
+    <Box sx={{ width: '100%' }} >
       <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
         <Box sx={{ width: '100%' }}>
           <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
@@ -223,34 +208,33 @@ const BlogsList = () => {
       <Box sx={{ p: 1 }}>
 
         {Array.isArray(searchResult) && searchResult.length && isSearch ?
-          <ThemeProvider theme={theme}  >
-            <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
 
-              {
-                isSelected === 'All' ?
+          <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+
+            {
+              isSelected === 'All' ?
+                (
+                  searchResult?.map(blog =>
+                    <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                      <Note blog={blog} />
+                    </Grid>)
+                ) :
+                isSelected === 'Public' ?
                   (
-                    searchResult?.map(blog =>
+                    searchPublicBlogs?.map(blog =>
+
                       <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Note blog={blog} />
                       </Grid>)
                   ) :
-                  isSelected === 'Public' ?
-                    (
-                      searchPublicBlogs?.map(blog =>
-
-                        <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                          <Note blog={blog} />
-                        </Grid>)
-                    ) :
-                    (
-                      searchPrivateBlogs?.map(blog =>
-                        <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                          <Note blog={blog} />
-                        </Grid>)
-                    )
-              }
-            </Grid>
-          </ThemeProvider >
+                  (
+                    searchPrivateBlogs?.map(blog =>
+                      <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Note blog={blog} />
+                      </Grid>)
+                  )
+            }
+          </Grid>
 
 
           :
@@ -261,7 +245,7 @@ const BlogsList = () => {
         }
 
       </Box>
-    </Container >
+    </Box >
 
   )
 }
