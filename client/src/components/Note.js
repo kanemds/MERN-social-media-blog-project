@@ -76,15 +76,14 @@ export default function Note({ blog, username = null }) {
 
     <Card
       sx={{
-        width: 355, height: 360,
+        maxWidth: 272, height: 360,
+        boxShadow: 'box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px ',
         "&:hover": {
-          boxShadow: 2,
-          border: '2px solid #1976d2'
+          boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)'
         }
       }}
     >
       <CardActionArea
-
         sx={{
           color: "white",
           backgroundColor: "white",
