@@ -1,20 +1,29 @@
 import { Outlet, useLocation } from "react-router-dom"
 import React from 'react'
 import Navbar from "./Navbar"
-import Footer from "./Footer"
 import { Box, Container } from "@mui/material"
 import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
 import LoadingSpinner from "./LoadingSpinner"
 import ErrorMessage from './ErrorMessage'
 import VerticalSwiper from "./swiper/VerticalSwiper"
-import MainContent from "../pages/mainPage/MainContent"
-import SideBar from "./FrontPageSideBar"
-import BodyElements from "../pages/mainPage/BodyElements"
-import ClientSideBar from "./ClientSideBar"
-import ClientSearchBar from "./ClientSearchBar"
+import MainContent from "../pages/blogs/MainContent"
 import FrontPageSideBar from "./FrontPageSideBar"
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 
-
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      ll: 1460,
+      xl: 1670,
+      xxl: 1950,
+      xxxl: 2560,
+    },
+  },
+})
 const Layout = () => {
 
   const [
@@ -50,12 +59,9 @@ const Layout = () => {
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
-
             <MainContent />
           </>
         }
-
-        <Footer />
       </Box>
 
     )
@@ -72,10 +78,11 @@ const Layout = () => {
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
             <Box sx={{ display: 'flex', mt: '70px', width: '100%', minHeight: 'calc(100vh - 70px)' }}>
               <FrontPageSideBar />
-              <Box sx={{ minHeight: '100%', width: '100%' }}>
-                <Outlet />
-              </Box>
-
+              <ThemeProvider theme={theme}  >
+                <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxxl'>
+                  <Outlet />
+                </Container>
+              </ThemeProvider>
             </Box>
           </>
         }
@@ -88,16 +95,15 @@ const Layout = () => {
     return main = (
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-        <Container maxWidth='true' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', mt: '100px' }}>
-          {isLoading || isError ?
-            { content }
-            :
-
-            <Outlet />
-          }
-
-        </Container>
-
+        <ThemeProvider theme={theme}  >
+          <Container maxWidth='xxxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', mt: '100px' }}>
+            {isLoading || isError ?
+              { content }
+              :
+              <Outlet />
+            }
+          </Container>
+        </ThemeProvider>
       </>)
 
   }

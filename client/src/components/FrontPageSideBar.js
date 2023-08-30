@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Button, IconButton, Typography, FormControlLabel, Switch, Collapse, Paper, Grow } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
-import ActiveCalender from '../pages/mainPage/ActiveCalender'
+import ActiveCalender from '../pages/blogs/ActiveCalender'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import HomeIcon from '@mui/icons-material/Home'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -12,6 +12,7 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import RecommendIcon from '@mui/icons-material/Recommend'
 import SubdirectoryArrowRightOutlinedIcon from '@mui/icons-material/SubdirectoryArrowRightOutlined'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useGetBlogsQuery } from '../pages/blogs/blogsApiSlice'
 
 
 
@@ -50,7 +51,11 @@ const FrontPageSideBar = () => {
   const { id } = useParams()
   const { pathname } = useLocation()
 
-
+  const { currentBlog } = useGetBlogsQuery('BlogsList', {
+    selectFromResult: ({ data }) => ({
+      currentBlog: data?.entities[id]
+    })
+  })
 
   const [checked, setChecked] = useState(false)
 
@@ -69,7 +74,7 @@ const FrontPageSideBar = () => {
     navigate('/blogs')
   }
   const handleToEdit = () => {
-    navigate(`/blogs/post/edit/${id}`, { state: '' })
+    navigate(`/blogs/post/edit/${id}`, { state: currentBlog })
   }
   const handleToCreatePost = () => {
     navigate('/blogs/new')
