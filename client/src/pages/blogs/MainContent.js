@@ -9,6 +9,7 @@ import { blue } from '@mui/material/colors'
 import FrontPageSideBar from '../../components/FrontPageSideBar'
 import { useGetBlogsQuery } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
+import useAuth from '../../hooks/useAuth'
 
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -48,11 +49,13 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 
 const MainContent = () => {
 
+  const { username } = useAuth()
 
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState(null)
 
   console.log(allBlogs)
+  console.log(username)
 
   const {
     data: blogs,
@@ -67,7 +70,8 @@ const MainContent = () => {
       const { entities } = blogs
 
       const list = Object.values(entities)
-      setAllBlogs(list)
+      const withOutCurrentUser = list?.filter(blog => blog?.user !== username)
+      setAllBlogs(withOutCurrentUser)
     }
   }, [isSuccess])
 

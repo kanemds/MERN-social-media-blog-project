@@ -13,12 +13,15 @@ import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useNavigate } from 'react-router-dom'
 import { timeDisplayOptions } from '../config/timeDisplayOptions'
+import useAuth from '../hooks/useAuth'
 
-export default function Note({ blog, username = null }) {
+export default function Note({ blog }) {
+
+
 
 
   const navigate = useNavigate()
-
+  const { username } = useAuth()
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
@@ -153,18 +156,20 @@ export default function Note({ blog, username = null }) {
                   new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
               }
             </Box>
-            <IconButton
-              onMouseOver={() => setIsClick(true)}
-              onMouseOut={() => setIsClick(false)}
-              aria-describedby={id}
-              variant="contained"
-              onClick={handleClick}
-              sx={{ p: 0, '&:hover': { backgroundColor: 'white', color: '#1976d2' } }}
+            {blog.user === username ?
+              <IconButton
+                onMouseOver={() => setIsClick(true)}
+                onMouseOut={() => setIsClick(false)}
+                aria-describedby={id}
+                variant="contained"
+                onClick={handleClick}
+                sx={{ p: 0, '&:hover': { backgroundColor: 'white', color: '#1976d2' } }}
 
-            >
-              <MoreVertOutlinedIcon />
+              >
+                <MoreVertOutlinedIcon />
 
-            </IconButton>
+              </IconButton>
+              : ''}
             <Popover
               onMouseOver={() => setIsClick(true)}
               onMouseOut={() => setIsClick(false)}
