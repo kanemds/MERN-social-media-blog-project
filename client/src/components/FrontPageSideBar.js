@@ -1,5 +1,5 @@
-import React from 'react'
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, IconButton, Typography, FormControlLabel, Switch, Collapse, Paper, Grow } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import ActiveCalender from '../pages/mainPage/ActiveCalender'
 import DehazeIcon from '@mui/icons-material/Dehaze'
@@ -10,11 +10,12 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import RecommendIcon from '@mui/icons-material/Recommend'
-import { useNavigate } from 'react-router-dom'
+import SubdirectoryArrowRightOutlinedIcon from '@mui/icons-material/SubdirectoryArrowRightOutlined'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+
 
 
 const SideButton = styled(Button)({
-
   textTransform: 'none',
   justifyContent: "flex-start",
 
@@ -41,15 +42,34 @@ const Divider = styled(Box)({
 })
 
 
+
+
 const FrontPageSideBar = () => {
 
   const navigate = useNavigate()
+  const { id } = useParams()
+  const { pathname } = useLocation()
+
+
+
+  const [checked, setChecked] = useState(false)
+
+  useEffect(() => {
+    if (pathname === `/blogs/post/${id}` || pathname === `/blogs/post/edit/${id}`) {
+      setChecked(true)
+    } else {
+      setChecked(false)
+    }
+  }, [pathname])
 
   const handleToHome = () => {
     navigate('/')
   }
   const handleToMyPost = () => {
     navigate('/blogs')
+  }
+  const handleToEdit = () => {
+    navigate(`/blogs/post/edit/${id}`, { state: '' })
   }
   const handleToCreatePost = () => {
     navigate('/blogs/new')
@@ -67,6 +87,13 @@ const FrontPageSideBar = () => {
     navigate('/setting')
   }
 
+  const icon = (
+    <SideButton sx={{ ml: 3 }}>
+      <SubdirectoryArrowRightOutlinedIcon />
+      <ButtonInfo onClick={handleToEdit}>Edit Post</ButtonInfo>
+    </SideButton>
+  )
+
   return (
     <Box sx={{ position: 'sticky', top: '70px', width: '280x', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
@@ -75,7 +102,6 @@ const FrontPageSideBar = () => {
         <IconButton color="primary">
           <DehazeIcon color='primary' />
         </IconButton>
-
       </Box>
 
       <Divider />
@@ -99,6 +125,18 @@ const FrontPageSideBar = () => {
           <ArticleOutlinedIcon />
           <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
         </SideButton>
+
+
+        {checked ?
+          <Grow
+            in={checked}
+            style={{ transformOrigin: '0 0 0' }}
+            {...(checked ? { timeout: 800 } : { timeout: 600 })}
+          >
+            {icon}
+          </Grow>
+          : ''
+        }
         <SideButton >
           <PostAddIcon />
           <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
