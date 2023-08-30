@@ -59,7 +59,11 @@ const Layout = () => {
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
-            <MainContent />
+            <ThemeProvider theme={theme}  >
+              <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxxl'>
+                <MainContent />
+              </Container>
+            </ThemeProvider>
           </>
         }
       </Box>

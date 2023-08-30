@@ -47,6 +47,10 @@ const PreView = styled(Button)({
   background: blue[300]
 })
 
+const buttonStyle = {
+  padding: '4px',
+}
+
 
 const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Public' }, { id: 3, 'type': 'Private' }]
 
@@ -141,13 +145,12 @@ const BlogsList = () => {
 
     content = (
 
-      <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
-
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
         {
           isSelected === 'All' ?
             (
               currentUserBlogs?.map(blog =>
-                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
                   <Note blog={blog} />
                 </Grid>)
             ) :
@@ -155,23 +158,21 @@ const BlogsList = () => {
               (
                 publicBlogs?.map(blog =>
 
-                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
                     <Note blog={blog} />
                   </Grid>)
               ) :
               (
                 privateBlogs?.map(blog =>
-                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
                     <Note blog={blog} />
                   </Grid>)
               )
         }
       </Grid>
-
     )
-
-
   }
+
   return (
 
     <Box sx={{ width: '100%' }} >
@@ -183,7 +184,7 @@ const BlogsList = () => {
           <Box>
             {dataList?.map(category => {
               return (
-                <Button key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} value={category.type} onClick={handleSelect} sx={{ minWidth: 0, mr: 1 }}>{category.type}</Button>
+                <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} value={category.type} onClick={handleSelect} sx={{ minWidth: 0, mr: 2 }}>{category.type}</Button>
               )
             }
             )}
