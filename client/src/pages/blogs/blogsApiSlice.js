@@ -54,6 +54,21 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         return [{ type: 'Blog', id: arg.id }]
       }
     }),
+    getLimitedBlogs: builder.query({
+      query: (page) => `/blogs/limited?=${page}`,
+      // Only have one cache entry because the arg always maps to one string
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName
+      },
+      // Always merge incoming data to the cache entry
+      merge: (currentCache, newItems) => {
+        currentCache.results.push(...newItems.results)
+      },
+      // Refetch when the page arg changes
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg !== previousArg
+      }
+    }),
     addNewBlog: builder.mutation({
       query: blogData => ({
         url: '/blogs',
@@ -94,6 +109,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetBlogsQuery,
   useGetSingleBlogQuery,
+  useGetLimitedBlogsQuery,
   useAddNewBlogMutation,
   useUpdateBlogMutation,
   useDeleteUserMutation

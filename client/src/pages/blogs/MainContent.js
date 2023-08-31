@@ -7,9 +7,10 @@ import Note from '../../components/Note'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 import { blue } from '@mui/material/colors'
 import FrontPageSideBar from '../../components/FrontPageSideBar'
-import { useGetBlogsQuery } from './blogsApiSlice'
+import { useGetBlogsQuery, useGetLimitedBlogsQuery } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
+
 
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -51,28 +52,32 @@ const MainContent = () => {
 
   const { username } = useAuth()
 
+  const [page, setPage] = useState(0)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState(null)
 
-  console.log(allBlogs)
-  console.log(username)
+  console.log(page)
 
   const {
     data: blogs,
     isLoading,
     isSuccess,
+    isFetching,
     isError,
     error
   } = useGetBlogsQuery()
 
+
+
+
   useEffect(() => {
     if (isSuccess) {
       const { entities } = blogs
-
       const list = Object.values(entities)
       const withOutCurrentUser = list?.filter(blog => blog?.user !== username)
       setAllBlogs(withOutCurrentUser)
     }
+
   }, [isSuccess])
 
   const handleSelect = (e) => {
@@ -137,7 +142,8 @@ const MainContent = () => {
           </Box>
         </Box>
         <Box sx={{ p: 1 }}>
-          {content}
+          {/* {content} */}
+
         </Box >
       </Box >
 

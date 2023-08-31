@@ -15,6 +15,19 @@ import { useNavigate } from 'react-router-dom'
 import { timeDisplayOptions } from '../config/timeDisplayOptions'
 import useAuth from '../hooks/useAuth'
 
+import StarRoundedIcon from '@mui/icons-material/StarRounded'
+import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
+import RecommendIcon from '@mui/icons-material/Recommend'
+import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
+
+const iconStyle = {
+  padding: '0px',
+}
+
+
+
 export default function Note({ blog }) {
 
 
@@ -27,6 +40,8 @@ export default function Note({ blog }) {
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false)
 
 
   const current = Date.parse(new Date())
@@ -70,7 +85,14 @@ export default function Note({ blog }) {
     if (isClick) {
       navigate(`/blogs/user/${blog.id}`)
     }
+  }
 
+  const handleFavorite = () => {
+    setIsFavorite(prev => !prev)
+  }
+
+  const handleLiked = () => {
+    setIsLiked(prev => !prev)
   }
 
   return (
@@ -148,6 +170,40 @@ export default function Note({ blog }) {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 28 }}>
+            <Box>
+              <IconButton
+                onClick={handleFavorite}
+                onMouseOver={() => setIsClick(true)}
+                onMouseOut={() => setIsClick(false)}
+                style={iconStyle}
+                sx={
+                  isFavorite ?
+                    { color: '#007aff', '&:hover': { background: 'white', color: '#007aff' } }
+                    :
+                    { color: '#bdbdbd', '&:hover': { background: '#bdbdbd', color: 'white' } }
+                }
+              >
+                <StarRoundedIcon />
+              </IconButton>
+
+              <IconButton
+                onClick={handleLiked}
+                onMouseOver={() => setIsClick(true)}
+                onMouseOut={() => setIsClick(false)}
+                style={iconStyle}
+                sx={
+                  isLiked ?
+                    { color: '#007aff', '&:hover': { background: 'white', color: '#007aff' } }
+                    :
+                    { color: '#bdbdbd', '&:hover': { background: '#bdbdbd', color: 'white' } }
+                }
+              >
+                <RecommendIcon />
+              </IconButton>
+
+
+
+            </Box>
             <Box color='black'>
               {
                 timeInMillisecond <= sevenDays ?

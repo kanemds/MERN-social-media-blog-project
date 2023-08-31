@@ -131,6 +131,33 @@ const getSingleBlog = async (req, res) => {
   res.status(200).json(blogWithUser)
 }
 
+// @desc Get limited blogs
+// route Get /blogs/post
+// @access Private
+const getPaginatedBlogs = async (req, res) => {
+  // /blogs?page=1 is string
+  const { page } = req.query
+
+  console.log(page)
+
+  const limit = 2
+
+  // current page 4, 
+  // startIndex (4 - 1) * 2 = 6 
+  const startIndex = (Number(page) - 1) * limit
+
+  const totalCount = await Blog.countDocuments({})
+
+  // the skip method is to skip the provided document, in this case which are the document from page 1,2,3 
+  // sort({_id: -1 }) desc order
+  const blogs = await Blog.find().sort({ _id: -1 }).limit(limit).skip(startIndex)
+
+  // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
+  res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })
+
+
+}
+
 // @desc Create a blog
 // route Post /blogs
 // @access Private
@@ -290,4 +317,4 @@ const deleteBlog = async (req, res) => {
 
 }
 
-module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog, getSingleBlog }
+module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog, getSingleBlog, getPaginatedBlogs }
