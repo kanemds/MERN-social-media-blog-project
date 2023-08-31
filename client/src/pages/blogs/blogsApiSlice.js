@@ -55,7 +55,20 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }
     }),
     getPaginatedBlogs: builder.query({
-      query: (pageNumber) => `/blogs/paginatedBlogs?page=${pageNumber}`,
+      query: (pageNumber) => ({
+        url: `/blogs/paginatedBlogs?page=${pageNumber}`,
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      keepUnusedDataFor: 300,
+      transformResponse: (response, meta, arg) => {
+        const loadedBlogs = response.data.map(blog => {
+          blog.id = blog._id
+          return blog
+        })
+        return { ...response, data: loadedBlogs }
+      },
       providesTags: (result, error, pageNumber) =>
         result
           ? [
