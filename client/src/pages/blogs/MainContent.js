@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ActiveCalender from './ActiveCalender'
 import { Box, Button, Paper, Container, Typography, AppBar, Toolbar } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
@@ -10,6 +10,7 @@ import FrontPageSideBar from '../../components/FrontPageSideBar'
 import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
+
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -55,22 +56,25 @@ const MainContent = () => {
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState(null)
+  const [paginatedBlogs, setPaginatedBlogs] = useState(null)
 
-  console.log(page)
+
+
+
 
   const {
     data: blogs,
     isLoading,
     isSuccess,
-    isFetching,
     isError,
     error
   } = useGetBlogsQuery()
 
-  const { data: paginatedBlogs } = useGetPaginatedBlogsQuery(page)
-
-  console.log(paginatedBlogs)
-
+  const {
+    data: paginatedData,
+    isSuccess: paginatedIsSuccess,
+    isLoading: paginatedIsLoading,
+  } = useGetPaginatedBlogsQuery(page)
 
   useEffect(() => {
     if (isSuccess) {
@@ -79,8 +83,22 @@ const MainContent = () => {
       const withOutCurrentUser = list?.filter(blog => blog?.user !== username)
       setAllBlogs(withOutCurrentUser)
     }
-
   }, [isSuccess])
+
+  useEffect(() => {
+    if (paginatedIsSuccess) {
+      setPaginatedBlogs(paginatedData)
+    }
+  }, [paginatedIsSuccess, paginatedData]) // needs paginatedData as dependency for the latest update
+
+  const handleNext = () => {
+    setPage(prev => prev + 1)
+  }
+  const handlePrev = () => {
+    if (page > 1) {
+      setPage((prevPage) => prevPage - 1)
+    }
+  }
 
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
@@ -92,14 +110,14 @@ const MainContent = () => {
 
   let content
 
-  if (isLoading) {
+  if (isLoading || paginatedIsLoading) {
     content = (<LoadingSpinner />)
   }
 
-  if (isSuccess) {
+  if (isSuccess || paginatedIsSuccess) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
-        {
+        {/* {
           isSelected === 'All' ?
             (
               allBlogs?.map(blog =>
@@ -115,7 +133,12 @@ const MainContent = () => {
                   </Grid>)
               ) :
               ''
-        }
+        } */}
+
+        {paginatedBlogs?.data?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+            <Note blog={blog} />
+          </Grid>)}
       </Grid>
     )
   }
@@ -144,8 +167,10 @@ const MainContent = () => {
           </Box>
         </Box>
         <Box sx={{ p: 1 }}>
-          {/* {content} */}
-
+          {content}
+          <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
+          {page}
+          <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button>
         </Box >
       </Box >
 
