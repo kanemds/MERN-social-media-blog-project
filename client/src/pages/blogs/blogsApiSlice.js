@@ -54,20 +54,17 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         return [{ type: 'Blog', id: arg.id }]
       }
     }),
-    getLimitedBlogs: builder.query({
-      query: (page) => `/blogs/limited?=${page}`,
-      // Only have one cache entry because the arg always maps to one string
-      serializeQueryArgs: ({ endpointName }) => {
-        return endpointName
-      },
-      // Always merge incoming data to the cache entry
-      merge: (currentCache, newItems) => {
-        currentCache.results.push(...newItems.results)
-      },
-      // Refetch when the page arg changes
-      forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg
-      }
+    getPaginatedBlogs: builder.query({
+      query: (pageNumber) => `/blogs/paginatedBlogs?page=${pageNumber}`,
+      providesTags: (result, error, pageNumber) =>
+        result
+          ? [
+            // Provides a tag for each Blog in the current page,
+            // as well as the 'PARTIAL-LIST' tag.
+            ...result.data.map(id => ({ type: 'Blog', id })),
+            { type: 'Blog', id: 'PARTIAL-LIST' },
+          ]
+          : [{ type: 'Blog', id: 'PARTIAL-LIST' }],
     }),
     addNewBlog: builder.mutation({
       query: blogData => ({
@@ -100,6 +97,8 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, arg) => {
         return [{
           type: 'Blog', id: arg.id
+        }, {
+          type: 'Blog', id: 'PARTIAL-LIST'
         }]
       }
     })
@@ -109,7 +108,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetBlogsQuery,
   useGetSingleBlogQuery,
-  useGetLimitedBlogsQuery,
+  useGetPaginatedBlogsQuery,
   useAddNewBlogMutation,
   useUpdateBlogMutation,
   useDeleteUserMutation

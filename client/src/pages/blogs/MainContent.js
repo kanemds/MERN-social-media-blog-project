@@ -7,7 +7,7 @@ import Note from '../../components/Note'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 import { blue } from '@mui/material/colors'
 import FrontPageSideBar from '../../components/FrontPageSideBar'
-import { useGetBlogsQuery, useGetLimitedBlogsQuery } from './blogsApiSlice'
+import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
 
@@ -52,7 +52,7 @@ const MainContent = () => {
 
   const { username } = useAuth()
 
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState(null)
 
@@ -67,7 +67,9 @@ const MainContent = () => {
     error
   } = useGetBlogsQuery()
 
+  const { data: paginatedBlogs } = useGetPaginatedBlogsQuery(page)
 
+  console.log(paginatedBlogs)
 
 
   useEffect(() => {

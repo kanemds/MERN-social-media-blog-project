@@ -7,7 +7,7 @@ router.route('/')
   .patch(updateBlog)
   .delete(deleteBlog)
 
-router.route('/limited')
+router.route('/paginatedBlogs')
   .get(getPaginatedBlogs)
 
 router.route('/:id')
