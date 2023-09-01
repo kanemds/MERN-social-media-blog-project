@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom"
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from "./Navbar"
 import { Box, Container } from "@mui/material"
 import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
@@ -9,18 +9,19 @@ import VerticalSwiper from "./swiper/VerticalSwiper"
 import MainContent from "../pages/blogs/MainContent"
 import FrontPageSideBar from "./FrontPageSideBar"
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
+import FrontPageSearchBar from "./FrontPageSearchBar"
 
 const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
       sm: 600,
-      md: 900,
+      md: 750,
       lg: 1200,
-      ll: 1460,
-      xl: 1670,
-      xxl: 1950,
-      xxxl: 2560,
+      ll: 1480,
+      xl: 1760,
+      xxl: 2060,
+
     },
   },
 })
@@ -37,7 +38,16 @@ const Layout = () => {
 
   const { pathname } = useLocation()
 
+  const [isShow, setIsShow] = useState(false)
+
+  const handleMenu = () => {
+    setIsShow(prev => !prev)
+  }
+
+
   const handleLogout = () => sendLogOut()
+
+
 
   let content
 
@@ -59,11 +69,17 @@ const Layout = () => {
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
-            <ThemeProvider theme={theme}  >
-              <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxxl'>
-                <MainContent />
-              </Container>
-            </ThemeProvider>
+            <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
+              <FrontPageSearchBar handleMenu={handleMenu} />
+            </Box>
+            <Box sx={{ display: 'flex', mb: '50px', }}>
+              <FrontPageSideBar isShow={isShow} />
+              <ThemeProvider theme={theme}  >
+                <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxl'>
+                  <MainContent />
+                </Container>
+              </ThemeProvider>
+            </Box>
           </>
         }
       </Box>
@@ -83,7 +99,7 @@ const Layout = () => {
             <Box sx={{ display: 'flex', mt: '70px', width: '100%', minHeight: 'calc(100vh - 70px)' }}>
               <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
-                <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxxl'>
+                <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxl'>
                   <Outlet />
                 </Container>
               </ThemeProvider>
@@ -100,7 +116,7 @@ const Layout = () => {
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
         <ThemeProvider theme={theme}  >
-          <Container maxWidth='xxxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', mt: '100px' }}>
+          <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', mt: '100px' }}>
             {isLoading || isError ?
               { content }
               :

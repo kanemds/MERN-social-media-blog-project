@@ -67,9 +67,6 @@ const MainContent = () => {
   const [hasMore, setHasMore] = useState(true)
   const elementRef = useRef(null)
 
-  console.log(products)
-  console.log(hasMore)
-  console.log(page)
 
   const {
     data: blogs,
@@ -159,7 +156,7 @@ const MainContent = () => {
 
   if (isSuccess || paginatedIsSuccess) {
     content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {/* {
           isSelected === 'All' ?
             (
@@ -184,7 +181,7 @@ const MainContent = () => {
           </Grid>)} */}
 
         {products?.data?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <Note blog={blog} />
           </Grid>)}
       </Grid>
@@ -193,45 +190,43 @@ const MainContent = () => {
 
 
   return (
-    <>
-      <Box sx={{ display: 'flex', mt: '50px', mb: '50px', height: '100%' }}>
 
-        <FrontPageSideBar blogs={blogs} />
+    <Box sx={{ display: 'flex', height: '100%' }}>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mb: 20 }} maxWidth='xxxl'>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mb: 20 }} maxWidth='xxxl'>
 
-          <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
-            <Box sx={{ width: '100%' }}>
-              <FrontPageSearchBar />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
-              <Box >
-                {dataList?.map(category => {
-                  return (
-                    <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
-                  )
-                }
-                )}
-              </Box>
+        <Box sx={{ position: 'sticky', top: '150px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
+          {/* <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <FrontPageSearchBar />
+          </Box> */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
+            <Box >
+              {dataList?.map(category => {
+                return (
+                  <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
+                )
+              }
+              )}
             </Box>
           </Box>
-          <Box sx={{ p: 1 }}>
-            {content}
-            {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
+        </Box>
+        <Box sx={{ p: 1 }}>
+          {content}
+          {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}
           <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}
 
-            {
-              hasMore &&
-              <Box ref={elementRef}> </Box>
-            }
-          </Box >
-
+          {
+            hasMore &&
+            <Box ref={elementRef}> </Box>
+          }
         </Box >
 
       </Box >
 
-    </>
+    </Box >
+
+
   )
 }
 

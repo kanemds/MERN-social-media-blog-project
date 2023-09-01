@@ -13,6 +13,7 @@ import RecommendIcon from '@mui/icons-material/Recommend'
 import SubdirectoryArrowRightOutlinedIcon from '@mui/icons-material/SubdirectoryArrowRightOutlined'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useGetBlogsQuery } from '../pages/blogs/blogsApiSlice'
+import { set } from 'lodash'
 
 
 
@@ -45,7 +46,7 @@ const Divider = styled(Box)({
 
 
 
-const FrontPageSideBar = () => {
+const FrontPageSideBar = ({ isShow }) => {
 
   const navigate = useNavigate()
   const { id } = useParams()
@@ -66,6 +67,7 @@ const FrontPageSideBar = () => {
       setChecked(false)
     }
   }, [pathname])
+
 
   const handleToHome = () => {
     navigate('/')
@@ -100,75 +102,124 @@ const FrontPageSideBar = () => {
   )
 
   return (
-    <Box sx={{ position: 'sticky', top: '70px', width: '280x', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <Box sx={{ position: 'sticky', top: '150px', width: isShow ? '280px' : '40px', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
-      <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }} >
+      {isShow ?
+        <>
+          <Section >
 
-        <IconButton color="primary">
-          <DehazeIcon color='primary' />
-        </IconButton>
-      </Box>
+            <SideButton onClick={handleToHome}>
+              <HomeIcon />
+              <ButtonInfo >Home</ButtonInfo>
+            </SideButton>
 
-      <Divider />
-      <Section >
-        <SideButton onClick={handleToHome}>
-          <HomeIcon />
-          <ButtonInfo >Home</ButtonInfo>
-        </SideButton>
-      </Section>
+          </Section>
 
-      <Divider />
+          <Divider />
+          <ActiveCalender />
+          <Divider />
+          <Section >
+            <SideButton  >
+              <ArticleOutlinedIcon />
+              <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
+            </SideButton>
+            {checked ?
+              <Grow
+                in={checked}
+                style={{ transformOrigin: '0 0 0' }}
+                {...(checked ? { timeout: 800 } : { timeout: 600 })}
+              >
+                {icon}
+              </Grow>
+              : ''
+            }
+            <SideButton >
+              <PostAddIcon />
+              <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
+            </SideButton>
+          </Section>
+          <Divider />
+          <Section >
+            <SideButton >
+              <Diversity2OutlinedIcon onClick={handleToSubscribed} />
+              <ButtonInfo>  Friend's Post(s)</ButtonInfo>
+            </SideButton>
+            <SideButton >
+              <StarRoundedIcon onClick={handleToFavorite} />
+              <ButtonInfo>  Favorite</ButtonInfo>
+            </SideButton>
+            <SideButton >
+              <RecommendIcon onClick={handleToLiked} />
+              <ButtonInfo>  Liked</ButtonInfo>
+            </SideButton>
+          </Section>
+          <Divider />
+          <Section>
+            <SideButton  >
+              <SettingsIcon onClick={handleToSetting} />
+              <ButtonInfo >  Settings</ButtonInfo>
+            </SideButton>
+          </Section>
+        </>
+        :
+        <>
+          <Section >
+
+            <IconButton color="primary" onClick={handleToHome}>
+              <HomeIcon color='primary' />
+            </IconButton>
+
+          </Section>
+
+          <Divider />
+          <Typography>maybe a pop up date select</Typography>
+          <Divider />
+          <Section >
+
+            <IconButton color="primary" onClick={handleToMyPost}>
+              <ArticleOutlinedIcon color='primary' />
+            </IconButton>
 
 
-      <ActiveCalender />
+            {checked ?
+              <Grow
+                in={checked}
+                style={{ transformOrigin: '0 0 0' }}
+                {...(checked ? { timeout: 800 } : { timeout: 600 })}
+              >
+                {icon}
+              </Grow>
+              : ''
+            }
 
-      <Divider />
+            <IconButton color="primary" onClick={handleToCreatePost}>
+              <PostAddIcon color='primary' />
+            </IconButton>
 
-      <Section >
+          </Section>
+          <Divider />
+          <Section >
+            <IconButton color="primary" onClick={handleToSubscribed}>
+              <Diversity2OutlinedIcon color='primary' />
+            </IconButton>
+            <IconButton color="primary" onClick={handleToFavorite}>
+              <StarRoundedIcon color='primary' />
+            </IconButton>
+            <IconButton color="primary" onClick={handleToLiked}>
+              <RecommendIcon color='primary' />
+            </IconButton>
 
-        <SideButton  >
-          <ArticleOutlinedIcon />
-          <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
-        </SideButton>
+          </Section>
+          <Divider />
+          <Section>
+            <IconButton color="primary" onClick={handleToSetting}>
+              <SettingsIcon color='primary' />
+            </IconButton>
 
+          </Section>
+        </>
 
-        {checked ?
-          <Grow
-            in={checked}
-            style={{ transformOrigin: '0 0 0' }}
-            {...(checked ? { timeout: 800 } : { timeout: 600 })}
-          >
-            {icon}
-          </Grow>
-          : ''
-        }
-        <SideButton >
-          <PostAddIcon />
-          <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
-        </SideButton>
-      </Section>
-      <Divider />
-      <Section >
-        <SideButton >
-          <Diversity2OutlinedIcon onClick={handleToSubscribed} />
-          <ButtonInfo>  Friend's Post(s)</ButtonInfo>
-        </SideButton>
-        <SideButton >
-          <StarRoundedIcon onClick={handleToFavorite} />
-          <ButtonInfo>  Favorite</ButtonInfo>
-        </SideButton>
-        <SideButton >
-          <RecommendIcon onClick={handleToLiked} />
-          <ButtonInfo>  Liked</ButtonInfo>
-        </SideButton>
-      </Section>
-      <Divider />
-      <Section>
-        <SideButton  >
-          <SettingsIcon onClick={handleToSetting} />
-          <ButtonInfo >  Settings</ButtonInfo>
-        </SideButton>
-      </Section>
+      }
     </Box>
   )
 }
