@@ -78,6 +78,20 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
             { type: 'Blog', id: 'PARTIAL-LIST' },
           ]
           : [{ type: 'Blog', id: 'PARTIAL-LIST' }],
+      // Only have one cache entry because the arg always maps to one string
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName
+      },
+      // Always merge incoming data to the cache entry
+      merge: (currentCache, newItems) => {
+        console.log(currentCache)
+        console.log(newItems)
+        currentCache.data.push(...newItems.data)
+      },
+      // Refetch when the page arg changes,is the argument in this case: pageNumber
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg !== previousArg
+      },
     }),
     addNewBlog: builder.mutation({
       query: blogData => ({
