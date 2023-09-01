@@ -10,7 +10,8 @@ import FrontPageSideBar from '../../components/FrontPageSideBar'
 import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
-import { set } from 'lodash'
+
+
 
 
 
@@ -61,27 +62,27 @@ const MainContent = () => {
   const [paginatedBlogs, setPaginatedBlogs] = useState(null)
 
   const [products, setProducts] = useState([])
-  const [hasMore, setHasMore] = useState(true)
 
+
+  const [hasMore, setHasMore] = useState(true)
   const elementRef = useRef(null)
 
   console.log(products)
-
+  console.log(hasMore)
+  console.log(page)
 
   const {
     data: blogs,
     isLoading,
     isSuccess,
     isError,
-    error
-  } = useGetBlogsQuery()
+    error } = useGetBlogsQuery()
 
   const {
     data: paginatedData,
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
   } = useGetPaginatedBlogsQuery(page)
-
 
 
   useEffect(() => {
@@ -96,14 +97,16 @@ const MainContent = () => {
   useEffect(() => {
     if (paginatedIsSuccess) {
       setPaginatedBlogs(paginatedData)
-      setProducts(preProducts => [...preProducts, ...paginatedData.data])
+      setProducts(paginatedData)
     }
   }, [paginatedIsSuccess, paginatedData]) // needs paginatedData as dependency for the latest update
 
   useEffect(() => {
-    const observer = new IntersectionObserver(onIntersection, { threshold: 0.1, })
+    const observer = new IntersectionObserver(onIntersection)
 
     if (observer && elementRef.current) {
+      console.log(observer)
+      console.log(elementRef.current)
       observer.observe(elementRef.current)
     }
 
@@ -112,7 +115,7 @@ const MainContent = () => {
         observer.disconnect()
       }
     }
-  }, [products])
+  }, [])
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -129,19 +132,20 @@ const MainContent = () => {
 
   const onIntersection = (entries) => {
     const firstEntry = entries[0]
+
     if (firstEntry.isIntersecting && hasMore) {
       fetchMoreBlogs()
     }
   }
 
   const fetchMoreBlogs = () => {
-    if (page === paginatedBlogs?.numberOfPages) {
+    if (Number(page) >= Number(products?.numberOfPages)) {
       setHasMore(false)
     } else {
       setPage(prev => prev + 1)
-
     }
   }
+
 
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -179,7 +183,7 @@ const MainContent = () => {
             <Note blog={blog} />
           </Grid>)} */}
 
-        {products?.map(blog =>
+        {products?.data?.map(blog =>
           <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
             <Note blog={blog} />
           </Grid>)}
@@ -194,7 +198,7 @@ const MainContent = () => {
 
         <FrontPageSideBar blogs={blogs} />
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }} maxWidth='xxxl'>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mb: 20 }} maxWidth='xxxl'>
 
           <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
             <Box sx={{ width: '100%' }}>
@@ -217,15 +221,16 @@ const MainContent = () => {
           {page}
           <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}
 
-
+            {
+              hasMore &&
+              <Box ref={elementRef}> </Box>
+            }
           </Box >
+
         </Box >
 
       </Box >
-      {
-        hasMore &&
-        <Box ref={elementRef}> <Typography>Load more blogs...</Typography></Box>
-      }
+
     </>
   )
 }
