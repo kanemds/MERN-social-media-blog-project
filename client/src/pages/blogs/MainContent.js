@@ -10,6 +10,7 @@ import FrontPageSideBar from '../../components/FrontPageSideBar'
 import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
+import { set } from 'lodash'
 
 
 
@@ -49,6 +50,7 @@ const buttonStyle = {
 const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }]
 
 
+
 const MainContent = () => {
 
   const { username } = useAuth()
@@ -58,8 +60,12 @@ const MainContent = () => {
   const [allBlogs, setAllBlogs] = useState(null)
   const [paginatedBlogs, setPaginatedBlogs] = useState(null)
 
+  const [products, setProducts] = useState([])
+  const [hasMore, setHasMore] = useState(true)
 
+  const elementRef = useRef(null)
 
+  console.log(products)
 
 
   const {
@@ -76,6 +82,8 @@ const MainContent = () => {
     isLoading: paginatedIsLoading,
   } = useGetPaginatedBlogsQuery(page)
 
+
+
   useEffect(() => {
     if (isSuccess) {
       const { entities } = blogs
@@ -88,8 +96,23 @@ const MainContent = () => {
   useEffect(() => {
     if (paginatedIsSuccess) {
       setPaginatedBlogs(paginatedData)
+      setProducts(preProducts => [...preProducts, ...paginatedData.data])
     }
   }, [paginatedIsSuccess, paginatedData]) // needs paginatedData as dependency for the latest update
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(onIntersection, { threshold: 0.1, })
+
+    if (observer && elementRef.current) {
+      observer.observe(elementRef.current)
+    }
+
+    return () => {
+      if (observer) {
+        observer.disconnect()
+      }
+    }
+  }, [products])
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -102,6 +125,22 @@ const MainContent = () => {
 
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
+  }
+
+  const onIntersection = (entries) => {
+    const firstEntry = entries[0]
+    if (firstEntry.isIntersecting && hasMore) {
+      fetchMoreBlogs()
+    }
+  }
+
+  const fetchMoreBlogs = () => {
+    if (page === paginatedBlogs?.numberOfPages) {
+      setHasMore(false)
+    } else {
+      setPage(prev => prev + 1)
+
+    }
   }
 
   const current = Date.parse(new Date())
@@ -134,8 +173,13 @@ const MainContent = () => {
               ) :
               ''
         } */}
-
+        {/* 
         {paginatedBlogs?.data?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+            <Note blog={blog} />
+          </Grid>)} */}
+
+        {products?.map(blog =>
           <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
             <Note blog={blog} />
           </Grid>)}
@@ -145,36 +189,44 @@ const MainContent = () => {
 
 
   return (
-    <Box sx={{ display: 'flex', mt: '50px', mb: '50px', height: '100%' }}>
+    <>
+      <Box sx={{ display: 'flex', mt: '50px', mb: '50px', height: '100%' }}>
 
-      <FrontPageSideBar blogs={blogs} />
+        <FrontPageSideBar blogs={blogs} />
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }} maxWidth='xxxl'>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }} maxWidth='xxxl'>
 
-        <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
-          <Box sx={{ width: '100%' }}>
-            <FrontPageSearchBar />
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
-            <Box >
-              {dataList?.map(category => {
-                return (
-                  <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
-                )
-              }
-              )}
+          <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
+            <Box sx={{ width: '100%' }}>
+              <FrontPageSearchBar />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
+              <Box >
+                {dataList?.map(category => {
+                  return (
+                    <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
+                  )
+                }
+                )}
+              </Box>
             </Box>
           </Box>
-        </Box>
-        <Box sx={{ p: 1 }}>
-          {content}
-          <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
+          <Box sx={{ p: 1 }}>
+            {content}
+            {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}
-          <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button>
-        </Box >
-      </Box >
+          <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}
 
-    </Box >
+
+          </Box >
+        </Box >
+
+      </Box >
+      {
+        hasMore &&
+        <Box ref={elementRef}> <Typography>Load more blogs...</Typography></Box>
+      }
+    </>
   )
 }
 
