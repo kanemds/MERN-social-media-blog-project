@@ -10,6 +10,9 @@ import MainContent from "../pages/blogs/MainContent"
 import FrontPageSideBar from "./FrontPageSideBar"
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import FrontPageSearchBar from "./FrontPageSearchBar"
+import useMediaQuery from '@mui/material/useMediaQuery'
+import FrontPageSideBarMedium from "./FrontPageSideBarMedium"
+
 
 const theme = createTheme({
   breakpoints: {
@@ -25,8 +28,13 @@ const theme = createTheme({
     },
   },
 })
-const Layout = () => {
 
+
+
+
+const Layout = () => {
+  const largeBP = useMediaQuery('(min-width:1200px)')
+  const mediumBP = useMediaQuery('(min-width:750px)')
   const [
     sendLogOut, {
       isLoading,
@@ -39,6 +47,7 @@ const Layout = () => {
   const { pathname } = useLocation()
 
   const [isShow, setIsShow] = useState(false)
+
 
   const handleMenu = () => {
     setIsShow(prev => !prev)
@@ -73,8 +82,15 @@ const Layout = () => {
               <FrontPageSearchBar handleMenu={handleMenu} />
             </Box>
             <Box sx={{ display: 'flex', mb: '50px', }}>
-              <FrontPageSideBar isShow={isShow} />
               <ThemeProvider theme={theme}  >
+                {largeBP ?
+                  <FrontPageSideBar isShow={isShow} />
+                  :
+                  mediumBP ?
+                    <FrontPageSideBarMedium />
+                    :
+                    ''
+                }
                 <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxl'>
                   <MainContent />
                 </Container>
