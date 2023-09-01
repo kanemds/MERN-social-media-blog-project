@@ -138,7 +138,7 @@ const getPaginatedBlogs = async (req, res) => {
   // /blogs?page=1 is string
   const { page } = req.query
 
-  const limit = 4
+  const limit = 6
 
   // current page 4, 
   // startIndex (4 - 1) * 2 = 6 
