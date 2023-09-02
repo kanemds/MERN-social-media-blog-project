@@ -13,9 +13,10 @@ import RecommendIcon from '@mui/icons-material/Recommend'
 import SubdirectoryArrowRightOutlinedIcon from '@mui/icons-material/SubdirectoryArrowRightOutlined'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useGetBlogsQuery } from '../pages/blogs/blogsApiSlice'
-import { set } from 'lodash'
-
-
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import Modal from '@mui/material/Modal'
+import Backdrop from '@mui/material/Backdrop'
+import Fade from '@mui/material/Fade'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -43,7 +44,20 @@ const Divider = styled(Box)({
   marginBottom: 12,
 })
 
-
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  borderRadius: '5%',
+  border: '2px solid #bdbdbd',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  justifyContent: 'center',
+}
 
 
 const FrontPageSideBarMedium = () => {
@@ -59,6 +73,9 @@ const FrontPageSideBarMedium = () => {
   })
 
   const [checked, setChecked] = useState(false)
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   useEffect(() => {
     if (pathname === `/blogs/post/${id}` || pathname === `/blogs/post/edit/${id}`) {
@@ -113,7 +130,31 @@ const FrontPageSideBarMedium = () => {
       </Section>
 
       <Divider />
-      <Typography>maybe a pop up date select</Typography>
+      <IconButton color="primary" onClick={handleOpen}>
+        <CalendarMonthIcon color='primary' />
+      </IconButton>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          borderRadius: "50px",
+          backdrop: {
+            timeout: 500,
+          },
+
+        }}
+
+      >
+        <Fade in={open} >
+          <Box sx={style} >
+            <ActiveCalender />
+          </Box>
+        </Fade>
+      </Modal>
       <Divider />
       <Section >
 
@@ -161,7 +202,7 @@ const FrontPageSideBarMedium = () => {
 
 
 
-    </Box>
+    </Box >
   )
 }
 
