@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import Input from '@mui/material/Input'
-import FilledInput from '@mui/material/FilledInput'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import InputLabel from '@mui/material/InputLabel'
-import InputAdornment from '@mui/material/InputAdornment'
-import FormHelperText from '@mui/material/FormHelperText'
-import FormControl from '@mui/material/FormControl'
-import TextField from '@mui/material/TextField'
-import Visibility from '@mui/icons-material/Visibility'
-import VisibilityOff from '@mui/icons-material/VisibilityOff'
-import SearchIcon from '@mui/icons-material/Search'
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
-import DehazeIcon from '@mui/icons-material/Dehaze'
-import useMediaQuery from '@mui/material/useMediaQuery'
+
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
+
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
-
-import { Box, Button, IconButton, Typography, AppBar, FormControlLabel, Switch, Collapse, Paper, Grow } from '@mui/material'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import InboxIcon from '@mui/icons-material/MoveToInbox'
+import MailIcon from '@mui/icons-material/Mail'
+import { Box, Button, IconButton, Typography, FormControlLabel, Switch, Collapse, Paper, Grow } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import ActiveCalender from '../pages/blogs/ActiveCalender'
+import DehazeIcon from '@mui/icons-material/Dehaze'
 import HomeIcon from '@mui/icons-material/Home'
 import SettingsIcon from '@mui/icons-material/Settings'
 import PostAddIcon from '@mui/icons-material/PostAdd'
@@ -30,6 +24,7 @@ import RecommendIcon from '@mui/icons-material/Recommend'
 import SubdirectoryArrowRightOutlinedIcon from '@mui/icons-material/SubdirectoryArrowRightOutlined'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useGetBlogsQuery } from '../pages/blogs/blogsApiSlice'
+
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -49,19 +44,19 @@ const Section = styled(Box)({
   width: '100%'
 })
 
+// const Divider = styled(Box)({
+//   height: '100%',
+//   width: '100%',
+//   borderTop: '1px solid lightGrey',
+//   marginTop: 12,
+//   marginBottom: 12,
+// })
 
-const IconButtonStyle = {
-  width: '40px', height: '40px'
-}
-export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
 
-  const largeBP = useMediaQuery('(min-width:1200px)')
-  const mediumBP = useMediaQuery('(min-width:750px)')
-
+export default function SideBarDrawer() {
   const [state, setState] = React.useState({
     left: false,
   })
-
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -71,17 +66,9 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
     ) {
       return
     }
-    if (open === true) {
-      setIsShow(true)
-    } else {
-      setIsShow(false)
-    }
+
     setState({ ...state, [anchor]: open })
   }
-
-  useEffect(() => {
-    setState({ ...state, left: false })
-  }, [largeBP])
 
   const navigate = useNavigate()
   const { id } = useParams()
@@ -137,7 +124,6 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
   )
 
 
-
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
@@ -147,6 +133,7 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
     >
       <List>
         <Section >
+
           <SideButton onClick={handleToHome}>
             <HomeIcon />
             <ButtonInfo >Home</ButtonInfo>
@@ -206,44 +193,20 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
   )
 
   return (
-    <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', mt: 10 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%', ml: '24px' }}>
-        {largeBP ?
-          <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
-            <DehazeIcon color='primary' />
-          </IconButton>
-          :
-          <div>
-            {['left'].map((anchor) => (
-              <React.Fragment key={anchor}>
-                <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
-                  <DehazeIcon color='primary' />
-                </IconButton>
-                <SwipeableDrawer
-                  anchor={anchor}
-                  open={state[anchor]}
-                  onClose={toggleDrawer(anchor, false)}
-                  onOpen={toggleDrawer(anchor, true)}
-                >
-                  {list(anchor)}
-                </SwipeableDrawer>
-              </React.Fragment>
-            ))}
-          </div>
-        }
-
-      </Box>
-      <FormControl sx={{ display: 'flex', flexDirection: 'row', width: '100%', mr: 'calc(40% - 64px)' }}>
-        <OutlinedInput
-          sx={{ width: '100%' }}
-          autoComplete='true'
-          placeholder='Search Posts...'
-          startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
-        />
-        <Button variant='contained'><SearchIcon /></Button>
-      </FormControl>
-
-    </Box >
-
+    <div>
+      {['left'].map((anchor) => (
+        <React.Fragment key={anchor}>
+          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
+          <SwipeableDrawer
+            anchor={anchor}
+            open={state[anchor]}
+            onClose={toggleDrawer(anchor, false)}
+            onOpen={toggleDrawer(anchor, true)}
+          >
+            {list(anchor)}
+          </SwipeableDrawer>
+        </React.Fragment>
+      ))}
+    </div>
   )
 }
