@@ -10,6 +10,7 @@ import FrontPageSideBar from '../../components/FrontPageSideBar'
 import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
+import SideBarDrawer from '../../components/SideBarDrawer'
 
 
 
@@ -210,6 +211,7 @@ const MainContent = () => {
             </Box>
           </Box>
         </Box>
+        <SideBarDrawer />
         <Box sx={{ p: 1 }}>
           {content}
           {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>

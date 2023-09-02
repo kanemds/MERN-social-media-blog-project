@@ -54,6 +54,8 @@ const Layout = () => {
   }
 
 
+
+
   const handleLogout = () => sendLogOut()
 
 
@@ -79,7 +81,7 @@ const Layout = () => {
               <VerticalSwiper />
             </Box>
             <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
-              <FrontPageSearchBar handleMenu={handleMenu} />
+              <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
             </Box>
             <Box sx={{ display: 'flex', mb: '50px', }}>
               <ThemeProvider theme={theme}  >
