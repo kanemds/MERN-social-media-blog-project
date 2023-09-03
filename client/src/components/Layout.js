@@ -24,7 +24,6 @@ const theme = createTheme({
       ll: 1480,
       xl: 1760,
       xxl: 2060,
-
     },
   },
 })

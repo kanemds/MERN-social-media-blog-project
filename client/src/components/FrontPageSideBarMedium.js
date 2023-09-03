@@ -119,9 +119,9 @@ const FrontPageSideBarMedium = () => {
   )
 
   return (
-    <Box sx={{ position: 'sticky', top: '150px', width: '40px', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <Box sx={{ position: 'sticky', top: '150px', width: '40px', height: '100%', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
-
+      <Divider />
       <Section >
         <IconButton color="primary" onClick={handleToHome}>
           <HomeIcon color='primary' />

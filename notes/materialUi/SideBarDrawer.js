@@ -12,7 +12,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
 import { Box, Button, IconButton, Typography, FormControlLabel, Switch, Collapse, Paper, Grow } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
-import ActiveCalender from '../pages/blogs/ActiveCalender'
+import ActiveCalender from '../../client/src/pages/blogs/ActiveCalender'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import HomeIcon from '@mui/icons-material/Home'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -23,7 +23,7 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import RecommendIcon from '@mui/icons-material/Recommend'
 import SubdirectoryArrowRightOutlinedIcon from '@mui/icons-material/SubdirectoryArrowRightOutlined'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useGetBlogsQuery } from '../pages/blogs/blogsApiSlice'
+import { useGetBlogsQuery } from '../../client/src/pages/blogs/blogsApiSlice'
 
 
 const SideButton = styled(Button)({
