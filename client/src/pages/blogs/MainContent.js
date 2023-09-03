@@ -10,8 +10,8 @@ import FrontPageSideBar from '../../components/FrontPageSideBar'
 import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
-import SideBarDrawer from '../../components/SideBarDrawer'
 
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 
 
@@ -44,6 +44,8 @@ const PreView = styled(Button)({
   background: blue[300]
 })
 
+
+
 const buttonStyle = {
   padding: '4px',
 }
@@ -56,6 +58,8 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 const MainContent = () => {
 
   const { username } = useAuth()
+
+  const smallScreenSize = useMediaQuery('(min-width:600px)')
 
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
@@ -194,13 +198,13 @@ const MainContent = () => {
 
     <Box sx={{ display: 'flex', height: '100%' }}>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mb: 20 }} maxWidth='xxxl'>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mb: 20 }} maxWidth='xxl'>
 
         <Box sx={{ position: 'sticky', top: '150px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
           {/* <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <FrontPageSearchBar />
           </Box> */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', p: smallScreenSize ? '' : '0 8px' }}>
             <Box >
               {dataList?.map(category => {
                 return (
@@ -211,7 +215,6 @@ const MainContent = () => {
             </Box>
           </Box>
         </Box>
-        <SideBarDrawer />
         <Box sx={{ p: 1 }}>
           {content}
           {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
