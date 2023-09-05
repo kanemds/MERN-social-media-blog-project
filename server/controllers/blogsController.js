@@ -292,6 +292,8 @@ const updateBlog = async (req, res) => {
 const deleteBlog = async (req, res) => {
   const { id } = req.body
   console.log(id)
+
+  res.status(200).json({ message: 'Selected blog had been deleted.' })
   // // Confirm data
   // if (!id) {
   //   return res.status(400).json({ message: 'Blog ID required' })

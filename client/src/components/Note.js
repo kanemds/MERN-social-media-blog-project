@@ -36,6 +36,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
+  height: 140,
   bgcolor: 'background.paper',
   border: '2px solid #bdbdbd',
   boxShadow: 24,
@@ -52,7 +53,9 @@ export default function Note({ blog }) {
 
   const [
     deleteBlog,
-    { isLoading,
+    {
+      data,
+      isLoading,
       isSuccess,
       isError,
       error }
@@ -68,6 +71,10 @@ export default function Note({ blog }) {
   const [isLiked, setIsLiked] = useState(false)
   const [isFavorite, setIsFavorite] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteMessage, setDeleteMessage] = useState(null)
+  const [isDeleteReady, setIsDeleteReady] = useState(false)
+
+
 
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
@@ -76,11 +83,25 @@ export default function Note({ blog }) {
   const timeInMillisecond = current - postedDay
 
   useEffect(() => {
-    if (isSuccess) {
-      setDeleteOpen(false)
-      setIsClick(false)
+
+    if (isSuccess && isDeleteReady === true && data?.message) {
+      setDeleteMessage(data.message)
+      setTimeout(() => {
+        setDeleteOpen(false)
+        setIsClick(false)
+      }, 1400)
+    } else {
+      setIsDeleteReady(false)
     }
-  }, [isSuccess])
+  }, [isSuccess, isDeleteReady, data])
+
+  useEffect(() => {
+    if (isLoading) {
+      setTimeout(() => {
+        setIsDeleteReady(true)
+      }, 1400)
+    }
+  }, [isLoading])
 
 
   const handleClick = (event) => {
@@ -126,8 +147,8 @@ export default function Note({ blog }) {
 
   const handleDeleteConfirm = async (e) => {
     e.preventDefault()
-    console.log(blog.id)
     await deleteBlog({ id: blog.id })
+
   }
 
   const handleUserPage = () => {
@@ -142,6 +163,42 @@ export default function Note({ blog }) {
 
   const handleLiked = () => {
     setIsLiked(prev => !prev)
+  }
+
+
+  let deleteModalMessage
+
+  if (isDeleteReady === false) {
+
+    deleteModalMessage = <LoadingSpinner />
+  }
+
+  if (!isLoading && !isSuccess) {
+    deleteModalMessage = (
+      <>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Delete the selected blog?
+        </Typography>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
+          <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+          <Button variant='contained' onClick={handleDeleteConfirm} sx={{
+            backgroundColor: red[600],
+            color: 'white',
+            '&:hover': {
+              backgroundColor: red[800]
+            }
+          }}>Delete Blog</Button>
+        </Box>
+      </>
+    )
+  }
+
+  if (isDeleteReady === true && deleteMessage) {
+    deleteModalMessage = (
+      <Typography id="modal-modal-title" variant="h6" component="h2">
+        {deleteMessage}
+      </Typography>
+    )
   }
 
   return (
@@ -190,8 +247,6 @@ export default function Note({ blog }) {
                 <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
               </IconButton>
             </Box>
-
-
 
             <Box>
               <Typography variant="body1" sx={{
@@ -251,7 +306,6 @@ export default function Note({ blog }) {
               </IconButton>
 
 
-
             </Box>
             <Box color='black'>
               {
@@ -298,29 +352,8 @@ export default function Note({ blog }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
-
-
                 <Box sx={style}>
-                  {isLoading ?
-                    <LoadingSpinner />
-                    :
-                    <>
-                      <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Delete the selected blog?
-                      </Typography>
-                      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
-                        <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
-                        <Button variant='contained' onClick={handleDeleteConfirm} sx={{
-                          backgroundColor: red[600],
-                          color: 'white',
-                          '&:hover': {
-                            backgroundColor: red[800]
-                          }
-                        }}>Delete Blog</Button>
-                      </Box>
-                    </>
-                  }
-
+                  {deleteModalMessage}
                 </Box>
               </Modal>
               <Button onClick={handleEdit}><EditNoteOutlinedIcon /></Button>
