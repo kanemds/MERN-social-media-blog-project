@@ -51,7 +51,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  borderRadius: '5%',
+  borderRadius: '20px',
   border: '2px solid #bdbdbd',
   boxShadow: 24,
   p: 4,
@@ -141,13 +141,11 @@ const FrontPageSideBarMedium = () => {
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
         slotProps={{
-          borderRadius: "50px",
+          borderRadius: "5px",
           backdrop: {
             timeout: 500,
           },
-
         }}
-
       >
         <Fade in={open} >
           <Box sx={style} >

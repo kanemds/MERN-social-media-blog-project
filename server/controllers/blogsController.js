@@ -291,24 +291,24 @@ const updateBlog = async (req, res) => {
 // @access Private
 const deleteBlog = async (req, res) => {
   const { id } = req.body
+  console.log(id)
+  // // Confirm data
+  // if (!id) {
+  //   return res.status(400).json({ message: 'Blog ID required' })
+  // }
 
-  // Confirm data
-  if (!id) {
-    return res.status(400).json({ message: 'Blog ID required' })
-  }
+  // // Confirm blog exists to delete 
+  // const blog = await Blog.findById(id).exec()
 
-  // Confirm blog exists to delete 
-  const blog = await Blog.findById(id).exec()
+  // if (!blog) {
+  //   return res.status(400).json({ message: 'Blog not found' })
+  // }
+  // await deleteImagesFromFirebase(blog.images)
+  // const result = await blog.deleteOne()
 
-  if (!blog) {
-    return res.status(400).json({ message: 'Blog not found' })
-  }
-  await deleteImagesFromFirebase(blog.images)
-  const result = await blog.deleteOne()
+  // const reply = `Blog '${result.title}' with ID ${result._id} deleted`
 
-  const reply = `Blog '${result.title}' with ID ${result._id} deleted`
-
-  res.json(reply)
+  // res.json(reply)
 
 
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import ActiveCalender from './ActiveCalender'
+import ActiveCalender from '../blogs/ActiveCalender'
 import { Box, Button, Paper, Container, Typography, AppBar, Toolbar } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
@@ -7,7 +7,7 @@ import Note from '../../components/Note'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 import { blue } from '@mui/material/colors'
 import FrontPageSideBar from '../../components/FrontPageSideBar'
-import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from './blogsApiSlice'
+import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from '../blogs/blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
 
@@ -215,7 +215,7 @@ const MainContent = () => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ p: 1 }}>
+        <Box sx={{ p: smallScreenSize ? 1 : '0 16px' }}>
           {content}
           {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}

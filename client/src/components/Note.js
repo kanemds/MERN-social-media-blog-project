@@ -21,17 +21,42 @@ import RecommendIcon from '@mui/icons-material/Recommend'
 import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
+import Modal from '@mui/material/Modal'
+import { useDeleteBlogMutation } from '../pages/blogs/blogsApiSlice'
+import LoadingSpinner from './LoadingSpinner'
+
 
 const iconStyle = {
   padding: '0px',
 }
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #bdbdbd',
+  boxShadow: 24,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  p: 4,
+  borderRadius: '20px',
+}
 
 
 export default function Note({ blog }) {
 
-
-
+  const [
+    deleteBlog,
+    { isLoading,
+      isSuccess,
+      isError,
+      error }
+  ] = useDeleteBlogMutation()
 
   const navigate = useNavigate()
   const { username } = useAuth()
@@ -42,7 +67,7 @@ export default function Note({ blog }) {
   const [isClick, setIsClick] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [isFavorite, setIsFavorite] = useState(false)
-
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
@@ -50,11 +75,18 @@ export default function Note({ blog }) {
 
   const timeInMillisecond = current - postedDay
 
+  useEffect(() => {
+    if (isSuccess) {
+      setDeleteOpen(false)
+      setIsClick(false)
+    }
+  }, [isSuccess])
+
+
   const handleClick = (event) => {
     if (isClick) {
       setAnchorEl(event.currentTarget)
     }
-
   }
 
   const handleClose = () => {
@@ -65,7 +97,7 @@ export default function Note({ blog }) {
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 
-  const handleView = () => {
+  const handleToSelectedBlog = () => {
     if (!isClick) {
       navigate(`/blogs/post/${blog.id}`)
     }
@@ -79,6 +111,23 @@ export default function Note({ blog }) {
 
   const handleEdit = () => {
     navigate(`/blogs/post/edit/${blog.id}`, { state: blog })
+  }
+
+
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false)
+    setIsClick(false)
+    setAnchorEl(null)
+  }
+
+  const handleDelete = () => setDeleteOpen(true)
+
+
+  const handleDeleteConfirm = async (e) => {
+    e.preventDefault()
+    console.log(blog.id)
+    await deleteBlog({ id: blog.id })
   }
 
   const handleUserPage = () => {
@@ -117,7 +166,7 @@ export default function Note({ blog }) {
           }
         }}
         disableRipple={true}
-        onClick={handleView}
+        onClick={handleToSelectedBlog}
       >
 
         <CardMedia
@@ -242,7 +291,32 @@ export default function Note({ blog }) {
                 horizontal: 'right',
               }}
             >
-              <Button><DeleteForeverOutlinedIcon /></Button>
+              <Button onClick={handleDelete} ><DeleteForeverOutlinedIcon /></Button>
+              <Modal
+                open={deleteOpen}
+                onClose={handleDeleteClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+
+
+                <Box sx={style}>
+                  {isLoading ?
+                    <LoadingSpinner />
+                    :
+                    <>
+                      <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Delete the selected blog?
+                      </Typography>
+                      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
+                        <Button sx={{ m: '2px 20px' }} onClick={handleDeleteClose}>Cancel</Button>
+                        <Button sx={{ m: '2px 20px' }} onClick={handleDeleteConfirm} color='error'><DeleteForeverOutlinedIcon /></Button>
+                      </Box>
+                    </>
+                  }
+
+                </Box>
+              </Modal>
               <Button onClick={handleEdit}><EditNoteOutlinedIcon /></Button>
               <Button onClick={handleLook}><RemoveRedEyeOutlinedIcon /></Button>
             </Popover>
