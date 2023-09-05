@@ -6,7 +6,7 @@ import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
 import LoadingSpinner from "./LoadingSpinner"
 import ErrorMessage from './ErrorMessage'
 import VerticalSwiper from "./swiper/VerticalSwiper"
-import MainContent from "../pages/blogs/MainContent"
+import MainContent from "../pages/mainPage/MainContent"
 import FrontPageSideBar from "./FrontPageSideBar"
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import FrontPageSearchBar from "./FrontPageSearchBar"

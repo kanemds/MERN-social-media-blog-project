@@ -115,7 +115,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         }]
       }
     }),
-    deleteUser: builder.mutation({
+    deleteBlog: builder.mutation({
       query: ({ id }) => ({
         url: '/blogs',
         method: 'DELETE',
@@ -138,5 +138,5 @@ export const {
   useGetPaginatedBlogsQuery,
   useAddNewBlogMutation,
   useUpdateBlogMutation,
-  useDeleteUserMutation
+  useDeleteBlogMutation
 } = blogsApiSlice
