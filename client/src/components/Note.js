@@ -24,7 +24,7 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import Modal from '@mui/material/Modal'
 import { useDeleteBlogMutation } from '../pages/blogs/blogsApiSlice'
 import LoadingSpinner from './LoadingSpinner'
-
+import { red } from '@mui/material/colors'
 
 const iconStyle = {
   padding: '0px',
@@ -308,9 +308,15 @@ export default function Note({ blog }) {
                       <Typography id="modal-modal-title" variant="h6" component="h2">
                         Delete the selected blog?
                       </Typography>
-                      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
-                        <Button sx={{ m: '2px 20px' }} onClick={handleDeleteClose}>Cancel</Button>
-                        <Button sx={{ m: '2px 20px' }} onClick={handleDeleteConfirm} color='error'><DeleteForeverOutlinedIcon /></Button>
+                      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
+                        <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+                        <Button variant='contained' onClick={handleDeleteConfirm} sx={{
+                          backgroundColor: red[600],
+                          color: 'white',
+                          '&:hover': {
+                            backgroundColor: red[800]
+                          }
+                        }}>Delete Blog</Button>
                       </Box>
                     </>
                   }
