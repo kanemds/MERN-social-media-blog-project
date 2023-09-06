@@ -265,11 +265,11 @@ const updateBlog = async (req, res) => {
 
   // find the different url between database and frontend  
   const imagesUrlNotMatch = await findUnmatchedUrls(blog?.images, newSetOrderImages)
-  console.log('blog.images', blog.images)
+  // console.log('blog.images', blog.images)
 
-  console.log('newSetOrderImages', newSetOrderImages)
+  // console.log('newSetOrderImages', newSetOrderImages)
 
-  console.log('imagesUrlNotMatch', imagesUrlNotMatch)
+  // console.log('imagesUrlNotMatch', imagesUrlNotMatch)
 
   // check if any un-match url found
   if (imagesUrlNotMatch.length) {
@@ -292,24 +292,25 @@ const updateBlog = async (req, res) => {
 const deleteBlog = async (req, res) => {
   const { id } = req.body
   console.log(id)
-  // // Confirm data
-  // if (!id) {
-  //   return res.status(400).json({ message: 'Blog ID required' })
-  // }
 
-  // // Confirm blog exists to delete 
-  // const blog = await Blog.findById(id).exec()
+  if (!id) {
+    return res.status(400).json({ message: 'Blog ID required' })
+  }
 
-  // if (!blog) {
-  //   return res.status(400).json({ message: 'Blog not found' })
-  // }
-  // await deleteImagesFromFirebase(blog.images)
-  // const result = await blog.deleteOne()
+  // Confirm blog exists to delete 
+  const blog = await Blog.findById(id).exec()
 
-  // const reply = `Blog '${result.title}' with ID ${result._id} deleted`
+  if (!blog) {
+    return res.status(400).json({ message: 'Blog not found' })
+  }
 
-  // res.json(reply)
+  const urls = blog.images.map(each => each.url)
+  await deleteImagesFromFirebase(urls)
 
+  await blog.deleteOne()
+
+
+  res.status(200).json({ message: 'Selected blog had been deleted.' })
 
 }
 

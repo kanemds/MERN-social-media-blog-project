@@ -122,7 +122,7 @@ const FrontPageSideBar = ({ isShow }) => {
   )
 
   return (
-    <Box sx={{ position: 'sticky', top: '150px', width: isShow ? '280px' : '40px', height: '100%', pt: '10px', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <Box sx={{ position: 'sticky', top: '150px', width: isShow ? '280px' : '40px', height: '100%', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
       {isShow ?
         <>
@@ -183,6 +183,7 @@ const FrontPageSideBar = ({ isShow }) => {
         </>
         :
         <>
+          <Divider />
           <Section >
 
             <IconButton color="primary" onClick={handleToHome}>

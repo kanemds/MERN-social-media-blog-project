@@ -67,6 +67,7 @@ const Layout = () => {
 
   let main
 
+  // home page with slider,sidebar and searchbar 
   if (pathname === '/') {
     return main = (
 
@@ -104,6 +105,7 @@ const Layout = () => {
     )
   }
 
+  // startWith /blogs pages with slider,sidebar and searchbar 
   if (pathname.includes('/blogs')) {
     return main = (
 
@@ -114,7 +116,7 @@ const Layout = () => {
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
             <Box sx={{ display: 'flex', mt: '70px', width: '100%', minHeight: 'calc(100vh - 70px)' }}>
-              <FrontPageSideBar />
+              <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
               <ThemeProvider theme={theme}  >
                 <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxl'>
                   <Outlet />
@@ -128,7 +130,8 @@ const Layout = () => {
     )
   }
 
-  if (pathname !== '/') {
+  // other pages no slider, sidebar and searchbar
+  if (!pathname.includes('/blogs')) {
     return main = (
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />

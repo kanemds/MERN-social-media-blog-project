@@ -14,15 +14,16 @@ const style = {
   top: '40%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
-  height: 230,
+  width: 400,
+
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '2px solid #bdbdbd',
   boxShadow: 24,
   p: 4,
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center'
+  alignItems: 'center',
+  borderRadius: '20px',
 }
 
 const DeleteActionButton = ({ userId }) => {
@@ -97,14 +98,12 @@ const DeleteActionButton = ({ userId }) => {
               {error?.data.message}
             </Typography> :
               <>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Delete user:{userId}
-                </Typography>
                 <Typography id="modal-modal-description" sx={{ m: 2 }}>
-                  Select "Yes" to delete or "No" back to Previous page
+                  Delete the selected user?
                 </Typography>
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 3, width: '100%' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2, width: '100%' }}>
+                  <Button variant='contained' onClick={handleClose}>Cancel</Button>
                   <Button variant='contained'
                     sx={{
                       backgroundColor: red[600],
@@ -115,10 +114,10 @@ const DeleteActionButton = ({ userId }) => {
                     }}
                     onClick={handleSubmit}
                   >
-                    Yes
+                    Delete User
                   </Button>
 
-                  <Button variant='contained' onClick={handleClose}>No</Button>
+
                 </Box>
               </>
           }
