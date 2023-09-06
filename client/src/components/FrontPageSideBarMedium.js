@@ -119,7 +119,7 @@ const FrontPageSideBarMedium = () => {
   )
 
   return (
-    <Box sx={{ position: 'sticky', top: '150px', width: '40px', height: '100%', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <Box sx={{ position: 'sticky', top: '0px', width: '40px', ml: 3, mr: 3, mb: 10 }}>
 
       <Divider />
       <Section >
