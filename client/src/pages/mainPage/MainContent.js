@@ -200,7 +200,7 @@ const MainContent = () => {
 
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mb: 20 }} maxWidth='xxl'>
 
-        <Box sx={{ position: 'sticky', top: '150px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
+        <Box sx={{ position: 'sticky', top: '150px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
           {/* <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <FrontPageSearchBar />
           </Box> */}
@@ -215,7 +215,7 @@ const MainContent = () => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ p: smallScreenSize ? 1 : '0 16px' }}>
+        <Box sx={{ p: smallScreenSize ? 2 : '0 24px' }}>
           {content}
           {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}

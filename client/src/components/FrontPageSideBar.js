@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, IconButton, Typography, FormControlLabel, Switch, Collapse, Paper, Grow } from '@mui/material'
+import { Box, Button, IconButton, Typography, FormControlLabel, Switch, Collapse, Paper, Grow, Toolbar, AppBar } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import ActiveCalender from '../pages/blogs/ActiveCalender'
 import DehazeIcon from '@mui/icons-material/Dehaze'
@@ -122,12 +122,11 @@ const FrontPageSideBar = ({ isShow }) => {
   )
 
   return (
-    <Box sx={{ position: 'sticky', top: '150px', width: isShow ? '280px' : '40px', height: '100%', ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-
+    <Box sx={{ position: 'sticky', top: '0px', width: isShow ? '280px' : '40px', ml: 3, mr: 3, mb: 10 }}>
       {isShow ?
         <>
+          <Divider />
           <Section >
-
             <SideButton onClick={handleToHome}>
               <HomeIcon />
               <ButtonInfo >Home</ButtonInfo>
