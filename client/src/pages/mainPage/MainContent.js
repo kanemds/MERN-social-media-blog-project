@@ -107,8 +107,8 @@ const MainContent = () => {
     const observer = new IntersectionObserver(onIntersection)
 
     if (observer && elementRef.current) {
-      console.log(observer)
-      console.log(elementRef.current)
+      // console.log(observer)
+      // console.log(elementRef.current)
       observer.observe(elementRef.current)
     }
 

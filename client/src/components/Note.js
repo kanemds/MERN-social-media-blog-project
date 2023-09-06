@@ -87,8 +87,10 @@ export default function Note({ blog }) {
     if (isSuccess && isDeleteReady === true && data?.message) {
       setDeleteMessage(data.message)
       setTimeout(() => {
+        console.log('run this setTimeout')
         setDeleteOpen(false)
         setIsClick(false)
+        navigate('/blogs')
       }, 1400)
     } else {
       setIsDeleteReady(false)

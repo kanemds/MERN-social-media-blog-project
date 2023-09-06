@@ -17,7 +17,7 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
 
-import { Box, Button, IconButton, Typography, AppBar, FormControlLabel, Switch, Collapse, Paper, Grow } from '@mui/material'
+import { Box, Button, IconButton, Typography, AppBar, Toolbar, FormControlLabel, Switch, Collapse, Paper, Grow } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import ActiveCalender from '../pages/blogs/ActiveCalender'
 import HomeIcon from '@mui/icons-material/Home'
@@ -136,16 +136,32 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
     </SideButton>
   )
 
+  const Divider = styled(Box)({
+    height: '100%',
+    width: '100%',
+    borderTop: '1px solid lightGrey',
+    marginTop: 12,
+    marginBottom: 12,
+  })
 
 
   const list = (anchor) => (
     <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      // sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 288 }}
+      sx={{ width: '288px', height: '100%' }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
+      <Box sx={{ height: '70px', width: '100%', background: '#1976d2' }}>
+
+      </Box>
+      <Box sx={{ height: '80px', display: 'flex', alignItems: 'flex-end', ml: 3, mr: 3 }}>
+        <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
+          <DehazeIcon color='primary' />
+        </IconButton>
+      </Box>
+      <List style={{ padding: 0 }} sx={{ ml: 3, mr: 3 }}>
         <Section >
           <SideButton onClick={handleToHome}>
             <HomeIcon />
@@ -199,23 +215,23 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
             <ButtonInfo >  Settings</ButtonInfo>
           </SideButton>
         </Section>
-      </List>
-      <Divider />
+      </List >
 
-    </Box>
+
+    </Box >
   )
 
   return (
-    <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', mt: 10 }}>
+    <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end' }}>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%', ml: '24px' }}>
         {largeBP ?
           <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
             <DehazeIcon color='primary' />
           </IconButton>
           :
-          <div>
+          <>
             {['left'].map((anchor) => (
-              <React.Fragment key={anchor}>
+              <Box key={anchor} >
                 <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
                   <DehazeIcon color='primary' />
                 </IconButton>
@@ -227,9 +243,9 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
                 >
                   {list(anchor)}
                 </SwipeableDrawer>
-              </React.Fragment>
+              </Box>
             ))}
-          </div>
+          </>
         }
 
       </Box>
