@@ -86,6 +86,8 @@ const Layout = () => {
             <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
               <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
             </Box>
+
+
             <Box sx={{ display: 'flex', position: 'relative' }}>
               <Box sx={{
                 position: 'sticky', top: '150px', zIndex: 10, backgroundColor: 'white', overflow: 'hidden', scrollbarGutter: 'stable', height: 'calc(100vh - 150px)', '&:hover': { overflowY: 'scroll' }
@@ -126,8 +128,12 @@ const Layout = () => {
             <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
               <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
             </Box>
-            <Box sx={{ minHeight: '100%', display: 'flex', mb: '50px' }}>
-              <ThemeProvider theme={theme}  >
+
+
+            <Box sx={{ display: 'flex', position: 'relative' }}>
+              <Box sx={{
+                position: 'sticky', top: '150px', zIndex: 10, backgroundColor: 'white', overflow: 'hidden', scrollbarGutter: 'stable', height: 'calc(100vh - 150px)', '&:hover': { overflowY: 'scroll' }
+              }}>
                 {largeBP ?
                   <FrontPageSideBar isShow={isShow} />
                   :
@@ -136,8 +142,10 @@ const Layout = () => {
                     :
                     ''
                 }
-                <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxl'>
-                  {/* <MainContent /> */}
+              </Box>
+
+              <ThemeProvider theme={theme}  >
+                <Container sx={{ minHeight: '100vh', width: '100%' }} maxWidth='xxl'>
                   <BlogsList />
                 </Container>
               </ThemeProvider>
