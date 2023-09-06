@@ -176,7 +176,7 @@ const BlogsList = () => {
   return (
 
     <Box sx={{ width: '100%' }} >
-      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 1, pr: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
         <Box sx={{ width: '100%' }}>
           <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
         </Box>
@@ -206,7 +206,7 @@ const BlogsList = () => {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ p: 1 }}>
+      <Box sx={{ p: 2 }}>
 
         {Array.isArray(searchResult) && searchResult.length && isSearch ?
 
@@ -236,8 +236,6 @@ const BlogsList = () => {
                   )
             }
           </Grid>
-
-
           :
           typeof searchResult === 'string' && searchResult.length && isSearch ?
             <Box> {searchResult}</Box>

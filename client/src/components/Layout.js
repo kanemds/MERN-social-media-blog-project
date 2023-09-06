@@ -12,7 +12,8 @@ import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import FrontPageSearchBar from "./FrontPageSearchBar"
 import useMediaQuery from '@mui/material/useMediaQuery'
 import FrontPageSideBarMedium from "./FrontPageSideBarMedium"
-
+import BlogsList from "../pages/blogs/BlogsList"
+import './scrollbar.css'
 
 const theme = createTheme({
   breakpoints: {
@@ -59,6 +60,7 @@ const Layout = () => {
 
 
 
+
   let content
 
   if (isError) return content = <ErrorMessage error={error} />
@@ -77,14 +79,17 @@ const Layout = () => {
           :
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
+
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
             <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
               <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
             </Box>
-            <Box sx={{ display: 'flex', mb: '50px', }}>
-              <ThemeProvider theme={theme}  >
+            <Box sx={{ display: 'flex', position: 'relative' }}>
+              <Box sx={{
+                position: 'sticky', top: '150px', zIndex: 10, backgroundColor: 'white', overflow: 'hidden', scrollbarGutter: 'stable', height: 'calc(100vh - 150px)', '&:hover': { overflowY: 'scroll' }
+              }}>
                 {largeBP ?
                   <FrontPageSideBar isShow={isShow} />
                   :
@@ -93,14 +98,17 @@ const Layout = () => {
                     :
                     ''
                 }
-                <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxl'>
+              </Box>
+
+              <ThemeProvider theme={theme}  >
+                <Container sx={{ minHeight: '100vh', width: '100%' }} maxWidth='xxl'>
                   <MainContent />
                 </Container>
               </ThemeProvider>
             </Box>
           </>
         }
-      </Box>
+      </Box >
 
     )
   }
@@ -115,11 +123,22 @@ const Layout = () => {
           :
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-            <Box sx={{ display: 'flex', mt: '70px', width: '100%', minHeight: 'calc(100vh - 70px)' }}>
+            <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
               <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
+            </Box>
+            <Box sx={{ minHeight: '100%', display: 'flex', mb: '50px' }}>
               <ThemeProvider theme={theme}  >
+                {largeBP ?
+                  <FrontPageSideBar isShow={isShow} />
+                  :
+                  mediumBP ?
+                    <FrontPageSideBarMedium />
+                    :
+                    ''
+                }
                 <Container sx={{ minHeight: '100%', width: '100%' }} maxWidth='xxl'>
-                  <Outlet />
+                  {/* <MainContent /> */}
+                  <BlogsList />
                 </Container>
               </ThemeProvider>
             </Box>
