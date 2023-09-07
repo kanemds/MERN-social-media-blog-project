@@ -1,8 +1,8 @@
 import { Box, Container, Paper, Typography, TextField, Modal, Button, IconButton, SvgIcon } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
-import { useParams } from 'react-router-dom'
-import { blogsApiSlice, useGetBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
+import { useNavigate, useParams } from 'react-router-dom'
+import { blogsApiSlice, useDeleteBlogMutation, useGetBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ImagesDisplaySlider from './ImagesDisplaySlider'
@@ -42,6 +42,7 @@ const SingleBlog = () => {
 
   const { id } = useParams()
   const { username } = useAuth()
+  const navigate = useNavigate()
 
   const [currentBlog, setCurrentBlog] = useState('')
   const [open, setOpen] = useState(false)
@@ -56,7 +57,14 @@ const SingleBlog = () => {
     error
   } = useGetSingleBlogQuery(id)
 
-  console.log(data)
+  const [
+    deleteBlog,
+    {
+      isLoading: isDeleteLoading,
+      isSuccess: isDeleteSuccess
+    }
+  ] = useDeleteBlogMutation()
+
 
 
   useEffect(() => {
@@ -67,6 +75,11 @@ const SingleBlog = () => {
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const handleToEdit = () => navigate(`/blogs/post/edit/${id}`, { state: data })
+  const handleDelete = (e) => {
+    e.preventDefault()
+
+  }
 
   const current = Date.parse(new Date())
   const postedDay = Date.parse(currentBlog?.createdAt)
@@ -104,11 +117,22 @@ const SingleBlog = () => {
             <ImagesDisplaySlider row={currentBlog?.images} handleClose={handleClose} on={open} />
           </Box>
         </Modal>
-        <Box sx={{ m: 2 }}>
-          <Typography>
+        <Box sx={{ m: 2, display: 'flex' }}>
+          <Typography sx={{ mr: 2 }}>
+            Posted:
             {
               timeInMillisecond <= sevenDays ?
                 moment(Date.parse(currentBlog?.createdAt)).fromNow()
+                :
+                localTime
+            }
+          </Typography>
+          |
+          <Typography sx={{ ml: 2 }}>
+            Last Updated:
+            {
+              timeInMillisecond <= sevenDays ?
+                moment(Date.parse(currentBlog?.updatedAt)).fromNow()
                 :
                 localTime
             }
@@ -171,8 +195,9 @@ const SingleBlog = () => {
 
   return (
     <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative' }}>
-      <Box sx={{ position: 'absolute', top: '50%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', width: '300px' }}>
-        <SideButton  >
+
+      <Box sx={{ position: 'sticky', top: '400px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%' }}>
+        <SideButton onClick={handleToEdit}>
           <EditNoteOutlinedIcon />
           <ButtonInfo >  Edit</ButtonInfo>
         </SideButton>
@@ -187,9 +212,11 @@ const SingleBlog = () => {
           </SvgIcon>
           <ButtonInfo >  Delete</ButtonInfo>
         </SideButton>
+
       </Box >
       {content}
     </Box >
+
   )
 }
 
