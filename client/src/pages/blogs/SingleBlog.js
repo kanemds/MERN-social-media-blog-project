@@ -11,9 +11,27 @@ import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import moment from 'moment'
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
-
+import { red } from '@mui/material/colors'
 
 const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  height: 140,
+  bgcolor: 'background.paper',
+  border: '2px solid #bdbdbd',
+  boxShadow: 24,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  p: 4,
+  borderRadius: '20px',
+}
+
+const stylePicture = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -21,11 +39,14 @@ const style = {
   width: '100%',
   height: '100%',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '2px solid #bdbdbd',
   boxShadow: 24,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
   p: 4,
 }
-
 const SideButton = styled(Button)({
   textTransform: 'none',
   justifyContent: "flex-start",
@@ -37,6 +58,14 @@ const ButtonInfo = styled(Typography)({
   marginLeft: 12
 })
 
+const Divider = styled(Box)({
+  height: '100%',
+  width: '100%',
+  borderTop: '1px solid lightGrey',
+  marginTop: 12,
+  marginBottom: 20,
+})
+
 
 const SingleBlog = () => {
 
@@ -46,8 +75,9 @@ const SingleBlog = () => {
 
   const [currentBlog, setCurrentBlog] = useState('')
   const [open, setOpen] = useState(false)
-
-
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteMessage, setDeleteMessage] = useState(null)
+  const [isDeleteReady, setIsDeleteReady] = useState(false)
 
   const {
     data,
@@ -60,6 +90,7 @@ const SingleBlog = () => {
   const [
     deleteBlog,
     {
+      data: message,
       isLoading: isDeleteLoading,
       isSuccess: isDeleteSuccess
     }
@@ -73,13 +104,42 @@ const SingleBlog = () => {
     }
   }, [isSuccess, data])
 
+  useEffect(() => {
+
+    if (isDeleteSuccess && isDeleteReady === true && message?.message) {
+      setDeleteMessage(message.message)
+      setTimeout(() => {
+        // console.log('run this setTimeout')
+        setDeleteOpen(false)
+        navigate('/blogs', { replace: true })
+      }, 1400)
+    } else {
+      setIsDeleteReady(false)
+    }
+  }, [isDeleteSuccess, isDeleteReady, message])
+
+  useEffect(() => {
+    if (isDeleteLoading) {
+      setTimeout(() => {
+        setIsDeleteReady(true)
+      }, 1400)
+    }
+  }, [isDeleteLoading])
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const handleToEdit = () => navigate(`/blogs/post/edit/${id}`, { state: data })
-  const handleDelete = (e) => {
+  const handleDelete = () => setDeleteOpen(true)
+  const handleDeleteClose = () => setDeleteOpen(false)
+  const handleDeleteConfirm = async (e) => {
     e.preventDefault()
-
+    await deleteBlog({ id })
   }
+  const handleBackToBlogs = () => {
+    navigate(-1)
+  }
+
+
 
   const current = Date.parse(new Date())
   const postedDay = Date.parse(currentBlog?.createdAt)
@@ -87,6 +147,41 @@ const SingleBlog = () => {
 
   const timeInMillisecond = current - postedDay
   const localTime = new Date(Date.parse(currentBlog?.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+
+  let deleteModalMessage
+
+  if (isDeleteReady === false) {
+
+    deleteModalMessage = <LoadingSpinner />
+  }
+
+  if (!isDeleteLoading && !isDeleteSuccess) {
+    deleteModalMessage = (
+      <>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Delete the selected blog?
+        </Typography>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
+          <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+          <Button variant='contained' onClick={handleDeleteConfirm} sx={{
+            backgroundColor: red[600],
+            color: 'white',
+            '&:hover': {
+              backgroundColor: red[800]
+            }
+          }}>Delete Blog</Button>
+        </Box>
+      </>
+    )
+  }
+
+  if (isDeleteReady === true && deleteMessage) {
+    deleteModalMessage = (
+      <Typography id="modal-modal-title" variant="h6" component="h2">
+        {deleteMessage}
+      </Typography>
+    )
+  }
 
   let content
 
@@ -102,7 +197,7 @@ const SingleBlog = () => {
 
     content = (
 
-      <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+      <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
 
         <Paper onClick={handleOpen} sx={{ width: 500, height: 500 }}>
           <ImagesDisplaySlider row={currentBlog?.images} />
@@ -113,7 +208,7 @@ const SingleBlog = () => {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box sx={stylePicture}>
             <ImagesDisplaySlider row={currentBlog?.images} handleClose={handleClose} on={open} />
           </Box>
         </Modal>
@@ -138,10 +233,9 @@ const SingleBlog = () => {
             }
           </Typography>
         </Box>
-        <Box sx={{ width: '60%', minWidth: 500 }}>
+        <Box sx={{ width: 500 }}>
           <TextField
             sx={{
-              mb: 1,
               '.css-1rcvvn7-MuiInputBase-root-MuiInput-root:before': {
                 border: 'hidden'
               },
@@ -150,7 +244,7 @@ const SingleBlog = () => {
                 border: 'hidden'
               },
               '& .MuiInputBase-input.Mui-disabled': {
-                fontSize: 20,
+                fontSize: 22,
                 WebkitTextFillColor: 'black',
                 '&:hover': {
                   cursor: 'text'
@@ -164,6 +258,7 @@ const SingleBlog = () => {
             multiline
             defaultValue={currentBlog.title}
           />
+          <Divider />
           <TextField
             sx={{
               '.css-1rcvvn7-MuiInputBase-root-MuiInput-root:before': {
@@ -174,7 +269,7 @@ const SingleBlog = () => {
                 border: 'hidden'
               },
               '& .MuiInputBase-input.Mui-disabled': {
-                fontSize: 14,
+                fontSize: 16,
                 WebkitTextFillColor: 'black',
                 '&:hover': {
                   cursor: 'text'
@@ -196,13 +291,13 @@ const SingleBlog = () => {
   return (
     <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative' }}>
 
-      <Box sx={{ position: 'sticky', top: '400px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%' }}>
-        <SideButton onClick={handleToEdit}>
+      <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%' }}>
+        <SideButton onClick={handleToEdit} sx={{ m: 1 }}>
           <EditNoteOutlinedIcon />
           <ButtonInfo >  Edit</ButtonInfo>
         </SideButton>
 
-        <SideButton >
+        <SideButton onClick={handleDelete} sx={{ m: 1 }}>
           <SvgIcon>
             <svg
               viewBox='2 0 24 24'
@@ -210,11 +305,28 @@ const SingleBlog = () => {
               <DeleteForeverOutlinedIcon />
             </svg>
           </SvgIcon>
-          <ButtonInfo >  Delete</ButtonInfo>
+          <ButtonInfo >Delete</ButtonInfo>
         </SideButton>
 
+        <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
+          <EditNoteOutlinedIcon />
+          <ButtonInfo >  Back</ButtonInfo>
+        </SideButton>
+
+        <Modal
+          open={deleteOpen}
+          onClose={handleDeleteClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            {deleteModalMessage}
+          </Box>
+        </Modal>
       </Box >
-      {content}
+      <Box sx={{ width: '100%', height: '100%' }}>
+        {content}
+      </Box>
     </Box >
 
   )
