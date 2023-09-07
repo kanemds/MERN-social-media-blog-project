@@ -30,7 +30,7 @@ const iconStyle = {
   padding: '0px',
 }
 
-const style = {
+const styleDelete = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -47,6 +47,7 @@ const style = {
   p: 4,
   borderRadius: '20px',
 }
+
 
 
 export default function Note({ blog }) {
@@ -87,7 +88,7 @@ export default function Note({ blog }) {
     if (isSuccess && isDeleteReady === true && data?.message) {
       setDeleteMessage(data.message)
       setTimeout(() => {
-        console.log('run this setTimeout')
+        // console.log('run this setTimeout')
         setDeleteOpen(false)
         setIsClick(false)
         navigate('/blogs')
@@ -150,7 +151,6 @@ export default function Note({ blog }) {
   const handleDeleteConfirm = async (e) => {
     e.preventDefault()
     await deleteBlog({ id: blog.id })
-
   }
 
   const handleUserPage = () => {
@@ -267,7 +267,7 @@ export default function Note({ blog }) {
                 wordBreak: "break-word", display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 1,
+                WebkitLineClamp: 2,
                 textOverflow: 'ellipsis',
               }}>
                 {text}
@@ -354,7 +354,7 @@ export default function Note({ blog }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
-                <Box sx={style}>
+                <Box sx={styleDelete}>
                   {deleteModalMessage}
                 </Box>
               </Modal>
