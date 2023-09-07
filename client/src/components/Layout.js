@@ -163,7 +163,7 @@ const Layout = () => {
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
         <ThemeProvider theme={theme}  >
-          <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', pt: '100px' }}>
+          <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', pt: '100px', pb: '100px' }}>
             {isLoading || isError ?
               { content }
               :
