@@ -116,7 +116,7 @@ const Layout = () => {
   }
 
   // startWith /blogs pages with slider,sidebar and searchbar 
-  if (pathname.includes('/blogs')) {
+  if (pathname === '/blogs') {
     return main = (
 
       <Box >
@@ -146,7 +146,7 @@ const Layout = () => {
 
               <ThemeProvider theme={theme}  >
                 <Container sx={{ minHeight: '100vh', width: '100%' }} maxWidth='xxl'>
-                  <BlogsList />
+                  <Outlet />
                 </Container>
               </ThemeProvider>
             </Box>
@@ -158,12 +158,12 @@ const Layout = () => {
   }
 
   // other pages no slider, sidebar and searchbar
-  if (!pathname.includes('/blogs')) {
+  if (pathname !== '/blogs' && pathname !== '/') {
     return main = (
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
         <ThemeProvider theme={theme}  >
-          <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', mt: '100px' }}>
+          <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 'calc(100vh - 70px)', pt: '100px' }}>
             {isLoading || isError ?
               { content }
               :
@@ -172,14 +172,8 @@ const Layout = () => {
           </Container>
         </ThemeProvider>
       </>)
-
   }
-
-
-
   return { main }
-
-
 }
 
 export default Layout

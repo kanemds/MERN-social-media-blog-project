@@ -1,4 +1,4 @@
-import { Box, Container, Paper, Typography, TextField, Modal, Button } from '@mui/material'
+import { Box, Container, Paper, Typography, TextField, Modal, Button, IconButton, SvgIcon } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 import { useParams } from 'react-router-dom'
@@ -9,6 +9,8 @@ import ImagesDisplaySlider from './ImagesDisplaySlider'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import moment from 'moment'
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
 
 
 const style = {
@@ -23,6 +25,17 @@ const style = {
   boxShadow: 24,
   p: 4,
 }
+
+const SideButton = styled(Button)({
+  textTransform: 'none',
+  justifyContent: "flex-start",
+
+})
+
+const ButtonInfo = styled(Typography)({
+  textAlign: 'left',
+  marginLeft: 12
+})
 
 
 const SingleBlog = () => {
@@ -43,11 +56,14 @@ const SingleBlog = () => {
     error
   } = useGetSingleBlogQuery(id)
 
+  console.log(data)
+
+
   useEffect(() => {
     if (isSuccess) {
       setCurrentBlog(data)
     }
-  }, [isSuccess])
+  }, [isSuccess, data])
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -73,7 +89,8 @@ const SingleBlog = () => {
 
     content = (
 
-      <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 6, mb: 6 }} >
+      <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+
         <Paper onClick={handleOpen} sx={{ width: 500, height: 500 }}>
           <ImagesDisplaySlider row={currentBlog?.images} />
         </Paper>
@@ -152,7 +169,28 @@ const SingleBlog = () => {
     )
   }
 
-  return content
+  return (
+    <Box sx={{ display: 'flex', width: '100%', height: '100%', position: 'relative' }}>
+      <Box sx={{ position: 'absolute', top: '50%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', width: '300px' }}>
+        <SideButton  >
+          <EditNoteOutlinedIcon />
+          <ButtonInfo >  Edit</ButtonInfo>
+        </SideButton>
+
+        <SideButton >
+          <SvgIcon>
+            <svg
+              viewBox='2 0 24 24'
+            >
+              <DeleteForeverOutlinedIcon />
+            </svg>
+          </SvgIcon>
+          <ButtonInfo >  Delete</ButtonInfo>
+        </SideButton>
+      </Box >
+      {content}
+    </Box >
+  )
 }
 
 export default SingleBlog
