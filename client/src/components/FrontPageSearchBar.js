@@ -222,6 +222,9 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
   )
 
   return (
+
+
+
     <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end' }}>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%', ml: '24px' }}>
         {largeBP ?
@@ -258,8 +261,10 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
         />
         <Button variant='contained'><SearchIcon /></Button>
       </FormControl>
-
     </Box >
+
+
+
 
   )
 }
