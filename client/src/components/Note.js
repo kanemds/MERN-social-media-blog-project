@@ -3,7 +3,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
-import { CardActionArea, Avatar, Box, Button, Popover, IconButton } from '@mui/material'
+import { CardActionArea, Avatar, Box, Button, Popover, IconButton, SvgIcon } from '@mui/material'
 import noteBook from '../images/noteBook.jpg'
 import moment from 'moment'
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
@@ -21,10 +21,13 @@ import RecommendIcon from '@mui/icons-material/Recommend'
 import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 import Modal from '@mui/material/Modal'
 import { useDeleteBlogMutation } from '../pages/blogs/blogsApiSlice'
 import LoadingSpinner from './LoadingSpinner'
-import { red } from '@mui/material/colors'
+import { red, pink, yellow, orange } from '@mui/material/colors'
+
 
 const iconStyle = {
   padding: '0px',
@@ -267,7 +270,7 @@ export default function Note({ blog }) {
                 wordBreak: "break-word", display: '-webkit-box',
                 overflow: 'hidden',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 2,
+                WebkitLineClamp: 3,
                 textOverflow: 'ellipsis',
               }}>
                 {text}
@@ -275,92 +278,109 @@ export default function Note({ blog }) {
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 28 }}>
-            <Box>
-              <IconButton
-                onClick={handleFavorite}
-                onMouseOver={() => setIsClick(true)}
-                onMouseOut={() => setIsClick(false)}
-                style={iconStyle}
-                sx={
-                  isFavorite ?
-                    { color: '#007aff', '&:hover': { background: 'white', color: '#007aff' } }
+          <Box sx={{ display: 'flex', alignItems: 'center', height: 28, width: '100%' }}>
+
+            {/* favorite and like */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
+              {username !== blog.user ?
+                <IconButton
+                  disableRipple
+                  onClick={handleFavorite}
+                  onMouseOver={() => setIsClick(true)}
+                  onMouseOut={() => setIsClick(false)}
+                  style={iconStyle}
+                  sx={{
+                    mr: 1,
+                    '&:hover': { color: yellow[800], background: 'white' }
+                  }}
+                >
+                  {isFavorite ?
+                    <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
                     :
-                    { color: '#bdbdbd', '&:hover': { background: '#bdbdbd', color: 'white' } }
-                }
-              >
-                <StarRoundedIcon />
-              </IconButton>
-
-              <IconButton
-                onClick={handleLiked}
-                onMouseOver={() => setIsClick(true)}
-                onMouseOut={() => setIsClick(false)}
-                style={iconStyle}
-                sx={
-                  isLiked ?
-                    { color: '#007aff', '&:hover': { background: 'white', color: '#007aff' } }
-                    :
-                    { color: '#bdbdbd', '&:hover': { background: '#bdbdbd', color: 'white' } }
-                }
-              >
-                <RecommendIcon />
-              </IconButton>
-
-
-            </Box>
-            <Box color='black'>
-              {
-                timeInMillisecond <= sevenDays ?
-                  moment(Date.parse(blog.createdAt)).fromNow()
-                  :
-                  new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+                    <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
+                  }
+                </IconButton>
+                : ''
               }
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <IconButton
+                  disableRipple
+                  onClick={handleLiked}
+                  onMouseOver={() => setIsClick(true)}
+                  onMouseOut={() => setIsClick(false)}
+                  style={iconStyle}
+                  sx={{
+                    '&:hover': { color: red[400], background: 'white' }
+                  }}
+                >
+                  {isLiked ?
+
+                    <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
+                    :
+                    <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
+                  }
+                </IconButton>
+                <Typography sx={{ color: 'black', ml: 1 }}>0</Typography>
+              </Box>
             </Box>
-            {blog.user === username ?
-              <IconButton
+
+            {/* show day and menu  */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '60%' }}>
+
+              <Typography color='black'>
+                {
+                  timeInMillisecond <= sevenDays ?
+                    moment(Date.parse(blog.createdAt)).fromNow()
+                    :
+                    new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+                }
+              </Typography>
+              {blog.user === username ?
+                <IconButton
+                  onMouseOver={() => setIsClick(true)}
+                  onMouseOut={() => setIsClick(false)}
+                  aria-describedby={id}
+                  variant="contained"
+                  onClick={handleClick}
+                  sx={{ p: 0, '&:hover': { backgroundColor: 'white', color: '#1976d2' } }}
+
+                >
+                  <MoreVertOutlinedIcon sx={{ fontSize: '20px' }} />
+                </IconButton>
+                : ''}
+
+              <Popover
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
-                aria-describedby={id}
-                variant="contained"
-                onClick={handleClick}
-                sx={{ p: 0, '&:hover': { backgroundColor: 'white', color: '#1976d2' } }}
-
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
               >
-                <MoreVertOutlinedIcon />
+                <Button onClick={handleDelete} ><DeleteForeverOutlinedIcon /></Button>
+                <Modal
+                  open={deleteOpen}
+                  onClose={handleDeleteClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={styleDelete}>
+                    {deleteModalMessage}
+                  </Box>
+                </Modal>
+                <Button onClick={handleEdit}><EditNoteOutlinedIcon /></Button>
+                <Button onClick={handleLook}><RemoveRedEyeOutlinedIcon /></Button>
+              </Popover>
+            </Box>
 
-              </IconButton>
-              : ''}
-            <Popover
-              onMouseOver={() => setIsClick(true)}
-              onMouseOut={() => setIsClick(false)}
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-            >
-              <Button onClick={handleDelete} ><DeleteForeverOutlinedIcon /></Button>
-              <Modal
-                open={deleteOpen}
-                onClose={handleDeleteClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <Box sx={styleDelete}>
-                  {deleteModalMessage}
-                </Box>
-              </Modal>
-              <Button onClick={handleEdit}><EditNoteOutlinedIcon /></Button>
-              <Button onClick={handleLook}><RemoveRedEyeOutlinedIcon /></Button>
-            </Popover>
           </Box>
         </CardContent>
 
