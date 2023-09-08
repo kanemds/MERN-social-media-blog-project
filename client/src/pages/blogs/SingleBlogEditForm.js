@@ -12,6 +12,7 @@ import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useAddNewBlogMutation, useUpdateBlogMutation, useGetBlogsQuery } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
+import './imagesDisplaySlider.css'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -26,6 +27,9 @@ const ButtonInfo = styled(Typography)({
 
 const SingleBlogEditForm = ({ blog }) => {
 
+  const mediumBP = useMediaQuery('(min-width:750px)') // true when larger
+  const smallBP = useMediaQuery('(min-width:550px)') // true when larger
+  const xSamllBP = useMediaQuery('(min-width:466px)') // true when larger
   const matches = useMediaQuery('(min-width:1200px)')
 
 
@@ -74,6 +78,10 @@ const SingleBlogEditForm = ({ blog }) => {
     setStatus(e.target.value)
   }
 
+  const handleBack = () => {
+    navigate(`/blogs/post/${blog.id}`, { replace: true })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData()
@@ -94,18 +102,24 @@ const SingleBlogEditForm = ({ blog }) => {
     await updateBlog(formData)
   }
 
-
+  // !xSamllBP ? { width: 375, height: 375 } : !smallBP ? { width: 420, height: 420 } : { width: 500, height: 500 }
 
 
   return (
-    <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%', }}>
-      <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: matches ? '200px' : '120px' }}>
+    <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%' }}>
+      <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* picture area */}
 
         {/* preveiw */}
         {!selectedImage ? '' :
-          <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', width: 400, height: 400 }}>
+          <Card sx={{
+            display: 'flex',
+            alignItems: 'center',
+            width: !xSamllBP ? 375 : !smallBP ? 420 : 500,
+            height: !xSamllBP ? 375 : !smallBP ? 420 : 500
+          }}>
             <CardMedia
+              className='display'
               component="img"
               image={selectedImage.url}
               alt={selectedImage.name}
@@ -115,14 +129,14 @@ const SingleBlogEditForm = ({ blog }) => {
 
         {/* image list */}
 
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, mb: 5, alignItems: 'center' }}>
           <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} imagesBeforeEdit={imagesBeforeEdit} />
         </Box>
 
       </Grid>
 
 
-      <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', mt: '160px' }}>
+      <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           {isError ?
@@ -144,10 +158,13 @@ const SingleBlogEditForm = ({ blog }) => {
             value={text}
             onChange={handleText}
             placeholder='what would you like to share today?'
-            sx={{ mt: 10, width: '80%' }}
+            sx={{
+              mt: 10, width: '80%',
+
+            }}
             fullWidth
-            multiline
-            maxRows={25}
+            multiline // auto add line if needed 
+            // maxRows={20} will create a scroll bar after the maxRows is reached (not good) 
             minRows={14}
             autoComplete='true'
           />
@@ -179,12 +196,19 @@ const SingleBlogEditForm = ({ blog }) => {
               </Select>
             </FormControl>
           </Box>
-          <Button
-            onClick={handleSubmit}
-            disabled={!canSave}
-          >
-            Create
-          </Button>
+          <Box>
+            <Button
+              onClick={handleBack}
+            >
+              Back
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={!canSave}
+            >
+              Save
+            </Button>
+          </Box>
         </Box>
       </Grid>
 
