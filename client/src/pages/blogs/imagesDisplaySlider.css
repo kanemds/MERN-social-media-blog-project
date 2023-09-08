@@ -11,3 +11,15 @@
   left: 50%;
   top: 50%;
 }
+
+/* -ms-transform is used for Microsoft Internet Explorer.
+-webkit-transform is used for WebKit-based browsers like Safari and some versions of Chrome.
+-moz-transform is used for Mozilla Firefox. */
+
+.display {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+
+}

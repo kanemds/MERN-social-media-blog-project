@@ -14,6 +14,7 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import { red } from '@mui/material/colors'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
+import './imagesDisplaySlider.css'
 
 const style = {
   position: 'absolute',
@@ -70,7 +71,8 @@ const Divider = styled(Box)({
 const SingleBlog = () => {
 
   const mediumBP = useMediaQuery('(min-width:750px)') // true when larger
-  const smallBP = useMediaQuery('(min-width:525px)') // true when larger
+  const smallBP = useMediaQuery('(min-width:550px)') // true when larger
+  const xSamllBP = useMediaQuery('(min-width:466px)') // true when larger
 
   const { id } = useParams()
   const { username, userId } = useAuth()
@@ -203,9 +205,14 @@ const SingleBlog = () => {
 
       <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
 
-        <Paper onClick={handleOpen} sx={!smallBP ? { height: 375, width: '100%' } : { width: 500, height: 500 }}>
+        <Paper onClick={handleOpen} className='display' sx={!xSamllBP ? { width: 375, height: 375 } : !smallBP ? { width: 420, height: 420 } : { width: 500, height: 500 }}>
           <ImagesDisplaySlider row={currentBlog?.images} />
         </Paper>
+        {/* <Paper onClick={handleOpen} className='display' sx={{ width: 500, height: 500 }}>
+          <ImagesDisplaySlider row={currentBlog?.images} />
+        </Paper> */}
+
+
         <Modal
           open={open}
           onClose={handleClose}
@@ -216,8 +223,8 @@ const SingleBlog = () => {
             <ImagesDisplaySlider row={currentBlog?.images} handleClose={handleClose} on={open} />
           </Box>
         </Modal>
-        <Box sx={{ width: '100%', m: 2, display: 'flex', flexDirection: !smallBP ? 'column' : 'row', justifyContent: 'center', alignItems: !smallBP ? 'flex-end' : 'center' }}>
-          <Typography variant='h8' sx={{ width: '190px' }}>
+        <Box sx={{ width: !smallBP ? '80%' : 500, m: 2, display: 'flex', flexDirection: !smallBP ? 'column' : 'row', justifyContent: 'center', alignItems: !smallBP ? 'flex-end' : 'center' }}>
+          <Typography variant='h8' sx={{ width: '220px', display: 'flex', justifyContent: !smallBP ? 'flex-start' : 'center' }}>
             Posted:
             {
               timeInMillisecond <= sevenDays ?
@@ -228,7 +235,7 @@ const SingleBlog = () => {
           </Typography>
 
           {currentBlog?.createdAt === currentBlog?.updatedAt ?
-            <Typography variant='h8' sx={{ ml: 2, width: '190px' }}>
+            <Typography variant='h8' sx={{ ml: 2, width: '220px' }}>
               Last Updated:
               {
                 timeInMillisecond <= sevenDays ?
@@ -240,7 +247,7 @@ const SingleBlog = () => {
             :
             ''}
         </Box>
-        <Box sx={{ width: !smallBP ? '90%' : 500 }}>
+        <Box sx={{ width: !smallBP ? '80%' : 500 }}>
           <TextField
             sx={{
               '.css-1rcvvn7-MuiInputBase-root-MuiInput-root:before': {
