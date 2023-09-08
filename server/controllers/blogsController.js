@@ -114,7 +114,7 @@ const getAllBlogs = async (req, res) => {
 // @access Private
 const getSingleBlog = async (req, res) => {
   const { id } = req.params
-  const blog = await Blog.findById(id).exec()
+  const blog = await Blog.findById(id).lean().exec()
 
 
   if (!blog) {
@@ -124,8 +124,8 @@ const getSingleBlog = async (req, res) => {
 
   const blogUser = await User.findById(blog.user).lean().exec()
 
-  const blogWithUser = await { ...blog, user: blogUser.username }
-
+  const blogWithUser = { ...blog, user: blogUser.username }
+  console.log(blogWithUser)
 
   // console.log(blogWithUser)
   res.status(200).json(blogWithUser)

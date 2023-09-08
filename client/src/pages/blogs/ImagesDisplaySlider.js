@@ -22,30 +22,31 @@ export default function ImagesDisplaySlider({ row, handleClose, on }) {
   const [isOpen, setIsOpen] = useState(on)
 
   return (
-    <>
-      <Swiper
-        slidesPerView={1}
-        spaceBetween={0}
-        // loop={true}
-        keyboard={{
-          enabled: true,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        // navigation={true}
-        modules={[Keyboard, Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {row?.map((each, index) => {
-          return (
-            <SwiperSlide key={index}>
-              <img className='contain' src={each.url} alt={each.title} />
-            </SwiperSlide>
-          )
-        })}
-        {isOpen ? <IconButton color='primary' sx={{ position: 'fixed', zIndex: 9999, top: '10%', right: '10%' }} size='large' onClick={handleClose} ><ClearIcon sx={{ width: 40, height: 40 }} /></IconButton> : ''}
-      </Swiper >
-    </>
+
+    <Swiper
+      lazy={true}
+      slidesPerView={1}
+      spaceBetween={2}
+      // loop={true}
+      keyboard={{
+        enabled: true,
+      }}
+      pagination={{
+        clickable: true,
+      }}
+      // navigation={true}
+      modules={[Keyboard, Pagination, Navigation]}
+      className="mySwiper"
+    >
+      {row?.map((each, index) => {
+        return (
+          <SwiperSlide key={index}>
+            <img className='contain' src={each.url} alt={each.title} />
+          </SwiperSlide>
+        )
+      })}
+      {isOpen ? <IconButton color='primary' sx={{ position: 'fixed', zIndex: 9999, top: '10%', right: '10%' }} size='large' onClick={handleClose} ><ClearIcon sx={{ width: 40, height: 40 }} /></IconButton> : ''}
+    </Swiper >
+
   )
 }
