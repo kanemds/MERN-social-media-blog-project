@@ -5,11 +5,15 @@ import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined'
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
 import './drag_n_drop.css'
-
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Grid from '@mui/material/Unstable_Grid2'
 
 
 
 const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgImages, imagesBeforeEdit = [] }) => {
+
+  const smallBP = useMediaQuery('(min-width:550px)') // true when larger
+  const xSamllBP = useMediaQuery('(min-width:466px)') // true when larger
 
   const [data, setData] = useState(imagesBeforeEdit)
   const [isClick, setIsClick] = useState(false)
@@ -159,7 +163,7 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
 
   return (
 
-    <Box className='container' sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+    <Box className='container' sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: !smallBP && data?.length <= 2 ? 400 : !smallBP && data?.length >= 3 ? 300 : 500 }}>
       {!data?.length ? ''
         :
         data?.map((image, index) => {
