@@ -27,11 +27,9 @@ const ButtonInfo = styled(Typography)({
 
 const SingleBlogEditForm = ({ blog }) => {
 
-  const mediumBP = useMediaQuery('(min-width:750px)') // true when larger
+
   const smallBP = useMediaQuery('(min-width:550px)') // true when larger
   const xSamllBP = useMediaQuery('(min-width:466px)') // true when larger
-  const matches = useMediaQuery('(min-width:1200px)')
-
 
   const navigate = useNavigate()
 
@@ -138,29 +136,28 @@ const SingleBlogEditForm = ({ blog }) => {
 
       <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           {isError ?
             <OutlinedInput defaultValue={error.data.message} color='error' disabled />
             :
             ''
           }
-
           <TextField
             value={title}
             onChange={handleTitle}
             autoComplete='true'
             multiline
             fullWidth
-            sx={{ width: '80%' }}
             placeholder='Story Title'
+            sx={{ width: !xSamllBP ? 368 : !smallBP ? 420 : 500, }}
           />
           <TextField
             value={text}
             onChange={handleText}
             placeholder='what would you like to share today?'
             sx={{
-              mt: 10, width: '80%',
-
+              mt: 10,
+              width: !xSamllBP ? 368 : !smallBP ? 420 : 500,
             }}
             fullWidth
             multiline // auto add line if needed 
