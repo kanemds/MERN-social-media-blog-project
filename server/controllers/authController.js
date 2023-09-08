@@ -93,6 +93,7 @@ const refresh = (req, res) => {
         {
           'userInfo': {
             'username': loginUser.username,
+            'userId': loginUser._id.toString(),
             'role': loginUser.role
           }
         },
