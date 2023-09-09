@@ -23,7 +23,7 @@ import FavoriteBlog from './pages/favorite/FavoriteBlog'
 
 function App() {
 
-  useTitle('K-Blog')
+  useTitle('Enjoying every moment to the fullest')
 
   return (
     <Routes>
