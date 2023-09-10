@@ -1,4 +1,4 @@
-import { Box, Container, Paper, Typography, TextField, Modal, Button, IconButton, SvgIcon } from '@mui/material'
+import { Box, Container, Paper, Typography, TextField, Modal, Button, IconButton, SvgIcon, Avatar } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -14,6 +14,10 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import { red } from '@mui/material/colors'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
+
 import './imagesDisplaySlider.css'
 
 const style = {
@@ -67,6 +71,10 @@ const Divider = styled(Box)({
   marginBottom: 20,
 })
 
+const iconStyle = {
+  padding: '0px',
+}
+
 
 const SingleBlog = () => {
 
@@ -83,6 +91,8 @@ const SingleBlog = () => {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [isDeleteReady, setIsDeleteReady] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false)
 
   const {
     data,
@@ -144,6 +154,17 @@ const SingleBlog = () => {
     navigate('/blogs', { replace: true })
   }
 
+  const handleUserPage = () => {
+    navigate(`/blogs/user/${data.id}`)
+  }
+
+  const handleLiked = () => {
+    setIsLiked(prev => !prev)
+  }
+
+  const handleToSubscribed = () => {
+    setIsSubscribed(prev => !prev)
+  }
 
 
   const current = Date.parse(new Date())
@@ -208,10 +229,6 @@ const SingleBlog = () => {
         <Paper onClick={handleOpen} className='display' sx={!xSamllBP ? { width: 375, height: 375 } : !smallBP ? { width: 420, height: 420 } : { width: 500, height: 500 }}>
           <ImagesDisplaySlider row={currentBlog?.images} />
         </Paper>
-        {/* <Paper onClick={handleOpen} className='display' sx={{ width: 500, height: 500 }}>
-          <ImagesDisplaySlider row={currentBlog?.images} />
-        </Paper> */}
-
 
         <Modal
           open={open}
@@ -235,7 +252,7 @@ const SingleBlog = () => {
           </Typography>
 
           {currentBlog?.createdAt === currentBlog?.updatedAt ?
-            <Typography variant='h8' sx={{ ml: 2, width: '220px' }}>
+            <Typography variant='h8' sx={{ width: '220px', display: 'flex', justifyContent: !smallBP ? 'flex-start' : 'center' }}>
               Last Updated:
               {
                 timeInMillisecond <= sevenDays ?
@@ -247,7 +264,85 @@ const SingleBlog = () => {
             :
             ''}
         </Box>
+
+        <Box sx={{ width: !xSamllBP ? 360 : !smallBP ? 410 : 500, display: 'flex', flexDirection: smallBP ? 'row' : 'column', alignItems: smallBP ? 'center' : 'flex-start', mb: 2 }}>
+          <Box sx={{ width: '80%', display: 'flex', alignItems: 'center', mr: 2, }} >
+            <IconButton
+              onClick={handleUserPage}
+              disableRipple={true}
+              sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
+            >
+              <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+            </IconButton>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <Typography sx={{
+                wordBreak: "break-word", display: '-webkit-box',
+                overflow: 'hidden',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 1,
+                textOverflow: 'ellipsis',
+              }}>{data.user}aaabbbcccdddeee</Typography>
+              <Typography sx={{ fontSize: '12px' }}>999k subscribers</Typography>
+            </Box>
+          </Box>
+
+
+          <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1 }}>
+
+            {isSubscribed ?
+              <Button
+                onClick={handleToSubscribed}
+                sx={{
+                  '&:hover': { background: '#f4f4f4' },
+                  color: '#bdbdbd',
+                  textTransform: 'none',
+                }}>
+                <Diversity2OutlinedIcon sx={{
+                  color: 'rgba(0, 0, 0, 0.87)',
+                  fontSize: '20px',
+                  mr: 1
+                }} />
+                <Typography color='rgba(0, 0, 0, 0.87)'> Subscribed</Typography>
+              </Button> :
+              <Button
+                onClick={handleToSubscribed}
+                sx={{
+                  textTransform: 'none',
+                }}>
+                <Diversity2OutlinedIcon sx={{
+                  fontSize: '20px',
+                  mr: 1
+                }} />
+                <Typography > Subscribe</Typography>
+              </Button>
+            }
+
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <IconButton
+                disableRipple
+                onClick={handleLiked}
+
+                style={iconStyle}
+                sx={{
+                  '&:hover': { color: red[400], background: 'white' }
+                }}
+              >
+                {isLiked ?
+
+                  <FavoriteIcon sx={{ color: red[400] }} />
+                  :
+                  <FavoriteBorderIcon sx={{ color: '#bdbdbd' }} />
+                }
+              </IconButton>
+              <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
+            </Box>
+          </Box>
+        </Box>
+
+
+
         <Box sx={{ width: !smallBP ? '80%' : 500 }}>
+          <Divider />
           <TextField
             sx={{
               '.css-1rcvvn7-MuiInputBase-root-MuiInput-root:before': {
