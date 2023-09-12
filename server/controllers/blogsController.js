@@ -284,7 +284,7 @@ const updateBlog = async (req, res) => {
 
   const updatedBlog = await blog.save()
 
-  res.json(`${updatedBlog.title} updated`)
+  res.status(200).json(`${updatedBlog.title} updated`)
 }
 // @desc Delete a blog
 // route Delete /blogs
