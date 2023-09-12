@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
 const Like = require('../models/Like')
+const { json } = require('body-parser')
 
 // @desc Get all likes
 // route Get /lies
@@ -27,7 +28,7 @@ const getAllLikes = async (req, res) => {
 // }
 
 
-const getLikesFromBlog = async (req, res) => {
+const getLikesForUser = async (req, res) => {
 
   const { username } = req.body
   console.log(username)
@@ -36,13 +37,11 @@ const getLikesFromBlog = async (req, res) => {
     { $match: { liked_by_user_username: username } }
   ])
 
+  if (!currentUserLikes.length) return json.status(400).json({ message: 'No liked blog found' })
+
   console.log(currentUserLikes)
 
-  // const numbersOfLike = await Like.findOne({ blog_id }).lean().exec()
-
-  // if (!numbersOfLike) return res.status(400).json({ message: 'No likes found for current Blog' })
-
-  // res.status(200).json(numbersOfLike)
+  res.status(200).json(currentUserLikes)
 }
 
 // @desc created a like to specific blog
@@ -75,8 +74,35 @@ const addedLike = async (req, res) => {
   res.status(200).json({ message: `${username} has liked to this Blog` })
 }
 
+const editLIke = async (req, res) => {
+  const { blog_id, is_like } = req.body
+
+
+  // Like.findOne({ blog_id }).lean().exec() turn plain js object not mongodb document, can not save
+  const likedBlog = await Like.findOne({ blog_id }).exec()
+
+  if (!likedBlog) return res.status(400).json({ message: 'net work error, please try again' })
+  console.log(likedBlog)
+
+  likedBlog.is_like = is_like
+
+  await likedBlog.save()
+
+  res.status(200).json({ message: 'updated' })
+}
+
+const deleteLike = async (req, res) => {
+  const { blog_id } = req.body
+  const likedBlog = await Like.findOne({ blog_id }).exec()
+
+  if (!likedBlog) return res.status(400).json({ message: 'net work error, please try again' })
+  console.log(likedBlog)
+
+  await likedBlog.deleteOne()
+
+  res.status(200).json({ message: 'unlike this blog' })
+}
 
 
 
-
-module.exports = { getAllLikes, getLikesFromBlog, addedLike }
+module.exports = { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike }

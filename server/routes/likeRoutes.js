@@ -1,13 +1,15 @@
 const router = require('express').Router()
-const { getAllLikes, getLikesFromBlog, addedLike } = require('../controllers/likeController')
+const { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike } = require('../controllers/likeController')
 
 router.route('/')
   .get(getAllLikes)
   .post(addedLike)
+  .patch(editLIke)
+  .delete(deleteLike)
 
 
 router.route('/user')
-  .get(getLikesFromBlog)
+  .get(getLikesForUser)
 
 module.exports = router
 
