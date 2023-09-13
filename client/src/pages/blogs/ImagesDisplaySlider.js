@@ -24,7 +24,7 @@ export default function ImagesDisplaySlider({ row, handleClose, on }) {
   return (
 
     <Swiper
-      lazy={true}
+      lazy='true'
       slidesPerView={1}
       spaceBetween={2}
       // loop={true}

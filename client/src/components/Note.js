@@ -136,7 +136,7 @@ export default function Note({ blog }) {
   }
 
   const handleEdit = () => {
-    navigate(`/blogs/post/edit/${blog.id}`, { state: blog })
+    navigate(`/blogs/post/edit/${blog.id}`)
   }
 
 

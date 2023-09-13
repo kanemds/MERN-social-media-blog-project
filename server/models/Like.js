@@ -25,10 +25,6 @@ const likeSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  likes: {
-    type: Number,
-    default: 0
-  }
 },
   {
     timestamps: true

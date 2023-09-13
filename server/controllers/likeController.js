@@ -1,7 +1,6 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
 const Like = require('../models/Like')
-const { json } = require('body-parser')
 
 // @desc Get all likes
 // route Get /lies
@@ -31,13 +30,14 @@ const getAllLikes = async (req, res) => {
 const getLikesForUser = async (req, res) => {
 
   const { username } = req.body
-  console.log(username)
+
+  console.log('username', username)
 
   const currentUserLikes = await Like.aggregate([
     { $match: { liked_by_user_username: username } }
   ])
 
-  if (!currentUserLikes.length) return json.status(400).json({ message: 'No liked blog found' })
+  // if (!currentUserLikes.length) return res.status(400).json({ message: 'No liked blog found' })
 
   console.log(currentUserLikes)
 
