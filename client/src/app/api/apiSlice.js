@@ -68,7 +68,7 @@ export const apiSlice = createApi({
   // baseQuery:fetchBaseQuery({baseUrl: 'http://localhost:4567'}) origin 
   // baseQuery, // set accessToken to headers for every request
   baseQuery: baseQueryWithTokenGeneration, // add additional handling for every request   
-  tagTypes: ['Blog', 'User'],
+  tagTypes: ['Blog', 'User', 'Like'],
   endpoints: builder => ({})
 })
 

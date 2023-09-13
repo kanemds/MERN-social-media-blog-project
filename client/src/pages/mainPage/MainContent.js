@@ -12,6 +12,8 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
 
 import useMediaQuery from '@mui/material/useMediaQuery'
+import { useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
+import { useLocation } from 'react-router-dom'
 
 
 
@@ -57,7 +59,8 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 
 const MainContent = () => {
 
-  const { username } = useAuth()
+  const { username, userId } = useAuth()
+
 
   const smallScreenSize = useMediaQuery('(min-width:600px)')
 
@@ -80,6 +83,8 @@ const MainContent = () => {
     isError,
     error } = useGetBlogsQuery()
 
+
+
   const {
     data: paginatedData,
     isSuccess: paginatedIsSuccess,
@@ -87,28 +92,30 @@ const MainContent = () => {
   } = useGetPaginatedBlogsQuery(page)
 
 
-  useEffect(() => {
-    if (isSuccess) {
-      const { entities } = blogs
-      const list = Object.values(entities)
-      const withOutCurrentUser = list?.filter(blog => blog?.user !== username)
-      setAllBlogs(withOutCurrentUser)
-    }
-  }, [isSuccess])
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     const { entities } = blogs
+  //     const list = Object.values(entities)
+  //     const withOutCurrentUser = list?.filter(blog => blog?.user !== username)
+  //     setAllBlogs(withOutCurrentUser)
+  //   }
+  // }, [isSuccess])
 
   useEffect(() => {
     if (paginatedIsSuccess) {
-      setPaginatedBlogs(paginatedData)
+      // setPaginatedBlogs(paginatedData)
       setProducts(paginatedData)
     }
   }, [paginatedIsSuccess, paginatedData]) // needs paginatedData as dependency for the latest update
 
   useEffect(() => {
+
     const observer = new IntersectionObserver(onIntersection)
 
     if (observer && elementRef.current) {
-      // console.log(observer)
-      // console.log(elementRef.current)
+      console.log(observer)
+      console.log(elementRef.current)
       observer.observe(elementRef.current)
     }
 
@@ -118,6 +125,10 @@ const MainContent = () => {
       }
     }
   }, [])
+
+
+
+
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -235,4 +246,6 @@ const MainContent = () => {
   )
 }
 
-export default MainContent
+
+const MemoizedMainContent = React.memo(MainContent)
+export default MemoizedMainContent

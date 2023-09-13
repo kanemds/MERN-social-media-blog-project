@@ -18,6 +18,7 @@ import SingleBlog from './pages/blogs/SingleBlog'
 import SingleBlogEditPage from './pages/blogs/SingleBlogEditPage'
 import BloggerHomePage from './pages/blogs/BloggerHomePage'
 import FavoriteBlog from './pages/favorite/FavoriteBlog'
+import MainContent from './pages/mainPage/MainContent'
 
 
 
@@ -29,6 +30,7 @@ function App() {
     <Routes>
 
       <Route path='/' element={<Layout />}>
+
 
         <Route path='login' element={<LoginPage />} />
         <Route path='register' element={<RegisterPage />} />

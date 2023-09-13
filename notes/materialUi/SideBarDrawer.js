@@ -98,7 +98,7 @@ export default function SideBarDrawer() {
     navigate('/blogs')
   }
   const handleToEdit = () => {
-    navigate(`/blogs/post/edit/${id}`, { state: currentBlog })
+    navigate(`/blogs/post/edit/${id}`)
   }
   const handleToCreatePost = () => {
     navigate('/blogs/new')
