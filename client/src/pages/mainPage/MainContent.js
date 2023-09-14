@@ -211,9 +211,6 @@ const MainContent = () => {
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }} maxWidth='xxl'>
 
         <Box sx={{ position: 'sticky', top: '150px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
-          {/* <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <FrontPageSearchBar />
-          </Box> */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', p: smallScreenSize ? '' : '0 8px' }}>
             <Box >
               {dataList?.map(category => {
