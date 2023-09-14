@@ -32,8 +32,18 @@ export const likesApiSlice = apiSlice.injectEndpoints({
           return [{ type: 'Like', id: 'LIST' }]
         }
       }
+    }),
+    addLikedToBlog: builder.mutation({
+      query: likedInfo => ({
+        url: '/likes',
+        method: 'POST',
+        body: likedInfo
+      }),
+      invalidatesTags: [{
+        type: 'Like', id: 'LIST'
+      }]
     })
   })
 })
 
-export const { useGetLikedBlogsFromUserQuery } = likesApiSlice
+export const { useGetLikedBlogsFromUserQuery, useAddLikedToBlogMutation } = likesApiSlice

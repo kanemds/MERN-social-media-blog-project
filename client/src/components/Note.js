@@ -26,6 +26,7 @@ import Modal from '@mui/material/Modal'
 import { useDeleteBlogMutation } from '../pages/blogs/blogsApiSlice'
 import LoadingSpinner from './LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
+import { useAddLikedToBlogMutation } from '../pages/likes/likesApiSlice'
 
 
 const iconStyle = {
@@ -66,8 +67,20 @@ export default function Note({ blog }) {
       error }
   ] = useDeleteBlogMutation()
 
+  const [
+    addedLike,
+    {
+      isLoading: isAddLikeLoading,
+      isSuccess: isAddLikeSuccess,
+      isError: isAddLikeError,
+      error: likeError
+    }
+  ] = useAddLikedToBlogMutation()
+
+
+
   const navigate = useNavigate()
-  const { username } = useAuth()
+  const { username, userId } = useAuth()
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
@@ -78,7 +91,6 @@ export default function Note({ blog }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [isDeleteReady, setIsDeleteReady] = useState(false)
-
 
 
 
@@ -112,6 +124,8 @@ export default function Note({ blog }) {
   }, [isLoading])
 
 
+
+
   const handleClick = (event) => {
     if (isClick) {
       setAnchorEl(event.currentTarget)
@@ -143,7 +157,6 @@ export default function Note({ blog }) {
   }
 
 
-
   const handleDeleteClose = () => {
     setDeleteOpen(false)
     setIsClick(false)
@@ -151,7 +164,6 @@ export default function Note({ blog }) {
   }
 
   const handleDelete = () => setDeleteOpen(true)
-
 
   const handleDeleteConfirm = async (e) => {
     e.preventDefault()
@@ -169,6 +181,7 @@ export default function Note({ blog }) {
   }
 
   const handleLiked = () => {
+    addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
     setIsLiked(prev => !prev)
   }
 
