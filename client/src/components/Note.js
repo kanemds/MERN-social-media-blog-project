@@ -26,7 +26,7 @@ import Modal from '@mui/material/Modal'
 import { useDeleteBlogMutation } from '../pages/blogs/blogsApiSlice'
 import LoadingSpinner from './LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
-import { useAddLikedToBlogMutation } from '../pages/likes/likesApiSlice'
+import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../pages/likes/likesApiSlice'
 
 
 const iconStyle = {
@@ -73,9 +73,18 @@ export default function Note({ blog }) {
       isLoading: isAddLikeLoading,
       isSuccess: isAddLikeSuccess,
       isError: isAddLikeError,
-      error: likeError
+      error: addLikeError
     }
   ] = useAddLikedToBlogMutation()
+
+  const [
+    deleteLike,
+    {
+      isLoading: isDeleteLikeLoading,
+      isSuccess: isDeleteLikeSuccess,
+      isError: isDeleteLikeError,
+      error: deleteLikeError
+    }] = useDeleteLikedFromBlogMutation()
 
 
 
@@ -123,6 +132,17 @@ export default function Note({ blog }) {
     }
   }, [isLoading])
 
+  useEffect(() => {
+    if (isAddLikeSuccess) {
+      setIsLiked(true)
+    }
+  }, [isAddLikeSuccess])
+
+  useEffect(() => {
+    if (isDeleteLikeSuccess) {
+      setIsLiked(false)
+    }
+  }, [isDeleteLikeSuccess])
 
 
 
@@ -180,9 +200,15 @@ export default function Note({ blog }) {
     setIsFavorite(prev => !prev)
   }
 
-  const handleLiked = () => {
-    addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
-    setIsLiked(prev => !prev)
+  const handleLiked = (e) => {
+    e.preventDefault()
+    // setIsLiked(prev => !prev)
+
+    if (!isLiked) {
+      addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
+    } else {
+      deleteLike({ id: blog.id })
+    }
   }
 
 

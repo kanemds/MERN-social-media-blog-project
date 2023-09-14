@@ -42,8 +42,20 @@ export const likesApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{
         type: 'Like', id: 'LIST'
       }]
+    }),
+    deleteLikedFromBlog: builder.mutation({
+      query: ({ id }) => ({
+        url: '/likes',
+        method: 'DELETE',
+        body: { id }
+      }),
+      invalidatesTags: (result, error, arg) => {
+        return [{
+          type: 'Like', id: arg.id
+        }]
+      }
     })
   })
 })
 
-export const { useGetLikedBlogsFromUserQuery, useAddLikedToBlogMutation } = likesApiSlice
+export const { useGetLikedBlogsFromUserQuery, useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } = likesApiSlice
