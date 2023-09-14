@@ -125,9 +125,7 @@ const getSingleBlog = async (req, res) => {
   const blogUser = await User.findById(blog.user).lean().exec()
 
   const blogWithUser = { ...blog, user: blogUser.username }
-  console.log(blogWithUser)
 
-  // console.log(blogWithUser)
   res.status(200).json(blogWithUser)
 }
 
@@ -137,6 +135,10 @@ const getSingleBlog = async (req, res) => {
 const getPaginatedBlogs = async (req, res) => {
   // /blogs?page=1 is string
   const { page } = req.query
+
+  console.log(page)
+
+  if (page === undefined) return res.status(400).json({ message: 'net work error, please try again' })
 
   const limit = 6
 

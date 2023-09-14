@@ -14,6 +14,9 @@ import useAuth from '../../hooks/useAuth'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
 import { useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { increment } from '../blogs/blogSlice'
+import { entries } from 'lodash'
 
 
 
@@ -60,6 +63,10 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 const MainContent = () => {
 
   const { username, userId } = useAuth()
+  const dispatch = useDispatch()
+
+  const { pageNumber } = useSelector((state) => state?.blog)
+
 
 
   const smallScreenSize = useMediaQuery('(min-width:600px)')
@@ -75,13 +82,16 @@ const MainContent = () => {
   const [hasMore, setHasMore] = useState(true)
   const elementRef = useRef(null)
 
+  console.log(elementRef.current)
+  console.log(pageNumber)
 
-  const {
-    data: blogs,
-    isLoading,
-    isSuccess,
-    isError,
-    error } = useGetBlogsQuery()
+
+  // const {
+  //   data: blogs,
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  //   error } = useGetBlogsQuery()
 
 
 
@@ -89,7 +99,7 @@ const MainContent = () => {
     data: paginatedData,
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
-  } = useGetPaginatedBlogsQuery(page)
+  } = useGetPaginatedBlogsQuery(Number(pageNumber))
 
 
 
@@ -109,25 +119,30 @@ const MainContent = () => {
     }
   }, [paginatedIsSuccess, paginatedData]) // needs paginatedData as dependency for the latest update
 
+
   useEffect(() => {
 
-    const observer = new IntersectionObserver(onIntersection)
+    const observer = new IntersectionObserver(([entry]) => {
+      // console.log(entries)
+      if (entry.isIntersecting && hasMore) {
+        console.log(entry.isIntersecting)
 
-    if (observer && elementRef.current) {
-      console.log(observer)
-      console.log(elementRef.current)
-      observer.observe(elementRef.current)
-    }
+        if (Number(pageNumber) >= Number(products?.numberOfPages)) {
+          setHasMore(false)
+        } else {
+          dispatch(increment(pageNumber + 1))
+        }
+      }
+    })
+
+    observer.observe(elementRef.current)
 
     return () => {
-      if (observer) {
+      if (elementRef.current) {
         observer.disconnect()
       }
     }
-  }, [])
-
-
-
+  }, [products])
 
 
   const handleNext = () => {
@@ -143,22 +158,6 @@ const MainContent = () => {
     setIsSelected(e.target.value)
   }
 
-  const onIntersection = (entries) => {
-    const firstEntry = entries[0]
-
-    if (firstEntry.isIntersecting && hasMore) {
-      fetchMoreBlogs()
-    }
-  }
-
-  const fetchMoreBlogs = () => {
-    if (Number(page) >= Number(products?.numberOfPages)) {
-      setHasMore(false)
-    } else {
-      setPage(prev => prev + 1)
-    }
-  }
-
 
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -166,11 +165,11 @@ const MainContent = () => {
 
   let content
 
-  if (isLoading || paginatedIsLoading) {
+  if (paginatedIsLoading) {
     content = (<LoadingSpinner />)
   }
 
-  if (isSuccess || paginatedIsSuccess) {
+  if (paginatedIsSuccess) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {/* {
@@ -209,7 +208,7 @@ const MainContent = () => {
 
     <Box sx={{ display: 'flex', height: '100%' }}>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mb: 20 }} maxWidth='xxl'>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }} maxWidth='xxl'>
 
         <Box sx={{ position: 'sticky', top: '150px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
           {/* <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -232,10 +231,12 @@ const MainContent = () => {
           {page}
           <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}
 
-          {
-            hasMore &&
-            <Box ref={elementRef}> </Box>
-          }
+          <Box sx={{ height: 20 }}>
+            {
+              hasMore &&
+              <Box ref={elementRef}> </Box>
+            }
+          </Box>
         </Box >
 
       </Box >
@@ -247,5 +248,5 @@ const MainContent = () => {
 }
 
 
-const MemoizedMainContent = React.memo(MainContent)
-export default MemoizedMainContent
+
+export default MainContent
