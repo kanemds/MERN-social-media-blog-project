@@ -80,7 +80,7 @@ const MainContent = () => {
   const [likesFromUser, setLikesFromUser] = useState('')
 
   const [products, setProducts] = useState([])
-
+  const [newBlogData, setNewBlogData] = useState('')
 
   const [hasMore, setHasMore] = useState(true)
   const elementRef = useRef(null)
@@ -107,13 +107,41 @@ const MainContent = () => {
   } = useGetLikedBlogsFromUserQuery(username)
 
 
+
+
   useEffect(() => {
-    setLikesFromUser(likes)
+    if (username && isLikesSuccess) {
+      const entities = likes?.entities
+      const listOfLikes = Object.values(entities)
+      setLikesFromUser(listOfLikes)
+    }
   }, [isLikesSuccess])
 
-
+  // console.log(products)
   console.log(likesFromUser)
 
+
+  useEffect(() => {
+
+    if (products && likesFromUser) {
+      const newData = products?.data?.map((blog) => {
+        // Find the like that matches the current blog's ID
+        const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
+
+        // If a matching like is found, update the blog with the like information
+        if (matchingLike) {
+          return { ...blog, isLike: matchingLike.is_like }
+        }
+        // If no matching like is found, keep the original blog object
+        return { ...blog }
+      })
+
+      setNewBlogData(newData)
+    } else if (products && !likesFromUser) {
+      setNewBlogData(products.data)
+    }
+  }, [products, likesFromUser])
+  console.log(newBlogData)
 
   // useEffect(() => {
   //   if (isSuccess) {
@@ -177,11 +205,11 @@ const MainContent = () => {
 
   let content
 
-  if (paginatedIsLoading || isLikesLoading) {
+  if (paginatedIsLoading) {
     content = (<LoadingSpinner />)
   }
 
-  if (paginatedIsSuccess || isLikesSuccess) {
+  if (paginatedIsSuccess) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {/* {
@@ -209,7 +237,7 @@ const MainContent = () => {
 
 
 
-        {products?.data?.map(blog =>
+        {newBlogData?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <Note blog={blog} />
           </Grid>)}
