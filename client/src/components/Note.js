@@ -219,6 +219,7 @@ export default function Note({ blog }) {
       }}
     >
       <CardActionArea
+        component="div"
         sx={{
           color: "white",
           backgroundColor: "white",
