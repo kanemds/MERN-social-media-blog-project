@@ -21,6 +21,7 @@ import { entries } from 'lodash'
 
 
 
+
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
@@ -64,6 +65,7 @@ const MainContent = () => {
 
   const { username, userId } = useAuth()
   const dispatch = useDispatch()
+  console.log(username)
 
   const { pageNumber } = useSelector((state) => state?.blog)
 
@@ -75,16 +77,13 @@ const MainContent = () => {
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState(null)
   const [paginatedBlogs, setPaginatedBlogs] = useState(null)
+  const [likesFromUser, setLikesFromUser] = useState('')
 
   const [products, setProducts] = useState([])
 
 
   const [hasMore, setHasMore] = useState(true)
   const elementRef = useRef(null)
-
-  console.log(elementRef.current)
-  console.log(pageNumber)
-
 
   // const {
   //   data: blogs,
@@ -101,6 +100,19 @@ const MainContent = () => {
     isLoading: paginatedIsLoading,
   } = useGetPaginatedBlogsQuery(Number(pageNumber))
 
+  const {
+    data: likes,
+    isLoading: isLikesLoading,
+    isSuccess: isLikesSuccess,
+  } = useGetLikedBlogsFromUserQuery(username)
+
+
+  useEffect(() => {
+    setLikesFromUser(likes)
+  }, [isLikesSuccess])
+
+
+  console.log(likesFromUser)
 
 
   // useEffect(() => {
@@ -165,11 +177,11 @@ const MainContent = () => {
 
   let content
 
-  if (paginatedIsLoading) {
+  if (paginatedIsLoading || isLikesLoading) {
     content = (<LoadingSpinner />)
   }
 
-  if (paginatedIsSuccess) {
+  if (paginatedIsSuccess || isLikesSuccess) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {/* {
@@ -194,6 +206,8 @@ const MainContent = () => {
           <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
             <Note blog={blog} />
           </Grid>)} */}
+
+
 
         {products?.data?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >

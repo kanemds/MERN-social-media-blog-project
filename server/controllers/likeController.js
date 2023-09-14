@@ -29,7 +29,8 @@ const getAllLikes = async (req, res) => {
 
 const getLikesForUser = async (req, res) => {
 
-  const { username } = req.body
+
+  const { username } = req.query
 
   console.log('username', username)
 

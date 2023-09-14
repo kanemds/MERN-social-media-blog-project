@@ -9,7 +9,7 @@ export const likesApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getLikedBlogsFromUser: builder.query({
       query: (username) => ({
-        url: '/likes/user',
+        url: `/likes/user?username=${username}`,
         // validateStatus: (response, result) => {
         //   return response.status === 200 && !result.isError
         // }
@@ -17,22 +17,22 @@ export const likesApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
         console.log(response)
-        // const loadedLikes = response.map(like => {
-        //   like.id = like._id
-        //   return like
-        // })
-        // return likesAdapter.setAll(initialState, loadedLikes)
+        const loadedLikes = response.map(like => {
+          like.id = like._id
+          return like
+        })
+        return likesAdapter.setAll(initialState, loadedLikes)
       },
-      // providesTags: (result, error, arg) => {
-      //   if (result?.ids) {
-      //     return [
-      //       { type: 'Like', id: 'LIST' },
-      //       ...result.ids.map(id => ({ type: 'Blog', id }))
-      //     ]
-      //   } else {
-      //     return [{ type: 'Like', id: 'LIST' }]
-      //   }
-      // }
+      providesTags: (result, error, arg) => {
+        if (result?.ids) {
+          return [
+            { type: 'Like', id: 'LIST' },
+            ...result.ids.map(id => ({ type: 'Blog', id }))
+          ]
+        } else {
+          return [{ type: 'Like', id: 'LIST' }]
+        }
+      }
     })
   })
 })
