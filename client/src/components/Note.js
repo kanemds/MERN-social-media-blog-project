@@ -54,6 +54,8 @@ const styleDelete = {
 
 export default function Note({ blog }) {
 
+  // console.log(blog)
+
   const [
     deleteBlog,
     {
@@ -71,11 +73,12 @@ export default function Note({ blog }) {
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
-  const [isLiked, setIsLiked] = useState(false)
+  const [isLiked, setIsLiked] = useState(blog.isLike || null)
   const [isFavorite, setIsFavorite] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [isDeleteReady, setIsDeleteReady] = useState(false)
+
 
 
 
