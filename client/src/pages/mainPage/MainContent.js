@@ -106,28 +106,6 @@ const MainContent = () => {
 
 
   // useEffect(() => {
-
-  //   if (products && likesFromUser) {
-  //     const newData = products?.data?.map((blog) => {
-  //       // Find the like that matches the current blog's ID
-  //       const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
-
-  //       // If a matching like is found, update the blog with the like information
-  //       if (matchingLike) {
-  //         return { ...blog, isLike: matchingLike.is_like }
-  //       }
-  //       // If no matching like is found, keep the original blog object
-  //       return { ...blog }
-  //     })
-
-  //     setNewBlogData(newData)
-  //   } else if (products && !likesFromUser) {
-  //     setNewBlogData(products.data)
-  //   }
-  // }, [products, likesFromUser])
-  // console.log(newBlogData)
-
-  // useEffect(() => {
   //   if (isSuccess) {
   //     const { entities } = blogs
   //     const list = Object.values(entities)
@@ -141,15 +119,29 @@ const MainContent = () => {
       // setPaginatedBlogs(paginatedData)
       setProducts(paginatedData)
     }
-  }, [paginatedIsSuccess, paginatedData]) // needs paginatedData as dependency for the latest update
-
-  useEffect(() => {
     if (username && isLikesSuccess) {
       const entities = likes?.entities
       const listOfLikes = Object.values(entities)
       setLikesFromUser(listOfLikes)
     }
-  }, [isLikesSuccess])
+    if (products && username && likesFromUser) {
+      const newData = products?.data?.map((blog) => {
+        // Find the like that matches the current blog's ID
+        const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
+
+        // If a matching like is found, update the blog with the like information
+        if (matchingLike) {
+          return { ...blog, isLike: matchingLike.is_like }
+        }
+        // If no matching like is found, keep the original blog object
+        return { ...blog }
+      })
+      setNewBlogData(newData)
+    }
+
+  }, [paginatedIsSuccess, paginatedData, isLikesSuccess, username]) // needs paginatedData as dependency for the latest update
+
+
 
   useEffect(() => {
 
@@ -189,21 +181,10 @@ const MainContent = () => {
   // }
   // then the [products] to disconnect the observer
 
-  const newData = products?.data?.map((blog) => {
-    // Find the like that matches the current blog's ID
-    const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
-
-    // If a matching like is found, update the blog with the like information
-    if (matchingLike) {
-      return { ...blog, isLike: matchingLike.is_like }
-    }
-    // If no matching like is found, keep the original blog object
-    return { ...blog }
-  })
 
   console.log(products)
   console.log(likesFromUser)
-  console.log(newData)
+
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -267,11 +248,11 @@ const MainContent = () => {
     )
   }
 
-  if (paginatedIsSuccess && isLikesSuccess && username && newData) {
+  if (paginatedIsSuccess && isLikesSuccess && username && newBlogData) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
 
-        {newData?.map(blog =>
+        {newBlogData?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <Note blog={blog} />
           </Grid>)}

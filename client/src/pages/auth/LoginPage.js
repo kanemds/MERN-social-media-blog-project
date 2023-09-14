@@ -11,6 +11,8 @@ import { FormControl, OutlinedInput, MenuItem, Paper, Box, FormControlLabel, For
 import LinkButton from '../../components/LinkButton'
 import { USER_REGEX, PASSWORD_REGEX } from '../../config/regex'
 import usePersist from '../../hooks/usePersist'
+import { apiSlice } from '../../app/api/apiSlice'
+import { resetCache } from '../blogs/blogSlice'
 
 const LoginPage = () => {
 
@@ -94,6 +96,8 @@ const LoginPage = () => {
         const { accessToken } = await login({ username, password }).unwrap()
         // after login success, will get accessToken generate by backend login controller and the refresh token will store in the cookie  
         // set auth.token = accessToken
+        dispatch(resetCache())
+        dispatch(apiSlice.util.invalidateTags(['Blog']))
         dispatch(setCredentials({ accessToken }))
         setUsername('')
         setPassword('')
