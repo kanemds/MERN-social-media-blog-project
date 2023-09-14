@@ -84,12 +84,15 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       },
       // Always merge incoming data to the cache entry
       merge: (currentCache, newItems) => {
-        // console.log(currentCache)
-        // console.log(newItems)
+        console.log(currentCache)
+        console.log(newItems)
+        // const checkDuplicate = newItems.filter(currentCache.data)
         currentCache.data.push(...newItems.data)
       },
       // Refetch when the page arg changes,is the argument in this case: pageNumber
       forceRefetch({ currentArg, previousArg }) {
+        console.log('currentArg', currentArg)
+        console.log('previousArg', previousArg)
         return currentArg !== previousArg
       },
     }),
