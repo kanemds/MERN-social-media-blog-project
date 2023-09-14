@@ -77,10 +77,10 @@ const MainContent = () => {
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState(null)
   const [paginatedBlogs, setPaginatedBlogs] = useState(null)
-  const [likesFromUser, setLikesFromUser] = useState('')
+  const [likesFromUser, setLikesFromUser] = useState([])
 
   const [products, setProducts] = useState([])
-  const [newBlogData, setNewBlogData] = useState('')
+  const [newBlogData, setNewBlogData] = useState([])
 
   const [hasMore, setHasMore] = useState(true)
   const elementRef = useRef(null)
@@ -91,8 +91,6 @@ const MainContent = () => {
   //   isSuccess,
   //   isError,
   //   error } = useGetBlogsQuery()
-
-
 
   const {
     data: paginatedData,
@@ -107,41 +105,27 @@ const MainContent = () => {
   } = useGetLikedBlogsFromUserQuery(username)
 
 
+  // useEffect(() => {
 
+  //   if (products && likesFromUser) {
+  //     const newData = products?.data?.map((blog) => {
+  //       // Find the like that matches the current blog's ID
+  //       const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
 
-  useEffect(() => {
-    if (username && isLikesSuccess) {
-      const entities = likes?.entities
-      const listOfLikes = Object.values(entities)
-      setLikesFromUser(listOfLikes)
-    }
-  }, [isLikesSuccess])
+  //       // If a matching like is found, update the blog with the like information
+  //       if (matchingLike) {
+  //         return { ...blog, isLike: matchingLike.is_like }
+  //       }
+  //       // If no matching like is found, keep the original blog object
+  //       return { ...blog }
+  //     })
 
-  // console.log(products)
-  console.log(likesFromUser)
-
-
-  useEffect(() => {
-
-    if (products && likesFromUser) {
-      const newData = products?.data?.map((blog) => {
-        // Find the like that matches the current blog's ID
-        const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
-
-        // If a matching like is found, update the blog with the like information
-        if (matchingLike) {
-          return { ...blog, isLike: matchingLike.is_like }
-        }
-        // If no matching like is found, keep the original blog object
-        return { ...blog }
-      })
-
-      setNewBlogData(newData)
-    } else if (products && !likesFromUser) {
-      setNewBlogData(products.data)
-    }
-  }, [products, likesFromUser])
-  console.log(newBlogData)
+  //     setNewBlogData(newData)
+  //   } else if (products && !likesFromUser) {
+  //     setNewBlogData(products.data)
+  //   }
+  // }, [products, likesFromUser])
+  // console.log(newBlogData)
 
   // useEffect(() => {
   //   if (isSuccess) {
@@ -159,6 +143,13 @@ const MainContent = () => {
     }
   }, [paginatedIsSuccess, paginatedData]) // needs paginatedData as dependency for the latest update
 
+  useEffect(() => {
+    if (username && isLikesSuccess) {
+      const entities = likes?.entities
+      const listOfLikes = Object.values(entities)
+      setLikesFromUser(listOfLikes)
+    }
+  }, [isLikesSuccess])
 
   useEffect(() => {
 
@@ -174,16 +165,45 @@ const MainContent = () => {
         }
       }
     })
-
     observer.observe(elementRef.current)
 
     return () => {
       if (elementRef.current) {
+        console.log('disconnect observer')
         observer.disconnect()
       }
     }
   }, [products])
 
+  // IntersectionObserver and use observer.observe(elementRef.current); to tell the observer to start observing the DOM element referenced by elementRef.current.
+  // When the DOM element referenced by elementRef (in your case, the empty <Box> element) becomes visible in the viewport (e.g., as the user scrolls down)
+  // the IntersectionObserver triggers the callback function you provided 
+  // if (entry.isIntersecting && hasMore) {
+  //   console.log(entry.isIntersecting)
+
+  //   if (Number(pageNumber) >= Number(products?.numberOfPages)) {
+  //     setHasMore(false)
+  //   } else {
+  //     dispatch(increment(pageNumber + 1))
+  //   }
+  // }
+  // then the [products] to disconnect the observer
+
+  const newData = products?.data?.map((blog) => {
+    // Find the like that matches the current blog's ID
+    const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
+
+    // If a matching like is found, update the blog with the like information
+    if (matchingLike) {
+      return { ...blog, isLike: matchingLike.is_like }
+    }
+    // If no matching like is found, keep the original blog object
+    return { ...blog }
+  })
+
+  console.log(products)
+  console.log(likesFromUser)
+  console.log(newData)
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -205,11 +225,11 @@ const MainContent = () => {
 
   let content
 
-  if (paginatedIsLoading) {
+  if (paginatedIsLoading || isLikesLoading) {
     content = (<LoadingSpinner />)
   }
 
-  if (paginatedIsSuccess) {
+  if (paginatedIsSuccess && isLikesSuccess && !username) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {/* {
@@ -235,9 +255,23 @@ const MainContent = () => {
             <Note blog={blog} />
           </Grid>)} */}
 
+        {/* {newData?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <Note blog={blog} />
+          </Grid>)} */}
+        {products.data?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <Note blog={blog} />
+          </Grid>)}
+      </Grid>
+    )
+  }
 
+  if (paginatedIsSuccess && isLikesSuccess && username && newData) {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
 
-        {newBlogData?.map(blog =>
+        {newData?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <Note blog={blog} />
           </Grid>)}

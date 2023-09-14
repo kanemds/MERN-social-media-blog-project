@@ -11,11 +11,14 @@ const blogSlice = createSlice({
   reducers: {
     increment: (state, action) => {
       state.pageNumber = action.payload
-    }
+    },
+    resetCache: (state) => {
+      state.pageNumber = 1
+    },
   }
 })
 
-export const { increment } = blogSlice.actions
+export const { increment, resetCache } = blogSlice.actions
 
 export default blogSlice.reducer
 

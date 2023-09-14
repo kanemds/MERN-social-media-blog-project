@@ -16,7 +16,6 @@ export const likesApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
-        console.log(response)
         const loadedLikes = response.map(like => {
           like.id = like._id
           return like

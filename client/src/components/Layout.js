@@ -14,6 +14,9 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import FrontPageSideBarMedium from "./FrontPageSideBarMedium"
 import BlogsList from "../pages/blogs/BlogsList"
 import './scrollbar.css'
+import { useDispatch, useSelector } from "react-redux"
+import { increment, resetCache } from "../pages/blogs/blogSlice"
+import { apiSlice } from "../app/api/apiSlice"
 
 const theme = createTheme({
   breakpoints: {
@@ -33,8 +36,12 @@ const theme = createTheme({
 
 
 const Layout = () => {
+
   const largeBP = useMediaQuery('(min-width:1200px)')
   const mediumBP = useMediaQuery('(min-width:750px)')
+
+  const dispatch = useDispatch()
+
   const [
     sendLogOut, {
       isLoading,
@@ -53,10 +60,12 @@ const Layout = () => {
     setIsShow(prev => !prev)
   }
 
-
-
-
-  const handleLogout = () => sendLogOut()
+  const handleLogout = () => {
+    dispatch(resetCache())
+    dispatch(apiSlice.util.resetApiState())
+    // dispatch(api.util.invalidateTags(['CompanySettings'])
+    sendLogOut()
+  }
 
 
 
