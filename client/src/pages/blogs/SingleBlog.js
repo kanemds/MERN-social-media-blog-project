@@ -17,6 +17,7 @@ import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
+import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
 
 import './imagesDisplaySlider.css'
 
@@ -75,7 +76,6 @@ const iconStyle = {
   padding: '0px',
 }
 
-
 const SingleBlog = () => {
 
   const mediumBP = useMediaQuery('(min-width:750px)') // true when larger
@@ -86,14 +86,6 @@ const SingleBlog = () => {
   const { username, userId } = useAuth()
   const navigate = useNavigate()
 
-  const [currentBlog, setCurrentBlog] = useState('')
-  const [open, setOpen] = useState(false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
-  const [deleteMessage, setDeleteMessage] = useState(null)
-  const [isDeleteReady, setIsDeleteReady] = useState(false)
-  const [isLiked, setIsLiked] = useState(false)
-  const [isSubscribed, setIsSubscribed] = useState(false)
-
   const {
     data,
     isLoading,
@@ -101,6 +93,33 @@ const SingleBlog = () => {
     isError,
     error
   } = useGetSingleBlogQuery(id)
+
+
+
+  const {
+    data: findLike,
+    isLoading: isFindLikeLoading,
+    isSuccess: isFindLikeSuccess,
+  } = useGetLikedBlogsFromUserQuery(username)
+
+  const [
+    addedLike,
+    {
+      isLoading: isAddLikeLoading,
+      isSuccess: isAddLikeSuccess,
+      isError: isAddLikeError,
+      error: addLikeError
+    }
+  ] = useAddLikedToBlogMutation()
+
+  const [
+    deleteLike,
+    {
+      isLoading: isDeleteLikeLoading,
+      isSuccess: isDeleteLikeSuccess,
+      isError: isDeleteLikeError,
+      error: deleteLikeError
+    }] = useDeleteLikedFromBlogMutation()
 
   const [
     deleteBlog,
@@ -112,12 +131,43 @@ const SingleBlog = () => {
   ] = useDeleteBlogMutation()
 
 
+  const [currentBlog, setCurrentBlog] = useState('')
+  const [open, setOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteMessage, setDeleteMessage] = useState(null)
+  const [isDeleteReady, setIsDeleteReady] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false)
+
 
   useEffect(() => {
     if (isSuccess) {
       setCurrentBlog(data)
     }
-  }, [isSuccess, data])
+    if (isFindLikeSuccess) {
+      const entities = Object.values(findLike.entities)
+      const findCurrentBlog = entities?.find(blog => blog.blog_id === id)
+      if (findCurrentBlog && findCurrentBlog.is_like) {
+        setIsLiked(true)
+      } else {
+        setIsLiked(false)
+      }
+    }
+  }, [isSuccess, isFindLikeSuccess])
+
+
+  useEffect(() => {
+    if (isAddLikeSuccess) {
+      setIsLiked(true)
+    }
+  }, [isAddLikeSuccess])
+
+  useEffect(() => {
+    if (isDeleteLikeSuccess) {
+      setIsLiked(false)
+    }
+  }, [isDeleteLikeSuccess])
+
 
   useEffect(() => {
 
@@ -151,15 +201,20 @@ const SingleBlog = () => {
     await deleteBlog({ id })
   }
   const handleBackToBlogs = () => {
-    navigate('/blogs', { replace: true })
+    navigate(-1)
   }
 
   const handleUserPage = () => {
     navigate(`/blogs/user/${data.id}`)
   }
 
-  const handleLiked = () => {
-    setIsLiked(prev => !prev)
+  const handleLiked = (e) => {
+    e.preventDefault()
+    if (!isLiked) {
+      addedLike({ blog_id: id, user_id: userId, username, is_like: true })
+    } else {
+      deleteLike({ id })
+    }
   }
 
   const handleToSubscribed = () => {
@@ -212,7 +267,7 @@ const SingleBlog = () => {
 
   let content
 
-  if (isLoading) {
+  if (isLoading || isFindLikeLoading) {
     content = (
       <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <LoadingSpinner />
@@ -220,7 +275,7 @@ const SingleBlog = () => {
     )
   }
 
-  if (isSuccess) {
+  if (isSuccess && isFindLikeSuccess) {
 
     content = (
 
@@ -475,6 +530,21 @@ const SingleBlog = () => {
             {deleteModalMessage}
           </Box>
         </Modal>
+      </Box >
+    )
+  }
+
+  if (username !== data?.user && mediumBP) {
+    menuButton = (
+      <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%', ml: '7%' }}>
+
+
+        <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
+          <ForwardRoundedIcon
+            style={{ transform: 'rotate(180deg)' }}
+          />
+          <ButtonInfo >  Back</ButtonInfo>
+        </SideButton>
       </Box >
     )
   }
