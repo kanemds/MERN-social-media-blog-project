@@ -15,8 +15,9 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { increment } from '../blogs/blogSlice'
+import { increment, resetCache } from '../blogs/blogSlice'
 import { entries } from 'lodash'
+import { apiSlice } from '../../app/api/apiSlice'
 
 
 
@@ -65,10 +66,7 @@ const MainContent = () => {
 
   const { username, userId } = useAuth()
   const dispatch = useDispatch()
-  console.log(username)
-
   const { pageNumber } = useSelector((state) => state?.blog)
-
 
 
   const smallScreenSize = useMediaQuery('(min-width:600px)')
@@ -114,6 +112,7 @@ const MainContent = () => {
   //   }
   // }, [isSuccess])
 
+
   useEffect(() => {
     if (paginatedIsSuccess) {
       // setPaginatedBlogs(paginatedData)
@@ -124,21 +123,6 @@ const MainContent = () => {
       const listOfLikes = Object.values(entities)
       setLikesFromUser(listOfLikes)
     }
-    if (products && username && likesFromUser) {
-      const newData = products?.data?.map((blog) => {
-        // Find the like that matches the current blog's ID
-        const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
-
-        // If a matching like is found, update the blog with the like information
-        if (matchingLike) {
-          return { ...blog, isLike: matchingLike.is_like }
-        }
-        // If no matching like is found, keep the original blog object
-        return { ...blog }
-      })
-      setNewBlogData(newData)
-    }
-
   }, [paginatedIsSuccess, paginatedData, isLikesSuccess, username]) // needs paginatedData as dependency for the latest update
 
 
@@ -180,11 +164,6 @@ const MainContent = () => {
   //   }
   // }
   // then the [products] to disconnect the observer
-
-
-  console.log(products)
-  console.log(likesFromUser)
-
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -249,10 +228,23 @@ const MainContent = () => {
   }
 
   if (paginatedIsSuccess && isLikesSuccess && username && newBlogData) {
+
+    const newData = products?.data?.map((blog) => {
+      // Find the like that matches the current blog's ID
+      const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
+
+      // If a matching like is found, update the blog with the like information
+      if (matchingLike) {
+        return { ...blog, isLike: matchingLike.is_like }
+      }
+      // If no matching like is found, keep the original blog object
+      return { ...blog }
+    })
+
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
 
-        {newBlogData?.map(blog =>
+        {newData?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <Note blog={blog} />
           </Grid>)}

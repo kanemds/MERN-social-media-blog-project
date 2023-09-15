@@ -26,7 +26,7 @@ export const likesApiSlice = apiSlice.injectEndpoints({
         if (result?.ids) {
           return [
             { type: 'Like', id: 'LIST' },
-            ...result.ids.map(id => ({ type: 'Blog', id }))
+            ...result.ids.map(id => ({ type: 'Like', id }))
           ]
         } else {
           return [{ type: 'Like', id: 'LIST' }]
@@ -41,9 +41,22 @@ export const likesApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{
         type: 'Like', id: 'LIST'
-      }]
+      }, { type: 'Blog', id: 'LIST' }]
+    }),
+    deleteLikedFromBlog: builder.mutation({
+      // using the blog.id to search like.id also can refresh the blog id cache data as well
+      query: ({ id }) => ({
+        url: '/likes',
+        method: 'DELETE',
+        body: { id }
+      }),
+      invalidatesTags: (result, error, arg) => {
+        return [{
+          type: 'Like', id: arg.id
+        }, { type: 'Like', id: 'LIST' }, { type: 'Blog', id: arg.id }]
+      }
     })
   })
 })
 
-export const { useGetLikedBlogsFromUserQuery, useAddLikedToBlogMutation } = likesApiSlice
+export const { useGetLikedBlogsFromUserQuery, useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } = likesApiSlice
