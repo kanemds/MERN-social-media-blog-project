@@ -125,7 +125,7 @@ const Layout = () => {
   }
 
   // startWith /blogs pages with slider,sidebar and searchbar 
-  if (pathname === '/blogs') {
+  if (pathname.includes('/blogs')) {
     return main = (
 
       <Box >
@@ -137,7 +137,6 @@ const Layout = () => {
             <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
               <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
             </Box>
-
 
             <Box sx={{ display: 'flex', position: 'relative' }}>
               <Box sx={{
@@ -154,7 +153,7 @@ const Layout = () => {
               </Box>
 
               <ThemeProvider theme={theme}  >
-                <Container sx={{ minHeight: '100vh', width: '100%' }} maxWidth='xxl'>
+                <Container sx={{ minHeight: 'calc(100vh - 80px)', width: '100%' }} maxWidth='xxl'>
                   <Outlet />
                 </Container>
               </ThemeProvider>
