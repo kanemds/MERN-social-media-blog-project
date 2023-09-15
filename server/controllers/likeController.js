@@ -40,6 +40,34 @@ const getLikesForUser = async (req, res) => {
   res.status(200).json(currentUserLikes)
 }
 
+const findLikedBlogs = async (req, res) => {
+
+  const { username } = req.query
+
+  const currentUserLikes = await Like.aggregate([
+    { $match: { liked_by_user_username: username } }
+  ])
+
+  const listOfBlogId = await currentUserLikes.map(like => {
+    return like.blog_id
+  })
+  console.log(listOfBlogId)
+
+  const listOfBlogs = await Blog.aggregate([
+    {
+      $match: {
+        _id: {
+          $in: listOfBlogId // Match documents where blog_id is in listOfBlogIds
+        }
+      }
+    }
+  ])
+
+  console.log(listOfBlogs)
+
+  res.status(200).json(listOfBlogs)
+}
+
 // @desc created a like to specific blog
 // route post /lies
 // @access Private
@@ -95,4 +123,4 @@ const deleteLike = async (req, res) => {
 
 
 
-module.exports = { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike }
+module.exports = { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike, findLikedBlogs }

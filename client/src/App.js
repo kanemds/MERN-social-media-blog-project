@@ -19,6 +19,7 @@ import SingleBlogEditPage from './pages/blogs/SingleBlogEditPage'
 import BloggerHomePage from './pages/blogs/BloggerHomePage'
 import FavoriteBlog from './pages/favorite/FavoriteBlog'
 import MainContent from './pages/mainPage/MainContent'
+import LikeList from './pages/likes/LikeList'
 
 
 
@@ -46,6 +47,7 @@ function App() {
               <Route path='user/:id' element={<BloggerHomePage />} />
               <Route path='new' element={<NewBlog />} />
               <Route path='favorite' element={<FavoriteBlog />} />
+              <Route path='liked' element={<LikeList />} />
 
             </Route>
           </Route>

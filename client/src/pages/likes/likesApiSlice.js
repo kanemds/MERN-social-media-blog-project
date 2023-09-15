@@ -33,6 +33,32 @@ export const likesApiSlice = apiSlice.injectEndpoints({
         }
       }
     }),
+    getUserLikedBlogs: builder.query({
+      query: (username) => ({
+        url: `/likes/user/blogs?username=${username}`,
+        // validateStatus: (response, result) => {
+        //   return response.status === 200 && !result.isError
+        // }
+      }),
+      keepUnusedDataFor: 300,
+      transformResponse: (response, meta, arg) => {
+        const loadedLikes = response.map(like => {
+          like.id = like._id
+          return like
+        })
+        return loadedLikes
+      },
+      providesTags: (result, error, arg) => {
+        if (result?.ids) {
+          return [
+            { type: 'Like', id: 'LIST' },
+            ...result.ids.map(id => ({ type: 'Like', id }))
+          ]
+        } else {
+          return [{ type: 'Like', id: 'LIST' }]
+        }
+      }
+    }),
     addLikedToBlog: builder.mutation({
       query: likedInfo => ({
         url: '/likes',
@@ -59,4 +85,4 @@ export const likesApiSlice = apiSlice.injectEndpoints({
   })
 })
 
-export const { useGetLikedBlogsFromUserQuery, useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } = likesApiSlice
+export const { useGetLikedBlogsFromUserQuery, useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetUserLikedBlogsQuery } = likesApiSlice
