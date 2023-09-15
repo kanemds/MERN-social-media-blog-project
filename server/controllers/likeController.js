@@ -44,15 +44,19 @@ const findLikedBlogs = async (req, res) => {
 
   const { username } = req.query
 
+  // find all likes 
   const currentUserLikes = await Like.aggregate([
     { $match: { liked_by_user_username: username } }
   ])
 
+  console.log(currentUserLikes)
+  // filter and get blog_id
   const listOfBlogId = await currentUserLikes.map(like => {
     return like.blog_id
   })
   console.log(listOfBlogId)
 
+  // find the match blog.id from Blog collection
   const listOfBlogs = await Blog.aggregate([
     {
       $match: {
@@ -63,9 +67,16 @@ const findLikedBlogs = async (req, res) => {
     }
   ])
 
-  console.log(listOfBlogs)
 
-  res.status(200).json(listOfBlogs)
+  const blogsWithLikes = await listOfBlogs.map(blog => {
+    const findMatch = currentUserLikes.find(like => like.blog_id.toString() === blog._id.toString())
+    console.log(findMatch)
+    return { ...blog, isLike: findMatch.is_like }
+  })
+
+  const decOrderBlogs = await blogsWithLikes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
+  res.status(200).json(decOrderBlogs)
 }
 
 // @desc created a like to specific blog
