@@ -132,7 +132,6 @@ const MainContent = () => {
     const observer = new IntersectionObserver(([entry]) => {
       // console.log(entries)
       if (entry.isIntersecting && hasMore) {
-        console.log(entry.isIntersecting)
 
         if (Number(pageNumber) >= Number(products?.numberOfPages)) {
           setHasMore(false)
@@ -145,7 +144,7 @@ const MainContent = () => {
 
     return () => {
       if (elementRef.current) {
-        console.log('disconnect observer')
+
         observer.disconnect()
       }
     }
