@@ -79,7 +79,10 @@ export const likesApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, arg) => {
         return [{
           type: 'Like', id: arg.id
-        }, { type: 'Like', id: 'LIST' }, { type: 'Blog', id: arg.id }]
+        }]
+        // return [{
+        //   type: 'Like', id: arg.id
+        // }, { type: 'Blog', id: arg.id }]
       }
     })
   })

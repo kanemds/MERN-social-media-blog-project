@@ -11,7 +11,7 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { timeDisplayOptions } from '../config/timeDisplayOptions'
 import useAuth from '../hooks/useAuth'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
@@ -27,6 +27,9 @@ import { useDeleteBlogMutation } from '../pages/blogs/blogsApiSlice'
 import LoadingSpinner from './LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
 import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../pages/likes/likesApiSlice'
+import { set } from 'lodash'
+import { apiSlice } from '../app/api/apiSlice'
+import { useDispatch } from 'react-redux'
 
 
 const iconStyle = {
@@ -57,6 +60,8 @@ export default function Note({ blog }) {
 
   // console.log(blog)
 
+  const dispatch = useDispatch()
+
   const [
     deleteBlog,
     {
@@ -70,6 +75,7 @@ export default function Note({ blog }) {
   const [
     addedLike,
     {
+
       isLoading: isAddLikeLoading,
       isSuccess: isAddLikeSuccess,
       isError: isAddLikeError,
@@ -80,6 +86,7 @@ export default function Note({ blog }) {
   const [
     deleteLike,
     {
+      data: removeMessage,
       isLoading: isDeleteLikeLoading,
       isSuccess: isDeleteLikeSuccess,
       isError: isDeleteLikeError,
@@ -87,9 +94,9 @@ export default function Note({ blog }) {
     }] = useDeleteLikedFromBlogMutation()
 
 
-
   const navigate = useNavigate()
   const { username, userId } = useAuth()
+  const { pathname } = useLocation()
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
@@ -98,9 +105,10 @@ export default function Note({ blog }) {
   const [isLiked, setIsLiked] = useState(blog.isLike || null)
   const [isFavorite, setIsFavorite] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
-  const [isDeleteReady, setIsDeleteReady] = useState(false)
-
+  const [isDeleteReady, setIsDeleteReady] = useState(null)
+  const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(null)
 
 
   const current = Date.parse(new Date())
@@ -111,18 +119,16 @@ export default function Note({ blog }) {
 
   useEffect(() => {
 
-    if (isSuccess && isDeleteReady === true && data?.message) {
+    if (isSuccess && isDeleteReady === true) {
       setDeleteMessage(data.message)
       setTimeout(() => {
-        // console.log('run this setTimeout')
+        console.log('run this setTimeout')
         setDeleteOpen(false)
-        setIsClick(false)
-        navigate('/blogs')
+        setAnchorEl(null)
+        dispatch(apiSlice.util.invalidateTags(['Blog']))
       }, 1400)
-    } else {
-      setIsDeleteReady(false)
     }
-  }, [isSuccess, isDeleteReady, data])
+  }, [isSuccess, isDeleteReady])
 
   useEffect(() => {
     if (isLoading) {
@@ -133,17 +139,34 @@ export default function Note({ blog }) {
   }, [isLoading])
 
   useEffect(() => {
+    if (isDeleteLikeSuccess && isDeleteLikeReady === true && pathname === '/blogs/liked') {
+      setDeleteMessage(removeMessage?.message)
+      setTimeout(() => {
+        console.log('finish')
+        setDeleteLikeOpen(false)
+        dispatch(apiSlice.util.invalidateTags(['Blog', 'Like']))
+      }, 1400)
+    }
+
+    if (isDeleteLikeSuccess && pathname !== '/blogs/liked') {
+      setIsLiked(false)
+    }
+  }, [isDeleteLikeSuccess, isDeleteLikeReady])
+
+  useEffect(() => {
+    if (isDeleteLikeLoading && pathname === '/blogs/liked') {
+      setTimeout(() => {
+        console.log('loading')
+        setIsDeleteLikeReady(true)
+      }, 1400)
+    }
+  }, [isDeleteLikeLoading])
+
+  useEffect(() => {
     if (isAddLikeSuccess) {
       setIsLiked(true)
     }
   }, [isAddLikeSuccess])
-
-  useEffect(() => {
-    if (isDeleteLikeSuccess) {
-      setIsLiked(false)
-    }
-  }, [isDeleteLikeSuccess])
-
 
 
   const handleClick = (event) => {
@@ -183,11 +206,24 @@ export default function Note({ blog }) {
     setAnchorEl(null)
   }
 
+
+
+  const handleDeleteLikeClose = () => {
+    setDeleteLikeOpen(false)
+  }
+
   const handleDelete = () => setDeleteOpen(true)
 
   const handleDeleteConfirm = async (e) => {
     e.preventDefault()
+    setIsDeleteReady(false)
     await deleteBlog({ id: blog.id })
+  }
+
+  const handleDeleteLikeConfirm = async (e) => {
+    e.preventDefault()
+    setIsDeleteLikeReady(false)
+    await deleteLike({ id: blog.id })
   }
 
   const handleUserPage = () => {
@@ -200,18 +236,23 @@ export default function Note({ blog }) {
     setIsFavorite(prev => !prev)
   }
 
-  const handleLiked = (e) => {
+  const handleLiked = async (e) => {
     e.preventDefault()
     // setIsLiked(prev => !prev)
-
-    if (!isLiked) {
-      addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
+    if (pathname === '/blogs/liked') {
+      setDeleteLikeOpen(true)
     } else {
-      deleteLike({ id: blog.id })
+      if (!isLiked) {
+        await addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
+      } else {
+        await deleteLike({ id: blog.id })
+      }
     }
+
   }
 
 
+  ////////////////////////////////////////////////// delete blog ////////////////////////////////////////////////////
   let deleteModalMessage
 
   if (isDeleteReady === false) {
@@ -246,6 +287,47 @@ export default function Note({ blog }) {
       </Typography>
     )
   }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////// delete like ////////////////////////////////////////////////////
+  let deleteLikeModalMessage
+
+  if (isDeleteLikeReady === false) {
+    deleteLikeModalMessage = <LoadingSpinner />
+  }
+
+  if (isDeleteLikeReady === true && deleteMessage) {
+    deleteLikeModalMessage = (
+      <Typography id="modal-modal-title" variant="h6" component="h2">
+        {deleteMessage}
+      </Typography>
+    )
+  }
+  if (!isDeleteLikeLoading && !isDeleteLikeSuccess) {
+    deleteLikeModalMessage = (
+      <>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Remove like from this blog?
+        </Typography>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
+          <Button variant='contained' onClick={handleDeleteLikeClose}>Cancel</Button>
+          <Button variant='contained' onClick={handleDeleteLikeConfirm} sx={{
+            backgroundColor: red[600],
+            color: 'white',
+            '&:hover': {
+              backgroundColor: red[800]
+            }
+          }}>Remove Like</Button>
+        </Box>
+      </>
+    )
+  }
+
+
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   return (
 
@@ -408,6 +490,7 @@ export default function Note({ blog }) {
                 }}
               >
                 <Button onClick={handleDelete} ><DeleteForeverOutlinedIcon /></Button>
+
                 <Modal
                   open={deleteOpen}
                   onClose={handleDeleteClose}
@@ -427,6 +510,16 @@ export default function Note({ blog }) {
         </CardContent>
 
       </CardActionArea>
+      <Modal
+        open={deleteLikeOpen}
+        onClose={handleDeleteLikeClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleDelete}>
+          {deleteLikeModalMessage}
+        </Box>
+      </Modal>
 
     </Card >
   )

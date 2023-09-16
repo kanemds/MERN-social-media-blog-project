@@ -129,9 +129,8 @@ const deleteLike = async (req, res) => {
 
   await likedBlog.deleteOne()
   console.log('like remove')
-  res.status(200).json({ message: 'unlike this blog' })
+  res.status(200).json({ message: 'The like has been successfully removed from this blog.' })
 }
-
 
 
 module.exports = { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike, findLikedBlogs }
