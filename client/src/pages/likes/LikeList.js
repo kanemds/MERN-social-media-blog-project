@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
-
 import { Box, Button, Paper, Container, Typography, AppBar, Toolbar, useScrollTrigger, IconButton } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
-import Note from '../../components/Note'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
-
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
-import { useGetBlogsQuery, useGetUserBlogsQuery } from '../blogs/blogsApiSlice'
+
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
@@ -17,7 +14,9 @@ import VerticalAlignBottomOutlinedIcon from '@mui/icons-material/VerticalAlignBo
 import VerticalAlignTopOutlinedIcon from '@mui/icons-material/VerticalAlignTopOutlined'
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
-import { useGetLikedBlogsFromUserQuery, useGetUserLikedBlogsQuery } from './likesApiSlice'
+import { useDeleteLikedFromBlogMutation, useGetLikedBlogsFromUserQuery, useGetUserLikedBlogsQuery } from './likesApiSlice'
+import LikeBlog from './LikeBlog'
+import { set } from 'lodash'
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -53,36 +52,50 @@ const buttonStyle = {
 }
 
 
-const LikeList = () => {
 
+
+const LikeList = () => {
 
   const { username } = useAuth()
 
-  const [isDesc, setIsDesc] = useState(true) // high to low
-  const [currentLikes, setCurrentLikes] = useState(null)
-  const [isReady, setIsReady] = useState(false)
-  const [searchInput, setSearchInput] = useState('')
-  const [searchResult, setSearchResult] = useState(null)
-  const [isSearch, setIsSearch] = useState(false)
+  const [
+    deleteLike,
+    {
+      data: removeMessage,
+      isLoading: isDeleteLikeLoading,
+      isSuccess: isDeleteLikeSuccess,
+      isError: isDeleteLikeError,
+      error: deleteLikeError
+    }] = useDeleteLikedFromBlogMutation()
 
-  const { likedBlogs } = useGetUserLikedBlogsQuery(username, {
-    selectFromResult: ({ data }) => ({
-      likedBlogs: data
+  const { likedBlogs, isSuccess, isLoading } = useGetUserLikedBlogsQuery(username, {
+    selectFromResult: ({ data, isSuccess, isLoading }) => ({
+      likedBlogs: data,
+      isSuccess,
+      isLoading
     })
   })
 
+
+  const [isDesc, setIsDesc] = useState(true) // high to low
+  const [currentLikes, setCurrentLikes] = useState(null)
+  const [searchInput, setSearchInput] = useState('')
+  const [searchResult, setSearchResult] = useState(null)
+  const [isSearch, setIsSearch] = useState(false)
+  const [refresh, setRefresh] = useState(false)
+
   useEffect(() => {
 
-    if (likedBlogs) {
+    if (isSuccess || refresh) {
       setCurrentLikes(Object.values(likedBlogs))
-      setIsReady(true)
+      setRefresh(false)
     }
-  }, [likedBlogs])
 
+  }, [isSuccess, refresh])
 
   let content
 
-  if (isReady === false) {
+  if (isLoading) {
     content = (
       <Box sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         <LoadingSpinner />
@@ -126,7 +139,9 @@ const LikeList = () => {
     }
   }
 
-  if (isReady === true) {
+
+
+  if (isSuccess) {
 
     content = (
 
@@ -134,12 +149,16 @@ const LikeList = () => {
 
         {currentLikes?.map(blog =>
           <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-            <Note blog={blog} />
-          </Grid>)}
+            <LikeBlog blog={blog} deleteLike={deleteLike} setRefresh={setRefresh} isDeleteLikeLoading={isDeleteLikeLoading} removeMessage={removeMessage} />
+          </Grid>
 
-      </Grid>
+        )
+        }
+      </Grid >
     )
   }
+
+
 
   return (
 

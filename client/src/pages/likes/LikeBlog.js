@@ -4,32 +4,20 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import { CardActionArea, Avatar, Box, Button, Popover, IconButton, SvgIcon } from '@mui/material'
-import noteBook from '../images/noteBook.jpg'
 import moment from 'moment'
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
-import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { timeDisplayOptions } from '../config/timeDisplayOptions'
-import useAuth from '../hooks/useAuth'
+import { timeDisplayOptions } from '../../config/timeDisplayOptions'
+import useAuth from '../../hooks/useAuth'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
-import RecommendIcon from '@mui/icons-material/Recommend'
-import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
-import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
-import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import Modal from '@mui/material/Modal'
-import { useDeleteBlogMutation } from '../pages/blogs/blogsApiSlice'
-import LoadingSpinner from './LoadingSpinner'
+import LoadingSpinner from '../../components/LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
-import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../pages/likes/likesApiSlice'
-import { set } from 'lodash'
-import { apiSlice } from '../app/api/apiSlice'
+import { apiSlice } from '../../app/api/apiSlice'
 import { useDispatch } from 'react-redux'
+import { set } from 'lodash'
 
 
 const iconStyle = {
@@ -55,71 +43,13 @@ const styleDelete = {
 }
 
 
-const fadeStyle = {
-  animation: 'fadeInAnimation ease 2s',
-  animationIterationCount: 1,
-  animationFillMode: 'forwards',
-}
-
-const loadedStyles = `
-  @keyframes fadeInAnimation {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-`
-const removedStyles = `
-  @keyframes fadeInAnimation {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
-`
 
 
-export default function Note({ blog }) {
 
+export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, isDeleteLikeLoading }) {
 
 
   const dispatch = useDispatch()
-
-  const [
-    deleteBlog,
-    {
-      data,
-      isLoading,
-      isSuccess,
-      isError,
-      error }
-  ] = useDeleteBlogMutation()
-
-  const [
-    addedLike,
-    {
-
-      isLoading: isAddLikeLoading,
-      isSuccess: isAddLikeSuccess,
-      isError: isAddLikeError,
-      error: addLikeError
-    }
-  ] = useAddLikedToBlogMutation()
-
-  const [
-    deleteLike,
-    {
-      data: removeMessage,
-      isLoading: isDeleteLikeLoading,
-      isSuccess: isDeleteLikeSuccess,
-      isError: isDeleteLikeError,
-      error: deleteLikeError
-    }] = useDeleteLikedFromBlogMutation()
-
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -127,16 +57,13 @@ export default function Note({ blog }) {
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
-  const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
   const [isLiked, setIsLiked] = useState(blog.isLike || null)
   const [isFavorite, setIsFavorite] = useState(false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
-  const [isDeleteReady, setIsDeleteReady] = useState(null)
-  const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(null)
-  const [isBlogRemove, setIsBlogRemove] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(false)
 
 
   const current = Date.parse(new Date())
@@ -145,52 +72,26 @@ export default function Note({ blog }) {
 
   const timeInMillisecond = current - postedDay
 
-  useEffect(() => {
 
-    if (isSuccess && isDeleteReady === true) {
-      setDeleteMessage(data.message)
-      setTimeout(() => {
-        setDeleteOpen(false)
-        setAnchorEl(null)
-        console.log('remove blog')
-        dispatch(apiSlice.util.invalidateTags([
-          { type: 'Blog', id: blog.id },
-          { type: 'Blog', id: 'LIST' }
-        ]))
-      }, 1400)
-    }
-  }, [isSuccess, isDeleteReady])
 
   useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsDeleteReady(true)
-      }, 1400)
-    }
-  }, [isLoading])
-
-  useEffect(() => {
-    if (isDeleteLikeSuccess && isDeleteLikeReady === true && pathname === '/blogs/liked') {
+    if (isDeleteLikeReady && removeMessage) {
       setDeleteMessage(removeMessage?.message)
       setTimeout(() => {
         setDeleteLikeOpen(false)
+        setRefresh(true)
+        setIsDeleteLikeReady(false)
+        setLoading(false)
         console.log('remove Like')
-        dispatch(apiSlice.util.invalidateTags([
-          { type: 'Blog', id: blog.id },
-          { type: 'Blog', id: 'LIST' },
-          { type: 'Like', id: blog.id },
-          { type: 'Like', id: 'LIST' }
-        ]))
+        dispatch(apiSlice.util.invalidateTags(['Blog', 'Like']))
       }, 1400)
     }
 
-    if (isDeleteLikeSuccess && pathname !== '/blogs/liked') {
-      setIsLiked(false)
-    }
-  }, [isDeleteLikeSuccess, isDeleteLikeReady])
+  }, [isDeleteLikeReady])
 
   useEffect(() => {
-    if (isDeleteLikeLoading && pathname === '/blogs/liked') {
+    if (isDeleteLikeLoading) {
+      setLoading(true)
       setTimeout(() => {
         console.log('loading')
         setIsDeleteLikeReady(true)
@@ -198,26 +99,8 @@ export default function Note({ blog }) {
     }
   }, [isDeleteLikeLoading])
 
-  useEffect(() => {
-    if (isAddLikeSuccess) {
-      setIsLiked(true)
-    }
-  }, [isAddLikeSuccess])
 
 
-  const handleClick = (event) => {
-    if (isClick) {
-      setAnchorEl(event.currentTarget)
-    }
-  }
-
-  const handleClose = () => {
-    setIsClick(false)
-    setAnchorEl(null)
-  }
-
-  const open = Boolean(anchorEl)
-  const id = open ? 'simple-popover' : undefined
 
   const handleToSelectedBlog = () => {
     if (!isClick) {
@@ -225,40 +108,13 @@ export default function Note({ blog }) {
     }
   }
 
-  const handleLook = () => {
-    if (isClick) {
-      navigate(`/blogs/post/${blog.id}`)
-    }
-  }
-
-  const handleEdit = () => {
-    navigate(`/blogs/post/edit/${blog.id}`)
-  }
-
-
-  const handleDeleteClose = () => {
-    setDeleteOpen(false)
-    setIsClick(false)
-    setAnchorEl(null)
-  }
-
-
-
   const handleDeleteLikeClose = () => {
     setDeleteLikeOpen(false)
   }
 
-  const handleDelete = () => setDeleteOpen(true)
-
-  const handleDeleteConfirm = async (e) => {
-    e.preventDefault()
-    setIsDeleteReady(false)
-    await deleteBlog({ id: blog.id })
-  }
 
   const handleDeleteLikeConfirm = async (e) => {
     e.preventDefault()
-    setIsDeleteLikeReady(false)
     await deleteLike({ id: blog.id })
   }
 
@@ -273,73 +129,26 @@ export default function Note({ blog }) {
   }
 
   const handleLiked = async (e) => {
-    e.preventDefault()
-    // setIsLiked(prev => !prev)
-    if (pathname === '/blogs/liked') {
-      setDeleteLikeOpen(true)
-    } else {
-      if (!isLiked) {
-        await addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
-      } else {
-        await deleteLike({ id: blog.id })
-      }
-    }
-
+    setDeleteLikeOpen(true)
   }
 
-
-  ////////////////////////////////////////////////// delete blog ////////////////////////////////////////////////////
-  let deleteModalMessage
-
-  if (isDeleteReady === false) {
-
-    deleteModalMessage = <LoadingSpinner />
-  }
-
-  if (!isLoading && !isSuccess) {
-    deleteModalMessage = (
-      <>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Delete the selected blog?
-        </Typography>
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
-          <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
-          <Button variant='contained' onClick={handleDeleteConfirm} sx={{
-            backgroundColor: red[600],
-            color: 'white',
-            '&:hover': {
-              backgroundColor: red[800]
-            }
-          }}>Delete Blog</Button>
-        </Box>
-      </>
-    )
-  }
-
-  if (isDeleteReady === true && deleteMessage) {
-    deleteModalMessage = (
-      <Typography id="modal-modal-title" variant="h6" component="h2">
-        {deleteMessage}
-      </Typography>
-    )
-  }
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////// delete like ////////////////////////////////////////////////////
   let deleteLikeModalMessage
 
-  if (isDeleteLikeReady === false) {
+  if (loading) {
     deleteLikeModalMessage = <LoadingSpinner />
   }
 
-  if (isDeleteLikeReady === true && deleteMessage) {
+  if (isDeleteLikeReady) {
     deleteLikeModalMessage = (
       <Typography id="modal-modal-title" variant="h6" component="h2">
         {deleteMessage}
       </Typography>
     )
   }
-  if (!isDeleteLikeLoading && !isDeleteLikeSuccess) {
+
+  if (!loading) {
     deleteLikeModalMessage = (
       <>
         <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -366,7 +175,7 @@ export default function Note({ blog }) {
   return (
 
     <Card
-      // style={fadeStyle}
+
       sx={{
         p: 0,
         maxWidth: 272,
@@ -378,7 +187,7 @@ export default function Note({ blog }) {
       }}
     >
       {/* keyframes animation will only apply to elements within the scope of the component. It won't affect other elements on the page, */}
-      {/* <style>{loadedStyles}</style> */}
+
       <CardActionArea
         component="div"
         sx={{
@@ -496,51 +305,8 @@ export default function Note({ blog }) {
                     new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
                 }
               </Typography>
-              {blog.user === username || blog.user === userId ?
-                <IconButton
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  aria-describedby={id}
-                  variant="contained"
-                  onClick={handleClick}
-                  sx={{ p: 0, '&:hover': { backgroundColor: 'white', color: '#1976d2' } }}
 
-                >
-                  <MoreVertOutlinedIcon sx={{ fontSize: '20px' }} />
-                </IconButton>
-                : ''}
 
-              <Popover
-                onMouseOver={() => setIsClick(true)}
-                onMouseOut={() => setIsClick(false)}
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-              >
-                <Button onClick={handleDelete} ><DeleteForeverOutlinedIcon /></Button>
-
-                <Modal
-                  open={deleteOpen}
-                  onClose={handleDeleteClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={styleDelete}>
-                    {deleteModalMessage}
-                  </Box>
-                </Modal>
-                <Button onClick={handleEdit}><EditNoteOutlinedIcon /></Button>
-                <Button onClick={handleLook}><RemoveRedEyeOutlinedIcon /></Button>
-              </Popover>
             </Box>
 
           </Box>
