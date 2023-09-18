@@ -109,6 +109,33 @@ const getAllBlogs = async (req, res) => {
 
   res.status(200).json(blogsWithUsers)
 }
+
+// @desc Get blogs for user
+// route Get /blogs/user
+// @access Private
+const getBlogsForUser = async (req, res) => {
+  const { id } = req.query
+  console.log(id)
+
+  const findUser = await User.findById(id).exec()
+
+  if (!findUser) return res.status(400).json({ message: 'No user found' })
+
+
+  const currentUserBlogs = await Blog.aggregate([
+    { $match: { user_id: findUser._id } }
+  ])
+
+  if (!currentUserBlogs.length) return res.status(400).json({ message: 'No blog found' })
+
+
+  const decOrderBlogs = await currentUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
+  res.status(200).json(decOrderBlogs)
+}
+
+
+
 // @desc Get single blog
 // route Get /blogs/post
 // @access Private
@@ -316,4 +343,4 @@ const deleteBlog = async (req, res) => {
 
 }
 
-module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog, getSingleBlog, getPaginatedBlogs }
+module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog, getSingleBlog, getPaginatedBlogs, getBlogsForUser }

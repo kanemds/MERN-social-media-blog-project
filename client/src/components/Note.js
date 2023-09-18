@@ -125,7 +125,7 @@ export default function Note({ blog }) {
         console.log('run this setTimeout')
         setDeleteOpen(false)
         setAnchorEl(null)
-        dispatch(apiSlice.util.invalidateTags(['Blog']))
+        dispatch(apiSlice.util.invalidateTags(['Blog', 'Like']))
       }, 1400)
     }
   }, [isSuccess, isDeleteReady])

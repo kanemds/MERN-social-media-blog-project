@@ -3,7 +3,7 @@ const Blog = require('../models/Blog')
 const Like = require('../models/Like')
 
 // @desc Get all likes
-// route Get /lies
+// route Get /likes
 // @access Private
 const getAllLikes = async (req, res) => {
   const likes = await Like.find().lean()
@@ -14,7 +14,7 @@ const getAllLikes = async (req, res) => {
 }
 
 // // @desc Get likes for specific blog
-// // route Get /lies
+// // route Get /likes
 // // @access Private
 // const getLikesFromBlog = async (req, res) => {
 //   const { blog_id } = req.body
@@ -26,7 +26,9 @@ const getAllLikes = async (req, res) => {
 //   res.status(200).json(numbersOfLike)
 // }
 
-
+// @desc Get user likes
+// route Get /likes/user
+// @access Private
 const getLikesForUser = async (req, res) => {
 
   const { username } = req.query

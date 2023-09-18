@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { getAllBlogs, updateBlog, createBlog, deleteBlog, getSingleBlog, getPaginatedBlogs } = require('../controllers/blogsController')
+const { getAllBlogs, updateBlog, createBlog, deleteBlog, getSingleBlog, getPaginatedBlogs, getBlogsForUser } = require('../controllers/blogsController')
 
 router.route('/')
   .get(getAllBlogs)
@@ -9,6 +9,9 @@ router.route('/')
 
 router.route('/paginatedBlogs')
   .get(getPaginatedBlogs)
+
+router.route('/user')
+  .get(getBlogsForUser)
 
 router.route('/:id')
   .get(getSingleBlog)
