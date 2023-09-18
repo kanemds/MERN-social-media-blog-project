@@ -85,8 +85,7 @@ const BlogsList = () => {
 
   })
 
-  console.log(isLoading)
-  console.log(error.data.message)
+
 
   // console.log('userBlogs', userBlogs)
 
