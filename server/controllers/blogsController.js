@@ -143,15 +143,15 @@ const getSingleBlog = async (req, res) => {
   const { id } = req.params
   const blog = await Blog.findById(id).lean().exec()
 
-
   if (!blog) {
     return res.status(404).json({ message: 'No blog found' })
   }
 
-
   const blogUser = await User.findById(blog.user).lean().exec()
 
   const blogWithUser = { ...blog, user: blogUser.username }
+
+
 
   res.status(200).json(blogWithUser)
 }
