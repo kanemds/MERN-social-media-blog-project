@@ -58,7 +58,7 @@ const styleDelete = {
 
 export default function Note({ blog }) {
 
-  // console.log(blog)
+
 
   const dispatch = useDispatch()
 
@@ -122,10 +122,9 @@ export default function Note({ blog }) {
     if (isSuccess && isDeleteReady === true) {
       setDeleteMessage(data.message)
       setTimeout(() => {
-        console.log('run this setTimeout')
         setDeleteOpen(false)
         setAnchorEl(null)
-        dispatch(apiSlice.util.invalidateTags(['Blog', 'Like']))
+        dispatch(apiSlice.util.invalidateTags(['Blog']))
       }, 1400)
     }
   }, [isSuccess, isDeleteReady])
@@ -142,7 +141,6 @@ export default function Note({ blog }) {
     if (isDeleteLikeSuccess && isDeleteLikeReady === true && pathname === '/blogs/liked') {
       setDeleteMessage(removeMessage?.message)
       setTimeout(() => {
-        console.log('finish')
         setDeleteLikeOpen(false)
         dispatch(apiSlice.util.invalidateTags(['Blog', 'Like']))
       }, 1400)
@@ -459,7 +457,7 @@ export default function Note({ blog }) {
                     new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
                 }
               </Typography>
-              {blog.user === username ?
+              {blog.user === username || blog.user === userId ?
                 <IconButton
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}

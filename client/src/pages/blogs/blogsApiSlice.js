@@ -54,6 +54,32 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         return [{ type: 'Blog', id: arg.id }]
       }
     }),
+    getUserBlogsFromUserId: builder.query({
+      query: (id) => ({
+        url: `/blogs/user?id=${id}`,
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      keepUnusedDataFor: 300,
+      transformResponse: (response, meta, arg) => {
+        const loadedBlogs = response.map(like => {
+          like.id = like._id
+          return like
+        })
+        return loadedBlogs
+      },
+      providesTags: (result, error, arg) => {
+        if (result?.ids) {
+          return [
+            { type: 'Blog', id: 'LIST' },
+            ...result.ids.map(id => ({ type: 'Blog', id }))
+          ]
+        } else {
+          return [{ type: 'Blog', id: 'LIST' }]
+        }
+      }
+    }),
     getPaginatedBlogs: builder.query({
       query: (pageNumber) => ({
         url: `/blogs/paginatedBlogs?page=${pageNumber}`,
@@ -138,5 +164,6 @@ export const {
   useGetPaginatedBlogsQuery,
   useAddNewBlogMutation,
   useUpdateBlogMutation,
-  useDeleteBlogMutation
+  useDeleteBlogMutation,
+  useGetUserBlogsFromUserIdQuery
 } = blogsApiSlice

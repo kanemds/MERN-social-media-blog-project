@@ -15,11 +15,13 @@ import { red } from '@mui/material/colors'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import { apiSlice } from '../../app/api/apiSlice'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
 import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
 
 import './imagesDisplaySlider.css'
+import { useDispatch } from 'react-redux'
 
 const style = {
   position: 'absolute',
@@ -78,12 +80,15 @@ const iconStyle = {
 
 const SingleBlog = () => {
 
+
+
   const mediumBP = useMediaQuery('(min-width:750px)') // true when larger
   const smallBP = useMediaQuery('(min-width:550px)') // true when larger
   const xSamllBP = useMediaQuery('(min-width:466px)') // true when larger
 
   const { id } = useParams()
   const { username, userId } = useAuth()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const {
@@ -174,9 +179,9 @@ const SingleBlog = () => {
     if (isDeleteSuccess && isDeleteReady === true && message?.message) {
       setDeleteMessage(message.message)
       setTimeout(() => {
-        // console.log('run this setTimeout')
         setDeleteOpen(false)
-        navigate('/blogs', { replace: true })
+        dispatch(apiSlice.util.invalidateTags(['Blog']))
+        navigate('/blogs')
       }, 1400)
     } else {
       setIsDeleteReady(false)

@@ -8,7 +8,7 @@ import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
-import { useGetBlogsQuery, useGetUserBlogsQuery } from './blogsApiSlice'
+import { useGetBlogsQuery, useGetUserBlogsFromUserIdQuery, useGetUserBlogsQuery } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
@@ -57,7 +57,7 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Public' }, { id: 3
 const BlogsList = () => {
 
 
-  const { username } = useAuth()
+  const { username, userId } = useAuth()
 
   const [isSelected, setIsSelected] = useState('All')
   const [isDesc, setIsDesc] = useState(true) // high to low
@@ -74,14 +74,31 @@ const BlogsList = () => {
     error
   } = useGetBlogsQuery()
 
+  const { userBlogs } = useGetUserBlogsFromUserIdQuery(userId, {
+    selectFromResult: ({ data }) => ({
+      userBlogs: data
+    })
+  })
+
+  // console.log('userBlogs', userBlogs)
+
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     const findUserBlogs = Object.values(data?.entities)?.filter(blog => blog.user === username)
+  //     const descendingOrder = findUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  //     setCurrentUserBlogs(descendingOrder)
+  //   }
+  // }, [isSuccess])
 
   useEffect(() => {
-    if (isSuccess) {
-      const findUserBlogs = Object.values(data?.entities)?.filter(blog => blog.user === username)
-      const descendingOrder = findUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      setCurrentUserBlogs(descendingOrder)
+    if (userBlogs) {
+
+      setCurrentUserBlogs(Object.values(userBlogs))
     }
-  }, [isSuccess])
+  }, [userBlogs])
+
+
 
 
   const handleSelect = (e) => {
@@ -141,7 +158,7 @@ const BlogsList = () => {
   const publicBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'public')
   const privateBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'private')
 
-  if (isSuccess) {
+  if (userBlogs) {
 
     content = (
 

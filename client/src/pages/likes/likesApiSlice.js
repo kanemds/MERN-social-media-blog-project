@@ -10,9 +10,9 @@ export const likesApiSlice = apiSlice.injectEndpoints({
     getLikedBlogsFromUser: builder.query({
       query: (username) => ({
         url: `/likes/user?username=${username}`,
-        // validateStatus: (response, result) => {
-        //   return response.status === 200 && !result.isError
-        // }
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
@@ -36,9 +36,9 @@ export const likesApiSlice = apiSlice.injectEndpoints({
     getUserLikedBlogs: builder.query({
       query: (username) => ({
         url: `/likes/user/blogs?username=${username}`,
-        // validateStatus: (response, result) => {
-        //   return response.status === 200 && !result.isError
-        // }
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
