@@ -66,19 +66,27 @@ const BlogsList = () => {
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
 
-  const {
-    data,
-    isLoading,
-    isSuccess,
-    isError,
-    error
-  } = useGetBlogsQuery()
+  // const {
+  //   data,
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  //   error
+  // } = useGetBlogsQuery()
 
-  const { userBlogs } = useGetUserBlogsFromUserIdQuery(userId, {
-    selectFromResult: ({ data }) => ({
-      userBlogs: data
-    })
+  const { userBlogs, isLoading, isSuccess, isError, error } = useGetUserBlogsFromUserIdQuery(userId, {
+    selectFromResult: ({ data, isLoading, isSuccess, isError, error }) => ({
+      userBlogs: data,
+      isLoading,
+      isSuccess,
+      isError,
+      error
+    }),
+
   })
+
+  console.log(isLoading)
+  console.log(error.data.message)
 
   // console.log('userBlogs', userBlogs)
 
@@ -92,11 +100,10 @@ const BlogsList = () => {
   // }, [isSuccess])
 
   useEffect(() => {
-    if (userBlogs) {
-
+    if (isSuccess) {
       setCurrentUserBlogs(Object.values(userBlogs))
     }
-  }, [userBlogs])
+  }, [isSuccess])
 
 
 
@@ -111,6 +118,14 @@ const BlogsList = () => {
     content = (
       <Box sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         <LoadingSpinner />
+      </Box>
+    )
+  }
+
+  if (isError) {
+    content = (
+      <Box sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+        <Typography sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{error.data.message}</Typography>
       </Box>
     )
   }
@@ -224,7 +239,6 @@ const BlogsList = () => {
         </Box>
       </Box>
       <Box sx={{ p: 2 }}>
-
         {Array.isArray(searchResult) && searchResult.length && isSearch ?
 
           <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
