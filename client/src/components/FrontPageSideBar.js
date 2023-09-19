@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, IconButton, Typography, FormControlLabel, Switch, Collapse, Paper, Grow, Toolbar, AppBar } from '@mui/material'
+import { Box, Button, IconButton, List, Typography, SwipeableDrawer, FormControlLabel, Switch, Collapse, Paper, Grow, Toolbar, AppBar } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import ActiveCalender from '../pages/blogs/ActiveCalender'
 import DehazeIcon from '@mui/icons-material/Dehaze'
@@ -17,6 +17,7 @@ import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import { useMediaQuery } from '@mui/material'
 
 
 const SideButton = styled(Button)({
@@ -39,7 +40,7 @@ const Section = styled(Box)({
 
 const Divider = styled(Box)({
   height: '100%',
-  width: '100%',
+  maxWidth: '240px',
   borderTop: '1px solid lightGrey',
   marginTop: 12,
   marginBottom: 12,
@@ -60,9 +61,17 @@ const style = {
   justifyContent: 'center',
 }
 
+const IconButtonStyle = {
+  width: '40px', height: '40px'
+}
 
 
-const FrontPageSideBar = ({ isShow }) => {
+const FrontPageSideBar = () => {
+
+  const largeBP = useMediaQuery('(min-width:1300px)')
+  const mediumBP = useMediaQuery('(min-width:750px)')
+
+
 
   const navigate = useNavigate()
   const { id } = useParams()
@@ -76,8 +85,11 @@ const FrontPageSideBar = ({ isShow }) => {
 
   const [checked, setChecked] = useState(false)
   const [open, setOpen] = React.useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const [isShow, setIsShow] = useState(true)
+  const [keepOpen, setKeepOpen] = useState(true)
+  const [state, setState] = React.useState({
+    left: false,
+  })
 
 
   useEffect(() => {
@@ -88,6 +100,42 @@ const FrontPageSideBar = ({ isShow }) => {
     }
   }, [pathname])
 
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return
+    }
+    if (open === true) {
+      setIsShow(true)
+    } else {
+      setIsShow(false)
+    }
+    setState({ ...state, [anchor]: open })
+  }
+
+  useEffect(() => {
+    setState({ ...state, left: false })
+
+    if (!largeBP) {
+      setIsShow(false)
+    }
+    if (largeBP && keepOpen) {
+      setIsShow(true)
+    }
+  }, [largeBP])
+
+
+
+  const handleMenu = () => {
+    setIsShow(prev => !prev)
+    setKeepOpen(prev => !prev)
+  }
+
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   const handleToHome = () => {
     navigate('/')
@@ -121,10 +169,111 @@ const FrontPageSideBar = ({ isShow }) => {
     </SideButton>
   )
 
+  const list = (anchor) => (
+    <Box
+      // sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 288 }}
+      sx={{ width: '288px', height: '100%' }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <Box sx={{ height: '70px', width: '100%', background: '#1976d2' }}>
+
+      </Box>
+      <Box sx={{ height: '80px', display: 'flex', alignItems: 'flex-end', ml: 3, mr: 3 }}>
+        <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
+          <DehazeIcon color='primary' />
+        </IconButton>
+      </Box>
+      <List style={{ padding: 0 }} sx={{ ml: 3, mr: 3 }}>
+        <Section >
+          <SideButton onClick={handleToHome}>
+            <HomeIcon />
+            <ButtonInfo >Home</ButtonInfo>
+          </SideButton>
+
+        </Section>
+
+        <Divider />
+        <ActiveCalender />
+        <Divider />
+        <Section >
+          <SideButton  >
+            <ArticleOutlinedIcon />
+            <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
+          </SideButton>
+          {checked ?
+            <Grow
+              in={checked}
+              style={{ transformOrigin: '0 0 0' }}
+              {...(checked ? { timeout: 800 } : { timeout: 600 })}
+            >
+              {icon}
+            </Grow>
+            : ''
+          }
+          <SideButton >
+            <PostAddIcon />
+            <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
+          </SideButton>
+        </Section>
+        <Divider />
+        <Section >
+          <SideButton >
+            <Diversity2OutlinedIcon onClick={handleToSubscribed} />
+            <ButtonInfo>  Friend's Post(s)</ButtonInfo>
+          </SideButton>
+          <SideButton >
+            <StarRoundedIcon onClick={handleToFavorite} />
+            <ButtonInfo>  Favorite</ButtonInfo>
+          </SideButton>
+          <SideButton >
+            <RecommendIcon onClick={handleToLiked} />
+            <ButtonInfo>  Liked</ButtonInfo>
+          </SideButton>
+        </Section>
+        <Divider />
+        <Section>
+          <SideButton  >
+            <SettingsIcon onClick={handleToSetting} />
+            <ButtonInfo >  Settings</ButtonInfo>
+          </SideButton>
+        </Section>
+      </List >
+    </Box >
+  )
+
+
   return (
-    <Box sx={{ position: 'sticky', top: '0px', width: isShow ? '280px' : '40px', ml: 3, mr: 3, mb: 10 }}>
-      {isShow ?
+    <Box sx={{ position: 'sticky', top: '100px', width: isShow ? '280px' : '40px', ml: 3, mr: 3, mb: 10 }}>
+
+      {largeBP ?
+        <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
+          <DehazeIcon color='primary' />
+        </IconButton>
+        :
         <>
+          {['left'].map((anchor) => (
+            <Box key={anchor} >
+              <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
+                <DehazeIcon color='primary' />
+              </IconButton>
+              <SwipeableDrawer
+                anchor={anchor}
+                open={state[anchor]}
+                onClose={toggleDrawer(anchor, false)}
+                onOpen={toggleDrawer(anchor, true)}
+              >
+                {list(anchor)}
+              </SwipeableDrawer>
+            </Box>
+          ))}
+        </>
+      }
+
+
+      {isShow && largeBP ?
+        <Box sx={{ width: '260px' }}>
           <Divider />
           <Section >
             <SideButton onClick={handleToHome}>
@@ -179,9 +328,9 @@ const FrontPageSideBar = ({ isShow }) => {
               <ButtonInfo >  Settings</ButtonInfo>
             </SideButton>
           </Section>
-        </>
+        </Box>
         :
-        <>
+        <Box sx={{ width: '40px' }}>
           <Divider />
           <Section >
 
@@ -261,7 +410,7 @@ const FrontPageSideBar = ({ isShow }) => {
             </IconButton>
 
           </Section>
-        </>
+        </Box>
 
       }
     </Box>

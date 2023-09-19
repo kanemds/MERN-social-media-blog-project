@@ -95,19 +95,19 @@ const findUnmatchedUrls = (imagesFromBD, imagesFromFE) => {
 // route Get /blogs
 // @access Private
 const getAllBlogs = async (req, res) => {
-  const blogs = await Blog.find().lean()
+  const blogs = await Blog.find().lean().exec()
 
-  if (!blogs?.length) {
-    return res.status(404).json({ message: 'No blogs found' })
+  if (!blogs || blogs.length === 0) {
+    return res.status(200).json([])
   }
 
-  // handle multiple promises concurrently and wait for all of them to resolve
-  const blogsWithUsers = await Promise.all(blogs.map(async blog => {
-    const blogUser = await User.findById(blog.user).lean().exec()
-    return { ...blog, user: blogUser.username }
-  }))
+  // // handle multiple promises concurrently and wait for all of them to resolve
+  // const blogsWithUsers = await Promise.all(blogs.map(async blog => {
+  //   const blogUser = await User.findById(blog.user).lean().exec()
+  //   return { ...blog, user: blogUser.username }
+  // }))
 
-  res.status(200).json(blogsWithUsers)
+  res.status(200).json(blogs)
 }
 
 // @desc Get blogs for user
@@ -119,15 +119,15 @@ const getBlogsForUser = async (req, res) => {
 
   const findUser = await User.findById(id).exec()
 
-  if (!findUser) return res.status(400).json({ message: 'No user found' })
+
+  if (!findUser) return res.status(200).json({ message: 'No user found' })
 
 
   const currentUserBlogs = await Blog.aggregate([
     { $match: { user_id: findUser._id } }
   ])
 
-  if (!currentUserBlogs.length) return res.status(400).json({ message: 'No blog found' })
-
+  if (!currentUserBlogs || currentUserBlogs.length === 0) return res.status(200).json([])
 
   const decOrderBlogs = await currentUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
@@ -149,11 +149,10 @@ const getSingleBlog = async (req, res) => {
 
   const blogUser = await User.findById(blog.user).lean().exec()
 
-  const blogWithUser = { ...blog, user: blogUser.username }
 
 
 
-  res.status(200).json(blogWithUser)
+  res.status(200).json(blogUser)
 }
 
 // @desc Get limited blogs
@@ -162,8 +161,6 @@ const getSingleBlog = async (req, res) => {
 const getPaginatedBlogs = async (req, res) => {
   // /blogs?page=1 is string
   const { page } = req.query
-
-  console.log(page)
 
   if (page === undefined) return res.status(400).json({ message: 'net work error, please try again' })
 
@@ -223,8 +220,9 @@ const createBlog = async (req, res) => {
 
 
   // console.log('Processed images:', processedImages)
+  console.log(currentUser)
 
-  const newBlog = await Blog.create({ user: currentUser, images: processedImages, user_id: currentUser._id, title, text, visible_to: visibleTo })
+  const newBlog = await Blog.create({ username: currentUser.username, images: processedImages, user_id: currentUser._id, title, text, visible_to: visibleTo })
 
   // res.status(201).json({ message: 'New blog created' })
   if (newBlog) {

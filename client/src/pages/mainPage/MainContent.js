@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { increment, resetCache } from '../blogs/blogSlice'
 import { entries } from 'lodash'
 import { apiSlice } from '../../app/api/apiSlice'
-
+import ClientSearchBar from '../../components/ClientSearchBar'
 
 
 
@@ -76,7 +76,9 @@ const MainContent = () => {
   const [allBlogs, setAllBlogs] = useState(null)
   const [paginatedBlogs, setPaginatedBlogs] = useState(null)
   const [likesFromUser, setLikesFromUser] = useState([])
-
+  const [searchInput, setSearchInput] = useState('')
+  const [searchResult, setSearchResult] = useState(null)
+  const [isSearch, setIsSearch] = useState(false)
   const [products, setProducts] = useState([])
   const [newBlogData, setNewBlogData] = useState([])
 
@@ -177,6 +179,26 @@ const MainContent = () => {
     setIsSelected(e.target.value)
   }
 
+  const handleSearch = () => {
+    if (!searchInput.length) return console.log('nothing')
+    const inputLowerCase = searchInput.toLowerCase()
+    // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
+    const result = products.data.filter(blog =>
+      [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
+    )
+
+    if (!result.length) {
+      setSearchInput('')
+      setIsSearch(true)
+      return setSearchResult('No search results found for blog(s)')
+    } else {
+      setSearchInput('')
+      setIsSearch(true)
+      return setSearchResult(result)
+    }
+
+  }
+
 
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -258,35 +280,37 @@ const MainContent = () => {
 
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }} maxWidth='xxl'>
 
-        <Box sx={{ position: 'sticky', top: '150px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', p: smallScreenSize ? '' : '0 8px' }}>
-            <Box >
-              {dataList?.map(category => {
-                return (
-                  <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
-                )
-              }
-              )}
-            </Box>
+        <Box sx={{ position: 'sticky', top: '0', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
+          <Box sx={{ width: '100%', mb: 1 }}>
+            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+          </Box>
+          <Box  >
+            {dataList?.map(category => {
+              return (
+                <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
+              )
+            }
+            )}
           </Box>
         </Box>
-        <Box sx={{ p: smallScreenSize ? 2 : '0 24px' }}>
-          {content}
-          {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
+      </Box>
+      <Box sx={{ p: smallScreenSize ? 2 : '0 24px' }}>
+        {content}
+        {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}
           <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}
 
-          <Box sx={{ height: 20 }}>
-            {
-              hasMore &&
-              <Box ref={elementRef}> </Box>
-            }
-          </Box>
-        </Box >
-
+        <Box sx={{ height: 20 }}>
+          {
+            hasMore &&
+            <Box ref={elementRef}> </Box>
+          }
+        </Box>
       </Box >
 
     </Box >
+
+
 
 
   )
