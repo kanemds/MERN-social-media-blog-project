@@ -5,7 +5,6 @@ import { Box, CircularProgress, Typography } from '@mui/material'
 const LoadingSpinner = () => {
   return (
     <Box>
-
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
         <CircularProgress size={74} />
         <Box
