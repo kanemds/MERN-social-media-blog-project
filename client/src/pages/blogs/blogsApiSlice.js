@@ -150,7 +150,9 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, arg) => {
         return [{
           type: 'Blog', id: arg.id
-        }, {
+        },
+        { type: 'Blog', id: 'LIST' },
+        {
           type: 'Blog', id: 'PARTIAL-LIST'
         }]
       }

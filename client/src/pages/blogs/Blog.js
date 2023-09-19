@@ -5,20 +5,22 @@ import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import { CardActionArea, Avatar, Box, Button, Popover, IconButton, SvgIcon } from '@mui/material'
 import moment from 'moment'
+import BorderColorIcon from '@mui/icons-material/BorderColor'
+import EditNoteIcon from '@mui/icons-material/EditNote'
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import useAuth from '../../hooks/useAuth'
-import StarRoundedIcon from '@mui/icons-material/StarRounded'
-import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import FavoriteIcon from '@mui/icons-material/Favorite'
 import Modal from '@mui/material/Modal'
+import { useDeleteBlogMutation } from './blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
+import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../likes/likesApiSlice'
 import { apiSlice } from '../../app/api/apiSlice'
 import { useDispatch } from 'react-redux'
-import { set } from 'lodash'
-
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 const iconStyle = {
   padding: '0px',
@@ -43,8 +45,35 @@ const styleDelete = {
 }
 
 
-export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, isDeleteLikeLoading }) {
+const fadeStyle = {
+  animation: 'fadeInAnimation ease 2s',
+  animationIterationCount: 1,
+  animationFillMode: 'forwards',
+}
 
+const loadedStyles = `
+  @keyframes fadeInAnimation {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+`
+const removedStyles = `
+  @keyframes fadeInAnimation {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+`
+
+
+export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
 
   const dispatch = useDispatch()
 
@@ -54,13 +83,12 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
+  const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
-  const [isLiked, setIsLiked] = useState(blog.isLike || null)
-  const [isFavorite, setIsFavorite] = useState(false)
-  const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
+  const [isDeleteReady, setIsDeleteReady] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(false)
 
 
   const current = Date.parse(new Date())
@@ -70,29 +98,47 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
   const timeInMillisecond = current - postedDay
 
   useEffect(() => {
-    if (isDeleteLikeReady && removeMessage) {
+
+    if (isDeleteReady && removeMessage) {
       setDeleteMessage(removeMessage?.message)
       setTimeout(() => {
-        setDeleteLikeOpen(false)
+        setDeleteOpen(false)
+        setAnchorEl(null)
         setRefresh(true)
-        setIsDeleteLikeReady(false)
+        setIsDeleteReady(false)
         setLoading(false)
-        console.log('remove Like')
+        // dispatch(apiSlice.util.invalidateTags([{ type: 'Blog', id: 'LIST' }]))
+        console.log('remove blog')
       }, 1400)
     }
+  }, [isDeleteReady])
 
-  }, [isDeleteLikeReady])
+  console.log(isDeleteReady)
 
   useEffect(() => {
-    if (isDeleteLikeLoading) {
+
+    if (isDeleteLoading) {
       setLoading(true)
       setTimeout(() => {
-        console.log('loading')
-        setIsDeleteLikeReady(true)
+        setIsDeleteReady(true)
       }, 1400)
     }
-  }, [isDeleteLikeLoading])
+  }, [isDeleteLoading])
 
+
+  const handleClick = (event) => {
+    if (isClick) {
+      setAnchorEl(event.currentTarget)
+    }
+  }
+
+  const handleClose = () => {
+    setIsClick(false)
+    setAnchorEl(null)
+  }
+
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
 
   const handleToSelectedBlog = () => {
     if (!isClick) {
@@ -100,15 +146,30 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
     }
   }
 
-  const handleDeleteLikeClose = () => {
-    setDeleteLikeOpen(false)
+  const handleLook = () => {
+    if (isClick) {
+      navigate(`/blogs/post/${blog.id}`)
+    }
+  }
+
+  const handleEdit = () => {
+    navigate(`/blogs/post/edit/${blog.id}`)
   }
 
 
-  const handleDeleteLikeConfirm = async (e) => {
+  const handleDeleteClose = () => {
+    setDeleteOpen(false)
+    setIsClick(false)
+    setAnchorEl(null)
+  }
+
+  const handleDelete = () => setDeleteOpen(true)
+
+  const handleDeleteConfirm = async (e) => {
     e.preventDefault()
-    await deleteLike({ id: blog.id })
+    await deleteBlog({ id: blog.id })
   }
+
 
   const handleUserPage = () => {
     if (isClick) {
@@ -116,52 +177,41 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
     }
   }
 
-  const handleFavorite = () => {
-    setIsFavorite(prev => !prev)
-  }
 
-  const handleLiked = async (e) => {
-    setDeleteLikeOpen(true)
-  }
-
-
-  ////////////////////////////////////////////////// delete like ////////////////////////////////////////////////////
-  let deleteLikeModalMessage
+  ////////////////////////////////////////////////// delete blog ////////////////////////////////////////////////////
+  let deleteModalMessage
 
   if (loading) {
-    deleteLikeModalMessage = <LoadingSpinner />
-  }
-
-  if (isDeleteLikeReady) {
-    deleteLikeModalMessage = (
-      <Typography id="modal-modal-title" variant="h6" component="h2">
-        {deleteMessage}
-      </Typography>
-    )
+    deleteModalMessage = <LoadingSpinner />
   }
 
   if (!loading) {
-    deleteLikeModalMessage = (
+    deleteModalMessage = (
       <>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Remove like from this blog?
+          Delete the selected blog?
         </Typography>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
-          <Button variant='contained' onClick={handleDeleteLikeClose}>Cancel</Button>
-          <Button variant='contained' onClick={handleDeleteLikeConfirm} sx={{
+          <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+          <Button variant='contained' onClick={handleDeleteConfirm} sx={{
             backgroundColor: red[600],
             color: 'white',
             '&:hover': {
               backgroundColor: red[800]
             }
-          }}>Remove Like</Button>
+          }}>Delete Blog</Button>
         </Box>
       </>
     )
   }
 
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  if (isDeleteReady) {
+    deleteModalMessage = (
+      <Typography id="modal-modal-title" variant="h6" component="h2">
+        {deleteMessage}
+      </Typography>
+    )
+  }
 
 
   return (
@@ -179,7 +229,7 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
       }}
     >
       {/* keyframes animation will only apply to elements within the scope of the component. It won't affect other elements on the page, */}
-
+      {/* <style>{loadedStyles}</style> */}
       <CardActionArea
         component="div"
         sx={{
@@ -242,46 +292,10 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
 
           <Box sx={{ display: 'flex', alignItems: 'center', height: 28, width: '100%' }}>
 
-            {/* favorite and like */}
+            {/* total like */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
-              {username !== blog.user ?
-                <IconButton
-                  disableRipple
-                  onClick={handleFavorite}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    mr: 1,
-                    '&:hover': { color: yellow[800], background: 'white' }
-                  }}
-                >
-                  {isFavorite ?
-                    <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
-                    :
-                    <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
-                : ''
-              }
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <IconButton
-                  disableRipple
-                  onClick={handleLiked}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    '&:hover': { color: red[400], background: 'white' }
-                  }}
-                >
-                  {isLiked ?
-
-                    <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
-                    :
-                    <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
+                <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
                 <Typography sx={{ color: 'black', ml: 1 }}>0</Typography>
               </Box>
             </Box>
@@ -297,24 +311,58 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
                     new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
                 }
               </Typography>
+              {blog.user === username || blog.user === userId ?
+                <IconButton
+                  onMouseOver={() => setIsClick(true)}
+                  onMouseOut={() => setIsClick(false)}
+                  aria-describedby={id}
+                  variant="contained"
+                  onClick={handleClick}
+                  sx={{ p: 0, '&:hover': { backgroundColor: 'white', color: '#1976d2' } }}
 
+                >
+                  <MoreVertOutlinedIcon sx={{ fontSize: '20px' }} />
+                </IconButton>
+                : ''}
 
+              <Popover
+                onMouseOver={() => setIsClick(true)}
+                onMouseOut={() => setIsClick(false)}
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+              >
+                <Button onClick={handleDelete} ><DeleteForeverOutlinedIcon /></Button>
+
+                <Modal
+                  open={deleteOpen}
+                  onClose={handleDeleteClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={styleDelete}>
+                    {deleteModalMessage}
+                  </Box>
+                </Modal>
+                <Button onClick={handleEdit}><EditNoteIcon /></Button>
+                <Button onClick={handleLook}><RemoveRedEyeOutlinedIcon /></Button>
+              </Popover>
             </Box>
 
           </Box>
         </CardContent>
 
       </CardActionArea>
-      <Modal
-        open={deleteLikeOpen}
-        onClose={handleDeleteLikeClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={styleDelete}>
-          {deleteLikeModalMessage}
-        </Box>
-      </Modal>
+
 
     </Card >
   )
