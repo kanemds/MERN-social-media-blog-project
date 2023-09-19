@@ -160,9 +160,11 @@ const getSingleBlog = async (req, res) => {
 // @access Private
 const getPaginatedBlogs = async (req, res) => {
   // /blogs?page=1 is string
+  //return  1
   const { page } = req.query
 
-  if (page === undefined) return res.status(400).json({ message: 'net work error, please try again' })
+
+  if (page === undefined) return res.status(400).json([])
 
   const limit = 6
 
@@ -175,6 +177,9 @@ const getPaginatedBlogs = async (req, res) => {
   // the skip method is to skip the provided document, in this case which are the document from page 1,2,3 
   // sort({_id: -1 }) desc order
   const blogs = await Blog.find().sort({ _id: -1 }).limit(limit).skip(startIndex)
+  console.log(blogs)
+
+  if (!blogs || blogs.length === 0) return res.status(200).json([])
 
   // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
   res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })

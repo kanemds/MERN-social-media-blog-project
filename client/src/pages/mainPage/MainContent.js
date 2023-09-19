@@ -127,7 +127,7 @@ const MainContent = () => {
     }
   }, [paginatedIsSuccess, paginatedData, isLikesSuccess, username]) // needs paginatedData as dependency for the latest update
 
-
+  console.log(paginatedData)
 
   useEffect(() => {
 
@@ -142,6 +142,7 @@ const MainContent = () => {
         }
       }
     })
+    if (!elementRef.current) return ''
     observer.observe(elementRef.current)
 
     return () => {
@@ -207,95 +208,113 @@ const MainContent = () => {
   let content
 
   if (paginatedIsLoading || isLikesLoading) {
-    content = (<LoadingSpinner />)
-  }
-
-  if (paginatedIsSuccess && isLikesSuccess && !username) {
     content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-        {/* {
-          isSelected === 'All' ?
-            (
-              allBlogs?.map(blog =>
-                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                  <Note blog={blog} />
-                </Grid>)
-            ) :
-            isSelected === 'Recently Upload' ?
-              (
-                recentlyUpload?.map(blog =>
-                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                    <Note blog={blog} />
-                  </Grid>)
-              ) :
-              ''
-        } */}
-        {/* 
-        {paginatedBlogs?.data?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-            <Note blog={blog} />
-          </Grid>)} */}
-
-        {/* {newData?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <Note blog={blog} />
-          </Grid>)} */}
-        {products.data?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <Note blog={blog} />
-          </Grid>)}
-      </Grid>
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <LoadingSpinner />
+      </Box>
     )
   }
 
-  if (paginatedIsSuccess && isLikesSuccess && username && newBlogData) {
+  console.log(products)
 
-    const newData = products?.data?.map((blog) => {
-      // Find the like that matches the current blog's ID
-      const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
-
-      // If a matching like is found, update the blog with the like information
-      if (matchingLike) {
-        return { ...blog, isLike: matchingLike.is_like }
-      }
-      // If no matching like is found, keep the original blog object
-      return { ...blog }
-    })
-
-    content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-
-        {newData?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <Note blog={blog} />
-          </Grid>)}
-      </Grid>
-    )
+  if (paginatedIsSuccess && products?.data?.length === 0 || paginatedIsSuccess && !products) {
+    content =
+      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography>
+          No Blogs are available at the moment
+        </Typography>
+      </Box>
+      )
   }
+
+  // if (paginatedIsSuccess && isLikesSuccess && !username) {
+  //   content = (
+  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //       {/* {
+  //         isSelected === 'All' ?
+  //           (
+  //             allBlogs?.map(blog =>
+  //               <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+  //                 <Note blog={blog} />
+  //               </Grid>)
+  //           ) :
+  //           isSelected === 'Recently Upload' ?
+  //             (
+  //               recentlyUpload?.map(blog =>
+  //                 <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+  //                   <Note blog={blog} />
+  //                 </Grid>)
+  //             ) :
+  //             ''
+  //       } */}
+  //       {/* 
+  //       {paginatedBlogs?.data?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+  //           <Note blog={blog} />
+  //         </Grid>)} */}
+
+  //       {/* {newData?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //           <Note blog={blog} />
+  //         </Grid>)} */}
+  //       {products.data?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //           <Note blog={blog} />
+  //         </Grid>)}
+  //     </Grid>
+  //   )
+  // }
+
+  // if (paginatedIsSuccess && isLikesSuccess && username && newBlogData) {
+
+  //   const newData = products?.data?.map((blog) => {
+  //     // Find the like that matches the current blog's ID
+  //     const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
+
+  //     // If a matching like is found, update the blog with the like information
+  //     if (matchingLike) {
+  //       return { ...blog, isLike: matchingLike.is_like }
+  //     }
+  //     // If no matching like is found, keep the original blog object
+  //     return { ...blog }
+  //   })
+
+  //   content = (
+  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+
+  //       {newData?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //           <Note blog={blog} />
+  //         </Grid>)}
+  //     </Grid>
+  //   )
+  // }
 
 
   return (
 
-    <Box sx={{ display: 'flex', height: '100%' }}>
+    <Box sx={{ width: '100%' }}>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }} maxWidth='xxl'>
 
-        <Box sx={{ position: 'sticky', top: '0', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
-          <Box sx={{ width: '100%', mb: 1 }}>
-            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
-          </Box>
-          <Box  >
-            {dataList?.map(category => {
-              return (
-                <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
-              )
-            }
-            )}
-          </Box>
+
+      <Box sx={{ position: 'sticky', top: '0', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
+        <Box sx={{ width: '100%', mb: 1 }}>
+          <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
         </Box>
+        <Box  >
+          {dataList?.map(category => {
+            return (
+              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
+            )
+          }
+          )}
+        </Box>
+
       </Box>
       <Box sx={{ p: smallScreenSize ? 2 : '0 24px' }}>
-        {content}
+        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
+          {content}
+        </Box>
         {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}
           <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}

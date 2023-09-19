@@ -90,13 +90,13 @@ const Layout = () => {
             </Box>
 
 
-            <Box sx={{ display: 'flex', position: 'relative', mt: '100px' }}>
+            <Box sx={{ display: 'flex', position: 'relative', minHeight: 'calc(100vh - 80px)', mt: '80px', width: '100%' }}>
 
               <FrontPageSideBar />
 
 
               <ThemeProvider theme={theme}  >
-                <Container sx={{ height: 'calc(100vh - 80px)', width: '100%' }} maxWidth='xxl'>
+                <Container maxWidth='xxl'>
                   <MainContent />
                 </Container>
               </ThemeProvider>
@@ -118,26 +118,17 @@ const Layout = () => {
           :
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
-            <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
-              <FrontPageSearchBar />
-            </Box>
-
-            <Box sx={{ display: 'flex', position: 'relative' }}>
-              <Box sx={{
-                position: 'sticky', top: '150px', zIndex: 10, backgroundColor: 'white', overflow: 'hidden', scrollbarGutter: 'stable', height: 'calc(100vh - 150px)', '&:hover': { overflowY: 'scroll' }
-              }}>
-                <FrontPageSideBar />
-              </Box>
-
+            <Box sx={{ display: 'flex', position: 'relative', minHeight: 'calc(100vh - 80px)', mt: '80px', width: '100%' }}>
+              <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
-                <Container sx={{ minHeight: 'calc(100vh - 80px)', width: '100%' }} maxWidth='xxl'>
+                <Container maxWidth='xxl'>
                   <Outlet />
                 </Container>
               </ThemeProvider>
             </Box>
           </>
         }
-      </Box>
+      </Box >
 
     )
   }
