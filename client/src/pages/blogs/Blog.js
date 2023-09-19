@@ -311,7 +311,7 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
                     new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
                 }
               </Typography>
-              {blog.user === username || blog.user === userId ?
+              {blog.username === username ?
                 <IconButton
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}

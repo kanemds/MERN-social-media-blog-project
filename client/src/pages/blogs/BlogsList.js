@@ -68,18 +68,16 @@ const BlogsList = () => {
     }
   ] = useDeleteBlogMutation()
 
-  const { userBlogs, isLoading, isSuccess } = useGetUserBlogsFromUserIdQuery(userId, {
-    selectFromResult: ({ data, isLoading, isSuccess }) => ({
+  const { userBlogs, isLoading, isSuccess, isError } = useGetUserBlogsFromUserIdQuery(userId, {
+    selectFromResult: ({ data, isLoading, isSuccess, isError }) => ({
       userBlogs: data,
       isLoading,
       isSuccess,
+      isError
     })
   })
 
-  console.log('isDeleteLoading', isDeleteLoading)
-  console.log('isDeleteSuccess', isDeleteSuccess)
-
-
+  console.log(userBlogs)
 
 
   const [isSelected, setIsSelected] = useState('All')
@@ -103,15 +101,6 @@ const BlogsList = () => {
     setIsSelected(e.target.value)
   }
 
-  let content
-
-  if (isLoading) {
-    content = (
-      <Box sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-        <LoadingSpinner />
-      </Box>
-    )
-  }
 
 
   const handleAscendent = () => {
@@ -156,7 +145,29 @@ const BlogsList = () => {
   const publicBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'public')
   const privateBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'private')
 
-  if (isSuccess && currentUserBlogs?.length) {
+  let content
+
+  if (isLoading) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <LoadingSpinner />
+      </Box>
+    )
+  }
+
+
+
+  if (isSuccess && !currentUserBlogs.length || isSuccess && !publicBlogs.length || isSuccess && !privateBlogs.length) {
+    content =
+      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography>
+          No Blogs are created
+        </Typography>
+      </Box>
+      )
+  }
+
+  if (isSuccess && currentUserBlogs?.length > 0) {
 
     content = (
 
@@ -223,7 +234,6 @@ const BlogsList = () => {
       </Box>
       <Box sx={{ p: 2 }}>
         {Array.isArray(searchResult) && searchResult.length && isSearch ?
-
           <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
 
             {
@@ -254,7 +264,10 @@ const BlogsList = () => {
           typeof searchResult === 'string' && searchResult.length && isSearch ?
             <Box> {searchResult}</Box>
             :
+
             content
+
+
         }
 
       </Box>

@@ -37,8 +37,8 @@ const theme = createTheme({
 
 const Layout = () => {
 
-  const largeBP = useMediaQuery('(min-width:1200px)')
-  const mediumBP = useMediaQuery('(min-width:750px)')
+  // const largeBP = useMediaQuery('(min-width:1200px)')
+  // const mediumBP = useMediaQuery('(min-width:750px)')
 
   const dispatch = useDispatch()
 
@@ -53,12 +53,8 @@ const Layout = () => {
 
   const { pathname } = useLocation()
 
-  const [isShow, setIsShow] = useState(false)
 
 
-  const handleMenu = () => {
-    setIsShow(prev => !prev)
-  }
 
   const handleLogout = () => {
     dispatch(resetCache())
@@ -92,27 +88,15 @@ const Layout = () => {
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
-            <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
-              <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
-            </Box>
 
 
-            <Box sx={{ display: 'flex', position: 'relative' }}>
-              <Box sx={{
-                position: 'sticky', top: '150px', zIndex: 10, backgroundColor: 'white', overflow: 'hidden', scrollbarGutter: 'stable', height: 'calc(100vh - 150px)', '&:hover': { overflowY: 'scroll' }
-              }}>
-                {largeBP ?
-                  <FrontPageSideBar isShow={isShow} />
-                  :
-                  mediumBP ?
-                    <FrontPageSideBarMedium />
-                    :
-                    ''
-                }
-              </Box>
+            <Box sx={{ display: 'flex', position: 'relative', mt: '100px' }}>
+
+              <FrontPageSideBar />
+
 
               <ThemeProvider theme={theme}  >
-                <Container sx={{ minHeight: '100vh', width: '100%' }} maxWidth='xxl'>
+                <Container sx={{ height: 'calc(100vh - 80px)', width: '100%' }} maxWidth='xxl'>
                   <MainContent />
                 </Container>
               </ThemeProvider>
@@ -135,21 +119,14 @@ const Layout = () => {
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
             <Box sx={{ position: 'sticky', top: '70px', height: '80px', zIndex: 10, backgroundColor: 'white', }}>
-              <FrontPageSearchBar handleMenu={handleMenu} setIsShow={setIsShow} />
+              <FrontPageSearchBar />
             </Box>
 
             <Box sx={{ display: 'flex', position: 'relative' }}>
               <Box sx={{
                 position: 'sticky', top: '150px', zIndex: 10, backgroundColor: 'white', overflow: 'hidden', scrollbarGutter: 'stable', height: 'calc(100vh - 150px)', '&:hover': { overflowY: 'scroll' }
               }}>
-                {largeBP ?
-                  <FrontPageSideBar isShow={isShow} />
-                  :
-                  mediumBP ?
-                    <FrontPageSideBarMedium />
-                    :
-                    ''
-                }
+                <FrontPageSideBar />
               </Box>
 
               <ThemeProvider theme={theme}  >

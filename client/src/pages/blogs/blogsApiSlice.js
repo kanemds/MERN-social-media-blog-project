@@ -18,12 +18,10 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: responseData => {
-
         const loadedBlogs = responseData.map(blog => {
           blog.id = blog._id
           return blog
         })
-
         return blogsAdapter.setAll(initialState, loadedBlogs)
       },
       providesTags: (result, error, arg) => {
@@ -63,11 +61,16 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
-        const loadedBlogs = response.map(like => {
-          like.id = like._id
-          return like
-        })
-        return loadedBlogs
+        if (Array.isArray(response)) {
+          const loadedBlogs = response?.map(blog => {
+            blog.id = blog._id
+            return blog
+          })
+          return loadedBlogs
+        } else {
+          return []
+        }
+
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
