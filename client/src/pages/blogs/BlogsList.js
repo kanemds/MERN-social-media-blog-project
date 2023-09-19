@@ -3,12 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { Box, Button, Paper, Container, Typography, AppBar, Toolbar, useScrollTrigger, IconButton } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
-import Note from '../../components/Note'
-import FrontPageSearchBar from '../../components/FrontPageSearchBar'
-
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
-import { useGetBlogsQuery, useGetUserBlogsFromUserIdQuery, useGetUserBlogsQuery } from './blogsApiSlice'
+import { useDeleteBlogMutation, useGetUserBlogsFromUserIdQuery } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
@@ -17,6 +14,7 @@ import VerticalAlignBottomOutlinedIcon from '@mui/icons-material/VerticalAlignBo
 import VerticalAlignTopOutlinedIcon from '@mui/icons-material/VerticalAlignTopOutlined'
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
+import Blog from './Blog'
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -59,52 +57,46 @@ const BlogsList = () => {
 
   const { username, userId } = useAuth()
 
-  const [isSelected, setIsSelected] = useState('All')
-  const [isDesc, setIsDesc] = useState(true) // high to low
-  const [currentUserBlogs, setCurrentUserBlogs] = useState(null)
-  const [searchInput, setSearchInput] = useState('')
-  const [searchResult, setSearchResult] = useState(null)
-  const [isSearch, setIsSearch] = useState(false)
+  const [
+    deleteBlog,
+    {
+      data: removeMessage,
+      isLoading: isDeleteLoading,
+      isSuccess: isDeleteSuccess,
+      isError: isDeleteError,
+      error: deleteError
+    }
+  ] = useDeleteBlogMutation()
 
-  // const {
-  //   data,
-  //   isLoading,
-  //   isSuccess,
-  //   isError,
-  //   error
-  // } = useGetBlogsQuery()
-
-  const { userBlogs, isLoading, isSuccess, isError, error } = useGetUserBlogsFromUserIdQuery(userId, {
-    selectFromResult: ({ data, isLoading, isSuccess, isError, error }) => ({
+  const { userBlogs, isLoading, isSuccess } = useGetUserBlogsFromUserIdQuery(userId, {
+    selectFromResult: ({ data, isLoading, isSuccess }) => ({
       userBlogs: data,
       isLoading,
       isSuccess,
-      isError,
-      error
-    }),
-
+    })
   })
 
+  console.log('isDeleteLoading', isDeleteLoading)
+  console.log('isDeleteSuccess', isDeleteSuccess)
 
 
-  // console.log('userBlogs', userBlogs)
 
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     const findUserBlogs = Object.values(data?.entities)?.filter(blog => blog.user === username)
-  //     const descendingOrder = findUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-  //     setCurrentUserBlogs(descendingOrder)
-  //   }
-  // }, [isSuccess])
+  const [isSelected, setIsSelected] = useState('All')
+  const [isDesc, setIsDesc] = useState(true) // high to low
+  const [currentUserBlogs, setCurrentUserBlogs] = useState([])
+  const [searchInput, setSearchInput] = useState('')
+  const [searchResult, setSearchResult] = useState(null)
+  const [isSearch, setIsSearch] = useState(false)
+  const [refresh, setRefresh] = useState(false)
+
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess || refresh) {
       setCurrentUserBlogs(Object.values(userBlogs))
+      setRefresh(false)
     }
-  }, [isSuccess])
-
-
+  }, [isSuccess, refresh])
 
 
   const handleSelect = (e) => {
@@ -117,14 +109,6 @@ const BlogsList = () => {
     content = (
       <Box sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         <LoadingSpinner />
-      </Box>
-    )
-  }
-
-  if (isError) {
-    content = (
-      <Box sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-        <Typography sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{error.data.message}</Typography>
       </Box>
     )
   }
@@ -172,7 +156,7 @@ const BlogsList = () => {
   const publicBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'public')
   const privateBlogs = currentUserBlogs?.filter(blog => blog.visible_to === 'private')
 
-  if (userBlogs) {
+  if (isSuccess && currentUserBlogs?.length) {
 
     content = (
 
@@ -182,7 +166,7 @@ const BlogsList = () => {
             (
               currentUserBlogs?.map(blog =>
                 <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                  <Note blog={blog} />
+                  <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
                 </Grid>)
             ) :
             isSelected === 'Public' ?
@@ -190,13 +174,13 @@ const BlogsList = () => {
                 publicBlogs?.map(blog =>
 
                   <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                    <Note blog={blog} />
+                    <Blog blog={blog} />
                   </Grid>)
               ) :
               (
                 privateBlogs?.map(blog =>
                   <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                    <Note blog={blog} />
+                    <Blog blog={blog} />
                   </Grid>)
               )
         }
@@ -247,7 +231,7 @@ const BlogsList = () => {
                 (
                   searchResult?.map(blog =>
                     <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Note blog={blog} />
+                      <Blog blog={blog} />
                     </Grid>)
                 ) :
                 isSelected === 'Public' ?
@@ -255,13 +239,13 @@ const BlogsList = () => {
                     searchPublicBlogs?.map(blog =>
 
                       <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Note blog={blog} />
+                        <Blog blog={blog} />
                       </Grid>)
                   ) :
                   (
                     searchPrivateBlogs?.map(blog =>
                       <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Note blog={blog} />
+                        <Blog blog={blog} />
                       </Grid>)
                   )
             }
