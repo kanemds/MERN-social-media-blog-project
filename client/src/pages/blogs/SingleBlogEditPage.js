@@ -20,7 +20,7 @@ const SingleBlogEditPage = () => {
 
 
 
-  const { data, isLoading, isSuccess, isError } = useGetSingleBlogQuery(id, { skip: isSkip })
+  const { data, isLoading, isSuccess, isError } = useGetSingleBlogQuery(id)
 
 
   useEffect(() => {
@@ -39,6 +39,8 @@ const SingleBlogEditPage = () => {
     }
   }, [isSuccess, isSkip, data])
 
+
+  console.log(data)
 
 
   let content

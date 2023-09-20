@@ -36,7 +36,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }
     }),
     getSingleBlog: builder.query({
-      query: id => ({
+      query: (id) => ({
         url: `/blogs/${id}`,
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError
@@ -44,6 +44,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
+        console.log(response)
         const id = response._id
         const blog = { ...response, id: id }
         return blog
@@ -92,26 +93,24 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
-        if (Array.isArray(response)) {
-          const loadedBlogs = response?.map(blog => {
-            blog.id = blog._id
-            return blog
-          })
-          return { ...response, data: loadedBlogs }
-        } else {
-          return []
-        }
 
+        const loadedBlogs = response?.data.map(blog => {
+          blog.id = blog._id
+          return blog
+        })
+        return { ...response, data: loadedBlogs }
       },
-      providesTags: (result, error, pageNumber) =>
-        result
+      providesTags: (result, error, pageNumber) => {
+
+        return result
           ? [
             // Provides a tag for each Blog in the current page,
             // as well as the 'PARTIAL-LIST' tag.
             ...result.data.map(id => ({ type: 'Blog', id })),
             { type: 'Blog', id: 'PARTIAL-LIST' },
           ]
-          : [{ type: 'Blog', id: 'PARTIAL-LIST' }],
+          : [{ type: 'Blog', id: 'PARTIAL-LIST' }]
+      },
       // Only have one cache entry because the arg always maps to one string
       serializeQueryArgs: ({ endpointName }) => {
         return endpointName
@@ -119,6 +118,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       // Always merge incoming data to the cache entry
       merge: (currentCache, newItems) => {
         // const checkDuplicate = newItems.filter(currentCache.data)
+
         currentCache.data.push(...newItems.data)
       },
       // Refetch when the page arg changes,is the argument in this case: pageNumber
