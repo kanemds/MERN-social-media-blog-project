@@ -39,10 +39,6 @@ const SingleBlogEditPage = () => {
     }
   }, [isSuccess, isSkip, data])
 
-
-  console.log(data)
-
-
   let content
 
   if (isReady) {

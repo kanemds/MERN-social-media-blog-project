@@ -94,22 +94,23 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
 
-        const loadedBlogs = response?.data.map(blog => {
+        const loadedBlogs = response?.data?.map(blog => {
           blog.id = blog._id
           return blog
         })
         return { ...response, data: loadedBlogs }
       },
       providesTags: (result, error, pageNumber) => {
-
-        return result
-          ? [
+        if (result?.data && Array.isArray(result?.data)) {
+          return [
             // Provides a tag for each Blog in the current page,
             // as well as the 'PARTIAL-LIST' tag.
-            ...result.data.map(id => ({ type: 'Blog', id })),
+            ...result?.data?.map(blog => ({ type: 'Blog', id: blog.id })),
             { type: 'Blog', id: 'PARTIAL-LIST' },
           ]
-          : [{ type: 'Blog', id: 'PARTIAL-LIST' }]
+        } else {
+          return [{ type: 'Blog', id: 'PARTIAL-LIST' }]
+        }
       },
       // Only have one cache entry because the arg always maps to one string
       serializeQueryArgs: ({ endpointName }) => {
@@ -118,8 +119,11 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       // Always merge incoming data to the cache entry
       merge: (currentCache, newItems) => {
         // const checkDuplicate = newItems.filter(currentCache.data)
-
-        currentCache.data.push(...newItems.data)
+        if (!currentCache || !newItems?.data) {
+          return currentCache
+        } else {
+          return currentCache.data.push(...newItems?.data)
+        }
       },
       // Refetch when the page arg changes,is the argument in this case: pageNumber
       forceRefetch({ currentArg, previousArg }) {
