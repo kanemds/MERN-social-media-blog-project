@@ -73,7 +73,8 @@ const MainContent = () => {
 
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
-  const [allBlogs, setAllBlogs] = useState(null)
+  const [allBlogs, setAllBlogs] = useState([])
+  const [blogsWithoutUser, setBlogsWithoutUser] = useState([])
   const [paginatedBlogs, setPaginatedBlogs] = useState(null)
   const [likesFromUser, setLikesFromUser] = useState([])
   const [searchInput, setSearchInput] = useState('')
@@ -116,10 +117,16 @@ const MainContent = () => {
 
 
   useEffect(() => {
-    if (paginatedIsSuccess) {
+    if (paginatedIsSuccess && !username) {
       // setPaginatedBlogs(paginatedData)
-      setProducts(paginatedData)
+      setAllBlogs(paginatedData.data)
     }
+    if (paginatedIsSuccess && username) {
+      // setPaginatedBlogs(paginatedData)
+      const withoutUser = paginatedData.data.filter(blog => blog.username !== username)
+      setBlogsWithoutUser(withoutUser)
+    }
+
     if (username && isLikesSuccess) {
       const entities = likes?.entities
       const listOfLikes = Object.values(entities)
@@ -127,8 +134,7 @@ const MainContent = () => {
     }
   }, [paginatedIsSuccess, paginatedData, isLikesSuccess, username]) // needs paginatedData as dependency for the latest update
 
-  console.log(paginatedData)
-  console.log(likes)
+
 
   useEffect(() => {
 
@@ -152,7 +158,7 @@ const MainContent = () => {
         observer.disconnect()
       }
     }
-  }, [products])
+  }, [allBlogs])
 
   // IntersectionObserver and use observer.observe(elementRef.current); to tell the observer to start observing the DOM element referenced by elementRef.current.
   // When the DOM element referenced by elementRef (in your case, the empty <Box> element) becomes visible in the viewport (e.g., as the user scrolls down)
@@ -201,6 +207,8 @@ const MainContent = () => {
 
   }
 
+  console.log(allBlogs)
+  console.log(blogsWithoutUser)
 
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -216,9 +224,8 @@ const MainContent = () => {
     )
   }
 
-  console.log(products)
 
-  if (paginatedIsSuccess && products?.data?.length === 0 || paginatedIsSuccess && !products) {
+  if (paginatedIsSuccess && allBlogs?.length === 0 || paginatedIsSuccess && blogsWithoutUser?.length === 0) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>
@@ -228,10 +235,23 @@ const MainContent = () => {
       )
   }
 
-  if (paginatedIsSuccess && isLikesSuccess && products?.data?.length > 0) {
+  // user not exist
+  if (paginatedIsSuccess && isLikesSuccess && allBlogs?.length > 0 && !username) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-        {products.data?.map(blog =>
+        {allBlogs?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <Note blog={blog} />
+          </Grid>)}
+      </Grid>
+    )
+  }
+
+  // if login user exist 
+  if (paginatedIsSuccess && isLikesSuccess && blogsWithoutUser?.length > 0 && username) {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {blogsWithoutUser?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <Note blog={blog} />
           </Grid>)}
