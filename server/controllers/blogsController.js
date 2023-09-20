@@ -147,12 +147,8 @@ const getSingleBlog = async (req, res) => {
     return res.status(404).json({ message: 'No blog found' })
   }
 
-  const blogUser = await User.findById(blog.user).lean().exec()
 
-
-
-
-  res.status(200).json(blogUser)
+  res.status(200).json(blog)
 }
 
 // @desc Get limited blogs
@@ -177,10 +173,10 @@ const getPaginatedBlogs = async (req, res) => {
   // the skip method is to skip the provided document, in this case which are the document from page 1,2,3 
   // sort({_id: -1 }) desc order
   const blogs = await Blog.find().sort({ _id: -1 }).limit(limit).skip(startIndex)
-  console.log(blogs)
+
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
-
+  console.log('blogs', blogs)
   // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
   res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })
 }

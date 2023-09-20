@@ -128,6 +128,7 @@ const MainContent = () => {
   }, [paginatedIsSuccess, paginatedData, isLikesSuccess, username]) // needs paginatedData as dependency for the latest update
 
   console.log(paginatedData)
+  console.log(likes)
 
   useEffect(() => {
 
@@ -225,6 +226,17 @@ const MainContent = () => {
         </Typography>
       </Box>
       )
+  }
+
+  if (paginatedIsSuccess && isLikesSuccess && products?.data?.length > 0) {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {products.data?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <Note blog={blog} />
+          </Grid>)}
+      </Grid>
+    )
   }
 
   // if (paginatedIsSuccess && isLikesSuccess && !username) {
