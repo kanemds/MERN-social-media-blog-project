@@ -77,7 +77,6 @@ const Layout = () => {
   // home page with slider,sidebar and searchbar 
   if (pathname === '/') {
     return main = (
-
       <Box >
         {isLoading || isError ?
           { content }
@@ -90,11 +89,8 @@ const Layout = () => {
             </Box>
 
 
-            <Box sx={{ display: 'flex', position: 'relative', minHeight: 'calc(100vh - 80px)', mt: '80px', width: '100%' }}>
-
+            <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 80px)', position: 'relative', mt: '80px', width: '100%' }}>
               <FrontPageSideBar />
-
-
               <ThemeProvider theme={theme}  >
                 <Container maxWidth='xxl'>
                   <MainContent />
@@ -104,7 +100,6 @@ const Layout = () => {
           </>
         }
       </Box >
-
     )
   }
 
