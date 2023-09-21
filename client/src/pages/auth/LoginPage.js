@@ -4,7 +4,7 @@ import { setCredentials } from './authSlice'
 import { useLoginMutation } from './authApiSlice'
 import userInputs from '../../config/userInputs'
 import UserInputField from '../../components/UserInputField'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ErrorMessage from '../../components/ErrorMessage'
 import { FormControl, OutlinedInput, MenuItem, Paper, Box, FormControlLabel, FormHelperText, Checkbox, InputLabel, FormGroup, FormLabel, Select, Typography, Button } from '@mui/material'
@@ -14,9 +14,16 @@ import usePersist from '../../hooks/usePersist'
 import { apiSlice } from '../../app/api/apiSlice'
 import { resetCache } from '../blogs/blogSlice'
 
-const LoginPage = () => {
+const LoginPage = ({ state }) => {
+
+  console.log(state)
+
+
 
   const navigate = useNavigate()
+  const location = useLocation()
+
+
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
@@ -28,6 +35,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [persist, setPersist] = usePersist()
+  const [requiredLoginMessage, setRequireLoginMessage] = useState(location.state ? location.state.message : '')
 
 
   // testing purpose
@@ -68,9 +76,11 @@ const LoginPage = () => {
   }
 
   const handleChangeUser = (e) => {
+    setRequireLoginMessage('')
     setUsername(e.target.value)
   }
   const handleChangePassword = (e) => {
+    setRequireLoginMessage('')
     setPassword(e.target.value)
   }
 
@@ -131,19 +141,27 @@ const LoginPage = () => {
       noValidate
       autoComplete="off"
       sx={{
-        minWidth: '500px',
+        minWidth: '380px',
+        maxWidth: '420px',
+        p: 3,
         width: '50%',
-        p: '50px',
-        pb: '100px',
-
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
       }}
     >
-      <Box sx={{ pb: '40px' }}>
-        <Typography variant='h4'>Login</Typography>
+
+      <Box sx={{ pb: '40px', width: '100%', minWidth: '380px', maxWidth: '420px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <Typography variant='h8' sx={{ mb: 1 }}>{requiredLoginMessage}</Typography>
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+          <Typography variant='h4' >Login</Typography>
+        </Box>
       </Box>
-      {errorMessage ?
-        <Typography>{errorMessage}</Typography>
-        : ''
+      {
+        errorMessage ?
+          <Typography>{errorMessage}</Typography>
+          : ''
       }
       <Box
         sx={{
@@ -154,7 +172,7 @@ const LoginPage = () => {
         }}
       >
 
-        <FormControl sx={{ minWidth: '420px', width: '85%', height: '130px' }}>
+        <FormControl sx={{ minWidth: '380px', maxWidth: '420px', width: '85%', height: '130px', p: 2 }}>
           <FormLabel
             error={!username?.length && focusedUser === null ? true : username.length && focusedUser === null && !checkUsername ? true : false}
           >Username</FormLabel>
@@ -174,7 +192,7 @@ const LoginPage = () => {
         </FormControl>
 
 
-        <FormControl sx={{ minWidth: '420px', width: '85%', height: '130px' }}>
+        <FormControl sx={{ minWidth: '380px', maxWidth: '420px', width: '85%', height: '130px', p: 2 }}>
           <FormLabel
             error={!password?.length && focusedPassword === null ? true : false}
           >Password</FormLabel>

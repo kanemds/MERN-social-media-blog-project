@@ -11,7 +11,6 @@ import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import moment from 'moment'
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
-import { red } from '@mui/material/colors'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
@@ -19,7 +18,10 @@ import { apiSlice } from '../../app/api/apiSlice'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
 import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
-
+import { messages } from '../../config/requireLoginMessage'
+import StarRoundedIcon from '@mui/icons-material/StarRounded'
+import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
+import { red, pink, yellow, orange } from '@mui/material/colors'
 import './imagesDisplaySlider.css'
 import { useDispatch } from 'react-redux'
 
@@ -143,6 +145,7 @@ const SingleBlog = () => {
   const [isDeleteReady, setIsDeleteReady] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false)
 
 
   useEffect(() => {
@@ -215,15 +218,33 @@ const SingleBlog = () => {
 
   const handleLiked = (e) => {
     e.preventDefault()
-    if (!isLiked) {
-      addedLike({ blog_id: id, user_id: userId, username, is_like: true })
+    if (username) {
+      if (!isLiked) {
+        addedLike({ blog_id: id, user_id: userId, username, is_like: true })
+      } else {
+        deleteLike({ id })
+      }
     } else {
-      deleteLike({ id })
+      navigate('/login', { state: { message: messages.like } })
     }
   }
 
+  const handleFavorite = () => {
+    if (!username) {
+      navigate('/login', { state: { message: messages.like } })
+    } else {
+      setIsFavorite(prev => !prev)
+    }
+  }
+
+
   const handleToSubscribed = () => {
-    setIsSubscribed(prev => !prev)
+    if (!username) {
+      navigate('/login', { state: { message: messages.subscribe } })
+    } else {
+      setIsSubscribed(prev => !prev)
+    }
+
   }
 
 
@@ -327,6 +348,7 @@ const SingleBlog = () => {
 
         <Box sx={{ width: !xSamllBP ? 360 : !smallBP ? 410 : 500, display: 'flex', flexDirection: smallBP ? 'row' : 'column', alignItems: smallBP ? 'center' : 'flex-start', mb: 2 }}>
           <Box sx={{ width: '80%', display: 'flex', alignItems: 'center', mr: 2, }} >
+
             <IconButton
               onClick={handleUserPage}
               disableRipple={true}
@@ -375,6 +397,32 @@ const SingleBlog = () => {
                 }} />
                 <Typography > Subscribe</Typography>
               </Button>
+            }
+            {username !== currentBlog.username ?
+              <IconButton
+                disableRipple
+                onClick={handleFavorite}
+                style={iconStyle}
+                sx={{
+                  mr: 1,
+                  '&:hover': { color: yellow[800], background: 'white' }
+                }}
+              >
+                {isFavorite ?
+                  <SvgIcon>
+                    <svg
+                      viewBox='0 0 20 20'
+                    >
+                      <StarRoundedIcon sx={{ color: yellow[800], fontSize: '28px' }} />
+                    </svg>
+                  </SvgIcon>
+                  :
+
+                  <StarOutlineRoundedIcon sx={{ color: '#bdbdbd', fontSize: '28px' }} />
+
+                }
+              </IconButton>
+              : ''
             }
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
