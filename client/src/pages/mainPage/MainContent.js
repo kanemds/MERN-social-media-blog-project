@@ -19,6 +19,7 @@ import { increment, resetCache } from '../blogs/blogSlice'
 import { entries } from 'lodash'
 import { apiSlice } from '../../app/api/apiSlice'
 import ClientSearchBar from '../../components/ClientSearchBar'
+import MainBlog from './MainBlog'
 
 
 
@@ -204,11 +205,7 @@ const MainContent = () => {
       setIsSearch(true)
       return setSearchResult(result)
     }
-
   }
-
-  console.log(allBlogs)
-  console.log(blogsWithoutUser)
 
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -241,7 +238,7 @@ const MainContent = () => {
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {allBlogs?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <Note blog={blog} />
+            <MainBlog blog={blog} />
           </Grid>)}
       </Grid>
     )
@@ -253,7 +250,7 @@ const MainContent = () => {
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {blogsWithoutUser?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <Note blog={blog} />
+            <MainBlog blog={blog} />
           </Grid>)}
       </Grid>
     )

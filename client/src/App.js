@@ -35,14 +35,14 @@ function App() {
 
         <Route path='login' element={<LoginPage />} />
         <Route path='register' element={<RegisterPage />} />
-
+        <Route path='/blogs/post/:id' element={<SingleBlog />} />
         {/* prefetch will only execute when user is browsing routes below */}
         <Route element={<PersistLogin />}>
 
           <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
             <Route path='blogs'>
               <Route index element={<BlogsList />} />
-              <Route path='post/:id' element={<SingleBlog />} />
+              {/* <Route path='post/:id' element={<SingleBlog />} /> */}
               <Route path='post/edit/:id' element={<SingleBlogEditPage />} />
               <Route path='user/:id' element={<BloggerHomePage />} />
               <Route path='new' element={<NewBlog />} />
