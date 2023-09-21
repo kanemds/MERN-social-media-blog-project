@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, IconButton, List, Typography, SwipeableDrawer, FormControlLabel, Switch, Collapse, Paper, Grow, Toolbar, AppBar } from '@mui/material'
+import { Box, Button, IconButton, List, Typography, SwipeableDrawer, FormControlLabel, Switch, Collapse, Paper, Grow, Toolbar, AppBar, SvgIcon } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import ActiveCalender from '../pages/blogs/ActiveCalender'
 import DehazeIcon from '@mui/icons-material/Dehaze'
@@ -18,7 +18,9 @@ import Backdrop from '@mui/material/Backdrop'
 import Fade from '@mui/material/Fade'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import { useMediaQuery } from '@mui/material'
-
+import useAuth from '../hooks/useAuth'
+import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
+import EditNoteIcon from '@mui/icons-material/EditNote'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -69,11 +71,13 @@ const IconButtonStyle = {
 const FrontPageSideBar = () => {
 
   const largeBP = useMediaQuery('(min-width:1300px)')
-  const mediumBP = useMediaQuery('(min-width:750px)')
+  const mediumBP = useMediaQuery('(max-width:1299px)')
+  const small = useMediaQuery('(max-width:792px)')
 
 
 
   const navigate = useNavigate()
+  const { username } = useAuth()
   const { id } = useParams()
   const { pathname } = useLocation()
 
@@ -84,9 +88,11 @@ const FrontPageSideBar = () => {
   })
 
   const [checked, setChecked] = useState(false)
+  const [showBack, setShowBack] = useState(false)
   const [open, setOpen] = React.useState(false)
   const [isShow, setIsShow] = useState(true)
   const [keepOpen, setKeepOpen] = useState(true)
+  const [hiddenSideBar, setHiddenSideBar] = useState(false)
   const [state, setState] = React.useState({
     left: false,
   })
@@ -98,6 +104,10 @@ const FrontPageSideBar = () => {
     } else {
       setChecked(false)
     }
+
+    if (pathname !== '/') {
+      setShowBack(true)
+    }
   }, [pathname])
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -108,30 +118,33 @@ const FrontPageSideBar = () => {
     ) {
       return
     }
-    if (open === true) {
-      setIsShow(true)
-    } else {
-      setIsShow(false)
-    }
+
     setState({ ...state, [anchor]: open })
   }
 
   useEffect(() => {
-    setState({ ...state, left: false })
+
 
     if (!largeBP) {
       setIsShow(false)
     }
-    if (largeBP && keepOpen) {
+    if (largeBP) {
       setIsShow(true)
+      setState({ ...state, left: false })
     }
-  }, [largeBP])
+
+
+  }, [largeBP, mediumBP, small])
 
 
 
   const handleMenu = () => {
-    setIsShow(prev => !prev)
-    setKeepOpen(prev => !prev)
+    if (largeBP) {
+      setIsShow(prev => !prev)
+      setKeepOpen(prev => !prev)
+    } else {
+      setKeepOpen(prev => !prev)
+    }
   }
 
   const handleOpen = () => setOpen(true)
@@ -162,10 +175,27 @@ const FrontPageSideBar = () => {
     navigate('/setting')
   }
 
-  const icon = (
-    <SideButton sx={{ ml: 3 }}>
-      <SubdirectoryArrowRightOutlinedIcon />
+  const handleToBack = () => {
+    navigate(-1)
+  }
+
+  const iconEdit = (
+    <SideButton >
+      <SvgIcon>
+        <svg
+          viewBox='-2 0 24 24'
+        >
+          <EditNoteIcon />
+        </svg>
+      </SvgIcon>
       <ButtonInfo onClick={handleToEdit}>Edit Post</ButtonInfo>
+    </SideButton>
+  )
+  const iconBack = (
+    <SideButton >
+      {/* <SubdirectoryArrowRightOutlinedIcon /> */}
+      <ForwardRoundedIcon style={{ transform: 'rotate(180deg)' }} />
+      <ButtonInfo onClick={handleToBack}>Back</ButtonInfo>
     </SideButton>
   )
 
@@ -191,7 +221,16 @@ const FrontPageSideBar = () => {
             <HomeIcon />
             <ButtonInfo >Home</ButtonInfo>
           </SideButton>
-
+          {showBack ?
+            < Grow
+              in={showBack}
+              style={{ transformOrigin: '0 0 0' }}
+              {...(showBack ? { timeout: 800 } : { timeout: 600 })}
+            >
+              {iconBack}
+            </Grow>
+            : ''
+          }
         </Section>
 
         <Divider />
@@ -202,13 +241,13 @@ const FrontPageSideBar = () => {
             <ArticleOutlinedIcon />
             <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
           </SideButton>
-          {checked ?
+          {checked && username ?
             <Grow
               in={checked}
               style={{ transformOrigin: '0 0 0' }}
               {...(checked ? { timeout: 800 } : { timeout: 600 })}
             >
-              {icon}
+              {iconEdit}
             </Grow>
             : ''
           }
@@ -243,11 +282,217 @@ const FrontPageSideBar = () => {
     </Box >
   )
 
+  let sideBar
+
+  if (largeBP) {
+    sideBar = (
+      <Box sx={{ width: '288px', ml: 3, mr: 3 }}>
+        <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
+          <DehazeIcon color='primary' />
+        </IconButton>
+        <Divider />
+        <Section >
+          <SideButton onClick={handleToHome}>
+            <HomeIcon />
+            <ButtonInfo >Home</ButtonInfo>
+          </SideButton>
+          {showBack ?
+            < Grow
+              in={showBack}
+              style={{ transformOrigin: '0 0 0' }}
+              {...(showBack ? { timeout: 800 } : { timeout: 600 })}
+            >
+              {iconBack}
+            </Grow>
+            : ''
+          }
+        </Section>
+
+        <Divider />
+        <ActiveCalender />
+        <Divider />
+        <Section >
+          <SideButton  >
+            <ArticleOutlinedIcon />
+            <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
+          </SideButton>
+          {checked && username ?
+            <Grow
+              in={checked}
+              style={{ transformOrigin: '0 0 0' }}
+              {...(checked ? { timeout: 800 } : { timeout: 600 })}
+            >
+              {iconEdit}
+            </Grow>
+            : ''
+          }
+          <SideButton >
+            <PostAddIcon />
+            <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
+          </SideButton>
+        </Section>
+        <Divider />
+        <Section >
+          <SideButton >
+            <Diversity2OutlinedIcon onClick={handleToSubscribed} />
+            <ButtonInfo>  Friend's Post(s)</ButtonInfo>
+          </SideButton>
+          <SideButton >
+            <StarRoundedIcon onClick={handleToFavorite} />
+            <ButtonInfo>  Favorite</ButtonInfo>
+          </SideButton>
+          <SideButton >
+            <RecommendIcon onClick={handleToLiked} />
+            <ButtonInfo>  Liked</ButtonInfo>
+          </SideButton>
+        </Section>
+        <Divider />
+        <Section>
+          <SideButton  >
+            <SettingsIcon onClick={handleToSetting} />
+            <ButtonInfo >  Settings</ButtonInfo>
+          </SideButton>
+        </Section>
+      </Box>
+    )
+  }
+
+  if (mediumBP) {
+    sideBar = (
+      <Box sx={{ width: '40px' }}>
+        <>
+          {['left'].map((anchor) => (
+            <Box key={anchor} >
+              <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
+                <DehazeIcon color='primary' />
+              </IconButton>
+              <SwipeableDrawer
+                anchor={anchor}
+                open={state[anchor]}
+                onClose={toggleDrawer(anchor, false)}
+                onOpen={toggleDrawer(anchor, true)}
+              >
+                {list(anchor)}
+              </SwipeableDrawer>
+            </Box>
+          ))}
+        </>
+        <Divider />
+        <Section >
+
+          <IconButton color="primary" onClick={handleToHome}>
+            <HomeIcon color='primary' />
+          </IconButton>
+
+        </Section>
+        {showBack ?
+          <IconButton color="primary" onClick={handleToBack}>
+            <ForwardRoundedIcon style={{ transform: 'rotate(180deg)' }} />
+          </IconButton>
+          : ''
+        }
+        <Divider />
+        <IconButton color="primary" onClick={handleOpen}>
+          <CalendarMonthIcon color='primary' />
+        </IconButton>
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={open}
+          onClose={handleClose}
+          closeAfterTransition
+          slots={{ backdrop: Backdrop }}
+          slotProps={{
+            borderRadius: "50px",
+            backdrop: {
+              timeout: 500,
+            },
+
+          }}
+
+        >
+          <Fade in={open} >
+            <Box sx={style} >
+              <ActiveCalender />
+            </Box>
+          </Fade>
+        </Modal>
+        <Divider />
+        <Section >
+
+          <IconButton color="primary" onClick={handleToMyPost}>
+            <ArticleOutlinedIcon color='primary' />
+          </IconButton>
+          {checked ?
+            <IconButton color="primary" onClick={handleToEdit}>
+              <SvgIcon>
+                <svg
+                  viewBox='-2 0 24 24'
+                >
+                  <EditNoteIcon />
+                </svg>
+              </SvgIcon>
+
+            </IconButton>
+            :
+            ''
+          }
+
+          <IconButton color="primary" onClick={handleToCreatePost}>
+            <PostAddIcon color='primary' />
+          </IconButton>
+
+        </Section>
+        <Divider />
+        <Section >
+          <IconButton color="primary" onClick={handleToSubscribed}>
+            <Diversity2OutlinedIcon color='primary' />
+          </IconButton>
+          <IconButton color="primary" onClick={handleToFavorite}>
+            <StarRoundedIcon color='primary' />
+          </IconButton>
+          <IconButton color="primary" onClick={handleToLiked}>
+            <RecommendIcon color='primary' />
+          </IconButton>
+
+        </Section>
+        <Divider />
+        <Section>
+          <IconButton color="primary" onClick={handleToSetting}>
+            <SettingsIcon color='primary' />
+          </IconButton>
+
+        </Section>
+      </Box>
+    )
+  }
+
+  if (small) {
+    sideBar = (
+      <>
+        {['left'].map((anchor) => (
+          <Box key={anchor} >
+            <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
+              <DehazeIcon color='primary' />
+            </IconButton>
+            <SwipeableDrawer
+              anchor={anchor}
+              open={state[anchor]}
+              onClose={toggleDrawer(anchor, false)}
+              onOpen={toggleDrawer(anchor, true)}
+            >
+              {list(anchor)}
+            </SwipeableDrawer>
+          </Box>
+        ))}
+      </>)
+  }
+
 
   return (
     <Box sx={{ position: 'sticky', top: '100px', width: isShow ? '280px' : '40px', ml: 3, mr: 3, mb: 10 }}>
 
-      {largeBP ?
+      {/* {largeBP ?
         <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
           <DehazeIcon color='primary' />
         </IconButton>
@@ -269,150 +514,10 @@ const FrontPageSideBar = () => {
             </Box>
           ))}
         </>
-      }
+      } */}
 
 
-      {isShow && largeBP ?
-        <Box sx={{ width: '260px' }}>
-          <Divider />
-          <Section >
-            <SideButton onClick={handleToHome}>
-              <HomeIcon />
-              <ButtonInfo >Home</ButtonInfo>
-            </SideButton>
-
-          </Section>
-
-          <Divider />
-          <ActiveCalender />
-          <Divider />
-          <Section >
-            <SideButton  >
-              <ArticleOutlinedIcon />
-              <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
-            </SideButton>
-            {checked ?
-              <Grow
-                in={checked}
-                style={{ transformOrigin: '0 0 0' }}
-                {...(checked ? { timeout: 800 } : { timeout: 600 })}
-              >
-                {icon}
-              </Grow>
-              : ''
-            }
-            <SideButton >
-              <PostAddIcon />
-              <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
-            </SideButton>
-          </Section>
-          <Divider />
-          <Section >
-            <SideButton >
-              <Diversity2OutlinedIcon onClick={handleToSubscribed} />
-              <ButtonInfo>  Friend's Post(s)</ButtonInfo>
-            </SideButton>
-            <SideButton >
-              <StarRoundedIcon onClick={handleToFavorite} />
-              <ButtonInfo>  Favorite</ButtonInfo>
-            </SideButton>
-            <SideButton >
-              <RecommendIcon onClick={handleToLiked} />
-              <ButtonInfo>  Liked</ButtonInfo>
-            </SideButton>
-          </Section>
-          <Divider />
-          <Section>
-            <SideButton  >
-              <SettingsIcon onClick={handleToSetting} />
-              <ButtonInfo >  Settings</ButtonInfo>
-            </SideButton>
-          </Section>
-        </Box>
-        :
-        <Box sx={{ width: '40px' }}>
-          <Divider />
-          <Section >
-
-            <IconButton color="primary" onClick={handleToHome}>
-              <HomeIcon color='primary' />
-            </IconButton>
-
-          </Section>
-
-          <Divider />
-          <IconButton color="primary" onClick={handleOpen}>
-            <CalendarMonthIcon color='primary' />
-          </IconButton>
-          <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            open={open}
-            onClose={handleClose}
-            closeAfterTransition
-            slots={{ backdrop: Backdrop }}
-            slotProps={{
-              borderRadius: "50px",
-              backdrop: {
-                timeout: 500,
-              },
-
-            }}
-
-          >
-            <Fade in={open} >
-              <Box sx={style} >
-                <ActiveCalender />
-              </Box>
-            </Fade>
-          </Modal>
-          <Divider />
-          <Section >
-
-            <IconButton color="primary" onClick={handleToMyPost}>
-              <ArticleOutlinedIcon color='primary' />
-            </IconButton>
-
-
-            {checked ?
-              <Grow
-                in={checked}
-                style={{ transformOrigin: '0 0 0' }}
-                {...(checked ? { timeout: 800 } : { timeout: 600 })}
-              >
-                {icon}
-              </Grow>
-              : ''
-            }
-
-            <IconButton color="primary" onClick={handleToCreatePost}>
-              <PostAddIcon color='primary' />
-            </IconButton>
-
-          </Section>
-          <Divider />
-          <Section >
-            <IconButton color="primary" onClick={handleToSubscribed}>
-              <Diversity2OutlinedIcon color='primary' />
-            </IconButton>
-            <IconButton color="primary" onClick={handleToFavorite}>
-              <StarRoundedIcon color='primary' />
-            </IconButton>
-            <IconButton color="primary" onClick={handleToLiked}>
-              <RecommendIcon color='primary' />
-            </IconButton>
-
-          </Section>
-          <Divider />
-          <Section>
-            <IconButton color="primary" onClick={handleToSetting}>
-              <SettingsIcon color='primary' />
-            </IconButton>
-
-          </Section>
-        </Box>
-
-      }
+      {sideBar}
     </Box>
   )
 }

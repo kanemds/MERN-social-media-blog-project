@@ -124,7 +124,7 @@ const MainContent = () => {
     }
     if (paginatedIsSuccess && username) {
       // setPaginatedBlogs(paginatedData)
-      const withoutUser = paginatedData.data.filter(blog => blog.username !== username)
+      const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
       setBlogsWithoutUser(withoutUser)
     }
 

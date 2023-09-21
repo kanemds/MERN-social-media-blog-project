@@ -25,6 +25,7 @@ import { red, pink, yellow, orange } from '@mui/material/colors'
 import './imagesDisplaySlider.css'
 import { useDispatch } from 'react-redux'
 
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -398,51 +399,53 @@ const SingleBlog = () => {
                 <Typography > Subscribe</Typography>
               </Button>
             }
-            {username !== currentBlog.username ?
-              <IconButton
-                disableRipple
-                onClick={handleFavorite}
-                style={iconStyle}
-                sx={{
-                  mr: 1,
-                  '&:hover': { color: yellow[800], background: 'white' }
-                }}
-              >
-                {isFavorite ?
-                  <SvgIcon>
-                    <svg
-                      viewBox='0 0 20 20'
-                    >
-                      <StarRoundedIcon sx={{ color: yellow[800], fontSize: '28px' }} />
-                    </svg>
-                  </SvgIcon>
-                  :
+            <Box sx={{ display: 'flex' }}>
+              {username !== currentBlog.username ?
+                <IconButton
+                  disableRipple
+                  onClick={handleFavorite}
+                  style={iconStyle}
+                  sx={{
+                    width: '28px',
+                    height: '28px',
+                    mr: 1,
+                    '&:hover': { color: yellow[800], background: 'white' }
+                  }}
+                >
+                  {isFavorite ?
 
-                  <StarOutlineRoundedIcon sx={{ color: '#bdbdbd', fontSize: '28px' }} />
+                    <StarRoundedIcon sx={{ color: yellow[800], fontSize: '28px' }} />
 
-                }
-              </IconButton>
-              : ''
-            }
+                    :
 
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton
-                disableRipple
-                onClick={handleLiked}
+                    <StarOutlineRoundedIcon sx={{ color: '#bdbdbd', fontSize: '28px' }} />
 
-                style={iconStyle}
-                sx={{
-                  '&:hover': { color: red[400], background: 'white' }
-                }}
-              >
-                {isLiked ?
+                  }
+                </IconButton>
+                : ''
+              }
 
-                  <FavoriteIcon sx={{ color: red[400] }} />
-                  :
-                  <FavoriteBorderIcon sx={{ color: '#bdbdbd' }} />
-                }
-              </IconButton>
-              <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton
+                  disableRipple
+                  onClick={handleLiked}
+
+                  style={iconStyle}
+                  sx={{
+
+                    width: '28px',
+                    height: '28px',
+                    '&:hover': { color: red[400], background: 'white' }
+                  }}
+                >
+                  {isLiked ?
+                    <FavoriteIcon sx={{ color: red[400] }} />
+                    :
+                    <FavoriteBorderIcon sx={{ color: '#bdbdbd' }} />
+                  }
+                </IconButton>
+                <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -507,7 +510,7 @@ const SingleBlog = () => {
 
   let menuButton
 
-  if (username === data?.user && mediumBP) {
+  if (username === data?.username && mediumBP) {
     menuButton = (
       <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%', ml: '7%' }}>
         <SideButton onClick={handleToEdit} sx={{ m: 1 }}>
