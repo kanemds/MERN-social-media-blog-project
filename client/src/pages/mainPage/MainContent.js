@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ActiveCalender from '../blogs/ActiveCalender'
-import { Box, Button, Paper, Container, Typography, AppBar, Toolbar } from '@mui/material'
+import { Box, Button, Paper, Container, Typography, IconButton, AppBar, Toolbar, SvgIcon } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import Note from '../../components/Note'
@@ -10,7 +10,7 @@ import FrontPageSideBar from '../../components/FrontPageSideBar'
 import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from '../blogs/blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
-
+import DehazeIcon from '@mui/icons-material/Dehaze'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
 import { useLocation } from 'react-router-dom'
@@ -20,7 +20,6 @@ import { entries } from 'lodash'
 import { apiSlice } from '../../app/api/apiSlice'
 import ClientSearchBar from '../../components/ClientSearchBar'
 import MainBlog from './MainBlog'
-
 
 
 
@@ -52,6 +51,9 @@ const PreView = styled(Button)({
   background: blue[300]
 })
 
+const IconButtonStyle = {
+  width: '40px', height: '40px'
+}
 
 
 const buttonStyle = {
@@ -63,13 +65,13 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 
 
 
-const MainContent = () => {
+const MainContent = ({ state, setState, drawerDirection, toggleDrawer }) => {
 
   const { username, userId } = useAuth()
   const dispatch = useDispatch()
   const { pageNumber } = useSelector((state) => state?.blog)
 
-
+  const small = useMediaQuery('(max-width:791px)')
   const smallScreenSize = useMediaQuery('(min-width:600px)')
 
   const [page, setPage] = useState(1)
@@ -222,7 +224,7 @@ const MainContent = () => {
   }
 
 
-  if (paginatedIsSuccess && allBlogs?.length === 0 || paginatedIsSuccess && blogsWithoutUser?.length === 0) {
+  if ((paginatedIsSuccess && allBlogs?.length === 0) || (paginatedIsSuccess && blogsWithoutUser?.length === 0)) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>
@@ -324,11 +326,19 @@ const MainContent = () => {
 
     <Box sx={{ width: '100%' }}>
 
-
-
-      <Box sx={{ position: 'sticky', top: '0', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
-        <Box sx={{ width: '100%', mb: 1 }}>
-          <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pb: '10px', pl: 2, pr: 2 }}>
+        <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
+          {small ?
+            <IconButton style={IconButtonStyle} color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
+              onClick={toggleDrawer(drawerDirection, true)}
+            >
+              <DehazeIcon color='primary' />
+            </IconButton>
+            : ''
+          }
+          <Box sx={{ width: '100%', pt: '10px' }}>
+            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+          </Box>
         </Box>
         <Box  >
           {dataList?.map(category => {
@@ -338,10 +348,10 @@ const MainContent = () => {
           }
           )}
         </Box>
-
       </Box>
-      <Box sx={{ p: smallScreenSize ? 2 : '0 24px' }}>
-        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
+
+      <Box sx={{ pl: 2, pr: 2 }}>
+        <Box sx={{ minHeight: 'calc(100vh - 250px)' }}>
           {content}
         </Box>
         {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
