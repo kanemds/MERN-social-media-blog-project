@@ -38,7 +38,6 @@ function App() {
         <Route path='/blogs/post/:id' element={<SingleBlog />} />
         {/* prefetch will only execute when user is browsing routes below */}
         <Route element={<PersistLogin />}>
-
           <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
             <Route path='blogs'>
               <Route index element={<BlogsList />} />

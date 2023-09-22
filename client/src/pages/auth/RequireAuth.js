@@ -6,8 +6,27 @@ import useAuth from '../../hooks/useAuth'
 
 const RequireAuth = ({ allowedRoles }) => {
 
+
   const location = useLocation()
   const { role } = useAuth()
+  const [state, setState] = React.useState({
+    left: false,
+  })
+
+
+  const drawerDirection = ['left']
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return
+    }
+
+    setState({ ...state, [anchor]: open })
+  }
+
 
   const content = (
 
