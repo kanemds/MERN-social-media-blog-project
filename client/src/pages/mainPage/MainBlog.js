@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
@@ -26,6 +26,7 @@ import { red, pink, yellow, orange } from '@mui/material/colors'
 import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../likes/likesApiSlice'
 import { set } from 'lodash'
 import { messages } from '../../config/requireLoginMessage'
+import { SmallSideBarContext } from '../../useContext/SmallSideBarContext'
 
 
 

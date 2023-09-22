@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Box, Button, IconButton, List, Typography, SwipeableDrawer, FormControlLabel, Switch, Collapse, Paper, Grow, Toolbar, AppBar, SvgIcon } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import ActiveCalender from '../pages/blogs/ActiveCalender'
@@ -21,6 +21,7 @@ import { useMediaQuery } from '@mui/material'
 import useAuth from '../hooks/useAuth'
 import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import { SmallSideBarContext } from '../useContext/SmallSideBarContext'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -68,14 +69,14 @@ const IconButtonStyle = {
 }
 
 
-const FrontPageSideBar = ({ state, setState, drawerDirection, toggleDrawer }) => {
+const FrontPageSideBar = () => {
 
   const largeBP = useMediaQuery('(min-width:1300px)')
   const mediumBP = useMediaQuery('(max-width:1299px)')
   const small = useMediaQuery('(max-width:791px)')
 
 
-
+  const { state, setState, drawerDirection, toggleDrawer } = useContext(SmallSideBarContext)
   const navigate = useNavigate()
   const { username } = useAuth()
   const { id } = useParams()

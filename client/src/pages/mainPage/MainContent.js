@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import ActiveCalender from '../blogs/ActiveCalender'
 import { Box, Button, Paper, Container, Typography, IconButton, AppBar, Toolbar, SvgIcon } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
@@ -20,6 +20,7 @@ import { entries } from 'lodash'
 import { apiSlice } from '../../app/api/apiSlice'
 import ClientSearchBar from '../../components/ClientSearchBar'
 import MainBlog from './MainBlog'
+import { SmallSideBarContext } from '../../useContext/SmallSideBarContext'
 
 
 
@@ -65,7 +66,7 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 
 
 
-const MainContent = ({ state, setState, drawerDirection, toggleDrawer }) => {
+const MainContent = () => {
 
   const { username, userId } = useAuth()
   const dispatch = useDispatch()
@@ -74,6 +75,7 @@ const MainContent = ({ state, setState, drawerDirection, toggleDrawer }) => {
   const small = useMediaQuery('(max-width:791px)')
   const smallScreenSize = useMediaQuery('(min-width:600px)')
 
+  const { state, setState, drawerDirection, toggleDrawer } = useContext(SmallSideBarContext)
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState([])
@@ -329,7 +331,7 @@ const MainContent = ({ state, setState, drawerDirection, toggleDrawer }) => {
       <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pb: '10px', pl: 2, pr: 2 }}>
         <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
           {small ?
-            <IconButton style={IconButtonStyle} color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
+            <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
               onClick={toggleDrawer(drawerDirection, true)}
             >
               <DehazeIcon color='primary' />
