@@ -190,7 +190,7 @@ const FrontPageSideBar = () => {
   }
 
   const iconEdit = (
-    <SideButton >
+    <SideButton onClick={handleToEdit}>
       <SvgIcon>
         <svg
           viewBox='-2 0 24 24'
@@ -198,14 +198,14 @@ const FrontPageSideBar = () => {
           <EditNoteIcon />
         </svg>
       </SvgIcon>
-      <ButtonInfo onClick={handleToEdit}>Edit Post</ButtonInfo>
+      <ButtonInfo >Edit Post</ButtonInfo>
     </SideButton>
   )
   const iconBack = (
-    <SideButton >
+    <SideButton onClick={handleToBack}>
       {/* <SubdirectoryArrowRightOutlinedIcon /> */}
       <ForwardRoundedIcon style={{ transform: 'rotate(180deg)' }} />
-      <ButtonInfo onClick={handleToBack}>Back</ButtonInfo>
+      <ButtonInfo >Back</ButtonInfo>
     </SideButton>
   )
 
