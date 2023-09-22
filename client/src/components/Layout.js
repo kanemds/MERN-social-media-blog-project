@@ -58,7 +58,7 @@ const Layout = () => {
     left: false,
   })
 
-  const drawerDirection = ['left']
+
 
 
   const handleLogout = () => {
@@ -68,6 +68,7 @@ const Layout = () => {
     sendLogOut()
   }
 
+  const drawerDirection = ['left']
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event &&
@@ -102,16 +103,12 @@ const Layout = () => {
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
-
             <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 80px)', position: 'relative', mt: '80px', width: '100%' }}>
               <FrontPageSideBar state={state} setState={setState} drawerDirection={drawerDirection} toggleDrawer={toggleDrawer} />
               <ThemeProvider theme={theme}  >
-
                 <Container maxWidth='xxl'>
                   <MainContent state={state} setState={setState} toggleDrawer={toggleDrawer} drawerDirection={drawerDirection} />
-
                 </Container>
-
               </ThemeProvider>
             </Box>
           </>
@@ -131,7 +128,7 @@ const Layout = () => {
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
             <Box sx={{ display: 'flex', position: 'relative', minHeight: 'calc(100vh - 80px)', mt: '80px', width: '100%' }}>
-              <FrontPageSideBar />
+              <FrontPageSideBar state={state} setState={setState} drawerDirection={drawerDirection} toggleDrawer={toggleDrawer} />
               <ThemeProvider theme={theme}  >
                 <Container maxWidth='xxl'>
                   <Outlet />

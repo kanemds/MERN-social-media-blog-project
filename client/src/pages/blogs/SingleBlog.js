@@ -1,7 +1,7 @@
 import { Box, Container, Paper, Typography, TextField, Modal, Button, IconButton, SvgIcon, Avatar } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import { blogsApiSlice, useDeleteBlogMutation, useGetBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -137,7 +137,6 @@ const SingleBlog = () => {
       isSuccess: isDeleteSuccess
     }
   ] = useDeleteBlogMutation()
-
 
   const [currentBlog, setCurrentBlog] = useState('')
   const [open, setOpen] = useState(false)

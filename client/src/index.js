@@ -7,6 +7,8 @@ import { CssBaseline } from '@mui/material'
 import { store } from './app/store'
 import { Provider } from 'react-redux'
 import ScrollToTop from './components/ScrollToTop'
+import SideBarProvider from './useContext/SmallSideBarContext'
+
 
 
 
@@ -15,13 +17,14 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <CssBaseline />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path='/*' element={<App />} />
-        </Routes>
-
-      </BrowserRouter>
+      <SideBarProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route path='/*' element={<App />} />
+          </Routes>
+        </BrowserRouter>
+      </SideBarProvider>
     </Provider>
   </React.StrictMode>
 )
