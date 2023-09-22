@@ -22,6 +22,7 @@ import useAuth from '../hooks/useAuth'
 import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import { SmallSideBarContext } from '../useContext/SmallSideBarContext'
+import { messages } from '../config/requireLoginMessage'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -88,9 +89,6 @@ const FrontPageSideBar = () => {
   const [isShow, setIsShow] = useState(true)
   const [keepOpen, setKeepOpen] = useState(true)
   const [hiddenSideBar, setHiddenSideBar] = useState(false)
-  // const [state, setState] = React.useState({
-  //   left: false,
-  // })
 
 
   useEffect(() => {
@@ -105,17 +103,6 @@ const FrontPageSideBar = () => {
     }
   }, [pathname])
 
-  // const toggleDrawer = (anchor, open) => (event) => {
-  //   if (
-  //     event &&
-  //     event.type === 'keydown' &&
-  //     (event.key === 'Tab' || event.key === 'Shift')
-  //   ) {
-  //     return
-  //   }
-
-  //   setState({ ...state, [anchor]: open })
-  // }
 
   useEffect(() => {
 
@@ -148,25 +135,54 @@ const FrontPageSideBar = () => {
     navigate('/')
   }
   const handleToMyPost = () => {
-    navigate('/blogs')
+    if (username) {
+      navigate('/blogs')
+    } else {
+      navigate('/login', { state: { message: messages.user } })
+    }
+
   }
   const handleToEdit = () => {
-    navigate(`/blogs/post/edit/${id}`)
+    if (username) {
+      navigate(`/blogs/post/edit/${id}`)
+    } else {
+      navigate('/login', { state: { message: messages.user } })
+    }
   }
   const handleToCreatePost = () => {
-    navigate('/blogs/new')
+    if (username) {
+      navigate('/blogs/new')
+    } else {
+      navigate('/login', { state: { message: messages.user } })
+    }
   }
   const handleToSubscribed = () => {
-    navigate('/blogs/subscribed')
+    if (username) {
+      navigate('/blogs/subscribed')
+    } else {
+      navigate('/login', { state: { message: messages.user } })
+    }
   }
   const handleToFavorite = () => {
-    navigate('/blogs/favorite')
+    if (username) {
+      navigate('/blogs/favorite')
+    } else {
+      navigate('/login', { state: { message: messages.user } })
+    }
   }
   const handleToLiked = () => {
-    navigate('/blogs/liked')
+    if (username) {
+      navigate('/blogs/liked')
+    } else {
+      navigate('/login', { state: { message: messages.user } })
+    }
   }
   const handleToSetting = () => {
-    navigate('/setting')
+    if (username) {
+      navigate('/setting')
+    } else {
+      navigate('/login', { state: { message: messages.user } })
+    }
   }
 
   const handleToBack = () => {
@@ -305,9 +321,9 @@ const FrontPageSideBar = () => {
         <ActiveCalender />
         <Divider />
         <Section >
-          <SideButton  >
+          <SideButton onClick={handleToMyPost}>
             <ArticleOutlinedIcon />
-            <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
+            <ButtonInfo >My Post(s)</ButtonInfo>
           </SideButton>
           {checked && username ?
             <Grow
@@ -319,30 +335,30 @@ const FrontPageSideBar = () => {
             </Grow>
             : ''
           }
-          <SideButton >
+          <SideButton onClick={handleToCreatePost}>
             <PostAddIcon />
-            <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
+            <ButtonInfo > Create a Post</ButtonInfo>
           </SideButton>
         </Section>
         <Divider />
         <Section >
-          <SideButton >
-            <Diversity2OutlinedIcon onClick={handleToSubscribed} />
+          <SideButton onClick={handleToSubscribed} >
+            <Diversity2OutlinedIcon />
             <ButtonInfo>  Friend's Post(s)</ButtonInfo>
           </SideButton>
-          <SideButton >
-            <StarRoundedIcon onClick={handleToFavorite} />
+          <SideButton onClick={handleToFavorite}>
+            <StarRoundedIcon />
             <ButtonInfo>  Favorite</ButtonInfo>
           </SideButton>
-          <SideButton >
-            <RecommendIcon onClick={handleToLiked} />
+          <SideButton onClick={handleToLiked}>
+            <RecommendIcon />
             <ButtonInfo>  Liked</ButtonInfo>
           </SideButton>
         </Section>
         <Divider />
         <Section>
-          <SideButton  >
-            <SettingsIcon onClick={handleToSetting} />
+          <SideButton onClick={handleToSetting}>
+            <SettingsIcon />
             <ButtonInfo >  Settings</ButtonInfo>
           </SideButton>
         </Section>
@@ -462,30 +478,6 @@ const FrontPageSideBar = () => {
       </Box >
     )
   }
-
-  // if (small) {
-  //   sideBar = (
-
-  //     <>
-  //       {['left'].map((anchor) => (
-  //         <Box key={anchor} >
-  //           <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
-  //             <DehazeIcon color='primary' />
-  //           </IconButton>
-  //           <SwipeableDrawer
-  //             anchor={anchor}
-  //             open={state[anchor]}
-  //             onClose={toggleDrawer(anchor, false)}
-  //             onOpen={toggleDrawer(anchor, true)}
-  //           >
-  //             {list(anchor)}
-  //           </SwipeableDrawer>
-  //         </Box>
-  //       ))}
-
-  //     </ >)
-  // }
-
 
   return (
 
