@@ -68,11 +68,11 @@ const IconButtonStyle = {
 }
 
 
-const FrontPageSideBar = () => {
+const FrontPageSideBar = ({ state, setState, drawerDirection, toggleDrawer }) => {
 
   const largeBP = useMediaQuery('(min-width:1300px)')
   const mediumBP = useMediaQuery('(max-width:1299px)')
-  const small = useMediaQuery('(max-width:792px)')
+  const small = useMediaQuery('(max-width:791px)')
 
 
 
@@ -81,21 +81,15 @@ const FrontPageSideBar = () => {
   const { id } = useParams()
   const { pathname } = useLocation()
 
-  const { currentBlog } = useGetBlogsQuery('BlogsList', {
-    selectFromResult: ({ data }) => ({
-      currentBlog: data?.entities[id]
-    })
-  })
-
   const [checked, setChecked] = useState(false)
   const [showBack, setShowBack] = useState(false)
   const [open, setOpen] = React.useState(false)
   const [isShow, setIsShow] = useState(true)
   const [keepOpen, setKeepOpen] = useState(true)
   const [hiddenSideBar, setHiddenSideBar] = useState(false)
-  const [state, setState] = React.useState({
-    left: false,
-  })
+  // const [state, setState] = React.useState({
+  //   left: false,
+  // })
 
 
   useEffect(() => {
@@ -110,17 +104,17 @@ const FrontPageSideBar = () => {
     }
   }, [pathname])
 
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event &&
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return
-    }
+  // const toggleDrawer = (anchor, open) => (event) => {
+  //   if (
+  //     event &&
+  //     event.type === 'keydown' &&
+  //     (event.key === 'Tab' || event.key === 'Shift')
+  //   ) {
+  //     return
+  //   }
 
-    setState({ ...state, [anchor]: open })
-  }
+  //   setState({ ...state, [anchor]: open })
+  // }
 
   useEffect(() => {
 
@@ -133,8 +127,7 @@ const FrontPageSideBar = () => {
       setState({ ...state, left: false })
     }
 
-
-  }, [largeBP, mediumBP, small])
+  }, [largeBP])
 
 
 
@@ -201,8 +194,7 @@ const FrontPageSideBar = () => {
 
   const list = (anchor) => (
     <Box
-      // sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 288 }}
-      sx={{ width: '288px', height: '100%' }}
+
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -210,12 +202,12 @@ const FrontPageSideBar = () => {
       <Box sx={{ height: '70px', width: '100%', background: '#1976d2' }}>
 
       </Box>
-      <Box sx={{ height: '80px', display: 'flex', alignItems: 'flex-end', ml: 3, mr: 3 }}>
+
+      <List sx={{ pl: 2, pr: 2 }}>
         <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
           <DehazeIcon color='primary' />
         </IconButton>
-      </Box>
-      <List style={{ padding: 0 }} sx={{ ml: 3, mr: 3 }}>
+        <Divider />
         <Section >
           <SideButton onClick={handleToHome}>
             <HomeIcon />
@@ -286,7 +278,7 @@ const FrontPageSideBar = () => {
 
   if (largeBP) {
     sideBar = (
-      <Box sx={{ width: '288px', ml: 3, mr: 3 }}>
+      <Box >
         <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
           <DehazeIcon color='primary' />
         </IconButton>
@@ -357,25 +349,27 @@ const FrontPageSideBar = () => {
     )
   }
 
-  if (mediumBP) {
+  if (mediumBP || !isShow) {
     sideBar = (
       <Box sx={{ width: '40px' }}>
         <>
-          {['left'].map((anchor) => (
-            <Box key={anchor} >
-              <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
-                <DehazeIcon color='primary' />
-              </IconButton>
-              <SwipeableDrawer
-                anchor={anchor}
-                open={state[anchor]}
-                onClose={toggleDrawer(anchor, false)}
-                onOpen={toggleDrawer(anchor, true)}
-              >
-                {list(anchor)}
-              </SwipeableDrawer>
-            </Box>
-          ))}
+          {drawerDirection?.map((anchor) => {
+            return (
+              <Box key={anchor} >
+                <IconButton style={IconButtonStyle} color="primary" onClick={mediumBP ? toggleDrawer(anchor, true) : handleMenu} >
+                  <DehazeIcon color='primary' />
+                </IconButton>
+                <SwipeableDrawer
+                  anchor={anchor}
+                  open={state[anchor]}
+                  onClose={toggleDrawer(anchor, false)}
+                  onOpen={toggleDrawer(anchor, true)}
+                >
+                  {list(anchor)}
+                </SwipeableDrawer>
+              </Box>)
+          }
+          )}
         </>
         <Divider />
         <Section >
@@ -385,11 +379,12 @@ const FrontPageSideBar = () => {
           </IconButton>
 
         </Section>
-        {showBack ?
-          <IconButton color="primary" onClick={handleToBack}>
-            <ForwardRoundedIcon style={{ transform: 'rotate(180deg)' }} />
-          </IconButton>
-          : ''
+        {
+          showBack ?
+            <IconButton color="primary" onClick={handleToBack}>
+              <ForwardRoundedIcon style={{ transform: 'rotate(180deg)' }} />
+            </IconButton>
+            : ''
         }
         <Divider />
         <IconButton color="primary" onClick={handleOpen}>
@@ -463,63 +458,44 @@ const FrontPageSideBar = () => {
           </IconButton>
 
         </Section>
-      </Box>
+      </Box >
     )
   }
 
-  if (small) {
-    sideBar = (
-      <>
-        {['left'].map((anchor) => (
-          <Box key={anchor} >
-            <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
-              <DehazeIcon color='primary' />
-            </IconButton>
-            <SwipeableDrawer
-              anchor={anchor}
-              open={state[anchor]}
-              onClose={toggleDrawer(anchor, false)}
-              onOpen={toggleDrawer(anchor, true)}
-            >
-              {list(anchor)}
-            </SwipeableDrawer>
-          </Box>
-        ))}
-      </>)
-  }
+  // if (small) {
+  //   sideBar = (
+
+  //     <>
+  //       {['left'].map((anchor) => (
+  //         <Box key={anchor} >
+  //           <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
+  //             <DehazeIcon color='primary' />
+  //           </IconButton>
+  //           <SwipeableDrawer
+  //             anchor={anchor}
+  //             open={state[anchor]}
+  //             onClose={toggleDrawer(anchor, false)}
+  //             onOpen={toggleDrawer(anchor, true)}
+  //           >
+  //             {list(anchor)}
+  //           </SwipeableDrawer>
+  //         </Box>
+  //       ))}
+
+  //     </ >)
+  // }
 
 
   return (
-    <Box sx={{ position: 'sticky', top: '100px', width: isShow ? '280px' : '40px', ml: 3, mr: 3, mb: 10 }}>
 
-      {/* {largeBP ?
-        <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
-          <DehazeIcon color='primary' />
-        </IconButton>
-        :
-        <>
-          {['left'].map((anchor) => (
-            <Box key={anchor} >
-              <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, true)} >
-                <DehazeIcon color='primary' />
-              </IconButton>
-              <SwipeableDrawer
-                anchor={anchor}
-                open={state[anchor]}
-                onClose={toggleDrawer(anchor, false)}
-                onOpen={toggleDrawer(anchor, true)}
-              >
-                {list(anchor)}
-              </SwipeableDrawer>
-            </Box>
-          ))}
-        </>
-      } */}
-
-
-      {sideBar}
-    </Box>
+    <Box sx={small ? { display: 'none' } : {}}>
+      <Box sx={{ position: 'sticky', top: '80px', width: isShow ? '260px' : '40px', pl: 2, pr: 2, mb: 10 }}>
+        {sideBar}
+      </Box>
+    </Box >
   )
+
+
 }
 
 export default FrontPageSideBar

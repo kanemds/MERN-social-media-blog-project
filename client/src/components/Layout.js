@@ -35,11 +35,13 @@ const theme = createTheme({
 
 
 
+
+
 const Layout = () => {
 
   // const largeBP = useMediaQuery('(min-width:1200px)')
   // const mediumBP = useMediaQuery('(min-width:750px)')
-
+  const small = useMediaQuery('(max-width:791px)')
   const dispatch = useDispatch()
 
   const [
@@ -52,8 +54,11 @@ const Layout = () => {
   ] = useSendLogOutMutation()
 
   const { pathname } = useLocation()
+  const [state, setState] = React.useState({
+    left: false,
+  })
 
-
+  const drawerDirection = ['left']
 
 
   const handleLogout = () => {
@@ -63,7 +68,17 @@ const Layout = () => {
     sendLogOut()
   }
 
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return
+    }
 
+    setState({ ...state, [anchor]: open })
+  }
 
 
   let content
@@ -88,13 +103,15 @@ const Layout = () => {
               <VerticalSwiper />
             </Box>
 
-
             <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 80px)', position: 'relative', mt: '80px', width: '100%' }}>
-              <FrontPageSideBar />
+              <FrontPageSideBar state={state} setState={setState} drawerDirection={drawerDirection} toggleDrawer={toggleDrawer} />
               <ThemeProvider theme={theme}  >
+
                 <Container maxWidth='xxl'>
-                  <MainContent />
+                  <MainContent state={state} setState={setState} toggleDrawer={toggleDrawer} drawerDirection={drawerDirection} />
+
                 </Container>
+
               </ThemeProvider>
             </Box>
           </>
