@@ -214,6 +214,7 @@ const MainContent = () => {
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
   const recentlyUpload = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
+  const recentlyUploadWithoutUser = Array.isArray(blogsWithoutUser) && blogsWithoutUser?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
   let content
 
@@ -236,8 +237,8 @@ const MainContent = () => {
       )
   }
 
-  // user not exist
-  if (paginatedIsSuccess && isLikesSuccess && allBlogs?.length > 0 && !username) {
+  // user not exist and all
+  if (paginatedIsSuccess && isLikesSuccess && allBlogs?.length > 0 && !username && isSelected === 'All') {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {allBlogs?.map(blog =>
@@ -247,9 +248,21 @@ const MainContent = () => {
       </Grid>
     )
   }
+  // user not exist and recently upload
+  if (paginatedIsSuccess && isLikesSuccess && recentlyUpload?.length > 0 && !username && isSelected === 'Recently Upload') {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {recentlyUpload?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <MainBlog blog={blog} />
+          </Grid>)}
+      </Grid>
+    )
+  }
+
 
   // if login user exist 
-  if (paginatedIsSuccess && isLikesSuccess && blogsWithoutUser?.length > 0 && username) {
+  if (paginatedIsSuccess && isLikesSuccess && blogsWithoutUser?.length > 0 && username && isSelected === 'All') {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {blogsWithoutUser?.map(blog =>
@@ -259,6 +272,20 @@ const MainContent = () => {
       </Grid>
     )
   }
+
+  // if login user exist 
+  if (paginatedIsSuccess && isLikesSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload') {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {recentlyUploadWithoutUser?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <MainBlog blog={blog} />
+          </Grid>)}
+      </Grid>
+    )
+  }
+
+
 
   // if (paginatedIsSuccess && isLikesSuccess && !username) {
   //   content = (
@@ -345,7 +372,7 @@ const MainContent = () => {
         <Box  >
           {dataList?.map(category => {
             return (
-              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ ['.css-14rqobi-MuiButtonBase-root-MuiButton-root']: { padding: 0 }, minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
+              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
             )
           }
           )}
