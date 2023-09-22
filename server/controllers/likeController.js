@@ -8,7 +8,7 @@ const Like = require('../models/Like')
 const getAllLikes = async (req, res) => {
   const likes = await Like.find().lean()
 
-  if (!likes.length) return res.status(400).json({ message: 'No likes found' })
+  if (!likes.length) return res.status(200).json({ message: 'No likes found' })
 
   res.status(200).json(likes)
 }
@@ -33,11 +33,15 @@ const getLikesForUser = async (req, res) => {
 
   const { username } = req.query
 
+  const isUserExist = await User.find({ username }).exec()
+
+  if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
+
   const currentUserLikes = await Like.aggregate([
     { $match: { liked_by_user_username: username } }
   ])
 
-  // if (!currentUserLikes.length) return res.status(400).json({ message: 'No liked blog found' })
+  if (!currentUserLikes.length || !currentUserLikes) return res.status(200).json([])
 
   res.status(200).json(currentUserLikes)
 }
