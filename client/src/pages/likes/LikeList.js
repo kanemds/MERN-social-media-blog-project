@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Box, Button, Paper, Container, Typography, AppBar, Toolbar, useScrollTrigger, IconButton } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
-
+import DehazeIcon from '@mui/icons-material/Dehaze'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
@@ -15,8 +16,11 @@ import VerticalAlignTopOutlinedIcon from '@mui/icons-material/VerticalAlignTopOu
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
 import { useDeleteLikedFromBlogMutation, useGetLikedBlogsFromUserQuery, useGetUserLikedBlogsQuery } from './likesApiSlice'
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
 import LikeBlog from './LikeBlog'
 import { set } from 'lodash'
+import { SmallSideBarContext } from '../../useContext/SmallSideBarContext'
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -28,6 +32,10 @@ const Root = styled(Grid)(({ theme }) => ({
     justifyContent: 'center'
   },
 }))
+
+const IconButtonStyle = {
+  width: '40px', height: '40px'
+}
 
 
 const SearchBarWidth = styled(Box)(({ theme }) => ({
@@ -56,8 +64,10 @@ const buttonStyle = {
 
 const LikeList = () => {
 
-  const { username } = useAuth()
+  const small = useMediaQuery('(max-width:791px)')
 
+  const { username } = useAuth()
+  const { state, setState, drawerDirection, toggleDrawer } = useContext(SmallSideBarContext)
   const [
     deleteLike,
     {
@@ -92,16 +102,6 @@ const LikeList = () => {
     }
 
   }, [isSuccess, refresh])
-
-  let content
-
-  if (isLoading) {
-    content = (
-      <Box sx={{ minHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-        <LoadingSpinner />
-      </Box>
-    )
-  }
 
 
   const handleAscendent = () => {
@@ -139,9 +139,29 @@ const LikeList = () => {
     }
   }
 
+  let content
 
+  if (isLoading) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <LoadingSpinner />
+      </Box>
+    )
+  }
 
-  if (isSuccess) {
+  console.log(currentLikes)
+
+  if (isSuccess && currentLikes?.length === 0) {
+    content =
+      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography >
+          No Blogs are available at the moment
+        </Typography>
+      </Box>
+      )
+  }
+
+  if (isSuccess && currentLikes?.length > 1) {
 
     content = (
 
@@ -163,31 +183,42 @@ const LikeList = () => {
   return (
 
     <Box sx={{ width: '100%' }} >
-      <Box sx={{ position: 'sticky', top: '150px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', }}>
-        {/* <Box sx={{ width: '100%' }}>
-          <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
-        </Box> */}
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>
+        <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
+          {small ?
+            <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
+              onClick={toggleDrawer(drawerDirection, true)}
+            >
+              <DehazeIcon color='primary' />
+            </IconButton>
+            : ''
+          }
+          <Box sx={{ width: '100%', pt: '10px' }}>
+            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+          </Box>
+        </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
 
           <Box>
             {!isDesc ?
-              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleDescendent}>
-                <ReorderOutlinedIcon />
-                <ExpandMoreOutlinedIcon />
+              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
+                <KeyboardDoubleArrowDownIcon />
                 DESC
               </Button>
               :
-              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleAscendent}>
-                <ReorderOutlinedIcon />
-                <ExpandLessOutlinedIcon />
+              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
+
+                <KeyboardDoubleArrowUpIcon />
                 ACES
               </Button>
             }
           </Box>
         </Box>
       </Box>
-      <Box sx={{ p: 2, mt: '60px' }}>
-        {content}
+      <Box sx={{ pl: 2, pr: 2 }}>
+        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
+          {content}
+        </Box>
       </Box>
     </Box >
 

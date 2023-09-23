@@ -380,7 +380,7 @@ const MainContent = () => {
       </Box>
 
       <Box sx={{ pl: 2, pr: 2 }}>
-        <Box sx={{ minHeight: 'calc(100vh - 250px)' }}>
+        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
           {content}
         </Box>
         {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
