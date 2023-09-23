@@ -288,7 +288,7 @@ export default function MainBlog({ blog }) {
                     <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
                   }
                 </IconButton>
-                <Typography sx={{ color: 'black', ml: 1 }}>0</Typography>
+                <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
               </Box>
             </Box>
 

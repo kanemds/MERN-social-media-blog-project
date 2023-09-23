@@ -122,7 +122,9 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         if (!currentCache || !newItems?.data) {
           return currentCache
         } else {
-          return currentCache.data.push(...newItems?.data)
+          // return currentCache.data.push(...newItems?.data) // throw a promise error
+          const updatedData = [...currentCache.data, ...newItems.data]
+          return { ...currentCache, data: updatedData }
         }
       },
       // Refetch when the page arg changes,is the argument in this case: pageNumber

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import produce from 'immer'
 
 const initialState = {
   pageNumber: 1
@@ -7,18 +8,16 @@ const initialState = {
 const blogSlice = createSlice({
   name: 'blog',
   initialState,
-  //reducers: An object containing the reducer functions for updating the state.
   reducers: {
-    increment: (state, action) => {
+    increment: produce((state, action) => {
       state.pageNumber = action.payload
-    },
-    resetCache: (state) => {
+    }),
+    resetCache: produce((state) => {
       state.pageNumber = 1
-    },
+    }),
   }
 })
 
 export const { increment, resetCache } = blogSlice.actions
 
 export default blogSlice.reducer
-

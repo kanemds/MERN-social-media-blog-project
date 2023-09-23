@@ -129,6 +129,9 @@ const SingleBlog = () => {
       error: deleteLikeError
     }] = useDeleteLikedFromBlogMutation()
 
+  console.log(isAddLikeSuccess)
+  console.log(isDeleteLikeSuccess)
+
   const [
     deleteBlog,
     {

@@ -293,15 +293,15 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
           <Box sx={{ display: 'flex', alignItems: 'center', height: 28, width: '100%' }}>
 
             {/* total like */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '30%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
-                <Typography sx={{ color: 'black', ml: 1 }}>0</Typography>
+                <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
               </Box>
             </Box>
 
             {/* show day and menu  */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '60%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '70%' }}>
 
               <Typography color='black'>
                 {

@@ -95,7 +95,7 @@ const addedLike = async (req, res) => {
 
   const blog = await Blog.findById(blog_id).lean().exec()
 
-  if (!blog) return res.status(400).json({ message: 'net work error, please try again' })
+  if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
 
   const info = {
     blog_id,
