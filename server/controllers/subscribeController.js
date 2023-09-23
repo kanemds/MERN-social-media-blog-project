@@ -96,4 +96,4 @@ const deleteSubscribe = async (req, res) => {
 
 
 
-module.exports = { getSubscribesForUser, findSubscribedBlogs, addSubscribe, deleteSubscribe }
+module.exports = { findSubscribedBlogs, addSubscribe, deleteSubscribe }
