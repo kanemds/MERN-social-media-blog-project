@@ -20,7 +20,7 @@ import { entries } from 'lodash'
 import { apiSlice } from '../../app/api/apiSlice'
 import ClientSearchBar from '../../components/ClientSearchBar'
 import MainBlog from './MainBlog'
-import { SmallSideBarContext } from '../../useContext/SmallSideBarContext'
+import { SideBarContext } from '../../useContext/SideBarContext'
 
 
 
@@ -75,7 +75,7 @@ const MainContent = () => {
   const small = useMediaQuery('(max-width:791px)')
   const smallScreenSize = useMediaQuery('(min-width:600px)')
 
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SmallSideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState([])

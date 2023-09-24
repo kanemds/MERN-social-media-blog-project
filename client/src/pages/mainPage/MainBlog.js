@@ -26,7 +26,7 @@ import { red, pink, yellow, orange } from '@mui/material/colors'
 import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../likes/likesApiSlice'
 import { set } from 'lodash'
 import { messages } from '../../config/requireLoginMessage'
-import { SmallSideBarContext } from '../../useContext/SmallSideBarContext'
+import { SideBarContext } from '../../useContext/SideBarContext'
 
 
 

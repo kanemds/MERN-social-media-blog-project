@@ -20,7 +20,7 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
 import LikeBlog from './LikeBlog'
 import { set } from 'lodash'
-import { SmallSideBarContext } from '../../useContext/SmallSideBarContext'
+import { SideBarContext } from '../../useContext/SideBarContext'
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -67,7 +67,7 @@ const LikeList = () => {
   const small = useMediaQuery('(max-width:791px)')
 
   const { username } = useAuth()
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SmallSideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
   const [
     deleteLike,
     {
@@ -149,7 +149,6 @@ const LikeList = () => {
     )
   }
 
-  console.log(currentLikes)
 
   if (isSuccess && currentLikes?.length === 0) {
     content =

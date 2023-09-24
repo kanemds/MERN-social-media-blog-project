@@ -21,7 +21,7 @@ import { useMediaQuery } from '@mui/material'
 import useAuth from '../hooks/useAuth'
 import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
 import EditNoteIcon from '@mui/icons-material/EditNote'
-import { SmallSideBarContext } from '../useContext/SmallSideBarContext'
+import { SideBarContext } from '../useContext/SideBarContext'
 import { messages } from '../config/requireLoginMessage'
 
 const SideButton = styled(Button)({
@@ -77,7 +77,7 @@ const FrontPageSideBar = () => {
   const small = useMediaQuery('(max-width:791px)')
 
 
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SmallSideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
   const navigate = useNavigate()
   const { username } = useAuth()
   const { id } = useParams()

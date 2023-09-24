@@ -14,11 +14,13 @@ import VerticalAlignBottomOutlinedIcon from '@mui/icons-material/VerticalAlignBo
 import VerticalAlignTopOutlinedIcon from '@mui/icons-material/VerticalAlignTopOutlined'
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
 import Blog from './Blog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import { useLocation, useOutletContext } from 'react-router-dom'
-import { SmallSideBarContext } from '../../useContext/SmallSideBarContext'
+import { SideBarContext } from '../../useContext/SideBarContext'
 
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -64,11 +66,8 @@ const BlogsList = () => {
   const small = useMediaQuery('(max-width:791px)')
 
   const { username, userId } = useAuth()
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SmallSideBarContext)
-  console.log(state)
-  console.log(setState)
-  console.log(drawerDirection)
-  console.log(toggleDrawer)
+  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
+
 
 
   const [
@@ -241,15 +240,15 @@ const BlogsList = () => {
           </Box>
           <Box>
             {!isDesc ?
-              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleDescendent}>
-                <ReorderOutlinedIcon />
-                <ExpandMoreOutlinedIcon />
+              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
+
+                <KeyboardDoubleArrowDownIcon />
                 DESC
               </Button>
               :
-              <Button size='small' sx={{ minWidth: 0, p: 0 }} onClick={handleAscendent}>
-                <ReorderOutlinedIcon />
-                <ExpandLessOutlinedIcon />
+              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
+
+                <KeyboardDoubleArrowUpIcon />
                 ACES
               </Button>
             }
