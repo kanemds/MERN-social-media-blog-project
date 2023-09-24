@@ -10,6 +10,7 @@ import { Box, Typography } from '@mui/material'
 import LinkButton from '../../components/LinkButton'
 
 
+
 const PersistLogin = () => {
 
   const [persist] = usePersist()
@@ -35,8 +36,8 @@ const PersistLogin = () => {
   ] = useRefreshMutation()
 
   useEffect(() => {
-    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
 
+    if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
       const verifyRefreshToken = async () => {
         // console.log('verifying refresh token')
         try {
@@ -75,20 +76,20 @@ const PersistLogin = () => {
     // console.log('Loading')
     content = <LoadingSpinner />
   } else if (isError) {
-    // console.log('error')
-    content = (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <ErrorMessage error={error.data} />
-        <Box sx={{ mt: 3 }}>
-          <LinkButton visit='/login' name='Login' />
-        </Box>
-      </Box>
-    )
+    // console.log('error', error.data)
+    // content = (
+    //   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    //     <ErrorMessage error={error.data} />
+    //     <Box sx={{ mt: 3 }}>
+    //       <LinkButton visit='/login' name='Login' />
+    //     </Box>
+    //   </Box>
+    // )
+    content = <Outlet />
   } else if (isSuccess && success) {
     // console.log('success')
     content = <Outlet />
   } else if (token && isUninitialized) {
-
     // console.log('token and uninit')
     // console.log(isUninitialized)
     content = <Outlet />

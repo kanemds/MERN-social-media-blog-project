@@ -85,6 +85,7 @@ const SingleBlog = () => {
 
 
 
+  const small = useMediaQuery('(max-width:791px)')
   const mediumBP = useMediaQuery('(min-width:750px)') // true when larger
   const smallBP = useMediaQuery('(min-width:550px)') // true when larger
   const xSamllBP = useMediaQuery('(min-width:466px)') // true when larger
@@ -129,8 +130,7 @@ const SingleBlog = () => {
       error: deleteLikeError
     }] = useDeleteLikedFromBlogMutation()
 
-  console.log(isAddLikeSuccess)
-  console.log(isDeleteLikeSuccess)
+
 
   const [
     deleteBlog,
@@ -512,47 +512,47 @@ const SingleBlog = () => {
 
   let menuButton
 
-  if (username === data?.username && mediumBP) {
-    menuButton = (
-      <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%', ml: '7%' }}>
-        <SideButton onClick={handleToEdit} sx={{ m: 1 }}>
-          <EditNoteOutlinedIcon />
-          <ButtonInfo >  Edit</ButtonInfo>
-        </SideButton>
+  // if (small) {
+  //   menuButton = (
+  //     <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%', ml: '7%' }}>
+  //       <SideButton onClick={handleToEdit} sx={{ m: 1 }}>
+  //         <EditNoteOutlinedIcon />
+  //         <ButtonInfo >  Edit</ButtonInfo>
+  //       </SideButton>
 
-        <SideButton onClick={handleDelete} sx={{ m: 1 }}>
-          <SvgIcon>
-            <svg
-              viewBox='2 0 24 24'
-            >
-              <DeleteForeverOutlinedIcon />
-            </svg>
-          </SvgIcon>
-          <ButtonInfo >Delete</ButtonInfo>
-        </SideButton>
+  //       <SideButton onClick={handleDelete} sx={{ m: 1 }}>
+  //         <SvgIcon>
+  //           <svg
+  //             viewBox='2 0 24 24'
+  //           >
+  //             <DeleteForeverOutlinedIcon />
+  //           </svg>
+  //         </SvgIcon>
+  //         <ButtonInfo >Delete</ButtonInfo>
+  //       </SideButton>
 
-        <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
-          <ForwardRoundedIcon
-            style={{ transform: 'rotate(180deg)' }}
-          />
-          <ButtonInfo >  Back</ButtonInfo>
-        </SideButton>
+  //       <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
+  //         <ForwardRoundedIcon
+  //           style={{ transform: 'rotate(180deg)' }}
+  //         />
+  //         <ButtonInfo >  Back</ButtonInfo>
+  //       </SideButton>
 
-        <Modal
-          open={deleteOpen}
-          onClose={handleDeleteClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            {deleteModalMessage}
-          </Box>
-        </Modal>
-      </Box >
-    )
-  }
+  //       <Modal
+  //         open={deleteOpen}
+  //         onClose={handleDeleteClose}
+  //         aria-labelledby="modal-modal-title"
+  //         aria-describedby="modal-modal-description"
+  //       >
+  //         <Box sx={style}>
+  //           {deleteModalMessage}
+  //         </Box>
+  //       </Modal>
+  //     </Box >
+  //   )
+  // }
 
-  if (username === data?.user && !mediumBP) {
+  if (small) {
     menuButton = (
       <Box sx={{ position: 'fixed', bottom: 0, background: 'white', zIndex: 30, pb: 2, width: '100%' }} textAlign='center' >
         <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
@@ -576,8 +576,6 @@ const SingleBlog = () => {
           <ButtonInfo >  Edit</ButtonInfo>
         </SideButton>
 
-
-
         <Modal
           open={deleteOpen}
           onClose={handleDeleteClose}
@@ -592,20 +590,20 @@ const SingleBlog = () => {
     )
   }
 
-  if (username !== data?.user && mediumBP) {
-    menuButton = (
-      <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%', ml: '7%' }}>
+  // if (username !== data?.user && mediumBP) {
+  //   menuButton = (
+  //     <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%', ml: '7%' }}>
 
 
-        <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
-          <ForwardRoundedIcon
-            style={{ transform: 'rotate(180deg)' }}
-          />
-          <ButtonInfo >  Back</ButtonInfo>
-        </SideButton>
-      </Box >
-    )
-  }
+  //       <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
+  //         <ForwardRoundedIcon
+  //           style={{ transform: 'rotate(180deg)' }}
+  //         />
+  //         <ButtonInfo >  Back</ButtonInfo>
+  //       </SideButton>
+  //     </Box >
+  //   )
+  // }
 
   return (
     <Box sx={{

@@ -104,10 +104,10 @@ const Layout = () => {
               <VerticalSwiper />
             </Box>
             <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 80px)', position: 'relative', mt: '80px', width: '100%' }}>
-              <FrontPageSideBar state={state} setState={setState} drawerDirection={drawerDirection} toggleDrawer={toggleDrawer} />
+              <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
                 <Container maxWidth='xxl'>
-                  <MainContent state={state} setState={setState} toggleDrawer={toggleDrawer} drawerDirection={drawerDirection} />
+                  <Outlet />
                 </Container>
               </ThemeProvider>
             </Box>

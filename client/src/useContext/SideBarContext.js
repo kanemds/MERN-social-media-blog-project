@@ -1,8 +1,9 @@
 import React, { createContext, useState } from 'react'
 
-export const SmallSideBarContext = createContext()
+export const SideBarContext = createContext()
 
 const SideBarProvider = ({ children }) => {
+
   const [state, setState] = useState({
     left: false,
   })
@@ -21,10 +22,11 @@ const SideBarProvider = ({ children }) => {
     setState({ ...state, [anchor]: open })
   }
 
+
   return (
-    <SmallSideBarContext.Provider value={{ state, setState, drawerDirection, toggleDrawer }}>
+    <SideBarContext.Provider value={{ state, setState, drawerDirection, toggleDrawer }}>
       {children}
-    </SmallSideBarContext.Provider>
+    </SideBarContext.Provider>
   )
 }
 

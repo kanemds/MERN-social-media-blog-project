@@ -7,7 +7,7 @@ import { CssBaseline } from '@mui/material'
 import { store } from './app/store'
 import { Provider } from 'react-redux'
 import ScrollToTop from './components/ScrollToTop'
-import SideBarProvider from './useContext/SmallSideBarContext'
+import SideBarProvider from './useContext/SideBarContext'
 
 
 
