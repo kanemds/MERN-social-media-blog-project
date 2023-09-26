@@ -128,7 +128,7 @@ const Layout = () => {
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
             <Box sx={{ display: 'flex', position: 'relative', minHeight: 'calc(100vh - 80px)', mt: '80px', width: '100%' }}>
-              <FrontPageSideBar state={state} setState={setState} drawerDirection={drawerDirection} toggleDrawer={toggleDrawer} />
+              <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
                 <Container maxWidth='xxl'>
                   <Outlet />

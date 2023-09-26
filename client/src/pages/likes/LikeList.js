@@ -87,6 +87,8 @@ const LikeList = () => {
   })
 
 
+
+
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentLikes, setCurrentLikes] = useState(null)
   const [searchInput, setSearchInput] = useState('')
@@ -160,17 +162,13 @@ const LikeList = () => {
       )
   }
 
-  if (isSuccess && currentLikes?.length > 1) {
-
+  if (isSuccess && currentLikes?.length >= 1) {
     content = (
-
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
-
         {currentLikes?.map(blog =>
           <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
             <LikeBlog blog={blog} deleteLike={deleteLike} setRefresh={setRefresh} isDeleteLikeLoading={isDeleteLikeLoading} removeMessage={removeMessage} />
           </Grid>
-
         )
         }
       </Grid >
@@ -180,9 +178,8 @@ const LikeList = () => {
 
 
   return (
-
     <Box sx={{ width: '100%' }} >
-      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>
+      <Box sx={{ position: 'sticky', top: '0px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>
         <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
           {small ?
             <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
