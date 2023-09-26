@@ -20,6 +20,7 @@ import BloggerHomePage from './pages/blogs/BloggerHomePage'
 import FavoriteBlog from './pages/favorite/FavoriteBlog'
 import MainContent from './pages/mainPage/MainContent'
 import LikeList from './pages/likes/LikeList'
+import SubscribedList from './pages/subscribed/SubscribedList'
 
 
 
@@ -41,11 +42,13 @@ function App() {
           <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
             <Route path='blogs'>
               <Route index element={<BlogsList />} />
-              {/* <Route path='post/:id' element={<SingleBlog />} /> */}
+              <Route path='post/:id' element={<SingleBlog />} />
               <Route path='liked' element={<LikeList />} />
 
               <Route path='new' element={<NewBlog />} />
               <Route path='favorite' element={<FavoriteBlog />} />
+              <Route path='subscribed' element={<SubscribedList />} />
+
               <Route path='post/edit/:id' element={<SingleBlogEditPage />} />
               <Route path='user/:id' element={<BloggerHomePage />} />
 
