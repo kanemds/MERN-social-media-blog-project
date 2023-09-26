@@ -198,6 +198,7 @@ const SingleBlog = () => {
     if (isSuccess) {
       setCurrentBlog(data)
       setIsLiked(data.isLike)
+      setIsSubscribed(data.isSubscribed)
     }
     // if (isFindLikeSuccess) {
     //   const entities = Object.values(findLike.entities)
@@ -219,10 +220,19 @@ const SingleBlog = () => {
     }
     if (isDeleteLikeSuccess) {
       dispatch(apiSlice.util.invalidateTags(['Blog']))
-
       setIsLiked(false)
     }
-  }, [isDeleteLikeSuccess, isAddLikeSuccess])
+    if (isAddSubscribeSuccess) {
+      dispatch(apiSlice.util.invalidateTags(['Blog']))
+      setIsSubscribed(true)
+    }
+    if (isDeleteSubscribedSuccess) {
+      dispatch(apiSlice.util.invalidateTags(['Blog']))
+      setIsSubscribed(false)
+    }
+  }, [isDeleteLikeSuccess, isAddLikeSuccess, isAddSubscribeSuccess, isDeleteSubscribedSuccess])
+
+
 
 
   useEffect(() => {
@@ -287,13 +297,17 @@ const SingleBlog = () => {
   }
 
 
-  const handleToSubscribed = () => {
-    if (!username) {
-      navigate('/login', { state: { message: messages.subscribe } })
+  const handleToSubscribed = (e) => {
+    e.preventDefault()
+    if (username) {
+      if (!isSubscribed) {
+        addSubscribe({ id, userId, username, isSubscribed: true })
+      } else {
+        deleteSubscribed({ id })
+      }
     } else {
-      setIsSubscribed(prev => !prev)
+      navigate('/login', { state: { message: messages.subscribe } })
     }
-
   }
 
 

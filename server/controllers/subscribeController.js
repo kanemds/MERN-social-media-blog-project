@@ -66,20 +66,27 @@ const findSubscribedBlogs = async (req, res) => {
 }
 
 const addSubscribe = async (req, res) => {
-  const { blog_id, user_id, username, is_subscribed } = req.body
-  if (!blog_id || !user_id || !username, !is_subscribed) return res.status(200).json({ message: 'All fields are required' })
-  const blog = await Blog.findById(blog_id).lean().exec()
+  const { id, userId, username, isSubscribed } = req.body
+  console.log(id)
+  console.log(userId)
+  console.log(username)
+  console.log(isSubscribed)
+  if (!id || !userId || !username) return res.status(404).json({ message: 'All fields are required' })
+  const blog = await Blog.findById(id).lean().exec()
   if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
+
+  console.log(blog)
   const info = {
-    blog_id,
+    blog_id: id,
     blog_owner: blog.user_id,
-    liked_by_user_id: user_id,
-    liked_by_user_username: username,
-    is_subscribed,
+    subscribed_by_user_id: userId,
+    subscribed_by_user_username: username,
+    is_subscribed: isSubscribed,
   }
 
+  console.log(info)
   await Subscribe.create(info)
-  res.status(200).json({ message: `{username} has subscribed to this Blog` })
+  res.status(200).json({ message: `${username} has subscribed to this Blog` })
 }
 
 const deleteSubscribe = async (req, res) => {

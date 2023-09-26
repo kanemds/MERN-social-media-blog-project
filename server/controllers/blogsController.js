@@ -147,6 +147,7 @@ const getSingleBlog = async (req, res) => {
 
   let loginUser
   let isLike
+  let isSubscribed
   const blog = await Blog.findById(id).lean().exec()
 
   if (!blog) return res.status(204).json({ message: 'No blog found' })
@@ -164,7 +165,15 @@ const getSingleBlog = async (req, res) => {
     isLike = like[0]?.is_like
   }
 
-  loginUser = { ...blog, isLike }
+  const subscribed = await Subscribe.find({ blog_id: id, subscribed_by_user_username: username }).lean().exec()
+  console.log('subscribed', subscribed)
+  if (!subscribed.length) {
+    isSubscribed = false
+  } else {
+    isSubscribed = subscribed[0]?.is_subscribed
+  }
+
+  loginUser = { ...blog, isLike, isSubscribed }
 
   res.status(200).json(loginUser)
 }
