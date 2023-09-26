@@ -176,6 +176,7 @@ export default function MainBlog({ blog }) {
 
   return (
     <Card
+      className='fadeIn'
       sx={{
         p: 0,
         maxWidth: 272,

@@ -1,5 +1,5 @@
 import { Box, Container, Paper, Typography, TextField, Modal, Button, IconButton, SvgIcon, Avatar } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import { blogsApiSlice, useDeleteBlogMutation, useGetBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
@@ -24,7 +24,8 @@ import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
 import { red, pink, yellow, orange } from '@mui/material/colors'
 import './imagesDisplaySlider.css'
 import { useDispatch } from 'react-redux'
-
+import DehazeIcon from '@mui/icons-material/Dehaze'
+import { SideBarContext } from '../../useContext/SideBarContext'
 
 const style = {
   position: 'absolute',
@@ -43,6 +44,11 @@ const style = {
   p: 4,
   borderRadius: '20px',
 }
+
+const IconButtonStyle = {
+  width: '40px', height: '40px'
+}
+
 
 const stylePicture = {
   position: 'absolute',
@@ -94,7 +100,7 @@ const SingleBlog = () => {
   const { username, userId } = useAuth()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
   const {
     data,
     isLoading,
@@ -512,70 +518,42 @@ const SingleBlog = () => {
 
   let menuButton
 
-  // if (small) {
-  //   menuButton = (
-  //     <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%', ml: '7%' }}>
-  //       <SideButton onClick={handleToEdit} sx={{ m: 1 }}>
-  //         <EditNoteOutlinedIcon />
-  //         <ButtonInfo >  Edit</ButtonInfo>
-  //       </SideButton>
-
-  //       <SideButton onClick={handleDelete} sx={{ m: 1 }}>
-  //         <SvgIcon>
-  //           <svg
-  //             viewBox='2 0 24 24'
-  //           >
-  //             <DeleteForeverOutlinedIcon />
-  //           </svg>
-  //         </SvgIcon>
-  //         <ButtonInfo >Delete</ButtonInfo>
-  //       </SideButton>
-
-  //       <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
-  //         <ForwardRoundedIcon
-  //           style={{ transform: 'rotate(180deg)' }}
-  //         />
-  //         <ButtonInfo >  Back</ButtonInfo>
-  //       </SideButton>
-
-  //       <Modal
-  //         open={deleteOpen}
-  //         onClose={handleDeleteClose}
-  //         aria-labelledby="modal-modal-title"
-  //         aria-describedby="modal-modal-description"
-  //       >
-  //         <Box sx={style}>
-  //           {deleteModalMessage}
-  //         </Box>
-  //       </Modal>
-  //     </Box >
-  //   )
-  // }
 
   if (small) {
     menuButton = (
-      <Box sx={{ position: 'fixed', bottom: 0, background: 'white', zIndex: 30, pb: 2, width: '100%' }} textAlign='center' >
+      <Box sx={{ position: 'fixed', bottom: 0, background: '#bdbdbd', zIndex: 30, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+        <SideButton disableRipple color="primary" sx={{ m: 1 }}
+          onClick={toggleDrawer(drawerDirection, true)}
+        >
+          <DehazeIcon color='primary' />
+          <ButtonInfo >  Menu</ButtonInfo>
+        </SideButton>
         <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
           <ForwardRoundedIcon
             style={{ transform: 'rotate(180deg)' }}
           />
           <ButtonInfo >  Back</ButtonInfo>
         </SideButton>
-        <SideButton onClick={handleDelete} sx={{ m: 1 }}>
-          <SvgIcon>
-            <svg
-              viewBox='2 0 24 24'
-            >
-              <DeleteForeverOutlinedIcon />
-            </svg>
-          </SvgIcon>
-          <ButtonInfo >Delete</ButtonInfo>
-        </SideButton>
-        <SideButton onClick={handleToEdit} sx={{ m: 1 }}>
-          <EditNoteOutlinedIcon />
-          <ButtonInfo >  Edit</ButtonInfo>
-        </SideButton>
-
+        {username === currentBlog.username ?
+          <>
+            <SideButton onClick={handleDelete} sx={{ m: 1 }}>
+              <SvgIcon>
+                <svg
+                  viewBox='2 0 24 24'
+                >
+                  <DeleteForeverOutlinedIcon />
+                </svg>
+              </SvgIcon>
+              <ButtonInfo >Delete</ButtonInfo>
+            </SideButton>
+            <SideButton onClick={handleToEdit} sx={{ m: 1 }}>
+              <EditNoteOutlinedIcon />
+              <ButtonInfo >  Edit</ButtonInfo>
+            </SideButton>
+          </>
+          :
+          ''
+        }
         <Modal
           open={deleteOpen}
           onClose={handleDeleteClose}
@@ -590,25 +568,13 @@ const SingleBlog = () => {
     )
   }
 
-  // if (username !== data?.user && mediumBP) {
-  //   menuButton = (
-  //     <Box sx={{ position: 'sticky', top: 'calc(50% - 78px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100px', height: '100%', ml: '7%' }}>
-
-
-  //       <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
-  //         <ForwardRoundedIcon
-  //           style={{ transform: 'rotate(180deg)' }}
-  //         />
-  //         <ButtonInfo >  Back</ButtonInfo>
-  //       </SideButton>
-  //     </Box >
-  //   )
-  // }
 
   return (
-    <Box sx={{
-      display: 'flex', width: '100%', height: '100%', minWidth: '375px', minHeight: '375px', position: !mediumBP ? 'none' : 'relative', justifyContent: 'space-evenly'
-    }}>
+    <Box
+      className='fadeIn'
+      sx={{
+        display: 'flex', width: '100%', height: '100%', minWidth: '375px', minHeight: '375px', position: !mediumBP ? 'none' : 'relative', justifyContent: 'space-evenly'
+      }}>
       {menuButton}
       < Box sx={{
         width: '100%', height: '100%'

@@ -42,11 +42,12 @@ function App() {
             <Route path='blogs'>
               <Route index element={<BlogsList />} />
               {/* <Route path='post/:id' element={<SingleBlog />} /> */}
-              <Route path='post/edit/:id' element={<SingleBlogEditPage />} />
-              <Route path='user/:id' element={<BloggerHomePage />} />
+              <Route path='liked' element={<LikeList />} />
+
               <Route path='new' element={<NewBlog />} />
               <Route path='favorite' element={<FavoriteBlog />} />
-              <Route path='liked' element={<LikeList />} />
+              <Route path='post/edit/:id' element={<SingleBlogEditPage />} />
+              <Route path='user/:id' element={<BloggerHomePage />} />
 
             </Route>
           </Route>
