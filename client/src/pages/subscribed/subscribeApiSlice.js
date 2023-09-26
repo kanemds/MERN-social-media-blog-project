@@ -26,7 +26,7 @@ export const subscribeApiSlice = apiSlice.injectEndpoints({
         if (result) {
           console.log(result)
           return [{
-            type: 'Subscribe', id: 'LiST'
+            type: 'Subscribe', id: 'LIST'
           }, {
             ...result.map(id => ({ type: 'Subscribe', id: result.id }))
           }
