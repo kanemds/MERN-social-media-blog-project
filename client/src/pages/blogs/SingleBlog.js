@@ -26,6 +26,7 @@ import './imagesDisplaySlider.css'
 import { useDispatch } from 'react-redux'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import { SideBarContext } from '../../useContext/SideBarContext'
+import { useAddSubscribedBlogMutation, useDeleteSubscribedFromBlogMutation } from '../subscribed/subscribeApiSlice'
 
 const style = {
   position: 'absolute',
@@ -101,15 +102,35 @@ const SingleBlog = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
+
+
+  /////////////// find and delete blog ///////////////////////
+
+  const currentSingleBlog = {
+    id,
+    username: username ? username : null
+  }
+
   const {
     data,
     isLoading,
     isSuccess,
     isError,
     error
-  } = useGetSingleBlogQuery(id)
+  } = useGetSingleBlogQuery(currentSingleBlog)
 
+  const [
+    deleteBlog,
+    {
+      data: message,
+      isLoading: isDeleteLoading,
+      isSuccess: isDeleteSuccess
+    }
+  ] = useDeleteBlogMutation()
 
+  /////////////// find and delete blog ///////////////////////
+
+  /////////////// find, add and delete like ///////////////////////
 
   const {
     data: findLike,
@@ -136,16 +157,32 @@ const SingleBlog = () => {
       error: deleteLikeError
     }] = useDeleteLikedFromBlogMutation()
 
+  /////////////// find, add and delete like ///////////////////////
 
+
+
+  /////////////// add and delete subscribe ///////////////////////
 
   const [
-    deleteBlog,
+    addSubscribe,
     {
-      data: message,
-      isLoading: isDeleteLoading,
-      isSuccess: isDeleteSuccess
+      isLoading: isAddSubscribeLoading,
+      isSuccess: isAddSubscribeSuccess,
+      isError: isAddSubscribeError,
+      error: addSubscribError
     }
-  ] = useDeleteBlogMutation()
+  ] = useAddSubscribedBlogMutation()
+
+  const [
+    deleteSubscribed,
+    {
+      isLoading: isDeleteSubscribedLoading, isSuccess: isDeleteSubscribedSuccess,
+      isError: isDeleteSubscribedError,
+      error: deleteSubscribedError
+    }
+  ] = useDeleteSubscribedFromBlogMutation()
+
+  /////////////// add and delete subscribe ///////////////////////
 
   const [currentBlog, setCurrentBlog] = useState('')
   const [open, setOpen] = useState(false)
@@ -160,30 +197,32 @@ const SingleBlog = () => {
   useEffect(() => {
     if (isSuccess) {
       setCurrentBlog(data)
+      setIsLiked(data.isLike)
     }
-    if (isFindLikeSuccess) {
-      const entities = Object.values(findLike.entities)
-      const findCurrentBlog = entities?.find(blog => blog.blog_id === id)
-      if (findCurrentBlog && findCurrentBlog.is_like) {
-        setIsLiked(true)
-      } else {
-        setIsLiked(false)
-      }
-    }
+    // if (isFindLikeSuccess) {
+    //   const entities = Object.values(findLike.entities)
+    //   const findCurrentBlog = entities?.find(blog => blog.blog_id === id)
+    //   if (findCurrentBlog && findCurrentBlog.is_like) {
+    //     setIsLiked(true)
+    //   } else {
+    //     setIsLiked(false)
+    //   }
+    // }
   }, [isSuccess, isFindLikeSuccess])
+
 
 
   useEffect(() => {
     if (isAddLikeSuccess) {
+      dispatch(apiSlice.util.invalidateTags(['Blog']))
       setIsLiked(true)
     }
-  }, [isAddLikeSuccess])
-
-  useEffect(() => {
     if (isDeleteLikeSuccess) {
+      dispatch(apiSlice.util.invalidateTags(['Blog']))
+
       setIsLiked(false)
     }
-  }, [isDeleteLikeSuccess])
+  }, [isDeleteLikeSuccess, isAddLikeSuccess])
 
 
   useEffect(() => {
@@ -230,6 +269,7 @@ const SingleBlog = () => {
     if (username) {
       if (!isLiked) {
         addedLike({ blog_id: id, user_id: userId, username, is_like: true })
+
       } else {
         deleteLike({ id })
       }
@@ -567,6 +607,8 @@ const SingleBlog = () => {
       </Box >
     )
   }
+
+  console.log(currentBlog)
 
 
   return (

@@ -1,5 +1,7 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
+const Like = require('../models/Like')
+const Subscribe = require('../models/Subscribe')
 const { isEqual, sortBy, find, differenceWith, differenceBy } = require('lodash')
 const storage = require('../config/firebaseConfig')
 
@@ -115,7 +117,7 @@ const getAllBlogs = async (req, res) => {
 // @access Private
 const getBlogsForUser = async (req, res) => {
   const { id } = req.query
-  console.log(id)
+
 
   const findUser = await User.findById(id).exec()
 
@@ -141,14 +143,30 @@ const getBlogsForUser = async (req, res) => {
 // @access Private
 const getSingleBlog = async (req, res) => {
   const { id } = req.params
+  const { username } = req.query
+
+  let loginUser
+  let isLike
   const blog = await Blog.findById(id).lean().exec()
 
-  if (!blog) {
-    return res.status(404).json({ message: 'No blog found' })
+  if (!blog) return res.status(204).json({ message: 'No blog found' })
+
+
+  const findUser = await User.find({ username }).exec()
+
+  if (!findUser) return res.status(204).json({ message: 'No user found' })
+
+  const like = await Like.find({ blog_id: id, liked_by_user_username: username }).lean().exec()
+
+  if (!like.length) {
+    isLike = false
+  } else {
+    isLike = like[0]?.is_like
   }
 
+  loginUser = { ...blog, isLike }
 
-  res.status(200).json(blog)
+  res.status(200).json(loginUser)
 }
 
 // @desc Get limited blogs
@@ -176,7 +194,7 @@ const getPaginatedBlogs = async (req, res) => {
 
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
-  console.log('blogs', blogs)
+
   // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
   res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })
 }
