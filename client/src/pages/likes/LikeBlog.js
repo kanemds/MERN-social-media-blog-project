@@ -121,7 +121,7 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
     setIsFavorite(prev => !prev)
   }
 
-  const handleLiked = async (e) => {
+  const handleLiked = (e) => {
     setDeleteLikeOpen(true)
   }
 
