@@ -68,6 +68,7 @@ const SubscribedList = () => {
 
   const { username } = useAuth()
   const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
+
   const [
     deleteSubscribed,
     {

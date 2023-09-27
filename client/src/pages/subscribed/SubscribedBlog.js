@@ -18,7 +18,8 @@ import { red, pink, yellow, orange } from '@mui/material/colors'
 import { apiSlice } from '../../app/api/apiSlice'
 import { useDispatch } from 'react-redux'
 import { set } from 'lodash'
-
+import img from './Dtqnxj1W4AAgFut.jpg'
+import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
 
 const iconStyle = {
   padding: '0px',
@@ -45,30 +46,18 @@ const styleDelete = {
 
 export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, removeMessage, isDeleteSubscribedLoading }) {
 
-  console.log(blog)
-
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
   const { pathname } = useLocation()
-  const [title, setTitle] = useState(blog?.title)
-  const [text, setText] = useState(blog?.text)
-  const [images, setImage] = useState(blog?.images[0]?.url)
+
   const [isClick, setIsClick] = useState(false)
-  const [isLiked, setIsLiked] = useState(blog.isLike || null)
-  const [isFavorite, setIsFavorite] = useState(false)
   const [deleteSubscribedOpen, setDeleteSubscribedOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isDeleteSubscribedReady, setIsDeleteSubscribedReady] = useState(false)
 
-
-  const current = Date.parse(new Date())
-  const postedDay = Date.parse(blog.createdAt)
-  const sevenDays = 60 * 60 * 24 * 1000 * 7
-
-  const timeInMillisecond = current - postedDay
 
   useEffect(() => {
     if (isDeleteSubscribedReady && removeMessage) {
@@ -81,7 +70,6 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
         console.log('remove Like')
       }, 1400)
     }
-
   }, [isDeleteSubscribedReady])
 
   useEffect(() => {
@@ -97,16 +85,19 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
 
   const handleToSelectedBlog = () => {
     if (!isClick) {
-      navigate(`/blogs/post/${blog.id}`)
+      navigate('/')
     }
   }
 
-  const handleDeleteLikeClose = () => {
+  const handleDeleteClose = () => {
     setDeleteSubscribedOpen(false)
+  }
+  const handleDeleteOpen = () => {
+    setDeleteSubscribedOpen(true)
   }
 
 
-  const handleDeleteLikeConfirm = async (e) => {
+  const handleDeleteConfirm = async (e) => {
     e.preventDefault()
     await deleteSubscribed({ id: blog.id })
   }
@@ -117,16 +108,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
     }
   }
 
-  const handleFavorite = () => {
-    setIsFavorite(prev => !prev)
-  }
-
-  const handleLiked = async (e) => {
-    setDeleteSubscribedOpen(true)
-  }
-
-
-  ////////////////////////////////////////////////// delete like ////////////////////////////////////////////////////
+  ////////////////////////////////////////////////// delete subscribe ////////////////////////////////////////////////////
   let deleteModalMessage
 
   if (loading) {
@@ -145,17 +127,17 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
     deleteModalMessage = (
       <>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Remove like from this blog?
+          Cancel your subscription to this blogger?
         </Typography>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
-          <Button variant='contained' onClick={handleDeleteLikeClose}>Cancel</Button>
-          <Button variant='contained' onClick={handleDeleteLikeConfirm} sx={{
+          <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+          <Button variant='contained' onClick={handleDeleteConfirm} sx={{
             backgroundColor: red[600],
             color: 'white',
             '&:hover': {
               backgroundColor: red[800]
             }
-          }}>Remove Like</Button>
+          }}>unsubscribe </Button>
         </Box>
       </>
     )
@@ -180,11 +162,9 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
       }}
     >
       {/* keyframes animation will only apply to elements within the scope of the component. It won't affect other elements on the page, */}
-
       <CardActionArea
         component="div"
         sx={{
-          color: "white",
           backgroundColor: "white",
           "&:hover": {
             backgroundColor: "white",
@@ -193,122 +173,51 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
         disableRipple={true}
         onClick={handleToSelectedBlog}
       >
+        <Box sx={{ height: 180, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
+          <CardMedia
+            sx={{ height: '100%', width: 'auto', borderRadius: '50%', objectFit: 'scale-down' }}
+            component="img"
+            image={img}
+            alt={'random'}
+          />
+        </Box>
+        <CardContent sx={{ height: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }} >
 
-        <CardMedia
-          sx={{ height: 180, width: '100%' }}
-          component="img"
-          image={images}
-          alt={title}
-        />
-
-        <CardContent sx={{ height: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }} >
-          <Box sx={{ display: 'flex', height: 120 }}>
-            <Box>
-              <IconButton
-                onMouseOver={() => setIsClick(true)}
-                onMouseOut={() => setIsClick(false)}
-                onClick={handleUserPage}
-                disableRipple={true}
-
-                sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
-              >
-                <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
-              </IconButton>
-            </Box>
-
-            <Box>
-              <Typography variant="body1" sx={{
-                color: 'black',
-                wordBreak: "break-word", display: '-webkit-box',
-                overflow: 'hidden',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 2,
-                fontWeight: 'bold',
-                textOverflow: 'ellipsis',
-                mb: 1
-              }}>
-                {title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{
-                wordBreak: "break-word", display: '-webkit-box',
-                overflow: 'hidden',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 3,
-                textOverflow: 'ellipsis',
-              }}>
-                {text}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', height: 28, width: '100%' }}>
-
-            {/* favorite and like */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
-              {username !== blog.user ?
-                <IconButton
-                  disableRipple
-                  onClick={handleFavorite}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    mr: 1,
-                    '&:hover': { color: yellow[800], background: 'white' }
-                  }}
-                >
-                  {isFavorite ?
-                    <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
-                    :
-                    <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
-                : ''
-              }
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <IconButton
-                  disableRipple
-                  onClick={handleLiked}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    '&:hover': { color: red[400], background: 'white' }
-                  }}
-                >
-                  {isLiked ?
-
-                    <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
-                    :
-                    <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
-                <Typography sx={{ color: 'black', ml: 1 }}>0</Typography>
-              </Box>
-            </Box>
-
-            {/* show day and menu  */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '60%' }}>
-
-              <Typography color='black'>
-                {
-                  timeInMillisecond <= sevenDays ?
-                    moment(Date.parse(blog.createdAt)).fromNow()
-                    :
-                    new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
-                }
-              </Typography>
-
-
-            </Box>
-
-          </Box>
+          <Typography sx={{
+            wordBreak: "break-word",
+            display: '-webkit-box',
+            overflow: 'hidden',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
+            textOverflow: 'ellipsis',
+          }}
+            variant='h5'
+          >
+            {blog.blog_owner_username}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          </Typography>
+          <Typography sx={{ fontSize: 'h6' }}>999k subscribers</Typography>
+          <Button
+            onMouseOver={() => setIsClick(true)}
+            onMouseOut={() => setIsClick(false)}
+            onClick={handleDeleteOpen}
+            sx={{
+              '&:hover': { background: '#f4f4f4' },
+              color: '#bdbdbd',
+              textTransform: 'none',
+            }}>
+            <Diversity2OutlinedIcon sx={{
+              color: 'rgba(0, 0, 0, 0.87)',
+              fontSize: '20px',
+              mr: 1
+            }} />
+            <Typography color='rgba(0, 0, 0, 0.87)' variant='h6'> Subscribed</Typography>
+          </Button>
         </CardContent>
 
       </CardActionArea>
       <Modal
         open={deleteSubscribedOpen}
-        onClose={handleDeleteLikeClose}
+        onClose={handleDeleteClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
