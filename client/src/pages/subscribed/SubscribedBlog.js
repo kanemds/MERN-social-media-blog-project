@@ -83,11 +83,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
   }, [isDeleteSubscribedLoading])
 
 
-  const handleToSelectedBlog = () => {
-    if (!isClick) {
-      navigate('/')
-    }
-  }
+
 
   const handleDeleteClose = () => {
     setDeleteSubscribedOpen(false)
@@ -103,7 +99,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
   }
 
   const handleUserPage = () => {
-    if (isClick) {
+    if (!isClick) {
       navigate(`/blogs/user/${blog.id}`)
     }
   }
@@ -171,7 +167,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
           }
         }}
         disableRipple={true}
-        onClick={handleToSelectedBlog}
+        onClick={handleUserPage}
       >
         <Box sx={{ height: 180, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
           <CardMedia

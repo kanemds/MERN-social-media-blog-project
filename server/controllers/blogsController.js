@@ -124,12 +124,16 @@ const getBlogsForUser = async (req, res) => {
 
   if (!findUser) return res.status(200).json({ message: 'No user found' })
 
-
   const currentUserBlogs = await Blog.aggregate([
     { $match: { user_id: findUser._id } }
   ])
 
   if (!currentUserBlogs || currentUserBlogs.length === 0) return res.status(200).json([])
+
+  const countLikePerBlog = await Like.find({ blog_owner: id, is_like: true }).lean().exec()
+  console.log(countLikePerBlog)
+
+  // find subscribe and then bookmard finally combine
 
   const decOrderBlogs = await currentUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 

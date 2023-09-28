@@ -200,15 +200,6 @@ const SingleBlog = () => {
       setIsLiked(data.isLike)
       setIsSubscribed(data.isSubscribed)
     }
-    // if (isFindLikeSuccess) {
-    //   const entities = Object.values(findLike.entities)
-    //   const findCurrentBlog = entities?.find(blog => blog.blog_id === id)
-    //   if (findCurrentBlog && findCurrentBlog.is_like) {
-    //     setIsLiked(true)
-    //   } else {
-    //     setIsLiked(false)
-    //   }
-    // }
   }, [isSuccess, isFindLikeSuccess])
 
 
@@ -216,10 +207,12 @@ const SingleBlog = () => {
   useEffect(() => {
     if (isAddLikeSuccess) {
       dispatch(apiSlice.util.invalidateTags(['Blog']))
+      // dispatch(apiSlice.util.prefetch('getPaginatedBlogs', undefined, { force: true }))
       setIsLiked(true)
     }
     if (isDeleteLikeSuccess) {
       dispatch(apiSlice.util.invalidateTags(['Blog']))
+      // dispatch(apiSlice.util.prefetch('getPaginatedBlogs', undefined, { force: true }))
       setIsLiked(false)
     }
     if (isAddSubscribeSuccess) {
