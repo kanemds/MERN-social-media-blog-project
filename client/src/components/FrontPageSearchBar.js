@@ -120,7 +120,7 @@ export default function FrontPageSearchBar({ handleMenu, setIsShow }) {
     navigate('/blogs/subscribed')
   }
   const handleToFavorite = () => {
-    navigate('/blogs/favorite')
+    navigate('/blogs/bookmarks')
   }
   const handleToLiked = () => {
     navigate('/blogs/liked')

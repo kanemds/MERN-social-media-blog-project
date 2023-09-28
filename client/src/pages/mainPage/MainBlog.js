@@ -27,6 +27,7 @@ import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../li
 import { set } from 'lodash'
 import { messages } from '../../config/requireLoginMessage'
 import { SideBarContext } from '../../useContext/SideBarContext'
+import { useAddBookmarkMutation, useDeleteBookmarkMutation } from '../bookmark/bookmarkApiSlice'
 
 
 
@@ -103,6 +104,24 @@ export default function MainBlog({ blog }) {
       error: deleteLikeError
     }] = useDeleteLikedFromBlogMutation()
 
+  const [
+    addBookmark, {
+      isLoading: isAddBookmarkLoading,
+      isSuccess: isAddBookmarkSuccess,
+      isError: isAddBookmarkError,
+      error: addBookmarkError
+    }
+  ] = useAddBookmarkMutation()
+
+  const [
+    deleteBookmark, {
+      isLoading: isDeleteBookmarkLoading,
+      isSuccess: isDeleteBookmarkSuccess,
+      isError: isDeleteBookmarkError,
+      error: deleteBookmarkError
+    }
+  ] = useDeleteBookmarkMutation()
+
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -112,8 +131,8 @@ export default function MainBlog({ blog }) {
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
-  const [isLiked, setIsLiked] = useState(blog.isLike || null)
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [isLiked, setIsLiked] = useState(blog.isLike || false)
+  const [isBookmarked, setIsBookmarked] = useState(blog.isBookmark || false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
@@ -134,7 +153,19 @@ export default function MainBlog({ blog }) {
     if (isAddLikeSuccess) {
       setIsLiked(true)
     }
-  }, [isAddLikeSuccess])
+    if (isAddBookmarkSuccess) {
+      setIsBookmarked(true)
+    }
+  }, [isAddLikeSuccess, isAddBookmarkSuccess])
+
+  useEffect(() => {
+    if (isDeleteLikeSuccess) {
+      setIsLiked(false)
+    }
+    if (isDeleteBookmarkSuccess) {
+      setIsBookmarked(false)
+    }
+  }, [isDeleteLikeSuccess, isDeleteBookmarkSuccess])
 
   const handleToSelectedBlog = () => {
     if (!isClick) {
@@ -148,11 +179,16 @@ export default function MainBlog({ blog }) {
     }
   }
 
-  const handleFavorite = () => {
+  const handleBookmark = async () => {
     if (!username) {
       navigate('/login', { state: { message: messages.like } })
     } else {
-      setIsFavorite(prev => !prev)
+      await addBookmark({ blog_id: blog.id, bookmark_by_user_id: userId, username, is_bookmark: true })
+      // if (!isBookmarked) {
+      //   await addBookmark({ blog_id: blog.id, username, isBookmark: true })
+      // } else {
+      //   await deleteBookmark({ id: blog.id })
+      // }
     }
   }
 
@@ -253,7 +289,7 @@ export default function MainBlog({ blog }) {
               {username !== blog.username ?
                 <IconButton
                   disableRipple
-                  onClick={handleFavorite}
+                  onClick={handleBookmark}
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
                   style={iconStyle}
@@ -262,7 +298,7 @@ export default function MainBlog({ blog }) {
                     '&:hover': { color: yellow[800], background: 'white' }
                   }}
                 >
-                  {isFavorite ?
+                  {isBookmarked ?
                     <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
                     :
                     <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />

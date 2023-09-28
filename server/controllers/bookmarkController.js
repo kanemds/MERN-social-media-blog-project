@@ -1,5 +1,6 @@
 const Bookmark = require('../models/Bookmark')
 const User = require('../models/User')
+const Blog = require('../models/Blog')
 
 // @desc Get bookmarks for login user
 // route Get /bookmarks
@@ -17,14 +18,18 @@ const getBookmarkForUser = async (req, res) => {
 // route Post /bookmarks
 // @access Private
 const addBookmark = async (req, res) => {
-  const { id, username, isMark } = req.body
+  const { blog_id, bookmark_by_user_id, username, is_bookmark } = req.body
+
+  const blogOwner = await Blog.findById(blog_id).exec()
+
+  if (!blogOwner || !blogOwner.length) return res.status(404).json({ message: 'The blog is not exist' })
 
   const info = {
     blog_id,
-    blog_owner,
+    blog_owner: blogOwner.username,
     bookmark_by_user_id,
-    bookmark_by_user_username,
-    is_marked
+    bookmark_by_user_username: username,
+    is_bookmark
   }
 
   await Bookmark.create(info)

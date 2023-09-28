@@ -17,10 +17,10 @@ import NewBlog from './pages/blogs/NewBlog'
 import SingleBlog from './pages/blogs/SingleBlog'
 import SingleBlogEditPage from './pages/blogs/SingleBlogEditPage'
 import BloggerHomePage from './pages/blogs/BloggerHomePage'
-import FavoriteBlog from './pages/favorite/FavoriteBlog'
 import MainContent from './pages/mainPage/MainContent'
 import LikeList from './pages/likes/LikeList'
 import SubscribedList from './pages/subscribed/SubscribedList'
+import BookmarkList from './pages/bookmark/BookmarkList'
 
 
 
@@ -44,11 +44,9 @@ function App() {
               <Route index element={<BlogsList />} />
               <Route path='post/:id' element={<SingleBlog />} />
               <Route path='liked' element={<LikeList />} />
-
               <Route path='new' element={<NewBlog />} />
-              <Route path='favorite' element={<FavoriteBlog />} />
+              <Route path='bookmarks' element={<BookmarkList />} />
               <Route path='subscribed' element={<SubscribedList />} />
-
               <Route path='post/edit/:id' element={<SingleBlogEditPage />} />
               <Route path='user/:id' element={<BloggerHomePage />} />
 
