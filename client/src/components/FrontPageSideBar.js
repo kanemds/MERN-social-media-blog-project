@@ -165,7 +165,7 @@ const FrontPageSideBar = () => {
   }
   const handleToFavorite = () => {
     if (username) {
-      navigate('/blogs/favorite')
+      navigate('/blogs/bookmarks')
     } else {
       navigate('/login', { state: { message: messages.user } })
     }

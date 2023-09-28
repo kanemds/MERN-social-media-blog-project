@@ -21,7 +21,7 @@ const bookmarkSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  is_marked: {
+  is_bookmark: {
     type: Boolean,
     default: false
   },

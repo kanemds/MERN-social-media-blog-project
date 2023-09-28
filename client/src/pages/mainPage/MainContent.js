@@ -93,7 +93,6 @@ const MainContent = () => {
 
 
 
-
   // const {
   //   data: blogs,
   //   isLoading,
@@ -106,6 +105,8 @@ const MainContent = () => {
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
   } = useGetPaginatedBlogsQuery(Number(pageNumber))
+
+
 
   const {
     data: likes,
@@ -168,6 +169,9 @@ const MainContent = () => {
     }
   }, [allBlogs])
 
+  console.log(page)
+  console.log(allBlogs)
+  console.log(blogsWithoutUser)
   // IntersectionObserver and use observer.observe(elementRef.current); to tell the observer to start observing the DOM element referenced by elementRef.current.
   // When the DOM element referenced by elementRef (in your case, the empty <Box> element) becomes visible in the viewport (e.g., as the user scrolls down)
   // the IntersectionObserver triggers the callback function you provided 
@@ -194,6 +198,7 @@ const MainContent = () => {
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
   }
+
 
   const handleSearch = () => {
     if (!searchInput.length) return console.log('nothing')
