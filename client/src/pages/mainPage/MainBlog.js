@@ -170,7 +170,6 @@ export default function MainBlog({ blog }) {
         await deleteLike({ id: blog.id })
       }
     }
-
   }
 
 
