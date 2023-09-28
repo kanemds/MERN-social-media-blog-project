@@ -11,17 +11,17 @@ const bookmarkSchema = new mongoose.Schema({
     required: true,
     ref: 'User'
   },
-  liked_by_user_id:
+  bookmark_by_user_id:
   {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User'
   },
-  liked_by_user_username: {
+  bookmark_by_user_username: {
     type: String,
     required: true,
   },
-  is_like: {
+  is_marked: {
     type: Boolean,
     default: false
   },

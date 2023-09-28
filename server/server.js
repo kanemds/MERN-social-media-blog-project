@@ -48,6 +48,7 @@ app.use('/auth', require('./routes/authRoutes'))
 app.use('/users', require('./routes/userRoutes'))
 app.use('/blogs', require('./routes/blogRoutes'))
 app.use('/likes', require('./routes/likeRoutes'))
+app.use('/bookmarks', require('./routes/bookmarkRoutes'))
 app.use('/subscribe', require('./routes/subscribeRoutes'))
 
 app.all('*', (req, res) => {

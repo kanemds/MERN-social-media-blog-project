@@ -38,7 +38,7 @@ const getLikesForUser = async (req, res) => {
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
   const currentUserLikes = await Like.aggregate([
-    { $match: { liked_by_user_username: username } }
+    { $match: { liked_by_user_username: isUserExist.username } }
   ])
 
   if (!currentUserLikes.length || !currentUserLikes) return res.status(200).json([])
