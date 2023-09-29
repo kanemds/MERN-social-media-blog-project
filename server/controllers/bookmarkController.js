@@ -30,7 +30,8 @@ const getBookmarkForUser = async (req, res) => {
 
   const blogsWithBookmarks = await listOfBlogs.map(blog => {
     const findMatch = bookmarks.find(bookmark => bookmark.blog_id.toString() === blog._id.toString())
-    return { ...blog, isBookmark: findMatch.is_bookmark }
+    console.log(bookmarks)
+    return { ...blog, isBookmark: findMatch.is_bookmark, bookmarkId: findMatch._id.toString() }
   })
 
   const decOrderBlogs = await blogsWithBookmarks?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
