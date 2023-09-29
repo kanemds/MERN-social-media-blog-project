@@ -7,7 +7,7 @@ const Subscribe = require('../models/Subscribe')
 // @desc Get subscribe for current user 
 // route Get /subscribe
 // @access Private
-const findSubscribedUsers = async (req, res) => {
+const getBlogsForSubscribedList = async (req, res) => {
   const { username } = req.query
 
   const isUserExist = await User.find({ username }).exec()
@@ -34,7 +34,10 @@ const addSubscribe = async (req, res) => {
   const blog = await Blog.findById(id).lean().exec()
   if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
 
-  console.log(blog)
+  const isDuplicate = await Subscribe.find({ blog_owner_username: blog.username, subscribed_by_user_id: userId }).exec()
+
+  if (isDuplicate.length) return res.status(409).json({ message: 'The selected blogger has already subscribed' })
+
   const info = {
     blog_owner_id: blog.user_id,
     blog_owner_username: blog.username,
@@ -43,7 +46,6 @@ const addSubscribe = async (req, res) => {
     is_subscribed: isSubscribed,
   }
 
-  console.log(info)
   await Subscribe.create(info)
   res.status(200).json({ message: `${username} has subscribed to this Blog` })
 }
@@ -62,4 +64,4 @@ const deleteSubscribe = async (req, res) => {
 
 
 
-module.exports = { findSubscribedUsers, addSubscribe, deleteSubscribe }
+module.exports = { getBlogsForSubscribedList, addSubscribe, deleteSubscribe }

@@ -86,6 +86,10 @@ const addedLike = async (req, res) => {
 
   if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
 
+  const isDuplicate = await Like.find({ blog_id, liked_by_user_id: user_id }).exec()
+
+  if (isDuplicate.length) return res.status(409).json({ message: 'The selected blog has already liked' })
+
   const info = {
     blog_id,
     blog_owner: blog.user_id,

@@ -46,11 +46,13 @@ const getBlogsForBookmarkList = async (req, res) => {
 const addBookmark = async (req, res) => {
   const { blog_id, bookmark_by_user_id, username, is_bookmark } = req.body
 
-
   const blog = await Blog.findById(blog_id).lean().exec()
 
-
   if (!blog || blog.length === 0) return res.status(404).json({ message: 'The blog is not exist' })
+
+  const isDuplicate = await Bookmark.find({ blog_owner_username: blog.username, bookmark_by_user_id }).exec()
+
+  if (isDuplicate.length) return res.status(409).json({ message: 'The selected blogger has already subscribed' })
 
   const info = {
     blog_id,
