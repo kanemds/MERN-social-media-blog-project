@@ -1,9 +1,9 @@
 const router = require('express').Router()
-const { findSubscribedUsers, deleteSubscribe, addSubscribe } = require('../controllers/subscribeController')
+const { getBlogsForSubscribedList, deleteSubscribe, addSubscribe } = require('../controllers/subscribeController')
 
 
 router.route('/')
-  .get(findSubscribedUsers)
+  .get(getBlogsForSubscribedList)
   .post(addSubscribe)
   .delete(deleteSubscribe)
 
