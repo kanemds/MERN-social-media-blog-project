@@ -12,6 +12,8 @@ const getBookmarkForUser = async (req, res) => {
 
   const bookmarksForUser = await Bookmark.find({ liked_by_user_id: isUserExist._id })
   console.log(bookmarksForUser)
+
+  res.status(200).json(bookmarksForUser)
 }
 
 // @desc create a bookmark
@@ -20,13 +22,15 @@ const getBookmarkForUser = async (req, res) => {
 const addBookmark = async (req, res) => {
   const { blog_id, bookmark_by_user_id, username, is_bookmark } = req.body
 
-  const blogOwner = await Blog.findById(blog_id).exec()
 
-  if (!blogOwner || !blogOwner.length) return res.status(404).json({ message: 'The blog is not exist' })
+  const blog = await Blog.findById(blog_id).lean().exec()
+
+
+  if (!blog || blog.length === 0) return res.status(404).json({ message: 'The blog is not exist' })
 
   const info = {
     blog_id,
-    blog_owner: blogOwner.username,
+    blog_owner: blog.user_id,
     bookmark_by_user_id,
     bookmark_by_user_username: username,
     is_bookmark
@@ -39,15 +43,28 @@ const addBookmark = async (req, res) => {
 }
 
 const deleteBookmark = async (req, res) => {
-  const { id } = req.body
+  const { id, username } = req.body
 
-  const bookmark = await Bookmark.findById(id).exec()
+  const blog = await Blog.findById(id).exec()
 
-  if (!bookmark) return res.status(404).json({ message: 'net work error, please try again' })
 
-  await bookmark.deleteOne()
+  if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
+
+  const findBookmark = await Bookmark.findOne({ blog_id: blog._id })
+
+  if (!findBookmark) return res.status(404).json({ message: 'net work error, please try again' })
+
+  console.log('findBookmark', findBookmark)
+
+  await findBookmark.deleteOne()
   console.log('bookmark removed')
-  res.status(200).json({ message: 'The bookmark has been successfully removed from this blog.' })
+
+  const deleteData = {
+    message: 'The bookmark has been successfully removed from this blog.',
+    blogId: blog._id,
+    bookmarkId: findBookmark._id
+  }
+  res.status(200).json(deleteData)
 
 }
 module.exports = { getBookmarkForUser, addBookmark, deleteBookmark }

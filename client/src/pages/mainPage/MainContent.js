@@ -24,6 +24,7 @@ import { SideBarContext } from '../../useContext/SideBarContext'
 
 
 
+
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
@@ -105,7 +106,6 @@ const MainContent = () => {
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
   } = useGetPaginatedBlogsQuery(Number(pageNumber))
-
 
 
   const {
