@@ -48,10 +48,17 @@ export const bookmarkApiSlice = apiSlice.injectEndpoints({
         body: { id }
       }),
       invalidatesTags: (result, error, arg) => {
+        console.log(result)
+        console.log(arg)
+        console.log(result.bookmarkId)
+        console.log(result.blogId)
         return [
-          { type: 'bookmarks', id: arg.id }
+          { type: 'Bookmarks', id: result.bookmarkId },
+          // { type: 'Blog', id: result.blogId },
+
         ]
       }
+
     })
   })
 })

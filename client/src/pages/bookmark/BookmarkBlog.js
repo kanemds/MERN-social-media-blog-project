@@ -1,34 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import { CardActionArea, Avatar, Box, Button, Popover, IconButton, SvgIcon } from '@mui/material'
 import moment from 'moment'
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
-import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import useAuth from '../../hooks/useAuth'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
-import RecommendIcon from '@mui/icons-material/Recommend'
-import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
-import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
-import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import Modal from '@mui/material/Modal'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
-import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../likes/likesApiSlice'
+import { apiSlice } from '../../app/api/apiSlice'
+import { useDispatch } from 'react-redux'
 import { set } from 'lodash'
-import { messages } from '../../config/requireLoginMessage'
-import { SideBarContext } from '../../useContext/SideBarContext'
-import { useAddBookmarkMutation, useDeleteBookmarkMutation } from '../bookmark/bookmarkApiSlice'
-
 
 
 const iconStyle = {
@@ -54,74 +43,11 @@ const styleDelete = {
 }
 
 
-const fadeStyle = {
-  animation: 'fadeInAnimation ease 2s',
-  animationIterationCount: 1,
-  animationFillMode: 'forwards',
-}
+export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeMessage, isDeleteBookmarkLoading }) {
 
-const loadedStyles = `
-  @keyframes fadeInAnimation {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-`
-const removedStyles = `
-  @keyframes fadeInAnimation {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
-`
+  console.log(blog)
 
-
-export default function MainBlog({ blog }) {
-
-  const [
-    addedLike,
-    {
-      isLoading: isAddLikeLoading,
-      isSuccess: isAddLikeSuccess,
-      isError: isAddLikeError,
-      error: addLikeError
-    }
-  ] = useAddLikedToBlogMutation()
-
-  const [
-    deleteLike,
-    {
-      data: removeMessage,
-      isLoading: isDeleteLikeLoading,
-      isSuccess: isDeleteLikeSuccess,
-      isError: isDeleteLikeError,
-      error: deleteLikeError
-    }] = useDeleteLikedFromBlogMutation()
-
-  const [
-    addBookmark, {
-      isLoading: isAddBookmarkLoading,
-      isSuccess: isAddBookmarkSuccess,
-      isError: isAddBookmarkError,
-      error: addBookmarkError
-    }
-  ] = useAddBookmarkMutation()
-
-  const [
-    deleteBookmark, {
-      isLoading: isDeleteBookmarkLoading,
-      isSuccess: isDeleteBookmarkSuccess,
-      isError: isDeleteBookmarkError,
-      error: deleteBookmarkError
-    }
-  ] = useDeleteBookmarkMutation()
-
+  const dispatch = useDispatch()
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -129,16 +55,13 @@ export default function MainBlog({ blog }) {
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
-  const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
-  const [isLiked, setIsLiked] = useState(blog.isLike || false)
-  const [isBookmarked, setIsBookmarked] = useState(blog.isBookmark || false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [isLiked, setIsLiked] = useState(blog.isLike || null)
+  const [isFavorite, setIsFavorite] = useState(false)
   const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
-  const [isDeleteReady, setIsDeleteReady] = useState(null)
-  const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(null)
-  const [isBlogRemove, setIsBlogRemove] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(false)
 
 
   const current = Date.parse(new Date())
@@ -147,30 +70,45 @@ export default function MainBlog({ blog }) {
 
   const timeInMillisecond = current - postedDay
 
+  useEffect(() => {
+    if (isDeleteLikeReady && removeMessage) {
+      setDeleteMessage(removeMessage?.message)
+      setTimeout(() => {
+        setDeleteLikeOpen(false)
+        setRefresh(true)
+        setIsDeleteLikeReady(false)
+        setLoading(false)
+        console.log('remove Like')
+      }, 1400)
+    }
 
+  }, [isDeleteLikeReady])
 
   useEffect(() => {
-    if (isAddLikeSuccess) {
-      setIsLiked(true)
+    if (isDeleteBookmarkLoading) {
+      setLoading(true)
+      setTimeout(() => {
+        console.log('loading')
+        setIsDeleteLikeReady(true)
+      }, 1400)
     }
-    if (isAddBookmarkSuccess) {
-      setIsBookmarked(true)
-    }
-  }, [isAddLikeSuccess, isAddBookmarkSuccess])
+  }, [isDeleteBookmarkLoading])
 
-  useEffect(() => {
-    if (isDeleteLikeSuccess) {
-      setIsLiked(false)
-    }
-    if (isDeleteBookmarkSuccess) {
-      setIsBookmarked(false)
-    }
-  }, [isDeleteLikeSuccess, isDeleteBookmarkSuccess])
 
   const handleToSelectedBlog = () => {
     if (!isClick) {
       navigate(`/blogs/post/${blog.id}`)
     }
+  }
+
+  const handleDeleteLikeClose = () => {
+    setDeleteLikeOpen(false)
+  }
+
+
+  const handleDeleteLikeConfirm = async (e) => {
+    e.preventDefault()
+    await deleteBookmark({ id: blog.id })
   }
 
   const handleUserPage = () => {
@@ -179,39 +117,56 @@ export default function MainBlog({ blog }) {
     }
   }
 
-  const handleBookmark = async () => {
-    if (!username) {
-      navigate('/login', { state: { message: messages.like } })
-    } else {
+  const handleFavorite = () => {
+    setIsFavorite(prev => !prev)
+  }
 
-      if (!isBookmarked) {
-        await addBookmark({ blog_id: blog.id, bookmark_by_user_id: userId, username, is_bookmark: true })
-      } else {
-        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: blog.id })
-        console.log(deleteBookmarkInfo)
-      }
-    }
+  const handleLiked = (e) => {
+    setDeleteLikeOpen(true)
   }
 
 
+  ////////////////////////////////////////////////// delete like ////////////////////////////////////////////////////
+  let deleteLikeModalMessage
 
-
-  const handleLiked = async (e) => {
-    e.preventDefault()
-    // setIsLiked(prev => !prev)
-    if (!username) {
-      navigate('/login', { state: { message: messages.favorite } })
-    } else {
-      if (!isLiked) {
-        await addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
-      } else {
-        await deleteLike({ id: blog.id, username })
-      }
-    }
+  if (loading) {
+    deleteLikeModalMessage = <LoadingSpinner />
   }
+
+  if (isDeleteLikeReady) {
+    deleteLikeModalMessage = (
+      <Typography id="modal-modal-title" variant="h6" component="h2">
+        {deleteMessage}
+      </Typography>
+    )
+  }
+
+  if (!loading) {
+    deleteLikeModalMessage = (
+      <>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Remove like from this blog?
+        </Typography>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
+          <Button variant='contained' onClick={handleDeleteLikeClose}>Cancel</Button>
+          <Button variant='contained' onClick={handleDeleteLikeConfirm} sx={{
+            backgroundColor: red[600],
+            color: 'white',
+            '&:hover': {
+              backgroundColor: red[800]
+            }
+          }}>Remove Like</Button>
+        </Box>
+      </>
+    )
+  }
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   return (
+
     <Card
       className='fadeIn'
       sx={{
@@ -224,6 +179,8 @@ export default function MainBlog({ blog }) {
         }
       }}
     >
+      {/* keyframes animation will only apply to elements within the scope of the component. It won't affect other elements on the page, */}
+
       <CardActionArea
         component="div"
         sx={{
@@ -288,10 +245,10 @@ export default function MainBlog({ blog }) {
 
             {/* favorite and like */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
-              {username !== blog.username ?
+              {username !== blog.user ?
                 <IconButton
                   disableRipple
-                  onClick={handleBookmark}
+                  onClick={handleFavorite}
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
                   style={iconStyle}
@@ -300,7 +257,7 @@ export default function MainBlog({ blog }) {
                     '&:hover': { color: yellow[800], background: 'white' }
                   }}
                 >
-                  {isBookmarked ?
+                  {isFavorite ?
                     <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
                     :
                     <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
@@ -326,7 +283,7 @@ export default function MainBlog({ blog }) {
                     <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
                   }
                 </IconButton>
-                <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
+                <Typography sx={{ color: 'black', ml: 1 }}>0</Typography>
               </Box>
             </Box>
 
@@ -342,13 +299,23 @@ export default function MainBlog({ blog }) {
                 }
               </Typography>
 
+
             </Box>
 
           </Box>
         </CardContent>
 
       </CardActionArea>
-
+      <Modal
+        open={deleteLikeOpen}
+        onClose={handleDeleteLikeClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleDelete}>
+          {deleteLikeModalMessage}
+        </Box>
+      </Modal>
 
     </Card >
   )

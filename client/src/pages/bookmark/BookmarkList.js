@@ -17,10 +17,10 @@ import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
-import LikeBlog from './LikeBlog'
 import { set } from 'lodash'
 import { SideBarContext } from '../../useContext/SideBarContext'
-import { useGetBookmarksQuery } from './bookmarkApiSlice'
+import { useDeleteBookmarkMutation, useGetBookmarksQuery } from './bookmarkApiSlice'
+import BookmarkBlog from './BookmarkBlog'
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -78,11 +78,22 @@ const BookmarkList = () => {
     })
   })
 
+  const [
+    deleteBookmark, {
+      data: removeMessage,
+      isLoading: isDeleteBookmarkLoading,
+      isSuccess: isDeleteBookmarkSuccess,
+      isError: isDeleteBookmarkError,
+      error: deleteBookmarkError
+    }
+  ] = useDeleteBookmarkMutation()
 
+
+  console.log(bookmarkBlogs)
 
 
   const [isDesc, setIsDesc] = useState(true) // high to low
-  const [currentLikes, setCurrentLikes] = useState(null)
+  const [currentBookmarks, setCurrentBookmarks] = useState(null)
   const [searchInput, setSearchInput] = useState('')
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
@@ -91,7 +102,7 @@ const BookmarkList = () => {
   useEffect(() => {
 
     if (isSuccess || refresh) {
-      setCurrentLikes(Object.values(likedBlogs))
+      setCurrentBookmarks(bookmarkBlogs)
       setRefresh(false)
     }
 
@@ -101,16 +112,16 @@ const BookmarkList = () => {
   const handleAscendent = () => {
     if (isDesc) {
 
-      const ascendingOrder = currentLikes?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-      setCurrentLikes(ascendingOrder)
+      const ascendingOrder = currentBookmarks?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      setCurrentBookmarks(ascendingOrder)
       setIsDesc(false)
     }
   }
 
   const handleDescendent = () => {
     if (!isDesc) {
-      const descendingOrder = currentLikes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      setCurrentLikes(descendingOrder)
+      const descendingOrder = currentBookmarks?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      setCurrentBookmarks(descendingOrder)
       setIsDesc(true)
     }
   }
@@ -119,7 +130,7 @@ const BookmarkList = () => {
     if (!searchInput.length) return console.log('nothing')
     const inputLowerCase = searchInput.toLowerCase()
     // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
-    const result = setCurrentLikes.filter(blog =>
+    const result = setCurrentBookmarks.filter(blog =>
       [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
     )
     if (!result.length) {
@@ -144,7 +155,7 @@ const BookmarkList = () => {
   }
 
 
-  if (isSuccess && currentLikes?.length === 0) {
+  if (isSuccess && currentBookmarks?.length === 0) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography >
@@ -154,12 +165,12 @@ const BookmarkList = () => {
       )
   }
 
-  if (isSuccess && currentLikes?.length >= 1) {
+  if (isSuccess && currentBookmarks?.length >= 1) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
-        {currentLikes?.map(blog =>
+        {currentBookmarks?.map(blog =>
           <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-            <LikeBlog blog={blog} deleteLike={deleteLike} setRefresh={setRefresh} isDeleteLikeLoading={isDeleteLikeLoading} removeMessage={removeMessage} />
+            <BookmarkBlog blog={blog} deleteBookmark={deleteBookmark} setRefresh={setRefresh} isDeleteBookmarkLoading={isDeleteBookmarkLoading} removeMessage={removeMessage} />
           </Grid>
         )
         }

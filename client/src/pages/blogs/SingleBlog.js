@@ -2,7 +2,7 @@ import { Box, Container, Paper, Typography, TextField, Modal, Button, IconButton
 import React, { useContext, useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
-import { blogsApiSlice, useDeleteBlogMutation, useGetBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
+import { blogsApiSlice, useDeleteBlogMutation, useGetBlogsQuery, useGetPaginatedBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ImagesDisplaySlider from './ImagesDisplaySlider'
@@ -111,6 +111,8 @@ const SingleBlog = () => {
     username: username ? username : null
   }
 
+
+
   const {
     data,
     isLoading,
@@ -206,12 +208,14 @@ const SingleBlog = () => {
 
   useEffect(() => {
     if (isAddLikeSuccess) {
-      dispatch(apiSlice.util.invalidateTags(['Blog']))
+      // dispatch(apiSlice.util.invalidateTags(['Blog']))
+
       // dispatch(apiSlice.util.prefetch('getPaginatedBlogs', undefined, { force: true }))
       setIsLiked(true)
     }
     if (isDeleteLikeSuccess) {
-      dispatch(apiSlice.util.invalidateTags(['Blog']))
+
+      // dispatch(apiSlice.util.invalidateTags(['Blog']))
       // dispatch(apiSlice.util.prefetch('getPaginatedBlogs', undefined, { force: true }))
       setIsLiked(false)
     }
