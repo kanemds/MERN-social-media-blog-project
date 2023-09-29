@@ -15,9 +15,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import Modal from '@mui/material/Modal'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
-import { apiSlice } from '../../app/api/apiSlice'
 import { useDispatch } from 'react-redux'
-import { set } from 'lodash'
+
 
 
 const iconStyle = {
@@ -45,7 +44,6 @@ const styleDelete = {
 
 export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, isDeleteLikeLoading }) {
 
-  console.log(blog)
 
   const dispatch = useDispatch()
 
@@ -57,7 +55,6 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [isClick, setIsClick] = useState(false)
   const [isLiked, setIsLiked] = useState(blog.isLike || null)
-  const [isFavorite, setIsFavorite] = useState(false)
   const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -105,20 +102,15 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
     setDeleteLikeOpen(false)
   }
 
-
   const handleDeleteLikeConfirm = async (e) => {
     e.preventDefault()
-    await deleteLike({ id: blog.id })
+    await deleteLike({ id: blog.id, likeId: blog.likeId })
   }
 
   const handleUserPage = () => {
     if (isClick) {
       navigate(`/blogs/user/${blog.id}`)
     }
-  }
-
-  const handleFavorite = () => {
-    setIsFavorite(prev => !prev)
   }
 
   const handleLiked = (e) => {
@@ -245,26 +237,7 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
 
             {/* favorite and like */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
-              {username !== blog.user ?
-                <IconButton
-                  disableRipple
-                  onClick={handleFavorite}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    mr: 1,
-                    '&:hover': { color: yellow[800], background: 'white' }
-                  }}
-                >
-                  {isFavorite ?
-                    <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
-                    :
-                    <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
-                : ''
-              }
+
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IconButton
                   disableRipple
@@ -278,12 +251,12 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
                 >
                   {isLiked ?
 
-                    <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
+                    <FavoriteIcon sx={{ fontSize: '30px', color: red[400] }} />
                     :
-                    <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
+                    <FavoriteBorderIcon sx={{ fontSize: '30px', color: '#bdbdbd' }} />
                   }
                 </IconButton>
-                <Typography sx={{ color: 'black', ml: 1 }}>0</Typography>
+
               </Box>
             </Box>
 

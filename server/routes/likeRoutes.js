@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike, findLikedBlogs } = require('../controllers/likeController')
+const { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike, getBlogsForLikedList } = require('../controllers/likeController')
 
 router.route('/')
   .get(getAllLikes)
@@ -13,8 +13,7 @@ router.route('/user')
 
 
 router.route('/user/blogs')
-  .get(findLikedBlogs)
-
+  .get(getBlogsForLikedList)
 
 module.exports = router
 

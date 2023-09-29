@@ -13,21 +13,9 @@ const getAllLikes = async (req, res) => {
   res.status(200).json(likes)
 }
 
-// // @desc Get likes for specific blog
-// // route Get /likes
-// // @access Private
-// const getLikesFromBlog = async (req, res) => {
-//   const { blog_id } = req.body
-
-//   const numbersOfLike = await Like.findOne({ blog_id }).lean().exec()
-
-//   if (!numbersOfLike) return res.status(400).json({ message: 'No likes found for current Blog' })
-
-//   res.status(200).json(numbersOfLike)
-// }
 
 // @desc Get user likes
-// route Get /likes/user
+// route Get /likes
 // @access Private
 const getLikesForUser = async (req, res) => {
 
@@ -37,26 +25,29 @@ const getLikesForUser = async (req, res) => {
 
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
-  const currentUserLikes = await Like.aggregate([
-    { $match: { liked_by_user_username: isUserExist.username } }
-  ])
+  const likes = await Like.find({ liked_by_user_username: isUserExist.username }).lean().exec()
 
-  if (!currentUserLikes.length || !currentUserLikes) return res.status(200).json([])
+  if (!likes.length || !likes) return res.status(200).json([])
 
   res.status(200).json(currentUserLikes)
 }
 
-const findLikedBlogs = async (req, res) => {
+
+// @desc Get blogs for likedList
+// route Get /likes/user
+// @access Private
+const getBlogsForLikedList = async (req, res) => {
 
   const { username } = req.query
+  const isUserExist = await User.findOne({ username }).exec()
+  if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
   // find all likes 
-  const currentUserLikes = await Like.aggregate([
-    { $match: { liked_by_user_username: username } }
-  ])
+  const likes = await Like.find({ liked_by_user_username: username }).lean().exec()
 
+  if (!likes.length || !likes) return res.status(200).json([])
   // filter and get blog_id
-  const listOfBlogId = await currentUserLikes.map(like => {
+  const listOfBlogId = await likes.map(like => {
     return like.blog_id
   })
 
@@ -73,9 +64,9 @@ const findLikedBlogs = async (req, res) => {
 
 
   const blogsWithLikes = await listOfBlogs.map(blog => {
-    const findMatch = currentUserLikes.find(like => like.blog_id.toString() === blog._id.toString())
+    const findMatch = likes.find(like => like.blog_id.toString() === blog._id.toString())
     console.log(findMatch)
-    return { ...blog, isLike: findMatch.is_like }
+    return { ...blog, isLike: findMatch.is_like, likeId: findMatch._id.toString() }
   })
 
   const decOrderBlogs = await blogsWithLikes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -127,14 +118,26 @@ const editLIke = async (req, res) => {
 const deleteLike = async (req, res) => {
   const { id } = req.body
 
-  const likedBlog = await Like.findOne({ blog_id: id }).exec()
+  const blog = await Blog.findById(id).exec()
 
-  if (!likedBlog) return res.status(400).json({ message: 'net work error, please try again' })
+  if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
 
-  await likedBlog.deleteOne()
-  console.log('like remove')
-  res.status(200).json({ message: 'The like has been successfully removed from this blog.' })
+  const selectedLikedBlog = await Like.findOne({ blog_id: blog._id }).exec()
+
+  if (!selectedLikedBlog) return res.status(400).json({ message: 'net work error, please try again' })
+
+  const deleteData = {
+    message: 'The like has been successfully removed from this blog',
+    blogId: blog._id,
+    likeId: selectedLikedBlog._id
+  }
+
+  await selectedLikedBlog.deleteOne()
+  console.log('like removed')
+
+
+  res.status(200).json(deleteData)
 }
 
 
-module.exports = { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike, findLikedBlogs }
+module.exports = { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike, getBlogsForLikedList }
