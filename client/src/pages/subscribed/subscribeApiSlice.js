@@ -24,12 +24,10 @@ export const subscribeApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, error, arg) => {
         if (result) {
-          console.log(result)
           return [{
             type: 'Subscribe', id: 'LIST'
-          }, {
-            ...result.map(id => ({ type: 'Subscribe', id: result.id }))
-          }
+          },
+          ...result.map(each => ({ type: 'Subscribe', id: each.id }))
           ]
         } else {
           return [{ type: 'Subscribe', id: 'LIST' }]
@@ -55,9 +53,9 @@ export const subscribeApiSlice = apiSlice.injectEndpoints({
         body: { id }
       }),
       invalidatesTags: (result, error, arg) => {
+        console.log(arg.id)
         return [
-          { type: 'Subscribe', id: 'LIST' },
-          { type: 'Blog', id: 'LIST' }
+          { type: 'Subscribe', id: arg.id }
         ]
       }
     })

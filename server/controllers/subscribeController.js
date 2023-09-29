@@ -14,9 +14,7 @@ const getBlogsForSubscribedList = async (req, res) => {
 
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
-  const currentUserSubscribed = await Subscribe.aggregate([
-    { $match: { subscribed_by_user_username: username } }
-  ])
+  const currentUserSubscribed = await Subscribe.find({ subscribed_by_user_username: username }).lean().exec()
 
   console.log(currentUserSubscribed)
 

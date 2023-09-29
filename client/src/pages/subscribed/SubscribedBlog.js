@@ -92,7 +92,6 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
     setDeleteSubscribedOpen(true)
   }
 
-
   const handleDeleteConfirm = async (e) => {
     e.preventDefault()
     await deleteSubscribed({ id: blog.id })
