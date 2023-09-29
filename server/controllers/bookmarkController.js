@@ -7,13 +7,34 @@ const Blog = require('../models/Blog')
 // @access Private
 const getBookmarkForUser = async (req, res) => {
   const { username } = req.query
-  const isUserExist = await User.find({ username }).exec()
+  const isUserExist = await User.findOne({ username }).exec()
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
-  const bookmarksForUser = await Bookmark.find({ liked_by_user_id: isUserExist._id })
-  console.log(bookmarksForUser)
+  const bookmarks = await Bookmark.find({ bookmark_by_user_id: isUserExist._id })
 
-  res.status(200).json(bookmarksForUser)
+  // filter and get blog_id
+  const listOfBlogId = await bookmarks.map(bookmark => {
+    return bookmark.blog_id
+  })
+
+  // find the match blog.id from Blog collection
+  const listOfBlogs = await Blog.aggregate([
+    {
+      $match: {
+        _id: {
+          $in: listOfBlogId // Match documents where blog_id is in listOfBlogIds
+        }
+      }
+    }
+  ])
+
+  const blogsWithBookmarks = await listOfBlogs.map(blog => {
+    const findMatch = bookmarks.find(bookmark => bookmark.blog_id.toString() === blog._id.toString())
+    return { ...blog, isBookmark: findMatch.is_bookmark }
+  })
+
+  const decOrderBlogs = await blogsWithBookmarks?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  res.status(200).json(decOrderBlogs)
 }
 
 // @desc create a bookmark

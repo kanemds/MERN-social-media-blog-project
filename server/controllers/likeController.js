@@ -55,12 +55,10 @@ const findLikedBlogs = async (req, res) => {
     { $match: { liked_by_user_username: username } }
   ])
 
-  console.log(currentUserLikes)
   // filter and get blog_id
   const listOfBlogId = await currentUserLikes.map(like => {
     return like.blog_id
   })
-  console.log(listOfBlogId)
 
   // find the match blog.id from Blog collection
   const listOfBlogs = await Blog.aggregate([

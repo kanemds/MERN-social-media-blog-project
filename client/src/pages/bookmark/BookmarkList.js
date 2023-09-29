@@ -89,7 +89,7 @@ const BookmarkList = () => {
   ] = useDeleteBookmarkMutation()
 
 
-  console.log(bookmarkBlogs)
+
 
 
   const [isDesc, setIsDesc] = useState(true) // high to low
@@ -143,6 +143,8 @@ const BookmarkList = () => {
       return setSearchResult(result)
     }
   }
+
+  console.log(currentBookmarks)
 
   let content
 
