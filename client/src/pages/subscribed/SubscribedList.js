@@ -98,7 +98,6 @@ const SubscribedList = () => {
   useEffect(() => {
 
     if (isSuccess || refresh) {
-      console.log(subscribedBlogs)
       setCurrentSubscribed(Object.values(subscribedBlogs))
       setRefresh(false)
     }
