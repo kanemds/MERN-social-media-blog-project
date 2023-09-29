@@ -1,10 +1,10 @@
-const { getBookmarkForUser, addBookmark, deleteBookmark } = require('../controllers/bookmarkController')
+const { getBlogsForBookmarkList, addBookmark, deleteBookmark } = require('../controllers/bookmarkController')
 
 const router = require('express').Router()
 
 
 router.route('/')
-  .get(getBookmarkForUser)
+  .get(getBlogsForBookmarkList)
   .post(addBookmark)
   .delete(deleteBookmark)
 

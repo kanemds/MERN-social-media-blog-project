@@ -251,9 +251,9 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
                   }}
                 >
                   {isFavorite ?
-                    <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
+                    <StarRoundedIcon sx={{ fontSize: '35px', color: yellow[800] }} />
                     :
-                    <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
+                    <StarOutlineRoundedIcon sx={{ fontSize: '35px', color: '#bdbdbd' }} />
                   }
                 </IconButton>
                 : ''

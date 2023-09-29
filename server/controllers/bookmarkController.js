@@ -5,12 +5,14 @@ const Blog = require('../models/Blog')
 // @desc Get bookmarks for login user
 // route Get /bookmarks
 // @access Private
-const getBookmarkForUser = async (req, res) => {
+const getBlogsForBookmarkList = async (req, res) => {
   const { username } = req.query
   const isUserExist = await User.findOne({ username }).exec()
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
-  const bookmarks = await Bookmark.find({ bookmark_by_user_id: isUserExist._id })
+  const bookmarks = await Bookmark.find({ bookmark_by_user_id: isUserExist._id }).lean().exec()
+
+  if (!bookmarks.length || !bookmarks) return res.status(200).json([])
 
   // filter and get blog_id
   const listOfBlogId = await bookmarks.map(bookmark => {
@@ -72,21 +74,23 @@ const deleteBookmark = async (req, res) => {
 
   if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
 
-  const findBookmark = await Bookmark.findOne({ blog_id: blog._id })
+  const selectedBookmarkBlog = await Bookmark.findOne({ blog_id: blog._id }).exec()
 
-  if (!findBookmark) return res.status(404).json({ message: 'net work error, please try again' })
+  if (!selectedBookmarkBlog) return res.status(404).json({ message: 'net work error, please try again' })
 
-  console.log('findBookmark', findBookmark)
-
-  await findBookmark.deleteOne()
-  console.log('bookmark removed')
+  console.log('findBookmark', selectedBookmarkBlog)
 
   const deleteData = {
     message: 'The bookmark has been successfully removed from this blog.',
     blogId: blog._id,
-    bookmarkId: findBookmark._id
+    bookmarkId: selectedBookmarkBlog._id
   }
+
+  await selectedBookmarkBlog.deleteOne()
+  console.log('bookmark removed')
+
+
   res.status(200).json(deleteData)
 
 }
-module.exports = { getBookmarkForUser, addBookmark, deleteBookmark }
+module.exports = { getBlogsForBookmarkList, addBookmark, deleteBookmark }
