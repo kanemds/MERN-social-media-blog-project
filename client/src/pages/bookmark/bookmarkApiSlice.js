@@ -22,10 +22,12 @@ export const bookmarkApiSlice = apiSlice.injectEndpoints({
         if (result) {
           return [{
             type: 'Bookmark', id: 'LIST'
-          }, {
-            ...result.map(each => ({ type: 'Bookmark', id: each._id }))
-          }]
+          },
+          // return {type:'Bookmark',id:id},{type:'Bookmark',id:id},
+          ...result.map(each => ({ type: 'Bookmark', id: each.bookmarkId }))
+          ]
         } else {
+          // for other endpoint to invalidates this get request
           return [{ type: 'Bookmark', id: 'LIST' }]
         }
       }
@@ -42,20 +44,18 @@ export const bookmarkApiSlice = apiSlice.injectEndpoints({
     }),
     deleteBookmark: builder.mutation({
       // using the blog.id to search like.id also can refresh the blog id cache data as well
-      query: ({ id }) => ({
+      query: ({ id, bookmarkId }) => ({
         url: '/bookmarks',
         method: 'DELETE',
-        body: { id }
+        body: { id, bookmarkId }
       }),
       invalidatesTags: (result, error, arg) => {
         console.log(result)
-        console.log(arg)
+        console.log(arg.bookmarkId)
         console.log(result.bookmarkId)
         console.log(result.blogId)
         return [
-          { type: 'Bookmarks', id: result.bookmarkId },
-          // { type: 'Blog', id: result.blogId },
-
+          { type: 'Bookmark', id: arg.bookmarkId }
         ]
       }
 

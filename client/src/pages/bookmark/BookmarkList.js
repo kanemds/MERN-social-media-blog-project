@@ -144,7 +144,6 @@ const BookmarkList = () => {
     }
   }
 
-  console.log(currentBookmarks)
 
   let content
 

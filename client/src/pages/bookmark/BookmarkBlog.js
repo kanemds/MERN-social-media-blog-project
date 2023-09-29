@@ -45,8 +45,6 @@ const styleDelete = {
 
 export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeMessage, isDeleteBookmarkLoading }) {
 
-  console.log(blog)
-
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
@@ -56,12 +54,11 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [isClick, setIsClick] = useState(false)
-  const [isLiked, setIsLiked] = useState(blog.isLike || null)
-  const [isFavorite, setIsFavorite] = useState(false)
-  const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(blog.isBookmark || null)
+  const [deleteBookmarkOpen, setDeleteBookmarkOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(false)
+  const [isDeleteBookmarkReady, setIsDeleteBookmarkReady] = useState(false)
 
 
   const current = Date.parse(new Date())
@@ -71,25 +68,25 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
   const timeInMillisecond = current - postedDay
 
   useEffect(() => {
-    if (isDeleteLikeReady && removeMessage) {
+    if (isDeleteBookmarkReady && removeMessage) {
       setDeleteMessage(removeMessage?.message)
       setTimeout(() => {
-        setDeleteLikeOpen(false)
+        setDeleteBookmarkOpen(false)
         setRefresh(true)
-        setIsDeleteLikeReady(false)
+        setIsDeleteBookmarkReady(false)
         setLoading(false)
         console.log('remove Like')
       }, 1400)
     }
 
-  }, [isDeleteLikeReady])
+  }, [isDeleteBookmarkReady])
 
   useEffect(() => {
     if (isDeleteBookmarkLoading) {
       setLoading(true)
       setTimeout(() => {
         console.log('loading')
-        setIsDeleteLikeReady(true)
+        setIsDeleteBookmarkReady(true)
       }, 1400)
     }
   }, [isDeleteBookmarkLoading])
@@ -101,14 +98,14 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
     }
   }
 
-  const handleDeleteLikeClose = () => {
-    setDeleteLikeOpen(false)
+  const handleDeleteBookmark = () => {
+    setDeleteBookmarkOpen(false)
   }
 
 
   const handleDeleteLikeConfirm = async (e) => {
     e.preventDefault()
-    await deleteBookmark({ id: blog.id })
+    await deleteBookmark({ id: blog.id, bookmarkId: blog.bookmarkId })
   }
 
   const handleUserPage = () => {
@@ -117,12 +114,8 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
     }
   }
 
-  const handleFavorite = () => {
-    setIsFavorite(prev => !prev)
-  }
-
-  const handleLiked = (e) => {
-    setDeleteLikeOpen(true)
+  const handleBookmark = () => {
+    setDeleteBookmarkOpen(true)
   }
 
 
@@ -133,7 +126,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
     deleteLikeModalMessage = <LoadingSpinner />
   }
 
-  if (isDeleteLikeReady) {
+  if (isDeleteBookmarkReady) {
     deleteLikeModalMessage = (
       <Typography id="modal-modal-title" variant="h6" component="h2">
         {deleteMessage}
@@ -145,17 +138,17 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
     deleteLikeModalMessage = (
       <>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Remove like from this blog?
+          Remove bookmark from this blog?
         </Typography>
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
-          <Button variant='contained' onClick={handleDeleteLikeClose}>Cancel</Button>
+          <Button variant='contained' onClick={handleDeleteBookmark}>Cancel</Button>
           <Button variant='contained' onClick={handleDeleteLikeConfirm} sx={{
             backgroundColor: red[600],
             color: 'white',
             '&:hover': {
               backgroundColor: red[800]
             }
-          }}>Remove Like</Button>
+          }}>Remove Bookmark</Button>
         </Box>
       </>
     )
@@ -248,7 +241,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
               {username !== blog.user ?
                 <IconButton
                   disableRipple
-                  onClick={handleFavorite}
+                  onClick={handleBookmark}
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
                   style={iconStyle}
@@ -265,26 +258,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
                 </IconButton>
                 : ''
               }
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <IconButton
-                  disableRipple
-                  onClick={handleLiked}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    '&:hover': { color: red[400], background: 'white' }
-                  }}
-                >
-                  {isLiked ?
 
-                    <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
-                    :
-                    <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
-                <Typography sx={{ color: 'black', ml: 1 }}>0</Typography>
-              </Box>
             </Box>
 
             {/* show day and menu  */}
@@ -307,8 +281,8 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
 
       </CardActionArea>
       <Modal
-        open={deleteLikeOpen}
-        onClose={handleDeleteLikeClose}
+        open={deleteBookmarkOpen}
+        onClose={handleDeleteBookmark}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
