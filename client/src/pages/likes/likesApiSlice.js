@@ -49,7 +49,6 @@ export const likesApiSlice = apiSlice.injectEndpoints({
         return loadedLikes
       },
       providesTags: (result, error, arg) => {
-        console.log('result', result)
         if (result) {
           return [{
             type: 'Like', id: 'LIST'
@@ -79,7 +78,6 @@ export const likesApiSlice = apiSlice.injectEndpoints({
         body: { id, likeId }
       }),
       invalidatesTags: (result, error, arg) => {
-        console.log(arg.likeId)
         return [{ type: 'Like', id: arg.likeId }]
       }
     })

@@ -208,23 +208,15 @@ const SingleBlog = () => {
 
   useEffect(() => {
     if (isAddLikeSuccess) {
-      // dispatch(apiSlice.util.invalidateTags(['Blog']))
-
-      // dispatch(apiSlice.util.prefetch('getPaginatedBlogs', undefined, { force: true }))
       setIsLiked(true)
     }
     if (isDeleteLikeSuccess) {
-
-      // dispatch(apiSlice.util.invalidateTags(['Blog']))
-      // dispatch(apiSlice.util.prefetch('getPaginatedBlogs', undefined, { force: true }))
       setIsLiked(false)
     }
     if (isAddSubscribeSuccess) {
-      dispatch(apiSlice.util.invalidateTags(['Blog']))
       setIsSubscribed(true)
     }
     if (isDeleteSubscribedSuccess) {
-      dispatch(apiSlice.util.invalidateTags(['Blog']))
       setIsSubscribed(false)
     }
   }, [isDeleteLikeSuccess, isAddLikeSuccess, isAddSubscribeSuccess, isDeleteSubscribedSuccess])

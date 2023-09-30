@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
 const Like = require('../models/Like')
+const timeDisplayOptions = require('../config/timeDisplayOptions')
 
 // @desc Get all likes
 // route Get /likes
@@ -66,7 +67,8 @@ const getBlogsForLikedList = async (req, res) => {
   const blogsWithLikes = await listOfBlogs.map(blog => {
     const findMatch = likes.find(like => like.blog_id.toString() === blog._id.toString())
     console.log(findMatch)
-    return { ...blog, isLike: findMatch.is_like, likeId: findMatch._id.toString() }
+    const timeConvert = new Date(Date.parse(findMatch?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+    return { ...blog, isLike: findMatch.is_like, likeId: findMatch._id.toString(), likedAt: timeConvert }
   })
 
   const decOrderBlogs = await blogsWithLikes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
