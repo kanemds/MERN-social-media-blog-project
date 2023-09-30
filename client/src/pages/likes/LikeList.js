@@ -21,6 +21,8 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import LikeBlog from './LikeBlog'
 import { set } from 'lodash'
 import { SideBarContext } from '../../useContext/SideBarContext'
+import { timeDisplayOptions } from '../../config/timeDisplayOptions'
+import { useLocation } from 'react-router-dom'
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -67,7 +69,8 @@ const LikeList = () => {
   const small = useMediaQuery('(max-width:791px)')
 
   const { username } = useAuth()
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
+  const { pathname } = useLocation()
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, path, setPath } = useContext(SideBarContext)
   const [
     deleteLike,
     {
@@ -89,6 +92,7 @@ const LikeList = () => {
 
 
 
+
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentLikes, setCurrentLikes] = useState(null)
   const [searchInput, setSearchInput] = useState('')
@@ -96,15 +100,28 @@ const LikeList = () => {
   const [isSearch, setIsSearch] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
+
   useEffect(() => {
 
     if (isSuccess || refresh) {
-      setCurrentLikes(Object.values(likedBlogs))
-      setRefresh(false)
+      if (selectedDate.likedPage) {
+        const selectedDay = Object.values(likedBlogs).filter(blog => blog.likedAt === selectedDate.likedPage)
+        setCurrentLikes(selectedDay)
+        setRefresh(false)
+      } else {
+        setCurrentLikes(Object.values(likedBlogs))
+        setRefresh(false)
+      }
     }
+  }, [isSuccess, refresh, selectedDate.likedPage])
 
-  }, [isSuccess, refresh])
+  useEffect(() => {
+    if (pathname === '/blogs/liked') {
+      setPath(pathname)
+    }
+  }, [pathname])
 
+  console.log(selectedDate?.likedPage)
 
   const handleAscendent = () => {
     if (isDesc) {
@@ -174,8 +191,6 @@ const LikeList = () => {
       </Grid >
     )
   }
-
-
 
   return (
     <Box sx={{ width: '100%' }} >

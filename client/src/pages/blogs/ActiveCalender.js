@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { List, Box, styled } from '@mui/material'
 import ListItem from '@mui/material/ListItem'
@@ -8,13 +8,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout'
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker'
+import { SideBarContext } from '../../useContext/SideBarContext'
+import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 
 
 function ActionList(props) {
   const { onAccept, onClear, onCancel, onSetToday, className } = props
   const actions = [
     { text: 'Today', method: onSetToday },
-    { text: 'Accept', method: onAccept },
+    // { text: 'Accept', method: onAccept },
     { text: 'Clear', method: onClear },
     // { text: 'Cancel', method: onCancel }
   ]
@@ -34,15 +36,26 @@ function ActionList(props) {
 }
 
 
-
 export default function ActiveCalender() {
+
+  // dayjs is giving the current timezone no need to convert
+
+  const { selectedDate, setSelectedDate, path } = useContext(SideBarContext)
+
+  const handleSelectedDate = (date) => {
+    console.log(date)
+    const timeConvert = date ? new Date(Date.parse(date?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo) : null
+    if (path === '/blogs/liked') {
+      setSelectedDate({ ...selectedDate, likedPage: timeConvert })
+    }
+  }
+
+
   return (
-
-
 
     <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ maxWidth: '240px', minWidth: '240px', }}>
       <StaticDatePicker
-        defaultValue={dayjs()}
+
         orientation='portrait'
         // disablePast={true}
         disableFuture={true}
@@ -156,6 +169,8 @@ export default function ActiveCalender() {
         slots={{
           actionBar: ActionList,
         }}
+        value={selectedDate}
+        onChange={newDate => handleSelectedDate(newDate)}
       />
     </LocalizationProvider>
 
