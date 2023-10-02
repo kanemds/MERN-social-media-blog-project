@@ -25,6 +25,7 @@ import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import { useLocation } from 'react-router-dom'
 
 
+
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
@@ -121,7 +122,6 @@ const LikeList = () => {
     }
   }, [pathname])
 
-  console.log(selectedDate?.likedPage)
 
   const handleAscendent = () => {
     if (isDesc) {
