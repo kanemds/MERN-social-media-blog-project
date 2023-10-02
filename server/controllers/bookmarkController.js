@@ -1,6 +1,7 @@
 const Bookmark = require('../models/Bookmark')
 const User = require('../models/User')
 const Blog = require('../models/Blog')
+const timeDisplayOptions = require('../config/timeDisplayOptions')
 
 // @desc Get bookmarks for login user
 // route Get /bookmarks
@@ -32,8 +33,9 @@ const getBlogsForBookmarkList = async (req, res) => {
 
   const blogsWithBookmarks = await listOfBlogs.map(blog => {
     const findMatch = bookmarks.find(bookmark => bookmark.blog_id.toString() === blog._id.toString())
-    console.log(bookmarks)
-    return { ...blog, isBookmark: findMatch.is_bookmark, bookmarkId: findMatch._id.toString() }
+    console.log('bookmarks', bookmarks)
+    const timeConvert = new Date(Date.parse(findMatch?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+    return { ...blog, isBookmark: findMatch.is_bookmark, bookmarkId: findMatch._id.toString(), bookmarkedAt: timeConvert }
   })
 
   const decOrderBlogs = await blogsWithBookmarks?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

@@ -113,7 +113,7 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
     }
   }, [isDeleteReady])
 
-  console.log(isDeleteReady)
+
 
   useEffect(() => {
 

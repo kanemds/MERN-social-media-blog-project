@@ -40,14 +40,38 @@ export default function ActiveCalender() {
 
   // dayjs is giving the current timezone no need to convert
 
-  const { selectedDate, setSelectedDate, path } = useContext(SideBarContext)
+  const { selectedDate, setSelectedDate, path, calendarDate, setCalendarDate } = useContext(SideBarContext)
+
+
 
   const handleSelectedDate = (date) => {
     console.log(date)
     const timeConvert = date ? new Date(Date.parse(date?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo) : null
     if (path === '/blogs/liked') {
+      setCalendarDate({ ...calendarDate, likedPage: date })
       setSelectedDate({ ...selectedDate, likedPage: timeConvert })
     }
+    if (path === '/blogs/subscribed') {
+      setCalendarDate({ ...calendarDate, subscribePage: date })
+      setSelectedDate({ ...selectedDate, subscribePage: timeConvert })
+    }
+    if (path === '/blogs/bookmarks') {
+      setCalendarDate({ ...calendarDate, bookmarkPage: date })
+      setSelectedDate({ ...selectedDate, bookmarkPage: timeConvert })
+    }
+
+  }
+
+  let displayDate = ''
+
+  if (path === '/blogs/liked') {
+    displayDate = calendarDate.likedPage
+  }
+  if (path === '/blogs/subscribed') {
+    displayDate = calendarDate.subscribePage
+  }
+  if (path === '/blogs/bookmarks') {
+    displayDate = calendarDate.bookmarkPage
   }
 
 
@@ -169,7 +193,7 @@ export default function ActiveCalender() {
         slots={{
           actionBar: ActionList,
         }}
-        value={selectedDate}
+        value={displayDate}
         onChange={newDate => handleSelectedDate(newDate)}
       />
     </LocalizationProvider>

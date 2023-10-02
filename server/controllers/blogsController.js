@@ -6,6 +6,7 @@ const { isEqual, sortBy, find, differenceWith, differenceBy } = require('lodash'
 const storage = require('../config/firebaseConfig')
 
 const { ref, uploadBytes, getDownloadURL, deleteObject } = require('firebase/storage')
+const timeDisplayOptions = require('../config/timeDisplayOptions')
 
 
 const processMultipleImages = async (images) => {
@@ -130,12 +131,17 @@ const getBlogsForUser = async (req, res) => {
 
   if (!currentUserBlogs || currentUserBlogs.length === 0) return res.status(200).json([])
 
-  const countLikePerBlog = await Like.find({ blog_owner: id, is_like: true }).lean().exec()
+
+  const countLikePerBlog = await Promise.all(currentUserBlogs.map(async blog => {
+    const timeConvert = new Date(Date.parse(blog.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+    const perBlog = await Like.find({ blog_id: blog._id, is_like: true }).count()
+    return { ...blog, likedCount: perBlog, calenderDate: timeConvert }
+  }))
   console.log(countLikePerBlog)
 
   // find subscribe and then bookmard finally combine
 
-  const decOrderBlogs = await currentUserBlogs?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  const decOrderBlogs = await countLikePerBlog?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
   res.status(200).json(decOrderBlogs)
 }

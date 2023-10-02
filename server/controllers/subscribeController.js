@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
 const Subscribe = require('../models/Subscribe')
+const timeDisplayOptions = require('../config/timeDisplayOptions')
 
 
 
@@ -20,7 +21,12 @@ const getBlogsForSubscribedList = async (req, res) => {
 
   if (!currentUserSubscribed || !currentUserSubscribed.length) return res.status(200).json([])
 
-  const decOrderSub = await currentUserSubscribed?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  const addedDate = currentUserSubscribed.map(blog => {
+    const timeConvert = new Date(Date.parse(blog.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+    return { ...blog, subscribedAt: timeConvert }
+  })
+
+  const decOrderSub = await addedDate?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
   res.status(200).json(decOrderSub)
 }

@@ -110,6 +110,7 @@ const BlogsList = () => {
     }
   }, [isSuccess, refresh])
 
+  console.log(currentUserBlogs)
 
   const handleSelect = (e) => {
     setIsSelected(e.target.value)

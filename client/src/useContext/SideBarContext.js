@@ -18,6 +18,13 @@ const SideBarProvider = ({ children }) => {
     bookmarkPage: null,
     likedPage: null
   })
+  const [calendarDate, setCalendarDate] = useState({
+    frontPage: null,
+    myPostPage: null,
+    subscribePage: null,
+    bookmarkPage: null,
+    likedPage: null
+  })
   const [path, setPath] = useState(null)
   const [state, setState] = useState({
     left: false,
@@ -25,6 +32,7 @@ const SideBarProvider = ({ children }) => {
 
 
   console.log(path)
+  console.log(selectedDate)
   const drawerDirection = ['left']
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -41,7 +49,7 @@ const SideBarProvider = ({ children }) => {
 
 
   return (
-    <SideBarContext.Provider value={{ state, setState, drawerDirection, toggleDrawer, selectedDate, setSelectedDate, path, setPath }}>
+    <SideBarContext.Provider value={{ state, setState, drawerDirection, toggleDrawer, selectedDate, setSelectedDate, path, setPath, calendarDate, setCalendarDate }}>
       {children}
     </SideBarContext.Provider>
   )
