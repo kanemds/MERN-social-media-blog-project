@@ -45,8 +45,6 @@ const styleDelete = {
 
 export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, isDeleteLikeLoading }) {
 
-  console.log(blog)
-
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
@@ -61,14 +59,8 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(false)
-  const [timeDisplay, setTimeDisplay] = useState(useTimeDisplay(blog.createdAt) || null)
+  const [timeDisplay, setTimeDisplay] = useState(useTimeDisplay(blog.addedBy) || null)
 
-
-  const current = Date.parse(new Date())
-  const postedDay = Date.parse(blog.createdAt)
-  const sevenDays = 60 * 60 * 24 * 1000 * 7
-
-  const timeInMillisecond = current - postedDay
 
   useEffect(() => {
     if (isDeleteLikeReady && removeMessage) {
@@ -239,7 +231,7 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
           <Box sx={{ display: 'flex', alignItems: 'center', height: 28, width: '100%' }}>
 
             {/* favorite and like */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
 
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IconButton
@@ -264,18 +256,11 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
             </Box>
 
             {/* show day and menu  */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '60%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '100%' }}>
 
               <Typography color='black'>
-                {/* {
-                  timeInMillisecond <= sevenDays ?
-                    moment(Date.parse(blog.createdAt)).fromNow()
-                    :
-                    new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
-                } */}
                 {timeDisplay}
               </Typography>
-
 
             </Box>
 

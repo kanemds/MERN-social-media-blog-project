@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux'
 import { set } from 'lodash'
 import img from './Dtqnxj1W4AAgFut.jpg'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
+import useTimeDisplay from '../../hooks/useTimeDisplay'
 
 const iconStyle = {
   padding: '0px',
@@ -57,7 +58,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isDeleteSubscribedReady, setIsDeleteSubscribedReady] = useState(false)
-
+  const [timeDisplay, setTimeDisplay] = useState(useTimeDisplay(blog.createdAt) || null)
 
   useEffect(() => {
     if (isDeleteSubscribedReady && removeMessage) {
@@ -190,7 +191,6 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
           >
             {blog.blog_owner_username}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
           </Typography>
-          <Typography sx={{ fontSize: 'h6' }}>999k subscribers</Typography>
           <Button
             onMouseOver={() => setIsClick(true)}
             onMouseOut={() => setIsClick(false)}
@@ -207,6 +207,9 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
             }} />
             <Typography color='rgba(0, 0, 0, 0.87)' variant='h6'> Subscribed</Typography>
           </Button>
+          <Typography color='black'>
+            {timeDisplay}
+          </Typography>
         </CardContent>
 
       </CardActionArea>

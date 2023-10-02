@@ -68,7 +68,7 @@ const getBlogsForLikedList = async (req, res) => {
     const findMatch = likes.find(like => like.blog_id.toString() === blog._id.toString())
     console.log(findMatch)
     const timeConvert = new Date(Date.parse(findMatch?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
-    return { ...blog, isLike: findMatch.is_like, likeId: findMatch._id.toString(), likedAt: timeConvert }
+    return { ...blog, isLike: findMatch.is_like, likeId: findMatch._id.toString(), likedAt: timeConvert, addedBy: findMatch.createdAt }
   })
 
   const decOrderBlogs = await blogsWithLikes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

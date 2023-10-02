@@ -99,14 +99,12 @@ const BookmarkList = () => {
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
   const [refresh, setRefresh] = useState(false)
-  console.log(bookmarkBlogs)
+
 
   useEffect(() => {
 
     if (isSuccess || refresh) {
       if (selectedDate.bookmarkPage) {
-        console.log(bookmarkBlogs.bookmarkedAt)
-        console.log(bookmarkBlogs)
         const selectedDay = bookmarkBlogs.filter(blog => blog?.bookmarkedAt === selectedDate.bookmarkPage)
         console.log(selectedDate.bookmarkPage)
         setCurrentBookmarks(selectedDay)
