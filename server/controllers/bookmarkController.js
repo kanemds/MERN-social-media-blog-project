@@ -33,9 +33,8 @@ const getBlogsForBookmarkList = async (req, res) => {
 
   const blogsWithBookmarks = await listOfBlogs.map(blog => {
     const findMatch = bookmarks.find(bookmark => bookmark.blog_id.toString() === blog._id.toString())
-    console.log('bookmarks', bookmarks)
     const timeConvert = new Date(Date.parse(findMatch?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
-    return { ...blog, isBookmark: findMatch.is_bookmark, bookmarkId: findMatch._id.toString(), bookmarkedAt: timeConvert }
+    return { ...blog, isBookmark: findMatch.is_bookmark, bookmarkId: findMatch._id.toString(), bookmarkedAt: timeConvert, addedBy: findMatch.createdAt }
   })
 
   const decOrderBlogs = await blogsWithBookmarks?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

@@ -18,6 +18,7 @@ import { red, pink, yellow, orange } from '@mui/material/colors'
 import { apiSlice } from '../../app/api/apiSlice'
 import { useDispatch } from 'react-redux'
 import { set } from 'lodash'
+import useTimeDisplay from '../../hooks/useTimeDisplay'
 
 
 const iconStyle = {
@@ -45,7 +46,6 @@ const styleDelete = {
 
 export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeMessage, isDeleteBookmarkLoading }) {
 
-  const dispatch = useDispatch()
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -59,13 +59,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isDeleteBookmarkReady, setIsDeleteBookmarkReady] = useState(false)
-
-
-  const current = Date.parse(new Date())
-  const postedDay = Date.parse(blog.createdAt)
-  const sevenDays = 60 * 60 * 24 * 1000 * 7
-
-  const timeInMillisecond = current - postedDay
+  const [timeDisplay, setTimeDisplay] = useState(useTimeDisplay(blog.addedBy) || null)
 
   useEffect(() => {
     if (isDeleteBookmarkReady && removeMessage) {
@@ -265,12 +259,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '60%' }}>
 
               <Typography color='black'>
-                {
-                  timeInMillisecond <= sevenDays ?
-                    moment(Date.parse(blog.createdAt)).fromNow()
-                    :
-                    new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
-                }
+                {timeDisplay}
               </Typography>
 
 

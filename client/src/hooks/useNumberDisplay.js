@@ -1,6 +1,6 @@
 import React from 'react'
 
-const useLikeCount = (number, decimalPlaces = 1) => {
+const useNumberDisplay = (number, decimalPlaces = 1) => {
   const abbreviateNumber = (number, decimalPlaces) => {
     if (number < 1000) {
       return number.toString()
@@ -34,4 +34,4 @@ const useLikeCount = (number, decimalPlaces = 1) => {
 
 
 
-export default useLikeCount
+export default useNumberDisplay
