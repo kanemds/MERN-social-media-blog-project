@@ -16,6 +16,7 @@ import Modal from '@mui/material/Modal'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
 import { useDispatch } from 'react-redux'
+import useTimeDisplay from '../../hooks/useTimeDisplay'
 
 
 
@@ -44,6 +45,7 @@ const styleDelete = {
 
 export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, isDeleteLikeLoading }) {
 
+  console.log(blog)
 
   const dispatch = useDispatch()
 
@@ -59,6 +61,7 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(false)
+  const [timeDisplay, setTimeDisplay] = useState(useTimeDisplay(blog.createdAt) || null)
 
 
   const current = Date.parse(new Date())
@@ -264,12 +267,13 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '60%' }}>
 
               <Typography color='black'>
-                {
+                {/* {
                   timeInMillisecond <= sevenDays ?
                     moment(Date.parse(blog.createdAt)).fromNow()
                     :
                     new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
-                }
+                } */}
+                {timeDisplay}
               </Typography>
 
 
