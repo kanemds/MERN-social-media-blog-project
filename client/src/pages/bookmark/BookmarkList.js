@@ -21,6 +21,7 @@ import { set } from 'lodash'
 import { SideBarContext } from '../../useContext/SideBarContext'
 import { useDeleteBookmarkMutation, useGetBookmarksQuery } from './bookmarkApiSlice'
 import BookmarkBlog from './BookmarkBlog'
+import { useLocation } from 'react-router-dom'
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -65,9 +66,9 @@ const buttonStyle = {
 const BookmarkList = () => {
 
   const small = useMediaQuery('(max-width:791px)')
-
+  const { pathname } = useLocation()
   const { username } = useAuth()
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, path, setPath } = useContext(SideBarContext)
 
 
   const { bookmarkBlogs, isSuccess, isLoading } = useGetBookmarksQuery(username, {
@@ -98,16 +99,31 @@ const BookmarkList = () => {
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
   const [refresh, setRefresh] = useState(false)
+  console.log(bookmarkBlogs)
 
   useEffect(() => {
 
     if (isSuccess || refresh) {
-      setCurrentBookmarks(bookmarkBlogs)
-      setRefresh(false)
+      if (selectedDate.bookmarkPage) {
+        console.log(bookmarkBlogs.bookmarkedAt)
+        console.log(bookmarkBlogs)
+        const selectedDay = bookmarkBlogs.filter(blog => blog?.bookmarkedAt === selectedDate.bookmarkPage)
+        console.log(selectedDate.bookmarkPage)
+        setCurrentBookmarks(selectedDay)
+        setRefresh(false)
+      } else {
+        setCurrentBookmarks(bookmarkBlogs)
+        setRefresh(false)
+      }
     }
 
-  }, [isSuccess, refresh])
+  }, [isSuccess, refresh, selectedDate.bookmarkPage])
 
+  useEffect(() => {
+    if (pathname === '/blogs/bookmarks') {
+      setPath(pathname)
+    }
+  }, [pathname])
 
   const handleAscendent = () => {
     if (isDesc) {

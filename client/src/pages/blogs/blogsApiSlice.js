@@ -45,7 +45,6 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
-        console.log(response)
         const id = response._id
         const blog = { ...response, id: id }
         return blog

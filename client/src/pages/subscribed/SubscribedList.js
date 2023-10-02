@@ -21,6 +21,7 @@ import { set } from 'lodash'
 import { SideBarContext } from '../../useContext/SideBarContext'
 import { useDeleteSubscribedFromBlogMutation, useGetUserSubscribedBlogsQuery } from './subscribeApiSlice'
 import SubscribedBlog from './SubscribedBlog'
+import { useLocation } from 'react-router-dom'
 
 
 const Root = styled(Grid)(({ theme }) => ({
@@ -67,7 +68,8 @@ const SubscribedList = () => {
   const small = useMediaQuery('(max-width:791px)')
 
   const { username } = useAuth()
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
+  const { pathname } = useLocation()
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, setPath } = useContext(SideBarContext)
 
   const [
     deleteSubscribed,
@@ -98,12 +100,23 @@ const SubscribedList = () => {
   useEffect(() => {
 
     if (isSuccess || refresh) {
-      setCurrentSubscribed(Object.values(subscribedBlogs))
-      setRefresh(false)
+      if (selectedDate.subscribePage) {
+        const selectedDay = Object.values(subscribedBlogs).filter(blog => blog.subscribedAt === selectedDate.subscribePage)
+        setCurrentSubscribed(selectedDay)
+        setRefresh(false)
+      } else {
+        setCurrentSubscribed(Object.values(subscribedBlogs))
+        setRefresh(false)
+      }
     }
+  }, [isSuccess, refresh, selectedDate.subscribePage])
 
-  }, [isSuccess, refresh])
 
+  useEffect(() => {
+    if (pathname === '/blogs/subscribed') {
+      setPath(pathname)
+    }
+  }, [pathname])
 
   const handleAscendent = () => {
     if (isDesc) {
