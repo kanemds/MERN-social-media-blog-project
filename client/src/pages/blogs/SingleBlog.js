@@ -219,7 +219,7 @@ const SingleBlog = () => {
       setCurrentBlog(data)
       setIsLiked(data.like.isLike)
       setIsSubscribed(data.subscribe.isSubscribed)
-      setIsBookmarked(data.isBookmarked)
+      setIsBookmarked(data.bookmark.isBookmarked)
     }
   }, [isSuccess, data])
 
@@ -307,7 +307,7 @@ const SingleBlog = () => {
       if (!isBookmarked) {
         addBookmark({ blog_id: id, bookmark_by_user_id: userId, username, is_bookmark: true })
       } else {
-        deleteBookmark({ id })
+        deleteBookmark({ id: currentBlog?.bookmark?.bookmarkId, blog_id: id })
       }
     } else {
       navigate('/login', { state: { message: messages.bookmark } })

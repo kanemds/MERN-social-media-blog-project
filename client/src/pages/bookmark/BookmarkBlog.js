@@ -99,7 +99,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
 
   const handleDeleteLikeConfirm = async (e) => {
     e.preventDefault()
-    await deleteBookmark({ id: blog.id, bookmarkId: blog.bookmarkId })
+    await deleteBookmark({ blogId: blog.id, id: blog.bookmarkId })
   }
 
   const handleUserPage = () => {

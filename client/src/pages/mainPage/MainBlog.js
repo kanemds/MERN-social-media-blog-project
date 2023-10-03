@@ -179,6 +179,8 @@ export default function MainBlog({ blog }) {
     }
   }
 
+  console.log(blog)
+
   const handleBookmark = async () => {
     if (!username) {
       navigate('/login', { state: { message: messages.like } })
@@ -187,7 +189,7 @@ export default function MainBlog({ blog }) {
       if (!isBookmarked) {
         await addBookmark({ blog_id: blog.id, bookmark_by_user_id: userId, username, is_bookmark: true })
       } else {
-        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: blog.id })
+        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: 'bookmarkId', blogId: blog.id })
         console.log(deleteBookmarkInfo)
       }
     }

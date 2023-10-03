@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
 const Like = require('../models/Like')
+const Bookmark = require('../models/Bookmark')
 const Subscribe = require('../models/Subscribe')
 const { isEqual, sortBy, find, differenceWith, differenceBy } = require('lodash')
 const storage = require('../config/firebaseConfig')
@@ -193,7 +194,6 @@ const getSingleBlog = async (req, res) => {
     }
 
     const status = await Subscribe.findOne({ blog_id: id, subscribed_by_user_username: username }).lean().exec()
-    console.log(status)
     if (status || status?.length) {
       subscribe.subscribedId = status._id
       subscribe.isSubscribed = status.is_subscribed
@@ -203,21 +203,32 @@ const getSingleBlog = async (req, res) => {
     }
   }
 
+  const currentBookmark = async (id, username) => {
+    const bookmark = {
+      bookmarkId: null,
+      isBookmarked: false
+    }
+
+    const status = await Bookmark.findOne({ blog_id: id, bookmark_by_user_username: username }).lean().exec()
+    if (status || status?.length) {
+      bookmark.bookmarkId = status._id
+      bookmark.isBookmarked = status.is_bookmark
+      return bookmark
+    } else {
+      return bookmark
+    }
+
+  }
 
   const like = await currentLike(id, username)
   const subscribe = await currentSubscribe(id, username)
-  console.log(subscribe)
+  const bookmark = await currentBookmark(id, username)
+  console.log(bookmark)
 
 
-  const bookmarked = await Subscribe.find({ blog_id: id, bookmark_by_user_username: username }).lean().exec()
 
-  if (!bookmarked.length) {
-    isBookmarked = false
-  } else {
-    isBookmarked = bookmarked[0]?.is_bookmark
-  }
 
-  loginUser = { ...blog, like, subscribe, isBookmarked, }
+  loginUser = { ...blog, like, subscribe, bookmark, }
   console.log('refetch single Blog')
   res.status(200).json(loginUser)
 }
