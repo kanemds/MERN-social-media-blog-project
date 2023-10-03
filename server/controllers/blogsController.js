@@ -171,14 +171,17 @@ const getSingleBlog = async (req, res) => {
   const currentLike = async (id, username) => {
     const like = {
       likeId: null,
-      isLike: false
+      isLike: false,
+      totalLikes: 0
     }
 
     const status = await Like.findOne({ blog_id: id, liked_by_user_username: username }).lean().exec()
+    const total = await Like.find({ blog_id: id })
 
     if (status || status?.length) {
       like.isLike = status.is_like
       like.likeId = status._id
+      like.totalLikes = total.length
       return like
     } else {
       return like
@@ -199,11 +202,7 @@ const getSingleBlog = async (req, res) => {
       { $match: { blog_owner_id: blog.user_id } }
     ])
 
-
-    console.log('total', total.length)
-
-
-    if ((status || status?.length) && total.length > 0) {
+    if (status || status?.length) {
       subscribe.subscribedId = status._id
       subscribe.isSubscribed = status.is_subscribed
       subscribe.totalSubscribers = total.length
