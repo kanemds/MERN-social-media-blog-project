@@ -40,22 +40,24 @@ export const subscribeApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: subscribedInfo
       }),
-      invalidatesTags: [{
-        type: 'Subscribe', id: 'LIST'
-      }, {
-        type: 'Blog', id: 'LIST'
-      }]
+      invalidatesTags: (result, error, arg) => {
+        return [{
+          type: 'Subscribe', id: 'LIST'
+        }, {
+          type: 'Blog', id: arg.blogId
+        }]
+      }
     }),
     deleteSubscribedFromBlog: builder.mutation({
-      query: ({ id }) => ({
+      query: ({ id, blogId }) => ({
         url: '/subscribe',
         method: 'DELETE',
-        body: { id }
+        body: { id, blogId }
       }),
       invalidatesTags: (result, error, arg) => {
         console.log(arg.id)
         return [
-          { type: 'Subscribe', id: arg.id }
+          { type: 'Subscribe', id: arg.id }, { type: 'Blog', id: arg.blogId }
         ]
       }
     })
