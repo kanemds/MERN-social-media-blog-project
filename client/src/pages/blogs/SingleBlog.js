@@ -321,7 +321,7 @@ const SingleBlog = () => {
       if (!isSubscribed) {
         addSubscribe({ id, userId, username, isSubscribed: true })
       } else {
-        deleteSubscribed({ id })
+        deleteSubscribed({ blogId: id, id: currentBlog.subscribe.subscribedId })
       }
     } else {
       navigate('/login', { state: { message: messages.subscribe } })

@@ -43,6 +43,7 @@ const addSubscribe = async (req, res) => {
   if (isDuplicate.length) return res.status(409).json({ message: 'The selected blogger has already subscribed' })
 
   const info = {
+    blog_id: blog._id,
     blog_owner_id: blog.user_id,
     blog_owner_username: blog.username,
     subscribed_by_user_id: userId,
