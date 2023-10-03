@@ -156,8 +156,9 @@ const getSingleBlog = async (req, res) => {
   const { username } = req.query
 
   let loginUser
-  let isLike
+
   let isSubscribed
+  let isBookmarked
   const blog = await Blog.findById(id).lean().exec()
 
   if (!blog) return res.status(200).json({ message: 'No blog found' })
@@ -167,24 +168,57 @@ const getSingleBlog = async (req, res) => {
 
   if (!findUser) return res.status(200).json({ message: 'No user found' })
 
-  const like = await Like.find({ blog_id: id, liked_by_user_username: username }).lean().exec()
 
-  if (!like.length) {
-    isLike = false
-  } else {
-    isLike = like[0]?.is_like
+  const currentLike = async (id, username) => {
+    const like = {
+      likeId: null,
+      isLike: false
+    }
+
+    const status = await Like.findOne({ blog_id: id, liked_by_user_username: username }).lean().exec()
+
+    if (status || status?.length) {
+      like.isLike = status.is_like
+      like.likeId = status._id
+      return like
+    } else {
+      return like
+    }
   }
 
-  const subscribed = await Subscribe.find({ blog_id: id, subscribed_by_user_username: username }).lean().exec()
-  console.log('subscribed', subscribed)
-  if (!subscribed.length) {
-    isSubscribed = false
-  } else {
-    isSubscribed = subscribed[0]?.is_subscribed
+  const currentSubscribe = async (id, username) => {
+    const subscribe = {
+      subscribedId: null,
+      isSubscribed: false
+    }
+
+    const status = await Subscribe.findOne({ blog_id: id, subscribed_by_user_username: username }).lean().exec()
+    console.log(status)
+    if (status || status?.length) {
+      subscribe.subscribedId = status._id
+      subscribe.isSubscribed = status.is_subscribed
+      return subscribe
+    } else {
+      return subscribe
+    }
   }
 
-  loginUser = { ...blog, isLike, isSubscribed }
 
+  const like = await currentLike(id, username)
+  const subscribe = await currentSubscribe(id, username)
+  console.log(subscribe)
+
+
+  const bookmarked = await Subscribe.find({ blog_id: id, bookmark_by_user_username: username }).lean().exec()
+
+  if (!bookmarked.length) {
+    isBookmarked = false
+  } else {
+    isBookmarked = bookmarked[0]?.is_bookmark
+  }
+
+  loginUser = { ...blog, like, subscribe, isBookmarked, }
+  console.log('refetch single Blog')
   res.status(200).json(loginUser)
 }
 
