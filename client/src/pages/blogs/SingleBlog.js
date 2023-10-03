@@ -212,15 +212,19 @@ const SingleBlog = () => {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [subscribers, setSubscribers] = useState(0)
+  const [likes, setLikes] = useState(0)
 
 
   const numberSubscribers = useNumberDisplay(subscribers)
+  const numberLikes = useNumberDisplay(likes)
   console.log(numberSubscribers)
+  console.log(numberLikes)
 
   useEffect(() => {
     if (isSuccess) {
       setCurrentBlog(data)
       setIsLiked(data.like.isLike)
+      setLikes(data.like.totalLikes)
       setIsSubscribed(data.subscribe.isSubscribed)
       setSubscribers(data.subscribe.totalSubscribers)
       setIsBookmarked(data.bookmark.isBookmarked)
@@ -528,7 +532,7 @@ const SingleBlog = () => {
                     <FavoriteBorderIcon sx={{ color: '#bdbdbd' }} />
                   }
                 </IconButton>
-                <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
+                <Typography sx={{ color: 'black', ml: 1 }}>{numberLikes}</Typography>
               </Box>
             </Box>
           </Box>
