@@ -38,24 +38,22 @@ export const bookmarkApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data
       }),
-      invalidatesTags: [{
-        type: 'Bookmark', id: 'LIST'
-      }]
+      invalidatesTags: (result, error, arg) => {
+        // { type: 'Blog', id: arg.blog_id } would invalidates the current single blog cache
+        return [{ type: 'Bookmark', id: 'LIST' }, { type: 'Blog', id: arg.blog_id }]
+      }
     }),
     deleteBookmark: builder.mutation({
       // using the blog.id to search like.id also can refresh the blog id cache data as well
-      query: ({ id, bookmarkId }) => ({
+      query: ({ id, blogId }) => ({
         url: '/bookmarks',
         method: 'DELETE',
-        body: { id, bookmarkId }
+        body: { id, blogId }
       }),
       invalidatesTags: (result, error, arg) => {
-        console.log(result)
-        console.log(arg.bookmarkId)
-        console.log(result.bookmarkId)
-        console.log(result.blogId)
         return [
-          { type: 'Bookmark', id: arg.bookmarkId }
+          { type: 'Bookmark', id: arg.id },
+          { type: 'Blog', id: arg.blogId }
         ]
       }
 

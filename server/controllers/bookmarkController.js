@@ -70,30 +70,20 @@ const addBookmark = async (req, res) => {
 }
 
 const deleteBookmark = async (req, res) => {
-  const { id, username } = req.body
+  const { id } = req.body
 
-  const blog = await Blog.findById(id).exec()
-
-
-  if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
-
-  const selectedBookmarkBlog = await Bookmark.findOne({ blog_id: blog._id }).exec()
+  const selectedBookmarkBlog = await Bookmark.findById(id).exec()
 
   if (!selectedBookmarkBlog) return res.status(404).json({ message: 'net work error, please try again' })
 
   console.log('findBookmark', selectedBookmarkBlog)
 
-  const deleteData = {
-    message: 'The bookmark has been successfully removed from this blog.',
-    blogId: blog._id,
-    bookmarkId: selectedBookmarkBlog._id
-  }
 
   await selectedBookmarkBlog.deleteOne()
   console.log('bookmark removed')
 
 
-  res.status(200).json(deleteData)
+  res.status(200).json({ message: 'The bookmark has been successfully removed from this blog.' })
 
 }
 module.exports = { getBlogsForBookmarkList, addBookmark, deleteBookmark }

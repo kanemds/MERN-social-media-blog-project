@@ -143,21 +143,11 @@ const editLIke = async (req, res) => {
 const deleteLike = async (req, res) => {
   const { id } = req.body
 
-  // const blog = await Blog.findById(id).exec()
-
-  // if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
-
-  // const selectedLikedBlog = await Like.findOne({ blog_id: blog._id }).exec()
   const selectedLikedBlog = await Like.findById(id).exec()
 
   if (!selectedLikedBlog) return res.status(400).json({ message: 'net work error, please try again' })
 
   console.log(selectedLikedBlog)
-  // const deleteData = {
-  //   message: 'The like has been successfully removed from this blog',
-  //   blogId: blog._id,
-  //   likeId: selectedLikedBlog._id
-  // }
 
   await selectedLikedBlog.deleteOne()
   console.log('like removed')
