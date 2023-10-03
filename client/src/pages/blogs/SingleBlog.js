@@ -17,7 +17,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { apiSlice } from '../../app/api/apiSlice'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
-import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
+import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetLikeForSingleBlogQuery, useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
 import { messages } from '../../config/requireLoginMessage'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import { SideBarContext } from '../../useContext/SideBarContext'
 import { useAddSubscribedBlogMutation, useDeleteSubscribedFromBlogMutation } from '../subscribed/subscribeApiSlice'
+import { useAddBookmarkMutation, useDeleteBookmarkMutation } from '../bookmark/bookmarkApiSlice'
 
 const style = {
   position: 'absolute',
@@ -111,8 +112,6 @@ const SingleBlog = () => {
     username: username ? username : null
   }
 
-
-
   const {
     data,
     isLoading,
@@ -120,6 +119,8 @@ const SingleBlog = () => {
     isError,
     error
   } = useGetSingleBlogQuery(currentSingleBlog)
+
+  console.log(data)
 
   const [
     deleteBlog,
@@ -132,13 +133,7 @@ const SingleBlog = () => {
 
   /////////////// find and delete blog ///////////////////////
 
-  /////////////// find, add and delete like ///////////////////////
-
-  const {
-    data: findLike,
-    isLoading: isFindLikeLoading,
-    isSuccess: isFindLikeSuccess,
-  } = useGetLikedBlogsFromUserQuery(username)
+  /////////////// add and delete like ///////////////////////
 
   const [
     addedLike,
@@ -161,6 +156,29 @@ const SingleBlog = () => {
 
   /////////////// find, add and delete like ///////////////////////
 
+  /////////////// find, add and delete bookmark ///////////////////////
+
+  const [
+    addBookmark,
+    {
+      isSuccess: isAddBookmarkSuccess,
+      isLoading: isAddBookmarkLoading,
+      isError: isAddBookmarkError,
+      error: addBookmarkError
+    }
+  ] = useAddBookmarkMutation()
+
+  const [
+    deleteBookmark,
+    {
+      isSuccess: isDeleteBookmarkSuccess,
+      isLoading: isDeleteBookmarkLoading,
+      isError: isDeleteBookmarkError,
+      error: deleteBookmarkError
+    }
+  ] = useDeleteBookmarkMutation()
+
+  /////////////// find, add and delete bookmark ///////////////////////
 
 
   /////////////// add and delete subscribe ///////////////////////
@@ -193,33 +211,39 @@ const SingleBlog = () => {
   const [isDeleteReady, setIsDeleteReady] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [isBookmarked, setIsBookmarked] = useState(false)
 
 
   useEffect(() => {
     if (isSuccess) {
       setCurrentBlog(data)
-      setIsLiked(data.isLike)
-      setIsSubscribed(data.isSubscribed)
+      setIsLiked(data.like.isLike)
+      setIsSubscribed(data.subscribe.isSubscribed)
+      setIsBookmarked(data.isBookmarked)
     }
-  }, [isSuccess, isFindLikeSuccess])
+  }, [isSuccess, data])
 
 
-
-  useEffect(() => {
-    if (isAddLikeSuccess) {
-      setIsLiked(true)
-    }
-    if (isDeleteLikeSuccess) {
-      setIsLiked(false)
-    }
-    if (isAddSubscribeSuccess) {
-      setIsSubscribed(true)
-    }
-    if (isDeleteSubscribedSuccess) {
-      setIsSubscribed(false)
-    }
-  }, [isDeleteLikeSuccess, isAddLikeSuccess, isAddSubscribeSuccess, isDeleteSubscribedSuccess])
+  // useEffect(() => {
+  //   if (isAddLikeSuccess) {
+  //     setIsLiked(true)
+  //   }
+  //   if (isDeleteLikeSuccess) {
+  //     setIsLiked(false)
+  //   }
+  //   if (isAddSubscribeSuccess) {
+  //     setIsSubscribed(true)
+  //   }
+  //   if (isDeleteSubscribedSuccess) {
+  //     setIsSubscribed(false)
+  //   }
+  //   if (isAddBookmarkSuccess) {
+  //     setIsBookmarked(true)
+  //   }
+  //   if (isDeleteBookmarkSuccess) {
+  //     setIsBookmarked(false)
+  //   }
+  // }, [isDeleteLikeSuccess, isAddLikeSuccess, isAddSubscribeSuccess, isDeleteSubscribedSuccess, isAddBookmarkSuccess, isDeleteBookmarkSuccess])
 
 
 
@@ -270,18 +294,23 @@ const SingleBlog = () => {
         addedLike({ blog_id: id, user_id: userId, username, is_like: true })
 
       } else {
-        deleteLike({ id })
+        deleteLike({ id: currentBlog?.like?.likeId, blogId: id })
       }
     } else {
       navigate('/login', { state: { message: messages.like } })
     }
   }
 
-  const handleFavorite = () => {
-    if (!username) {
-      navigate('/login', { state: { message: messages.like } })
+  const handleBookmark = (e) => {
+    e.preventDefault()
+    if (username) {
+      if (!isBookmarked) {
+        addBookmark({ blog_id: id, bookmark_by_user_id: userId, username, is_bookmark: true })
+      } else {
+        deleteBookmark({ id })
+      }
     } else {
-      setIsFavorite(prev => !prev)
+      navigate('/login', { state: { message: messages.bookmark } })
     }
   }
 
@@ -345,7 +374,7 @@ const SingleBlog = () => {
 
   let content
 
-  if (isLoading || isFindLikeLoading) {
+  if (isLoading) {
     content = (
       <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <LoadingSpinner />
@@ -353,7 +382,7 @@ const SingleBlog = () => {
     )
   }
 
-  if (isSuccess && isFindLikeSuccess) {
+  if (isSuccess) {
 
     content = (
 
@@ -454,7 +483,7 @@ const SingleBlog = () => {
               {username !== currentBlog.username ?
                 <IconButton
                   disableRipple
-                  onClick={handleFavorite}
+                  onClick={handleBookmark}
                   style={iconStyle}
                   sx={{
                     width: '28px',
@@ -463,7 +492,7 @@ const SingleBlog = () => {
                     '&:hover': { color: yellow[800], background: 'white' }
                   }}
                 >
-                  {isFavorite ?
+                  {isBookmarked ?
 
                     <StarRoundedIcon sx={{ color: yellow[800], fontSize: '28px' }} />
 
@@ -610,9 +639,6 @@ const SingleBlog = () => {
       </Box >
     )
   }
-
-  console.log(currentBlog)
-
 
   return (
     <Box

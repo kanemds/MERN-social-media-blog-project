@@ -60,28 +60,50 @@ export const likesApiSlice = apiSlice.injectEndpoints({
         }
       }
     }),
+    getLikeForSingleBlog: builder.query({
+      query: ({ id, username }) => ({
+        url: `/likes/single?id=${id}&username=${username}`,
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      keepUnusedDataFor: 300,
+      providesTags: (result, error, arg) => {
+        if (result) {
+          return [{
+            type: 'Like', id: 'LIST'
+          },
+          { type: 'Like', id: result._id }
+          ]
+        } else {
+          return [{ type: 'Like', id: 'LIST' }]
+        }
+      }
+    }),
     addLikedToBlog: builder.mutation({
       query: likedInfo => ({
         url: '/likes',
         method: 'POST',
         body: likedInfo
       }),
-      invalidatesTags: [{
-        type: 'Like', id: 'LIST'
-      }, { type: 'Blog', id: 'LIST' }]
+      invalidatesTags: (result, error, arg) => {
+        // { type: 'Blog', id: arg.blog_id } would invalidates the current single blog cache
+        return [{ type: 'Like', id: 'LIST' }, { type: 'Blog', id: arg.blog_id }]
+      }
     }),
     deleteLikedFromBlog: builder.mutation({
       // using the blog.id to search like.id also can refresh the blog id cache data as well
-      query: ({ id, likeId }) => ({
+      query: ({ id, blogId }) => ({
         url: '/likes',
         method: 'DELETE',
-        body: { id, likeId }
+        body: { id, blogId }
       }),
       invalidatesTags: (result, error, arg) => {
-        return [{ type: 'Like', id: arg.likeId }]
+        // { type: 'Blog', id: arg.blog_id } would invalidates the current single blog cache
+        return [{ type: 'Like', id: arg.id }, { type: 'Blog', id: arg.blogId }]
       }
     })
   })
 })
 
-export const { useGetLikedBlogsFromUserQuery, useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetUserLikedBlogsQuery } = likesApiSlice
+export const { useGetLikedBlogsFromUserQuery, useGetLikeForSingleBlogQuery, useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetUserLikedBlogsQuery } = likesApiSlice

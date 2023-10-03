@@ -33,6 +33,25 @@ const getLikesForUser = async (req, res) => {
   res.status(200).json(currentUserLikes)
 }
 
+// @desc Get like for single blog page
+// route Get /likes
+// @access Private
+const getSingleLike = async (req, res) => {
+
+  const { id, username } = req.query
+
+  const isUserExist = await User.findOne({ username }).exec()
+
+
+  if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
+
+  const like = await Like.findOne({ liked_by_user_username: isUserExist.username, blog_id: id }).lean().exec()
+
+  if (!like) return res.status(200).json([])
+
+  res.status(200).json(like)
+}
+
 
 // @desc Get blogs for likedList
 // route Get /likes/user
@@ -124,26 +143,29 @@ const editLIke = async (req, res) => {
 const deleteLike = async (req, res) => {
   const { id } = req.body
 
-  const blog = await Blog.findById(id).exec()
+  // const blog = await Blog.findById(id).exec()
 
-  if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
+  // if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
 
-  const selectedLikedBlog = await Like.findOne({ blog_id: blog._id }).exec()
+  // const selectedLikedBlog = await Like.findOne({ blog_id: blog._id }).exec()
+  const selectedLikedBlog = await Like.findById(id).exec()
 
   if (!selectedLikedBlog) return res.status(400).json({ message: 'net work error, please try again' })
 
-  const deleteData = {
-    message: 'The like has been successfully removed from this blog',
-    blogId: blog._id,
-    likeId: selectedLikedBlog._id
-  }
+  console.log(selectedLikedBlog)
+  // const deleteData = {
+  //   message: 'The like has been successfully removed from this blog',
+  //   blogId: blog._id,
+  //   likeId: selectedLikedBlog._id
+  // }
 
   await selectedLikedBlog.deleteOne()
   console.log('like removed')
 
 
-  res.status(200).json(deleteData)
+  // res.status(200).json(deleteData)
+  res.status(200).json('like removed')
 }
 
 
-module.exports = { getAllLikes, getLikesForUser, addedLike, editLIke, deleteLike, getBlogsForLikedList }
+module.exports = { getAllLikes, getLikesForUser, getSingleLike, addedLike, editLIke, deleteLike, getBlogsForLikedList }
