@@ -158,8 +158,6 @@ const getSingleBlog = async (req, res) => {
 
   let loginUser
 
-  let isSubscribed
-  let isBookmarked
   const blog = await Blog.findById(id).lean().exec()
 
   if (!blog) return res.status(200).json({ message: 'No blog found' })
@@ -187,16 +185,28 @@ const getSingleBlog = async (req, res) => {
     }
   }
 
-  const currentSubscribe = async (id, username) => {
+  const currentSubscribe = async (blog, username) => {
     const subscribe = {
       subscribedId: null,
-      isSubscribed: false
+      isSubscribed: false,
+      totalSubscribers: 0
     }
 
-    const status = await Subscribe.findOne({ blog_id: id, subscribed_by_user_username: username }).lean().exec()
-    if (status || status?.length) {
+
+
+    const status = await Subscribe.findOne({ blog_owner_id: blog.user_id.toString(), subscribed_by_user_username: username }).lean().exec()
+    const total = await Subscribe.aggregate([
+      { $match: { blog_owner_id: blog.user_id } }
+    ])
+
+
+    console.log('total', total.length)
+
+
+    if ((status || status?.length) && total.length > 0) {
       subscribe.subscribedId = status._id
       subscribe.isSubscribed = status.is_subscribed
+      subscribe.totalSubscribers = total.length
       return subscribe
     } else {
       return subscribe
@@ -221,7 +231,7 @@ const getSingleBlog = async (req, res) => {
   }
 
   const like = await currentLike(id, username)
-  const subscribe = await currentSubscribe(id, username)
+  const subscribe = await currentSubscribe(blog, username)
   const bookmark = await currentBookmark(id, username)
   console.log(bookmark)
 

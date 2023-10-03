@@ -28,7 +28,7 @@ import DehazeIcon from '@mui/icons-material/Dehaze'
 import { SideBarContext } from '../../useContext/SideBarContext'
 import { useAddSubscribedBlogMutation, useDeleteSubscribedFromBlogMutation } from '../subscribed/subscribeApiSlice'
 import { useAddBookmarkMutation, useDeleteBookmarkMutation } from '../bookmark/bookmarkApiSlice'
-
+import useNumberDisplay from '../../hooks/useNumberDisplay'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -78,10 +78,9 @@ const ButtonInfo = styled(Typography)({
 })
 
 const Divider = styled(Box)({
-  height: '100%',
   width: '100%',
   borderTop: '1px solid lightGrey',
-  marginTop: 12,
+  marginTop: 20,
   marginBottom: 20,
 })
 
@@ -212,13 +211,18 @@ const SingleBlog = () => {
   const [isLiked, setIsLiked] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const [subscribers, setSubscribers] = useState(0)
 
+
+  const numberSubscribers = useNumberDisplay(subscribers)
+  console.log(numberSubscribers)
 
   useEffect(() => {
     if (isSuccess) {
       setCurrentBlog(data)
       setIsLiked(data.like.isLike)
       setIsSubscribed(data.subscribe.isSubscribed)
+      setSubscribers(data.subscribe.totalSubscribers)
       setIsBookmarked(data.bookmark.isBookmarked)
     }
   }, [isSuccess, data])
@@ -319,7 +323,7 @@ const SingleBlog = () => {
     e.preventDefault()
     if (username) {
       if (!isSubscribed) {
-        addSubscribe({ id, userId, username, isSubscribed: true })
+        addSubscribe({ id: currentBlog?.user_id, userId, username, isSubscribed: true })
       } else {
         deleteSubscribed({ blogId: id, id: currentBlog.subscribe.subscribedId })
       }
@@ -444,8 +448,8 @@ const SingleBlog = () => {
                 WebkitBoxOrient: 'vertical',
                 WebkitLineClamp: 1,
                 textOverflow: 'ellipsis',
-              }}>{data.user}aaabbbcccdddeee</Typography>
-              <Typography sx={{ fontSize: '12px' }}>999k subscribers</Typography>
+              }}>{data.username}</Typography>
+              <Typography sx={{ fontSize: '12px' }}>{numberSubscribers} subscribers</Typography>
             </Box>
           </Box>
 

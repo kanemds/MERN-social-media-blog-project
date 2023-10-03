@@ -1,11 +1,6 @@
 const mongoose = require('mongoose')
 
 const subscribeSchema = new mongoose.Schema({
-  blog_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Blog'
-  },
   blog_owner_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
