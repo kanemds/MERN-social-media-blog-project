@@ -13,7 +13,12 @@ singlePage:
 
 myPostPage
   displayOwnBlogs[x]
-  like number from list[]
+  likes number from list[x]
+  subscribers number from list[x]
+
+editPage
+  edit [x]
+
 subscribePage
   displayUser[x]
   removeFormList[x]

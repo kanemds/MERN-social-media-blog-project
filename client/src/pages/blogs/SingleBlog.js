@@ -280,7 +280,7 @@ const SingleBlog = () => {
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const handleToEdit = () => navigate(`/blogs/post/edit/${id}`, { state: data })
+  const handleToEdit = () => navigate(`/blogs/post/edit/${id}`)
   const handleDelete = () => setDeleteOpen(true)
   const handleDeleteClose = () => setDeleteOpen(false)
   const handleDeleteConfirm = async (e) => {

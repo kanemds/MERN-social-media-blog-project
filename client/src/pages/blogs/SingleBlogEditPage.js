@@ -9,39 +9,35 @@ import SingleBlogEditForm from './SingleBlogEditForm'
 
 const SingleBlogEditPage = () => {
 
-  const { id } = useParams()
-  const { state } = useLocation()
-
-
+  const { id, username } = useParams()
 
   const [blog, setBlog] = useState('')
-  const [isReady, setIsReady] = useState(true)
-  const [isSkip, setIsSkip] = useState(true)
 
+  const currentSingleBlog = {
+    id,
+    username: username ? username : null
+  }
 
-
-  const { data, isLoading, isSuccess, isError } = useGetSingleBlogQuery(id)
+  const {
+    data,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetSingleBlogQuery(currentSingleBlog)
 
 
   useEffect(() => {
-    if (!state) {
-      setBlog(state)
-      setIsReady(false)
-    } else {
-      setIsSkip(false)
-    }
-  }, [state])
-
-  useEffect(() => {
-    if (!isSkip && isSuccess) {
-      setIsReady(isLoading)
+    if (isSuccess) {
       setBlog(data)
     }
-  }, [isSuccess, isSkip, data])
+  }, [isSuccess, data])
+
+  console.log(data)
 
   let content
 
-  if (isReady) {
+  if (!blog) {
     content = (
       <Container sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <LoadingSpinner />

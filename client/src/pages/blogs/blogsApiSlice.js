@@ -37,7 +37,6 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
     }),
     getSingleBlog: builder.query({
       query: (currentSingleBlog) => ({
-
         url: `/blogs/${currentSingleBlog.id}?username=${currentSingleBlog.username}`,
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError
