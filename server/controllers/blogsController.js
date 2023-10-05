@@ -177,8 +177,6 @@ const getSingleBlog = async (req, res) => {
 
     const status = await Like.findOne({ blog_id: id, liked_by_user_username: username }).lean().exec()
     const total = await Like.find({ blog_id: id, is_like: true }).count()
-    console.log(status)
-    console.log(total)
 
     if (status || status?.length) {
       like.isLike = status.is_like
@@ -186,7 +184,7 @@ const getSingleBlog = async (req, res) => {
       like.totalLikes = total
       return like
     } else {
-      return like
+      return { ...like, totalLikes: total }
     }
   }
 
@@ -197,20 +195,16 @@ const getSingleBlog = async (req, res) => {
       totalSubscribers: 0
     }
 
-
-
     const status = await Subscribe.findOne({ blog_owner_id: blog.user_id.toString(), subscribed_by_user_username: username }).lean().exec()
-    const total = await Subscribe.aggregate([
-      { $match: { blog_owner_id: blog.user_id } }
-    ])
+    const total = await Subscribe.find({ blog_owner_id: blog.user_id }).count()
 
     if (status || status?.length) {
       subscribe.subscribedId = status._id
       subscribe.isSubscribed = status.is_subscribed
-      subscribe.totalSubscribers = total.length
+      subscribe.totalSubscribers = total
       return subscribe
     } else {
-      return subscribe
+      return { ...subscribe, totalSubscribers: total }
     }
   }
 
@@ -234,10 +228,6 @@ const getSingleBlog = async (req, res) => {
   const like = await currentLike(id, username)
   const subscribe = await currentSubscribe(blog, username)
   const bookmark = await currentBookmark(id, username)
-  console.log(bookmark)
-
-
-
 
   loginUser = { ...blog, like, subscribe, bookmark, }
   console.log('refetch single Blog')
