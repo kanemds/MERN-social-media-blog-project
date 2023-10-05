@@ -1,4 +1,3 @@
-import React from 'react'
 
 const useNumberDisplay = (number, decimalPlaces = 1) => {
   const abbreviateNumber = (number, decimalPlaces) => {
@@ -10,8 +9,6 @@ const useNumberDisplay = (number, decimalPlaces = 1) => {
 
     // giving the correct index from the number provided: 1000 -> 1 k
     const abbreviationIndex = Math.floor(Math.log10(number) / 3)
-
-
 
     // cut number from 1000 to 1
     const abbreviatedNumber = (number / Math.pow(1000, abbreviationIndex))

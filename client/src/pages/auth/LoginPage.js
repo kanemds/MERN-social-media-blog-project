@@ -16,13 +16,8 @@ import { resetCache } from '../blogs/blogSlice'
 
 const LoginPage = ({ state }) => {
 
-  console.log(state)
-
-
-
   const navigate = useNavigate()
   const location = useLocation()
-
 
   const dispatch = useDispatch()
 

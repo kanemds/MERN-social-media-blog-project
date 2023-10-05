@@ -1,7 +1,29 @@
 
+singlePage:
+  bookmark add[x] 
+  bookmark delete[x] 
 
+  subscribe add[x] 
+  subscribe delete[x] 
+  subscribe number[x]
 
-make another api like, Subscribe
+  like add[x] 
+  like delete[x] 
+  like number[x]
 
-backend another one
+myPostPage
+  displayOwnBlogs[x]
+  like number from list[]
+subscribePage
+  displayUser[x]
+  removeFormList[x]
+
+bookmarkPage
+  displayBlogs[x]
+  removeFormList[x]
+
+likePage
+  displayBlogs[x]
+  removeFormList[x]
+  
 

@@ -176,12 +176,14 @@ const getSingleBlog = async (req, res) => {
     }
 
     const status = await Like.findOne({ blog_id: id, liked_by_user_username: username }).lean().exec()
-    const total = await Like.find({ blog_id: id })
+    const total = await Like.find({ blog_id: id, is_like: true }).count()
+    console.log(status)
+    console.log(total)
 
     if (status || status?.length) {
       like.isLike = status.is_like
       like.likeId = status._id
-      like.totalLikes = total.length
+      like.totalLikes = total
       return like
     } else {
       return like
