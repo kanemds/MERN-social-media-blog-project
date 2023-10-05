@@ -345,6 +345,8 @@ const SingleBlog = () => {
   const localCreatedTime = new Date(Date.parse(currentBlog?.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
   const localUpdatedTime = new Date(Date.parse(currentBlog?.updatedAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
 
+  console.log(localUpdatedTime)
+
   let deleteModalMessage
 
   if (isDeleteReady === false) {
@@ -421,18 +423,17 @@ const SingleBlog = () => {
             }
           </Typography>
 
-          {currentBlog?.createdAt === currentBlog?.updatedAt ?
-            <Typography variant='h8' sx={{ width: '220px', display: 'flex', justifyContent: !smallBP ? 'flex-start' : 'center' }}>
-              Last Updated:
-              {
-                timeInMillisecond <= sevenDays ?
-                  moment(Date.parse(currentBlog?.updatedAt)).fromNow()
-                  :
-                  localUpdatedTime
-              }
-            </Typography>
-            :
-            ''}
+
+          <Typography variant='h8' sx={{ width: '220px', display: 'flex', justifyContent: !smallBP ? 'flex-start' : 'center' }}>
+            Last Updated:
+            {
+              timeInMillisecond <= sevenDays ?
+                moment(Date.parse(currentBlog?.updatedAt)).fromNow()
+                :
+                localUpdatedTime
+            }
+          </Typography>
+
         </Box>
 
         <Box sx={{ width: !xSamllBP ? 360 : !smallBP ? 410 : 500, display: 'flex', flexDirection: smallBP ? 'row' : currentBlog?.username === username ? 'row' : 'column', alignItems: smallBP ? 'center' : 'flex-start', mb: 2 }}>

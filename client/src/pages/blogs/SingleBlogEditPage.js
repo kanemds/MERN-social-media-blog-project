@@ -37,7 +37,7 @@ const SingleBlogEditPage = () => {
 
   let content
 
-  if (!blog) {
+  if (!blog || isLoading) {
     content = (
       <Container sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <LoadingSpinner />
@@ -45,7 +45,7 @@ const SingleBlogEditPage = () => {
     )
   }
 
-  if (blog) {
+  if (blog && isSuccess) {
     content = <SingleBlogEditForm blog={blog} />
   }
 
