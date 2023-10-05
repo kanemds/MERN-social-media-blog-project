@@ -30,7 +30,7 @@ const SingleBlogEditForm = ({ blog }) => {
 
   const smallBP = useMediaQuery('(min-width:550px)') // true when larger
   const xSamllBP = useMediaQuery('(min-width:466px)') // true when larger
-
+  const matches = useMediaQuery('(min-width:1200px)')
   const navigate = useNavigate()
 
   const [selectedImage, setSelectedImage] = useState([])
@@ -105,19 +105,14 @@ const SingleBlogEditForm = ({ blog }) => {
 
   return (
     <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%' }}>
-      <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: matches ? '200px' : '120px' }}>
         {/* picture area */}
 
         {/* preveiw */}
         {!selectedImage ? '' :
-          <Card sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: !xSamllBP ? 375 : !smallBP ? 420 : 500,
-            height: !xSamllBP ? 375 : !smallBP ? 420 : 500
-          }}>
+          <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', width: 400, height: 400 }}>
             <CardMedia
-              className='display'
+              // className='display'
               component="img"
               image={selectedImage.url}
               alt={selectedImage.name}
@@ -134,9 +129,9 @@ const SingleBlogEditForm = ({ blog }) => {
       </Grid>
 
 
-      <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+      <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', mt: '160px' }}>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           {isError ?
             <OutlinedInput defaultValue={error.data.message} color='error' disabled />
             :
@@ -149,16 +144,13 @@ const SingleBlogEditForm = ({ blog }) => {
             multiline
             fullWidth
             placeholder='Story Title'
-            sx={{ width: !xSamllBP ? 368 : !smallBP ? 420 : 500, }}
+            sx={{ width: '80%' }}
           />
           <TextField
             value={text}
             onChange={handleText}
             placeholder='what would you like to share today?'
-            sx={{
-              mt: 10,
-              width: !xSamllBP ? 368 : !smallBP ? 420 : 500,
-            }}
+            sx={{ mt: 10, width: '80%' }}
             fullWidth
             multiline // auto add line if needed 
             // maxRows={20} will create a scroll bar after the maxRows is reached (not good) 
