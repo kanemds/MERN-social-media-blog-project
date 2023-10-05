@@ -21,6 +21,7 @@ import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../li
 import { apiSlice } from '../../app/api/apiSlice'
 import { useDispatch } from 'react-redux'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import useNumberDisplay from '../../hooks/useNumberDisplay'
 
 const iconStyle = {
   padding: '0px',
@@ -77,6 +78,8 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
 
   const dispatch = useDispatch()
 
+  const number = useNumberDisplay(blog?.likedCount)
+
   const navigate = useNavigate()
   const { username, userId } = useAuth()
   const { pathname } = useLocation()
@@ -89,8 +92,7 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [isDeleteReady, setIsDeleteReady] = useState(null)
   const [loading, setLoading] = useState(false)
-
-
+  const [totalLikes, setTotalLieks] = useState(number || 0)
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -98,7 +100,6 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
   const timeInMillisecond = current - postedDay
 
   useEffect(() => {
-
     if (isDeleteReady && removeMessage) {
       setDeleteMessage(removeMessage?.message)
       setTimeout(() => {
@@ -116,7 +117,6 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
 
 
   useEffect(() => {
-
     if (isDeleteLoading) {
       setLoading(true)
       setTimeout(() => {
@@ -296,7 +296,7 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '30%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
-                <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
+                <Typography sx={{ color: 'black', ml: 1 }}>{totalLikes}</Typography>
               </Box>
             </Box>
 

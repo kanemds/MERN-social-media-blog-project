@@ -145,16 +145,16 @@ const deleteLike = async (req, res) => {
 
   const selectedLikedBlog = await Like.findById(id).exec()
 
+
   if (!selectedLikedBlog) return res.status(400).json({ message: 'net work error, please try again' })
 
-  console.log(selectedLikedBlog)
 
   await selectedLikedBlog.deleteOne()
   console.log('like removed')
 
 
   // res.status(200).json(deleteData)
-  res.status(200).json('like removed')
+  res.status(200).json({ message: 'The like has been successfully removed from this blog.' })
 }
 
 
