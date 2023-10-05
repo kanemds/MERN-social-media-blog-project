@@ -193,7 +193,7 @@ const SingleBlogEditForm = ({ blog }) => {
               </Select>
             </FormControl>
           </Box>
-          <Box>
+          <Box sx={{ mb: 10 }}>
             <Button
               onClick={handleBack}
             >
