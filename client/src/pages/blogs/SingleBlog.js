@@ -435,7 +435,7 @@ const SingleBlog = () => {
             ''}
         </Box>
 
-        <Box sx={{ width: !xSamllBP ? 360 : !smallBP ? 410 : 500, display: 'flex', flexDirection: smallBP ? 'row' : 'column', alignItems: smallBP ? 'center' : 'flex-start', mb: 2 }}>
+        <Box sx={{ width: !xSamllBP ? 360 : !smallBP ? 410 : 500, display: 'flex', flexDirection: smallBP ? 'row' : currentBlog?.username === username ? 'row' : 'column', alignItems: smallBP ? 'center' : 'flex-start', mb: 2 }}>
           <Box sx={{ width: '80%', display: 'flex', alignItems: 'center', mr: 2, }} >
 
             <IconButton
@@ -458,9 +458,9 @@ const SingleBlog = () => {
           </Box>
 
 
-          <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1 }}>
+          <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: currentBlog?.username === username ? 'flex-end' : 'space-between', p: 1 }}>
 
-            {isSubscribed ?
+            {currentBlog?.username === username ? '' : isSubscribed ?
               <Button
                 onClick={handleToSubscribed}
                 sx={{
@@ -526,7 +526,7 @@ const SingleBlog = () => {
                     '&:hover': { color: red[400], background: 'white' }
                   }}
                 >
-                  {isLiked ?
+                  {isLiked || currentBlog?.username === username ?
                     <FavoriteIcon sx={{ color: red[400] }} />
                     :
                     <FavoriteBorderIcon sx={{ color: '#bdbdbd' }} />
@@ -540,7 +540,7 @@ const SingleBlog = () => {
 
 
 
-        <Box sx={{ width: !smallBP ? '80%' : 500 }}>
+        <Box sx={{ width: !smallBP ? '80%' : 500, mb: 10 }}>
           <Divider />
           <TextField
             sx={{
