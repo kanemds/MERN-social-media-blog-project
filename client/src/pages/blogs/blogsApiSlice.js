@@ -83,6 +83,37 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         }
       }
     }),
+    getBloggerHomePage: builder.query({
+      query: (id) => ({
+        url: `/blogs/blogger/${id}`,
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      keepUnusedDataFor: 300,
+      transformResponse: (response, meta, arg) => {
+        if (Array.isArray(response)) {
+          const loadedBlogs = response?.map(blog => {
+            blog.id = blog._id
+            return blog
+          })
+          return loadedBlogs
+        } else {
+          return []
+        }
+      },
+      providesTags: (result, error, arg) => {
+        console.log(result)
+        if (result?.ids) {
+          return [
+            { type: 'Blog', id: 'LIST' },
+            ...result.ids.map(id => ({ type: 'Blog', id }))
+          ]
+        } else {
+          return [{ type: 'Blog', id: 'LIST' }]
+        }
+      }
+    }),
     getPaginatedBlogs: builder.query({
       query: (pageNumber) => ({
         url: `/blogs/paginatedBlogs?page=${pageNumber}`,
@@ -177,6 +208,7 @@ export const {
   useGetBlogsQuery,
   useGetSingleBlogQuery,
   useGetPaginatedBlogsQuery,
+  useGetBloggerHomePageQuery,
   useAddNewBlogMutation,
   useUpdateBlogMutation,
   useDeleteBlogMutation,
