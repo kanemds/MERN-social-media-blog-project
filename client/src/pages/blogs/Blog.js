@@ -170,10 +170,9 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
     await deleteBlog({ id: blog.id })
   }
 
-
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.id}`)
+      navigate(`/blogs/user/${blog.user_id}`)
     }
   }
 

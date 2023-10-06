@@ -102,9 +102,10 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
     await deleteBookmark({ blogId: blog.id, id: blog.bookmarkId })
   }
 
+
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.id}`)
+      navigate(`/blogs/user/${blog.user_id}`)
     }
   }
 

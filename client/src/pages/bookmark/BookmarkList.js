@@ -144,13 +144,13 @@ const BookmarkList = () => {
     if (!searchInput.length) return console.log('nothing')
     const inputLowerCase = searchInput.toLowerCase()
     // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
-    const result = setCurrentBookmarks.filter(blog =>
+    const result = currentBookmarks.filter(blog =>
       [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
     )
     if (!result.length) {
       setSearchInput('')
       setIsSearch(true)
-      return setSearchResult('No search results found for blog(s)')
+      return setSearchResult('No bookmarked blog was found to match the input')
     } else {
       setSearchInput('')
       setIsSearch(true)
@@ -193,6 +193,25 @@ const BookmarkList = () => {
     )
   }
 
+
+  if (isSearch) {
+    content = (
+      <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+        {
+          Array.isArray(searchResult) ?
+            (
+              searchResult?.map(blog =>
+                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+                  <BookmarkBlog blog={blog} deleteBookmark={deleteBookmark} setRefresh={setRefresh} isDeleteBookmarkLoading={isDeleteBookmarkLoading} removeMessage={removeMessage} />
+                </Grid>)
+            ) :
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+              {searchResult}
+            </Box>
+        }
+      </Grid >
+    )
+  }
 
 
   return (

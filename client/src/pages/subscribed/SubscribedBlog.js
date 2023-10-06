@@ -98,8 +98,6 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
     await deleteSubscribed({ id: blog.id })
   }
 
-  console.log(blog)
-
   const handleUserPage = () => {
     if (!isClick) {
       navigate(`/blogs/user/${blog.blog_owner_id}`)

@@ -5,13 +5,9 @@ import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useNavigate, useParams } from 'react-router-dom'
-import noteBook from '../../images/noteBook.jpg'
-import ark from '../../images/ark.jpg'
 import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
-
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useAddNewBlogMutation, useUpdateBlogMutation, useGetBlogsQuery } from './blogsApiSlice'
-import useAuth from '../../hooks/useAuth'
 import './imagesDisplaySlider.css'
 
 const SideButton = styled(Button)({

@@ -135,8 +135,6 @@ const SubscribedList = () => {
     }
   }
 
-  console.log(currentSubscribed)
-
   const handleSearch = () => {
     if (!searchInput.length) return console.log('nothing')
     const inputLowerCase = searchInput.toLowerCase()
