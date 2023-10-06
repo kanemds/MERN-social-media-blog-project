@@ -84,22 +84,25 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }
     }),
     getBloggerHomePage: builder.query({
-      query: (id) => ({
-        url: `/blogs/blogger/${id}`,
+      query: (bloggerInfo) => ({
+        url: `/blogs/blogger/${bloggerInfo.id}?username=${bloggerInfo.username}`,
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError
         }
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
-        if (Array.isArray(response)) {
-          const loadedBlogs = response?.map(blog => {
-            blog.id = blog._id
-            return blog
-          })
-          return loadedBlogs
+        console.log(response)
+        const { blogs } = response
+        console.log(blogs)
+        if (!blogs.length) {
+          return response
         } else {
-          return []
+          const loadedBlogs = blogs?.map(blog => {
+            blog.id = blog._id
+            return loadedBlogs
+          })
+          return { ...response, blogs: loadedBlogs }
         }
       },
       providesTags: (result, error, arg) => {
