@@ -71,6 +71,10 @@ const BloggerHomePage = () => {
   const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
 
 
+  const bloggerInfo = {
+    id,
+    username: username ? username : null
+  }
 
   const [
     deleteBlog,
@@ -83,7 +87,7 @@ const BloggerHomePage = () => {
     }
   ] = useDeleteBlogMutation()
 
-  const { userBlogs, isLoading, isSuccess, isError } = useGetBloggerHomePageQuery(id, {
+  const { userBlogs, isLoading, isSuccess, isError } = useGetBloggerHomePageQuery(bloggerInfo, {
     selectFromResult: ({ data, isLoading, isSuccess, isError }) => ({
       userBlogs: data,
       isLoading,
@@ -91,6 +95,9 @@ const BloggerHomePage = () => {
       isError
     })
   })
+
+
+  console.log(userBlogs)
 
 
 
@@ -109,7 +116,7 @@ const BloggerHomePage = () => {
 
   useEffect(() => {
     if (isSuccess || refresh) {
-      setCurrentUserBlogs(Object.values(userBlogs))
+      setCurrentUserBlogs(Object.values(userBlogs?.blogs))
       setBloggerUsername(userBlogs[0]?.username)
       setRefresh(false)
     }
@@ -251,7 +258,7 @@ const BloggerHomePage = () => {
       </Box>
       <Box sx={{ height: '100%', p: 2 }}>
         <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
-          {content}
+          {/* {content} */}
         </Box>
       </Box>
     </Box >
