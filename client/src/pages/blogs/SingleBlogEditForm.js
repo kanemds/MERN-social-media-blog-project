@@ -100,8 +100,6 @@ const SingleBlogEditForm = ({ blog }) => {
     await updateBlog(formData)
   }
 
-  // !xSamllBP ? { width: 375, height: 375 } : !smallBP ? { width: 420, height: 420 } : { width: 500, height: 500 }
-
 
   return (
     <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%' }}>

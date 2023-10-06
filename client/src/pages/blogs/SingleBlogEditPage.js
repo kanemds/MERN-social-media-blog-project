@@ -32,8 +32,6 @@ const SingleBlogEditPage = () => {
     }
   }, [isSuccess, data])
 
-  console.log(data)
-
   let content
 
   if (!blog || isLoading) {

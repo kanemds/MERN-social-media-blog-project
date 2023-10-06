@@ -302,10 +302,6 @@ const createBlog = async (req, res) => {
     processedImages = await processMultipleImages(images) // array
   }
 
-
-  // console.log('Processed images:', processedImages)
-  console.log(currentUser)
-
   const newBlog = await Blog.create({ username: currentUser.username, images: processedImages, user_id: currentUser._id, title, text, visible_to: visibleTo })
 
   // res.status(201).json({ message: 'New blog created' })
@@ -391,7 +387,7 @@ const updateBlog = async (req, res) => {
   blog.title = title
   blog.text = text
   blog.images = newSetOrderImages
-  blog.visibleTo = visibleTo
+  blog.visible_to = visibleTo
 
   const updatedBlog = await blog.save()
 
@@ -402,7 +398,6 @@ const updateBlog = async (req, res) => {
 // @access Private
 const deleteBlog = async (req, res) => {
   const { id } = req.body
-  console.log(id)
 
   if (!id) {
     return res.status(400).json({ message: 'Blog ID required' })
