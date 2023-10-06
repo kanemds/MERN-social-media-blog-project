@@ -23,6 +23,7 @@ import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import { SideBarContext } from '../useContext/SideBarContext'
 import { messages } from '../config/requireLoginMessage'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -163,7 +164,7 @@ const FrontPageSideBar = () => {
       navigate('/login', { state: { message: messages.user } })
     }
   }
-  const handleToFavorite = () => {
+  const handleToBookmark = () => {
     if (username) {
       navigate('/blogs/bookmarks')
     } else {
@@ -246,9 +247,9 @@ const FrontPageSideBar = () => {
         <ActiveCalender />
         <Divider />
         <Section >
-          <SideButton  >
+          <SideButton onClick={handleToMyPost}>
             <ArticleOutlinedIcon />
-            <ButtonInfo onClick={handleToMyPost}>My Post(s)</ButtonInfo>
+            <ButtonInfo >My Post(s)</ButtonInfo>
           </SideButton>
           {checked && username ?
             <Grow
@@ -260,30 +261,36 @@ const FrontPageSideBar = () => {
             </Grow>
             : ''
           }
-          <SideButton >
+          <SideButton onClick={handleToCreatePost}>
             <PostAddIcon />
-            <ButtonInfo onClick={handleToCreatePost}> Create a Post</ButtonInfo>
+            <ButtonInfo> Create a Post</ButtonInfo>
           </SideButton>
         </Section>
         <Divider />
         <Section >
-          <SideButton >
-            <Diversity2OutlinedIcon onClick={handleToSubscribed} />
-            <ButtonInfo>  Friend's Post(s)</ButtonInfo>
+          <SideButton onClick={handleToSubscribed} >
+            <Diversity2OutlinedIcon />
+            <ButtonInfo> Subscribers</ButtonInfo>
           </SideButton>
           <SideButton >
-            <StarRoundedIcon onClick={handleToFavorite} />
-            <ButtonInfo>  Favorite</ButtonInfo>
+            <StarRoundedIcon onClick={handleToBookmark} />
+            <ButtonInfo>  Bookmarks</ButtonInfo>
           </SideButton>
-          <SideButton >
-            <RecommendIcon onClick={handleToLiked} />
+          <SideButton onClick={handleToLiked}>
+            <SvgIcon sx={{ fontSize: '1.3rem', width: '24px' }} >
+              <svg
+                viewBox='0 0 24 24'
+              >
+                <FavoriteIcon color='primary' />
+              </svg>
+            </SvgIcon>
             <ButtonInfo>  Liked</ButtonInfo>
           </SideButton>
         </Section>
         <Divider />
         <Section>
-          <SideButton  >
-            <SettingsIcon onClick={handleToSetting} />
+          <SideButton onClick={handleToSetting}>
+            <SettingsIcon />
             <ButtonInfo >  Settings</ButtonInfo>
           </SideButton>
         </Section>
@@ -344,14 +351,20 @@ const FrontPageSideBar = () => {
         <Section >
           <SideButton onClick={handleToSubscribed} >
             <Diversity2OutlinedIcon />
-            <ButtonInfo>  Friend's Post(s)</ButtonInfo>
+            <ButtonInfo>  Subscribers</ButtonInfo>
           </SideButton>
-          <SideButton onClick={handleToFavorite}>
+          <SideButton onClick={handleToBookmark}>
             <StarRoundedIcon />
-            <ButtonInfo>  Favorite</ButtonInfo>
+            <ButtonInfo>  Bookmarks</ButtonInfo>
           </SideButton>
           <SideButton onClick={handleToLiked}>
-            <RecommendIcon />
+            <SvgIcon sx={{ fontSize: '1.3rem', width: '24px' }} >
+              <svg
+                viewBox='0 0 24 24'
+              >
+                <FavoriteIcon color='primary' />
+              </svg>
+            </SvgIcon>
             <ButtonInfo>  Liked</ButtonInfo>
           </SideButton>
         </Section>
@@ -460,11 +473,11 @@ const FrontPageSideBar = () => {
           <IconButton color="primary" onClick={handleToSubscribed}>
             <Diversity2OutlinedIcon color='primary' />
           </IconButton>
-          <IconButton color="primary" onClick={handleToFavorite}>
+          <IconButton color="primary" onClick={handleToBookmark}>
             <StarRoundedIcon color='primary' />
           </IconButton>
           <IconButton color="primary" onClick={handleToLiked}>
-            <RecommendIcon color='primary' />
+            <FavoriteIcon color='primary' sx={{ fontSize: '1.3rem' }} />
           </IconButton>
 
         </Section>

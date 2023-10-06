@@ -5,8 +5,7 @@ singlePage:
 [x]   subscribe add
 [x]   subscribe delete
 [x]   subscribe number
-
-[x]   like add[x] 
+[x]   like add
 [x]   like delete
 [x]   like number
 
@@ -27,6 +26,7 @@ myPostPage
 [x]   public blogs in ascendent / descendent order
 [x]   see private blogs 
 [x]   private blogs in ascendent / descendent order
+[x]   able to search, when no result display message
 
 editPage
 [x]   edit [x]
