@@ -212,6 +212,7 @@ const BlogsList = () => {
                     <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
                   </Grid>)
               ) :
+
               (
                 privateBlogs?.map(blog =>
                   <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
@@ -229,14 +230,14 @@ const BlogsList = () => {
       <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
 
         {
-          isSelected === 'All' ?
+          isSelected === 'All' && Array.isArray(searchResult) ?
             (
               searchResult?.map(blog =>
                 <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
                   <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
                 </Grid>)
             ) :
-            isSelected === 'Public' ?
+            isSelected === 'Public' && Array.isArray(searchResult) ?
               (
                 searchPublicBlogs?.map(blog =>
 
@@ -244,14 +245,18 @@ const BlogsList = () => {
                     <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
                   </Grid>)
               ) :
-              (
-                searchPrivateBlogs?.map(blog =>
-                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                    <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
-                  </Grid>)
-              )
+              isSelected === 'Private' && Array.isArray(searchResult) ?
+                (
+                  searchPrivateBlogs?.map(blog =>
+                    <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+                      <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+                    </Grid>)
+                ) :
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                  {searchResult}
+                </Box>
         }
-      </Grid>
+      </Grid >
     )
   }
 
