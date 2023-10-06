@@ -10,7 +10,6 @@ import SingleBlogEditForm from './SingleBlogEditForm'
 const SingleBlogEditPage = () => {
 
   const { id, username } = useParams()
-
   const [blog, setBlog] = useState('')
 
   const currentSingleBlog = {

@@ -136,7 +136,7 @@ const getBlogsForUser = async (req, res) => {
   const countLikePerBlog = await Promise.all(currentUserBlogs.map(async blog => {
     const timeConvert = new Date(Date.parse(blog.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
     const perBlog = await Like.find({ blog_id: blog._id, is_like: true }).count()
-    return { ...blog, likedCount: perBlog, calenderDate: timeConvert }
+    return { ...blog, likedCount: perBlog, createdDate: timeConvert }
   }))
   console.log(countLikePerBlog)
 

@@ -66,8 +66,8 @@ const BlogsList = () => {
   const small = useMediaQuery('(max-width:791px)')
 
   const { username, userId } = useAuth()
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
-
+  const { pathname } = useLocation()
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, setPath } = useContext(SideBarContext)
 
 
   const [
@@ -91,7 +91,6 @@ const BlogsList = () => {
   })
 
 
-
   const [isSelected, setIsSelected] = useState('All')
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentUserBlogs, setCurrentUserBlogs] = useState([])
@@ -105,17 +104,27 @@ const BlogsList = () => {
 
   useEffect(() => {
     if (isSuccess || refresh) {
-      setCurrentUserBlogs(Object.values(userBlogs))
-      setRefresh(false)
+      if (selectedDate.myPostPage) {
+        const selectedDay = Object.values(userBlogs).filter(blog => blog.createdDate === selectedDate.myPostPage)
+        setCurrentUserBlogs(selectedDay)
+        setRefresh(false)
+      } else {
+        setCurrentUserBlogs(Object.values(userBlogs))
+        setRefresh(false)
+      }
     }
-  }, [isSuccess, refresh])
+  }, [isSuccess, refresh, selectedDate.myPostPage])
 
-  console.log(currentUserBlogs)
 
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
   }
 
+  useEffect(() => {
+    if (pathname === '/blogs') {
+      setPath(pathname)
+    }
+  }, [pathname])
 
 
   const handleAscendent = () => {

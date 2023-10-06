@@ -47,6 +47,15 @@ export default function ActiveCalender() {
   const handleSelectedDate = (date) => {
     console.log(date)
     const timeConvert = date ? new Date(Date.parse(date?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo) : null
+    if (path === '/') {
+      setCalendarDate({ ...calendarDate, frontPage: date })
+      setSelectedDate({ ...selectedDate, frontPage: timeConvert })
+    }
+    if (path === '/blogs') {
+      setCalendarDate({ ...calendarDate, myPostPage: date })
+      setSelectedDate({ ...selectedDate, myPostPage: timeConvert })
+    }
+
     if (path === '/blogs/liked') {
       setCalendarDate({ ...calendarDate, likedPage: date })
       setSelectedDate({ ...selectedDate, likedPage: timeConvert })
