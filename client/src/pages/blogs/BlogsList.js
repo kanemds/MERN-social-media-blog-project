@@ -154,7 +154,7 @@ const BlogsList = () => {
     if (!result.length) {
       setSearchInput('')
       setIsSearch(true)
-      return setSearchResult('No search results found for blog(s)')
+      return setSearchResult('No blog was found to match the input')
     } else {
       setSearchInput('')
       setIsSearch(true)
@@ -223,7 +223,6 @@ const BlogsList = () => {
       </Grid>
     )
   }
-
 
   if (isSearch) {
     content = (
