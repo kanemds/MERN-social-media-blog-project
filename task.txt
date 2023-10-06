@@ -9,6 +9,15 @@ singlePage:
 [x]   like delete
 [x]   like number
 
+bloggerPage
+[]    display all blogs
+[]    total number blogs
+[]    isBookmarked for current login user
+[]    isLiked for current login user
+[]    total number subscribers
+[]    total number likes
+[]    able to search    
+
 myPostPage
 [x]   display owner's Blogs 
 [x]   display time ago

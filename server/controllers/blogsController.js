@@ -234,6 +234,94 @@ const getSingleBlog = async (req, res) => {
   res.status(200).json(loginUser)
 }
 
+// @desc Get view blogger blogs
+// route Get /blogger
+// @access Private
+const getSelectedBlogger = async (req, res) => {
+  const { id } = req.params
+
+  console.log(id)
+  console.log('hi')
+  // const { username } = req.query
+
+  // let loginUser
+
+  // const blog = await Blog.findById(id).lean().exec()
+
+  // if (!blog) return res.status(200).json({ message: 'No blog found' })
+
+
+  // const findUser = await User.find({ username }).exec()
+
+  // if (!findUser) return res.status(200).json({ message: 'No user found' })
+
+
+  // const currentLike = async (id, username) => {
+  //   const like = {
+  //     likeId: null,
+  //     isLike: false,
+  //     totalLikes: 0
+  //   }
+
+  //   const status = await Like.findOne({ blog_id: id, liked_by_user_username: username }).lean().exec()
+  //   const total = await Like.find({ blog_id: id, is_like: true }).count()
+
+  //   if (status || status?.length) {
+  //     like.isLike = status.is_like
+  //     like.likeId = status._id
+  //     like.totalLikes = total
+  //     return like
+  //   } else {
+  //     return { ...like, totalLikes: total }
+  //   }
+  // }
+
+  // const currentSubscribe = async (blog, username) => {
+  //   const subscribe = {
+  //     subscribedId: null,
+  //     isSubscribed: false,
+  //     totalSubscribers: 0
+  //   }
+
+  //   const status = await Subscribe.findOne({ blog_owner_id: blog.user_id.toString(), subscribed_by_user_username: username }).lean().exec()
+  //   const total = await Subscribe.find({ blog_owner_id: blog.user_id }).count()
+
+  //   if (status || status?.length) {
+  //     subscribe.subscribedId = status._id
+  //     subscribe.isSubscribed = status.is_subscribed
+  //     subscribe.totalSubscribers = total
+  //     return subscribe
+  //   } else {
+  //     return { ...subscribe, totalSubscribers: total }
+  //   }
+  // }
+
+  // const currentBookmark = async (id, username) => {
+  //   const bookmark = {
+  //     bookmarkId: null,
+  //     isBookmarked: false
+  //   }
+
+  //   const status = await Bookmark.findOne({ blog_id: id, bookmark_by_user_username: username }).lean().exec()
+  //   if (status || status?.length) {
+  //     bookmark.bookmarkId = status._id
+  //     bookmark.isBookmarked = status.is_bookmark
+  //     return bookmark
+  //   } else {
+  //     return bookmark
+  //   }
+
+  // }
+
+  // const like = await currentLike(id, username)
+  // const subscribe = await currentSubscribe(blog, username)
+  // const bookmark = await currentBookmark(id, username)
+
+  // loginUser = { ...blog, like, subscribe, bookmark, }
+  // console.log('refetch single Blog')
+  // res.status(200).json(loginUser)
+}
+
 // @desc Get limited blogs
 // route Get /blogs/post
 // @access Private
@@ -420,4 +508,4 @@ const deleteBlog = async (req, res) => {
 
 }
 
-module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog, getSingleBlog, getPaginatedBlogs, getBlogsForUser }
+module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog, getSingleBlog, getSelectedBlogger, getPaginatedBlogs, getBlogsForUser }

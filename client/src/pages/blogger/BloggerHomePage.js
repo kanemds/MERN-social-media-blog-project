@@ -5,7 +5,7 @@ import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
-import { useDeleteBlogMutation, useGetUserBlogsFromUserIdQuery } from './blogsApiSlice'
+import { useDeleteBlogMutation, useGetBloggerHomePageQuery, useGetUserBlogsFromUserIdQuery } from '../blogs/blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
@@ -16,7 +16,7 @@ import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
-import Blog from './Blog'
+import Blog from '../blogs/Blog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import { useLocation, useOutletContext, useParams } from 'react-router-dom'
@@ -83,7 +83,7 @@ const BloggerHomePage = () => {
     }
   ] = useDeleteBlogMutation()
 
-  const { userBlogs, isLoading, isSuccess, isError } = useGetUserBlogsFromUserIdQuery(id, {
+  const { userBlogs, isLoading, isSuccess, isError } = useGetBloggerHomePageQuery(id, {
     selectFromResult: ({ data, isLoading, isSuccess, isError }) => ({
       userBlogs: data,
       isLoading,
