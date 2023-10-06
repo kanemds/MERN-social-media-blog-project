@@ -30,9 +30,6 @@ const SideBarProvider = ({ children }) => {
     left: false,
   })
 
-
-  console.log(path)
-  console.log(selectedDate)
   const drawerDirection = ['left']
 
   const toggleDrawer = (anchor, open) => (event) => {
