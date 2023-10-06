@@ -1,34 +1,48 @@
 
 singlePage:
-  bookmark add[x] 
-  bookmark delete[x] 
+[x]   bookmark add
+[x]   bookmark delete
+[x]   subscribe add
+[x]   subscribe delete
+[x]   subscribe number
 
-  subscribe add[x] 
-  subscribe delete[x] 
-  subscribe number[x]
-
-  like add[x] 
-  like delete[x] 
-  like number[x]
+[x]   like add[x] 
+[x]   like delete
+[x]   like number
 
 myPostPage
-  displayOwnBlogs[x]
-  likes number from list[x]
-  subscribers number from list[x]
+[x]   display owner's Blogs 
+[x]   display time ago
+[x]   likes number from list 
+[x]   subscribers number from list
+[x]   selected by date 
+[x]   ascendent / descendent order
+[x]   able to delete  
+[x]   able to navigate edit  
+[x]   able to navigate single page  
+[x]   able to navigate user's home page  
+[x]   see all blogs 
+[x]   all blogs in ascendent / descendent order
+[x]   see public blogs 
+[x]   public blogs in ascendent / descendent order
+[x]   see private blogs 
+[x]   private blogs in ascendent / descendent order
 
 editPage
-  edit [x]
+[x]   edit [x]
 
 subscribePage
-  displayUser[x]
-  removeFormList[x]
+[x]   displayUser
+[x]  removeFormList
+[x]   selected by date 
 
 bookmarkPage
-  displayBlogs[x]
-  removeFormList[x]
+[x]   displayBlogs
+[x]   removeFormList
+[x]   selected by date 
 
 likePage
-  displayBlogs[x]
-  removeFormList[x]
-  
+[x]   displayBlogs
+[x]   removeFormList
+[x]   selected by date
 
