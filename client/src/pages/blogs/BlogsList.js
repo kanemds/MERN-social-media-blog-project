@@ -209,13 +209,45 @@ const BlogsList = () => {
                 publicBlogs?.map(blog =>
 
                   <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                    <Blog blog={blog} />
+                    <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
                   </Grid>)
               ) :
               (
                 privateBlogs?.map(blog =>
                   <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                    <Blog blog={blog} />
+                    <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+                  </Grid>)
+              )
+        }
+      </Grid>
+    )
+  }
+
+
+  if (isSearch) {
+    content = (
+      <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+
+        {
+          isSelected === 'All' ?
+            (
+              searchResult?.map(blog =>
+                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+                  <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+                </Grid>)
+            ) :
+            isSelected === 'Public' ?
+              (
+                searchPublicBlogs?.map(blog =>
+
+                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+                    <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+                  </Grid>)
+              ) :
+              (
+                searchPrivateBlogs?.map(blog =>
+                  <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+                    <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
                   </Grid>)
               )
         }
@@ -266,42 +298,12 @@ const BlogsList = () => {
         </Box>
       </Box>
       <Box sx={{ height: '100%', p: 2 }}>
-        {Array.isArray(searchResult) && searchResult.length && isSearch ?
-          <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
 
-            {
-              isSelected === 'All' ?
-                (
-                  searchResult?.map(blog =>
-                    <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Blog blog={blog} />
-                    </Grid>)
-                ) :
-                isSelected === 'Public' ?
-                  (
-                    searchPublicBlogs?.map(blog =>
+        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
+          {content}
+        </Box>
 
-                      <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Blog blog={blog} />
-                      </Grid>)
-                  ) :
-                  (
-                    searchPrivateBlogs?.map(blog =>
-                      <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Blog blog={blog} />
-                      </Grid>)
-                  )
-            }
-          </Grid>
-          :
-          typeof searchResult === 'string' && searchResult.length && isSearch ?
-            <Box> {searchResult}</Box>
-            :
-            <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
-              {content}
-            </Box>
 
-        }
 
       </Box>
     </Box >
