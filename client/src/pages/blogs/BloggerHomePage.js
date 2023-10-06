@@ -19,7 +19,7 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import Blog from './Blog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import DehazeIcon from '@mui/icons-material/Dehaze'
-import { useLocation, useOutletContext } from 'react-router-dom'
+import { useLocation, useOutletContext, useParams } from 'react-router-dom'
 import { SideBarContext } from '../../useContext/SideBarContext'
 import img from './Dtqnxj1W4AAgFut.jpg'
 
@@ -66,6 +66,7 @@ const BloggerHomePage = () => {
 
   const small = useMediaQuery('(max-width:791px)')
 
+  const { id } = useParams()
   const { username, userId } = useAuth()
   const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
 
@@ -82,7 +83,7 @@ const BloggerHomePage = () => {
     }
   ] = useDeleteBlogMutation()
 
-  const { userBlogs, isLoading, isSuccess, isError } = useGetUserBlogsFromUserIdQuery(userId, {
+  const { userBlogs, isLoading, isSuccess, isError } = useGetUserBlogsFromUserIdQuery(id, {
     selectFromResult: ({ data, isLoading, isSuccess, isError }) => ({
       userBlogs: data,
       isLoading,
@@ -101,13 +102,15 @@ const BloggerHomePage = () => {
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
   const [refresh, setRefresh] = useState(false)
+  const [bloggerUsername, setBloggerUsername] = useState('')
 
 
-
+  console.log(userBlogs)
 
   useEffect(() => {
     if (isSuccess || refresh) {
       setCurrentUserBlogs(Object.values(userBlogs))
+      setBloggerUsername(userBlogs[0]?.username)
       setRefresh(false)
     }
   }, [isSuccess, refresh])
@@ -199,7 +202,7 @@ const BloggerHomePage = () => {
 
   return (
     <Box sx={{ width: '100%' }} >
-      <Box sx={{ height: 200, width: '100%' }}>
+      <Box sx={{ height: 120, width: '100%' }}>
         <Box sx={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'start-left', pl: 2, pr: 2 }}>
           <CardMedia
             sx={{ height: '100%', width: 'auto', borderRadius: '50%', objectFit: 'scale-down' }}
@@ -207,6 +210,11 @@ const BloggerHomePage = () => {
             image={img}
             alt={'random'}
           />
+          <Box sx={{ display: 'flex', flexDirection: 'column', ml: 2 }}>
+            <Typography variant='h5'>{bloggerUsername}</Typography>
+            <Typography>999 subscribers</Typography>
+            <Typography>999 blogs</Typography>
+          </Box>
         </Box>
       </Box>
       <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>

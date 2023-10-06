@@ -27,23 +27,31 @@ myPostPage
 [x]   see private blogs 
 [x]   private blogs in ascendent / descendent order
 [x]   able to search, when no result display message
+[x]   each blog avatar icon can navigate to selected blogger home page
 
 editPage
 [x]   edit [x]
 
 subscribePage
 [x]   displayUser
-[x]   removeFormList
+[x]   remove form list
 [x]   selected by date 
 [x]   able to search
+[x]   display subscribed time
+[x]   each blog avatar icon can navigate to selected blogger home page
 
 bookmarkPage
 [x]   displayBlogs
-[x]   removeFormList
-[x]   selected by date 
+[x]   remove form list
+[x]   selected by date
+[x]   able to search 
+[x]   display bookmarked time
+[x]   each blog avatar icon can navigate to selected blogger home page
 
 likePage
 [x]   displayBlogs
-[x]   removeFormList
+[x]   remove form list
 [x]   selected by date
-
+[x]   able to search
+[x]   display liked time
+[x]   each blog avatar icon can navigate to selected blogger home page

@@ -106,7 +106,7 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
 
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.id}`)
+      navigate(`/blogs/user/${blog.user_id}`)
     }
   }
 
