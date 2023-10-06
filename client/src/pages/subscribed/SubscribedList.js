@@ -135,17 +135,19 @@ const SubscribedList = () => {
     }
   }
 
+  console.log(currentSubscribed)
+
   const handleSearch = () => {
     if (!searchInput.length) return console.log('nothing')
     const inputLowerCase = searchInput.toLowerCase()
     // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
-    const result = setCurrentSubscribed.filter(blog =>
-      [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
+    const result = currentSubscribed.filter(blog =>
+      [inputLowerCase].some(character => blog.blog_owner_username.toLowerCase().includes(character))
     )
     if (!result.length) {
       setSearchInput('')
       setIsSearch(true)
-      return setSearchResult('No search results found for blog(s)')
+      return setSearchResult('No subscriber was found to match the input')
     } else {
       setSearchInput('')
       setIsSearch(true)
@@ -187,6 +189,24 @@ const SubscribedList = () => {
     )
   }
 
+  if (isSearch) {
+    content = (
+      <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+        {
+          Array.isArray(searchResult) ?
+            (
+              searchResult?.map(blog =>
+                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+                  <SubscribedBlog blog={blog} deleteSubscribed={deleteSubscribed} setRefresh={setRefresh} isDeleteSubscribedLoading={isDeleteSubscribedLoading} removeMessage={removeMessage} />
+                </Grid>)
+            ) :
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+              {searchResult}
+            </Box>
+        }
+      </Grid >
+    )
+  }
 
 
   return (

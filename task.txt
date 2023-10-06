@@ -33,8 +33,9 @@ editPage
 
 subscribePage
 [x]   displayUser
-[x]  removeFormList
+[x]   removeFormList
 [x]   selected by date 
+[x]   able to search
 
 bookmarkPage
 [x]   displayBlogs

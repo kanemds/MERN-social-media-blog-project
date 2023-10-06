@@ -191,7 +191,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
           }}
             variant='h5'
           >
-            {blog.blog_owner_username}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            {blog.blog_owner_username}
           </Typography>
           <Button
             onMouseOver={() => setIsClick(true)}
