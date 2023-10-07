@@ -8,6 +8,7 @@ const storage = require('../config/firebaseConfig')
 
 const { ref, uploadBytes, getDownloadURL, deleteObject } = require('firebase/storage')
 const timeDisplayOptions = require('../config/timeDisplayOptions')
+const { subscribe } = require('../routes/blogRoutes')
 
 
 const processMultipleImages = async (images) => {
@@ -254,10 +255,30 @@ const getSelectedBlogger = async (req, res) => {
 
   if (!findBlogger) return res.status(200).json({ message: 'Net work error please try again' })
 
-  const totalBlogs = await Blog.find({ user_id: id }).count().exec()
+  const blogs = await Blog.find({ user_id: id }).lean().exec()
+
   const totalSubscribers = await Subscribe.find({ blog_owner_id: id }).count().exec()
-  console.log(totalBlogs)
-  console.log(totalSubscribers)
+
+  // blog:[like,numberLike,subscribe,numberOfSubscribers]
+
+
+  const promises = blogs.map(async blog => {
+    const like = await currentLike(blog._id, username)
+    const subscribe = await currentSubscribe(blog, username)
+    const bookmark = await currentBookmark(blog._id, username)
+
+    const [likeResult, subscribeResult, bookmarkResult] = await Promise.all([
+      like,
+      subscribe,
+      bookmark,
+    ])
+
+    return { ...blog, like: likeResult, subscribe: subscribeResult, bookmark: bookmarkResult }
+  })
+
+  const a = await Promise.all(promises)
+
+  console.log(a)
 
 
   // const currentLike = async (id, username) => {
@@ -317,13 +338,11 @@ const getSelectedBlogger = async (req, res) => {
 
   // }
 
-  // const like = await currentLike(id, username)
-  // const subscribe = await currentSubscribe(blog, username)
-  // const bookmark = await currentBookmark(id, username)
+
 
   // loginUser = { ...blog, like, subscribe, bookmark, }
   // console.log('refetch single Blog')
-  res.status(200).json(bloggerInfo)
+  res.status(200).json({ ...bloggerInfo, blogs: a })
 }
 
 // @desc Get limited blogs
