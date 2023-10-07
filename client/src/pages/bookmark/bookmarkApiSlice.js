@@ -40,7 +40,7 @@ export const bookmarkApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => {
         // { type: 'Blog', id: arg.blog_id } would invalidates the current single blog cache
-        return [{ type: 'Bookmark', id: 'LIST' }, { type: 'Blog', id: arg.blog_id }]
+        return [{ type: 'Bookmark', id: 'LIST' }, { type: 'Blog', id: arg.blog_id }, { type: 'Blog', id: 'LIST' }]
       }
     }),
     deleteBookmark: builder.mutation({

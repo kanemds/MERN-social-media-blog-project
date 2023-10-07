@@ -108,10 +108,11 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
           const { blogs } = result
           return [
             { type: 'Blog', id: 'LIST' },
-            ...blogs.map(blog => ({ type: 'Blog', id: blog._id }))
+            { type: 'Like', id: 'LIST' }, { type: 'Bookmark', id: 'LIST' },
+            ...blogs.map(blog => ({ type: 'Blog', id: blog._id }, { type: 'Like', id: blog.like.likeId }, { type: 'Bookmark', id: blog.bookmark.bookmarkId }))
           ]
         } else {
-          return [{ type: 'Blog', id: 'LIST' }]
+          return [{ type: 'Blog', id: 'LIST' }, { type: 'Like', id: 'LIST' }, { type: 'Bookmark', id: 'LIST' }]
         }
       }
     }),

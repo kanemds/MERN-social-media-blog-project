@@ -78,8 +78,7 @@ const removedStyles = `
 `
 
 
-export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
-
+export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
   const [
     addedLike,
     {
@@ -119,7 +118,6 @@ export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteL
     }
   ] = useDeleteBookmarkMutation()
 
-  console.log(blog)
 
   const number = useNumberDisplay(blog?.like?.totalLikes)
 
@@ -226,9 +224,11 @@ export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteL
     } else {
 
       if (!isBookmarked) {
-        await addBookmark({ blog_id: blog.id, bookmark_by_user_id: userId, username, is_bookmark: true })
+        setUpdateLoading(true)
+        await addBookmark({ blog_id: blog._id, bookmark_by_user_id: userId, username, is_bookmark: true })
       } else {
-        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: 'bookmarkId', blogId: blog.id })
+        setUpdateLoading(true)
+        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: blog.bookmark.bookmarkId, blogId: blog._id })
         console.log(deleteBookmarkInfo)
       }
     }
@@ -242,9 +242,9 @@ export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteL
       navigate('/login', { state: { message: messages.favorite } })
     } else {
       if (!isLiked) {
-        await addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
+        await addedLike({ blog_id: blog._id, user_id: userId, username, is_like: true })
       } else {
-        await deleteLike({ id: blog.id, username })
+        await deleteLike({ id: blog._id, username })
       }
     }
   }
