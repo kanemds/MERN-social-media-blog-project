@@ -7,6 +7,9 @@ import { CardActionArea, Avatar, Box, Button, Popover, IconButton, SvgIcon } fro
 import moment from 'moment'
 import BorderColorIcon from '@mui/icons-material/BorderColor'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import StarRoundedIcon from '@mui/icons-material/StarRounded'
+import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
@@ -14,7 +17,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import useAuth from '../../hooks/useAuth'
 import Modal from '@mui/material/Modal'
-import { useDeleteBlogMutation } from '../blogs/blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
 import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../likes/likesApiSlice'
@@ -22,6 +24,8 @@ import { apiSlice } from '../../app/api/apiSlice'
 import { useDispatch } from 'react-redux'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import useNumberDisplay from '../../hooks/useNumberDisplay'
+import { messages } from '../../config/requireLoginMessage'
+import { useAddBookmarkMutation, useDeleteBookmarkMutation } from '../bookmark/bookmarkApiSlice'
 
 const iconStyle = {
   padding: '0px',
@@ -76,9 +80,48 @@ const removedStyles = `
 
 export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
 
-  const dispatch = useDispatch()
+  const [
+    addedLike,
+    {
+      isLoading: isAddLikeLoading,
+      isSuccess: isAddLikeSuccess,
+      isError: isAddLikeError,
+      error: addLikeError
+    }
+  ] = useAddLikedToBlogMutation()
 
-  const number = useNumberDisplay(blog?.likedCount)
+  const [
+    deleteLike,
+    {
+      data: deleteLikeMessage,
+      isLoading: isDeleteLikeLoading,
+      isSuccess: isDeleteLikeSuccess,
+      isError: isDeleteLikeError,
+      error: deleteLikeError
+    }
+  ] = useDeleteLikedFromBlogMutation()
+
+  const [
+    addBookmark, {
+      isLoading: isAddBookmarkLoading,
+      isSuccess: isAddBookmarkSuccess,
+      isError: isAddBookmarkError,
+      error: addBookmarkError
+    }
+  ] = useAddBookmarkMutation()
+
+  const [
+    deleteBookmark, {
+      isLoading: isDeleteBookmarkLoading,
+      isSuccess: isDeleteBookmarkSuccess,
+      isError: isDeleteBookmarkError,
+      error: deleteBookmarkError
+    }
+  ] = useDeleteBookmarkMutation()
+
+  console.log(blog)
+
+  const number = useNumberDisplay(blog?.like?.totalLikes)
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -93,6 +136,8 @@ export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteL
   const [isDeleteReady, setIsDeleteReady] = useState(null)
   const [loading, setLoading] = useState(false)
   const [totalLikes, setTotalLieks] = useState(number || 0)
+  const [isLiked, setIsLiked] = useState(blog?.like?.isLike || false)
+  const [isBookmarked, setIsBookmarked] = useState(blog?.bookmark?.isBookmarked || false)
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -108,7 +153,6 @@ export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteL
         setRefresh(true)
         setIsDeleteReady(false)
         setLoading(false)
-        // dispatch(apiSlice.util.invalidateTags([{ type: 'Blog', id: 'LIST' }]))
         console.log('remove blog')
       }, 1400)
     }
@@ -173,6 +217,35 @@ export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteL
   const handleUserPage = () => {
     if (isClick) {
       navigate(`/blogs/user/${blog.user_id}`)
+    }
+  }
+
+  const handleBookmark = async () => {
+    if (!username) {
+      navigate('/login', { state: { message: messages.like } })
+    } else {
+
+      if (!isBookmarked) {
+        await addBookmark({ blog_id: blog.id, bookmark_by_user_id: userId, username, is_bookmark: true })
+      } else {
+        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: 'bookmarkId', blogId: blog.id })
+        console.log(deleteBookmarkInfo)
+      }
+    }
+  }
+
+
+  const handleLiked = async (e) => {
+    e.preventDefault()
+    // setIsLiked(prev => !prev)
+    if (!username) {
+      navigate('/login', { state: { message: messages.favorite } })
+    } else {
+      if (!isLiked) {
+        await addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
+      } else {
+        await deleteLike({ id: blog.id, username })
+      }
     }
   }
 
@@ -291,16 +364,52 @@ export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteL
 
           <Box sx={{ display: 'flex', alignItems: 'center', height: 28, width: '100%' }}>
 
-            {/* total like */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '30%' }}>
+            {/* favorite and like */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
+              {username !== blog.username ?
+                <IconButton
+                  disableRipple
+                  onClick={handleBookmark}
+                  onMouseOver={() => setIsClick(true)}
+                  onMouseOut={() => setIsClick(false)}
+                  style={iconStyle}
+                  sx={{
+                    mr: 1,
+                    '&:hover': { color: yellow[800], background: 'white' }
+                  }}
+                >
+                  {isBookmarked ?
+                    <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
+                    :
+                    <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
+                  }
+                </IconButton>
+                : ''
+              }
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
+                <IconButton
+                  disableRipple
+                  onClick={handleLiked}
+                  onMouseOver={() => setIsClick(true)}
+                  onMouseOut={() => setIsClick(false)}
+                  style={iconStyle}
+                  sx={{
+                    '&:hover': { color: red[400], background: 'white' }
+                  }}
+                >
+                  {isLiked ?
+
+                    <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
+                    :
+                    <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
+                  }
+                </IconButton>
                 <Typography sx={{ color: 'black', ml: 1 }}>{totalLikes}</Typography>
               </Box>
             </Box>
 
             {/* show day and menu  */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '70%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '60%' }}>
 
               <Typography color='black'>
                 {

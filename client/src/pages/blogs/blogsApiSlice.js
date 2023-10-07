@@ -92,9 +92,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
-        console.log(response)
         const { blogs } = response
-        console.log(blogs)
         if (!blogs.length) {
           return response
         } else {
@@ -106,11 +104,11 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         }
       },
       providesTags: (result, error, arg) => {
-        console.log(result)
-        if (result?.ids) {
+        if (result) {
+          const { blogs } = result
           return [
             { type: 'Blog', id: 'LIST' },
-            ...result.ids.map(id => ({ type: 'Blog', id }))
+            ...blogs.map(blog => ({ type: 'Blog', id: blog._id }))
           ]
         } else {
           return [{ type: 'Blog', id: 'LIST' }]
