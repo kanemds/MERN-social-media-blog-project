@@ -1,35 +1,27 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import { CardActionArea, Avatar, Box, Button, Popover, IconButton, SvgIcon } from '@mui/material'
 import moment from 'moment'
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
+import BorderColorIcon from '@mui/icons-material/BorderColor'
+import EditNoteIcon from '@mui/icons-material/EditNote'
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import useAuth from '../../hooks/useAuth'
-import StarRoundedIcon from '@mui/icons-material/StarRounded'
-import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded'
-import RecommendIcon from '@mui/icons-material/Recommend'
-import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
-import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
-import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import FavoriteIcon from '@mui/icons-material/Favorite'
+import Modal from '@mui/material/Modal'
+import { useDeleteBlogMutation } from '../blogs/blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
 import { useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation } from '../likes/likesApiSlice'
-import { set } from 'lodash'
-import { messages } from '../../config/requireLoginMessage'
-import { SideBarContext } from '../../useContext/SideBarContext'
-import { useAddBookmarkMutation, useDeleteBookmarkMutation } from '../bookmark/bookmarkApiSlice'
-
-
+import { apiSlice } from '../../app/api/apiSlice'
+import { useDispatch } from 'react-redux'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import useNumberDisplay from '../../hooks/useNumberDisplay'
 
 const iconStyle = {
   padding: '0px',
@@ -82,46 +74,11 @@ const removedStyles = `
 `
 
 
-export default function MainBlog({ blog }) {
+export default function BlogForBlogger({ blog, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
 
-  const [
-    addedLike,
-    {
-      isLoading: isAddLikeLoading,
-      isSuccess: isAddLikeSuccess,
-      isError: isAddLikeError,
-      error: addLikeError
-    }
-  ] = useAddLikedToBlogMutation()
+  const dispatch = useDispatch()
 
-  const [
-    deleteLike,
-    {
-      data: removeMessage,
-      isLoading: isDeleteLikeLoading,
-      isSuccess: isDeleteLikeSuccess,
-      isError: isDeleteLikeError,
-      error: deleteLikeError
-    }] = useDeleteLikedFromBlogMutation()
-
-  const [
-    addBookmark, {
-      isLoading: isAddBookmarkLoading,
-      isSuccess: isAddBookmarkSuccess,
-      isError: isAddBookmarkError,
-      error: addBookmarkError
-    }
-  ] = useAddBookmarkMutation()
-
-  const [
-    deleteBookmark, {
-      isLoading: isDeleteBookmarkLoading,
-      isSuccess: isDeleteBookmarkSuccess,
-      isError: isDeleteBookmarkError,
-      error: deleteBookmarkError
-    }
-  ] = useDeleteBookmarkMutation()
-
+  const number = useNumberDisplay(blog?.likedCount)
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -131,46 +88,86 @@ export default function MainBlog({ blog }) {
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
-  const [isLiked, setIsLiked] = useState(blog.isLike || false)
-  const [isBookmarked, setIsBookmarked] = useState(blog.isBookmark || false)
   const [deleteOpen, setDeleteOpen] = useState(false)
-  const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [isDeleteReady, setIsDeleteReady] = useState(null)
-  const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(null)
-  const [isBlogRemove, setIsBlogRemove] = useState(false)
-
-
+  const [loading, setLoading] = useState(false)
+  const [totalLikes, setTotalLieks] = useState(number || 0)
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
   const sevenDays = 60 * 60 * 24 * 1000 * 7
 
   const timeInMillisecond = current - postedDay
 
+  useEffect(() => {
+    if (isDeleteReady && removeMessage) {
+      setDeleteMessage(removeMessage?.message)
+      setTimeout(() => {
+        setDeleteOpen(false)
+        setAnchorEl(null)
+        setRefresh(true)
+        setIsDeleteReady(false)
+        setLoading(false)
+        // dispatch(apiSlice.util.invalidateTags([{ type: 'Blog', id: 'LIST' }]))
+        console.log('remove blog')
+      }, 1400)
+    }
+  }, [isDeleteReady])
+
 
 
   useEffect(() => {
-    if (isAddLikeSuccess) {
-      setIsLiked(true)
+    if (isDeleteLoading) {
+      setLoading(true)
+      setTimeout(() => {
+        setIsDeleteReady(true)
+      }, 1400)
     }
-    if (isAddBookmarkSuccess) {
-      setIsBookmarked(true)
-    }
-  }, [isAddLikeSuccess, isAddBookmarkSuccess])
+  }, [isDeleteLoading])
 
-  useEffect(() => {
-    if (isDeleteLikeSuccess) {
-      setIsLiked(false)
+
+  const handleClick = (event) => {
+    if (isClick) {
+      setAnchorEl(event.currentTarget)
     }
-    if (isDeleteBookmarkSuccess) {
-      setIsBookmarked(false)
-    }
-  }, [isDeleteLikeSuccess, isDeleteBookmarkSuccess])
+  }
+
+  const handleClose = () => {
+    setIsClick(false)
+    setAnchorEl(null)
+  }
+
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
 
   const handleToSelectedBlog = () => {
     if (!isClick) {
       navigate(`/blogs/post/${blog.id}`)
     }
+  }
+
+  const handleLook = () => {
+    if (isClick) {
+      navigate(`/blogs/post/${blog.id}`)
+    }
+  }
+
+  const handleEdit = () => {
+    navigate(`/blogs/post/edit/${blog.id}`)
+  }
+
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false)
+    setIsClick(false)
+    setAnchorEl(null)
+  }
+
+  const handleDelete = () => setDeleteOpen(true)
+
+  const handleDeleteConfirm = async (e) => {
+    e.preventDefault()
+    await deleteBlog({ id: blog.id })
   }
 
   const handleUserPage = () => {
@@ -179,41 +176,45 @@ export default function MainBlog({ blog }) {
     }
   }
 
-  console.log(blog)
 
-  const handleBookmark = async () => {
-    if (!username) {
-      navigate('/login', { state: { message: messages.like } })
-    } else {
+  ////////////////////////////////////////////////// delete blog ////////////////////////////////////////////////////
+  let deleteModalMessage
 
-      if (!isBookmarked) {
-        await addBookmark({ blog_id: blog.id, bookmark_by_user_id: userId, username, is_bookmark: true })
-      } else {
-        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: 'bookmarkId', blogId: blog.id })
-        console.log(deleteBookmarkInfo)
-      }
-    }
+  if (loading) {
+    deleteModalMessage = <LoadingSpinner />
   }
 
+  if (!loading) {
+    deleteModalMessage = (
+      <>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Delete the selected blog?
+        </Typography>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
+          <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+          <Button variant='contained' onClick={handleDeleteConfirm} sx={{
+            backgroundColor: red[600],
+            color: 'white',
+            '&:hover': {
+              backgroundColor: red[800]
+            }
+          }}>Delete Blog</Button>
+        </Box>
+      </>
+    )
+  }
 
-
-
-  const handleLiked = async (e) => {
-    e.preventDefault()
-    // setIsLiked(prev => !prev)
-    if (!username) {
-      navigate('/login', { state: { message: messages.favorite } })
-    } else {
-      if (!isLiked) {
-        await addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
-      } else {
-        await deleteLike({ id: blog.id, username })
-      }
-    }
+  if (isDeleteReady) {
+    deleteModalMessage = (
+      <Typography id="modal-modal-title" variant="h6" component="h2">
+        {deleteMessage}
+      </Typography>
+    )
   }
 
 
   return (
+
     <Card
       className='fadeIn'
       sx={{
@@ -226,6 +227,8 @@ export default function MainBlog({ blog }) {
         }
       }}
     >
+      {/* keyframes animation will only apply to elements within the scope of the component. It won't affect other elements on the page, */}
+      {/* <style>{loadedStyles}</style> */}
       <CardActionArea
         component="div"
         sx={{
@@ -288,52 +291,16 @@ export default function MainBlog({ blog }) {
 
           <Box sx={{ display: 'flex', alignItems: 'center', height: 28, width: '100%' }}>
 
-            {/* favorite and like */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
-              {username !== blog.username ?
-                <IconButton
-                  disableRipple
-                  onClick={handleBookmark}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    mr: 1,
-                    '&:hover': { color: yellow[800], background: 'white' }
-                  }}
-                >
-                  {isBookmarked ?
-                    <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
-                    :
-                    <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
-                : ''
-              }
+            {/* total like */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '30%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <IconButton
-                  disableRipple
-                  onClick={handleLiked}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    '&:hover': { color: red[400], background: 'white' }
-                  }}
-                >
-                  {isLiked ?
-
-                    <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
-                    :
-                    <FavoriteBorderIcon sx={{ fontSize: '20px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
-                <Typography sx={{ color: 'black', ml: 1 }}>999k</Typography>
+                <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
+                <Typography sx={{ color: 'black', ml: 1 }}>{totalLikes}</Typography>
               </Box>
             </Box>
 
             {/* show day and menu  */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '60%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '70%' }}>
 
               <Typography color='black'>
                 {
@@ -343,7 +310,51 @@ export default function MainBlog({ blog }) {
                     new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
                 }
               </Typography>
+              {blog.username === username ?
+                <IconButton
+                  onMouseOver={() => setIsClick(true)}
+                  onMouseOut={() => setIsClick(false)}
+                  aria-describedby={id}
+                  variant="contained"
+                  onClick={handleClick}
+                  sx={{ p: 0, '&:hover': { backgroundColor: 'white', color: '#1976d2' } }}
 
+                >
+                  <MoreVertOutlinedIcon sx={{ fontSize: '20px' }} />
+                </IconButton>
+                : ''}
+
+              <Popover
+                onMouseOver={() => setIsClick(true)}
+                onMouseOut={() => setIsClick(false)}
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+              >
+                <Button onClick={handleDelete} ><DeleteForeverOutlinedIcon /></Button>
+
+                <Modal
+                  open={deleteOpen}
+                  onClose={handleDeleteClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={styleDelete}>
+                    {deleteModalMessage}
+                  </Box>
+                </Modal>
+                <Button onClick={handleEdit}><EditNoteIcon /></Button>
+                <Button onClick={handleLook}><RemoveRedEyeOutlinedIcon /></Button>
+              </Popover>
             </Box>
 
           </Box>
