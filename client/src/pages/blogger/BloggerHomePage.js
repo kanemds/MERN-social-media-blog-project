@@ -216,7 +216,14 @@ const BloggerHomePage = () => {
             alt={'random'}
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', ml: 2 }}>
-            <Typography variant='h5'>{bloggerUsername}</Typography>
+            <Typography variant='h5' sx={{
+              width: 300,
+              wordBreak: "break-word", display: '-webkit-box',
+              overflow: 'hidden',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 1,
+              textOverflow: 'ellipsis',
+            }}>{bloggerUsername}</Typography>
             <Typography>{subscribersDisplay} subscribers</Typography>
             <Typography>{blogsDisplay} blogs</Typography>
           </Box>
