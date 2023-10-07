@@ -335,10 +335,7 @@ const createBlog = async (req, res) => {
   // const { username, title, text, images } = req.body
   const { username, title, text, visibleTo } = req.body
 
-
-
   const images = await req.files.images // same order from how frontend formData append
-
 
   if (!title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
@@ -351,8 +348,6 @@ const createBlog = async (req, res) => {
   if (titleExist) {
     return res.status(400).json({ message: 'Title has been used' })
   }
-
-
 
   let processedImages
   // using typeof array === 'object' true since array is object
