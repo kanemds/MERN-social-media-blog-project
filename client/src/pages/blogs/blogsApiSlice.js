@@ -100,7 +100,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         } else {
           const loadedBlogs = blogs?.map(blog => {
             blog.id = blog._id
-            return loadedBlogs
+            return blog
           })
           return { ...response, blogs: loadedBlogs }
         }
