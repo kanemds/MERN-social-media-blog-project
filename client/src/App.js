@@ -37,6 +37,7 @@ function App() {
           <Route index element={<MainContent />} />
 
           <Route path='/blogs/post/:id' element={<SingleBlog />} />
+          <Route path='/blogs/user/:id' element={<BloggerHomePage />} />
           {/* prefetch will only execute when user is browsing routes below */}
 
           <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>

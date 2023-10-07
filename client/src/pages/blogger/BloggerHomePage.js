@@ -6,7 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
 import { useDeleteBlogMutation, useGetBloggerHomePageQuery, useGetUserBlogsFromUserIdQuery } from '../blogs/blogsApiSlice'
-import useAuth from '../../hooks/useAuth'
+
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
 import UpgradeOutlinedIcon from '@mui/icons-material/UpgradeOutlined'
@@ -16,12 +16,14 @@ import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
-import Blog from '../blogs/Blog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import { useLocation, useOutletContext, useParams } from 'react-router-dom'
 import { SideBarContext } from '../../useContext/SideBarContext'
 import img from './Dtqnxj1W4AAgFut.jpg'
+import BlogForBlogger from './BlogForBlogger'
+import useAuth from '../../hooks/useAuth'
+import useNumberDisplay from '../../hooks/useNumberDisplay'
 
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -70,7 +72,6 @@ const BloggerHomePage = () => {
   const { username, userId } = useAuth()
   const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
 
-
   const bloggerInfo = {
     id,
     username: username ? username : null
@@ -97,14 +98,11 @@ const BloggerHomePage = () => {
   })
 
 
-  console.log(userBlogs)
-
-
-
-
   const [isSelected, setIsSelected] = useState('All')
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentUserBlogs, setCurrentUserBlogs] = useState([])
+  const [numberOfSubscribers, setNumberOfSubscribers] = useState(0)
+  const [numberOfBlogs, setNumberOfBlogs] = useState(0)
   const [searchInput, setSearchInput] = useState('')
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
@@ -112,12 +110,13 @@ const BloggerHomePage = () => {
   const [bloggerUsername, setBloggerUsername] = useState('')
 
 
-  console.log(userBlogs)
 
   useEffect(() => {
     if (isSuccess || refresh) {
       setCurrentUserBlogs(Object.values(userBlogs?.blogs))
-      setBloggerUsername(userBlogs[0]?.username)
+      setBloggerUsername(userBlogs?.blogs[0]?.username)
+      setNumberOfSubscribers(userBlogs?.numberOfSubscribers)
+      setNumberOfBlogs(userBlogs?.numberOfBlogs)
       setRefresh(false)
     }
   }, [isSuccess, refresh])
@@ -126,8 +125,6 @@ const BloggerHomePage = () => {
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
   }
-
-
 
   const handleAscendent = () => {
     if (isDesc) {
@@ -162,8 +159,10 @@ const BloggerHomePage = () => {
       setIsSearch(true)
       return setSearchResult(result)
     }
-
   }
+
+  const subscribersDisplay = useNumberDisplay(numberOfSubscribers)
+  const blogsDisplay = useNumberDisplay(numberOfBlogs)
 
   const searchPublicBlogs = Array.isArray(searchResult) && searchResult?.filter(blog => blog.visible_to === 'public')
   const searchPrivateBlogs = Array.isArray(searchResult) && searchResult?.filter(blog => blog.visible_to === 'private')
@@ -180,7 +179,6 @@ const BloggerHomePage = () => {
       </Box>
     )
   }
-
 
 
   if (isSuccess && !currentUserBlogs.length || isSuccess && !publicBlogs.length || isSuccess && !privateBlogs.length) {
@@ -200,7 +198,7 @@ const BloggerHomePage = () => {
         {
           currentUserBlogs?.map(blog =>
             <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-              <Blog blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+              <BlogForBlogger blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
             </Grid>
           )}
       </Grid>
@@ -219,8 +217,8 @@ const BloggerHomePage = () => {
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', ml: 2 }}>
             <Typography variant='h5'>{bloggerUsername}</Typography>
-            <Typography>999 subscribers</Typography>
-            <Typography>999 blogs</Typography>
+            <Typography>{subscribersDisplay} subscribers</Typography>
+            <Typography>{blogsDisplay} blogs</Typography>
           </Box>
         </Box>
       </Box>
@@ -258,7 +256,7 @@ const BloggerHomePage = () => {
       </Box>
       <Box sx={{ height: '100%', p: 2 }}>
         <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
-          {/* {content} */}
+          {content}
         </Box>
       </Box>
     </Box >
