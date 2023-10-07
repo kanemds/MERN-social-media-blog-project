@@ -46,6 +46,7 @@ const styleDelete = {
 
 export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeMessage, isDeleteBookmarkLoading }) {
 
+  console.log('Hey')
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -54,7 +55,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [isClick, setIsClick] = useState(false)
-  const [isFavorite, setIsFavorite] = useState(blog.isBookmark || null)
+  const [isFavorite, setIsFavorite] = useState(blog?.isBookmark || null)
   const [deleteBookmarkOpen, setDeleteBookmarkOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)

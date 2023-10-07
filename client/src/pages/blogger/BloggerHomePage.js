@@ -108,6 +108,8 @@ const BloggerHomePage = () => {
   const [isSearch, setIsSearch] = useState(false)
   const [refresh, setRefresh] = useState(false)
   const [bloggerUsername, setBloggerUsername] = useState('')
+  const [isReady, setIsReady] = useState(false)
+  const [updateLoading, setUpdateLoading] = useState(false)
 
 
 
@@ -118,8 +120,23 @@ const BloggerHomePage = () => {
       setNumberOfSubscribers(userBlogs?.numberOfSubscribers)
       setNumberOfBlogs(userBlogs?.numberOfBlogs)
       setRefresh(false)
+      setIsReady(true)
     }
-  }, [isSuccess, refresh])
+    if (updateLoading) {
+
+      setCurrentUserBlogs(Object.values(userBlogs?.blogs))
+      setBloggerUsername(userBlogs?.blogs[0]?.username)
+      setNumberOfSubscribers(userBlogs?.numberOfSubscribers)
+      setNumberOfBlogs(userBlogs?.numberOfBlogs)
+      setTimeout(() => {
+        setUpdateLoading(false)
+      }, 1000)
+    }
+  }, [isSuccess, refresh, userBlogs, updateLoading])
+
+  console.log('currentUserBlogs', currentUserBlogs)
+
+
 
 
   const handleSelect = (e) => {
@@ -172,7 +189,7 @@ const BloggerHomePage = () => {
 
   let content
 
-  if (isLoading) {
+  if (isLoading || updateLoading) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -191,14 +208,14 @@ const BloggerHomePage = () => {
       )
   }
 
-  if (isSuccess && currentUserBlogs?.length > 0) {
+  if (isSuccess && currentUserBlogs?.length > 0 && !updateLoading) {
 
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
         {
           currentUserBlogs?.map(blog =>
             <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-              <BlogForBlogger blog={blog} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+              <BlogForBlogger blog={blog} setUpdateLoading={setUpdateLoading} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
             </Grid>
           )}
       </Grid>
@@ -270,5 +287,6 @@ const BloggerHomePage = () => {
 
   )
 }
+
 
 export default BloggerHomePage
