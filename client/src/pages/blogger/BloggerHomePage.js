@@ -198,7 +198,7 @@ const BloggerHomePage = () => {
   }
 
 
-  if (isSuccess && !currentUserBlogs.length || isSuccess && !publicBlogs.length || isSuccess && !privateBlogs.length) {
+  if ((isSuccess && !currentUserBlogs.length && !updateLoading) || (isSuccess && !publicBlogs.length && !updateLoading) || (isSuccess && !privateBlogs.length && !updateLoading)) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>

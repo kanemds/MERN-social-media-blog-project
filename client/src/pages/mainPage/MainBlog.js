@@ -183,7 +183,7 @@ export default function MainBlog({ blog }) {
 
   const handleBookmark = async () => {
     if (!username) {
-      navigate('/login', { state: { message: messages.like } })
+      navigate('/login', { state: messages.bookmark })
     } else {
 
       if (!isBookmarked) {
@@ -202,7 +202,7 @@ export default function MainBlog({ blog }) {
     e.preventDefault()
     // setIsLiked(prev => !prev)
     if (!username) {
-      navigate('/login', { state: { message: messages.favorite } })
+      navigate('/login', { state: messages.like })
     } else {
       if (!isLiked) {
         await addedLike({ blog_id: blog.id, user_id: userId, username, is_like: true })
