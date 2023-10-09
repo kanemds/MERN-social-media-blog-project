@@ -8,13 +8,15 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import { USER_REGEX, PASSWORD_REGEX, EMAIL_REGEX } from '../../config/regex'
 import userInputs from '../../config/userInputs'
 import ToggleButton from '../../components/ToggleButton'
-import DeleteActionButton from './DeleteActionButton'
 import { useUpdateUserMutation } from '../users/UserApiSlice'
+import { ROLES } from '../../config/roles'
+import { useRefreshMutation } from '../auth/authApiSlice'
 
 
 
 const UserSettingForm = ({ currentUser }) => {
 
+  console.log(currentUser)
 
   const [updateUser, {
     isLoading,
@@ -23,6 +25,11 @@ const UserSettingForm = ({ currentUser }) => {
     error
   }
   ] = useUpdateUserMutation()
+
+
+  const [
+    refresh, { }
+  ] = useRefreshMutation()
 
   const navigate = useNavigate()
 
@@ -37,6 +44,7 @@ const UserSettingForm = ({ currentUser }) => {
       navigate('/')
     }
   }, [isSuccess, navigate])
+
 
 
 
@@ -85,7 +93,11 @@ const UserSettingForm = ({ currentUser }) => {
   const handleSave = async (e) => {
     e.preventDefault()
     if (canSave) {
-      await updateUser({ id: currentUser.id, username, email, password, role, active })
+      const updateReady = await updateUser({ id: currentUser.id, username, email, password, role, active }).unwrap()
+      if (updateReady) {
+        console.log(updateReady)
+        await refresh()
+      }
     }
   }
 
@@ -117,9 +129,7 @@ const UserSettingForm = ({ currentUser }) => {
 
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-          <DeleteActionButton userId={currentUser.id} />
-        </Box>
+
 
         <Box sx={{ pb: '40px', ml: '5%' }}>
           <Typography variant='h4'>EDIT ACCOUNT</Typography>
@@ -154,24 +164,27 @@ const UserSettingForm = ({ currentUser }) => {
             )
             : ''
           }
-          <Typography>Status</Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-            <FormControl sx={{ m: 3, width: 120 }}>
-              <InputLabel>Select Role</InputLabel>
-              <Select
-                value={role}
-                onChange={handleChange}
-                autoWidth
-                label="Select Role"
-              >
-
-                <MenuItem value='User'>User</MenuItem>
-                <MenuItem value='Employee'>Employee</MenuItem>
-                <MenuItem value='Admin'>Admin</MenuItem>
-              </Select>
-            </FormControl>
-            <ToggleButton active={active} setActive={setActive} />
-          </Box>
+          {currentUser.role === ROLES.Admin ?
+            <>
+              <Typography>Status</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                <FormControl sx={{ m: 3, width: 120 }}>
+                  <InputLabel>Select Role</InputLabel>
+                  <Select
+                    value={role}
+                    onChange={handleChange}
+                    autoWidth
+                    label="Select Role"
+                  >
+                    <MenuItem value='User'>User</MenuItem>
+                    <MenuItem value='Employee'>Employee</MenuItem>
+                    <MenuItem value='Admin'>Admin</MenuItem>
+                  </Select>
+                </FormControl>
+                <ToggleButton active={active} setActive={setActive} />
+              </Box>
+            </>
+            : ''}
 
           <Box sx={{ mt: '30px' }}>
             <Button

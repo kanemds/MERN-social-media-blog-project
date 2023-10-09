@@ -70,6 +70,13 @@ calender
 [x] clear the selected day
 
 setting
-[] name change
-[] password change
+[x] name update
+[x] navbar name display update
+[x] email update
+[x] password update
 [] avatar change
+
+issue:
+when username update, blogs become undefined
+needs to update all model that require from username.
+it should be userId and then look for username.

@@ -179,8 +179,6 @@ export default function MainBlog({ blog }) {
     }
   }
 
-  console.log(blog)
-
   const handleBookmark = async () => {
     if (!username) {
       navigate('/login', { state: messages.bookmark })
