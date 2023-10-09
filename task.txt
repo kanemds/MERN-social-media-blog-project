@@ -16,7 +16,7 @@ bloggerPage
 [x]    isLiked for current login user
 [x]    total number subscribers
 [x]    total number likes
-[]    able to search    
+[x]    able to search    
 
 myPostPage
 [x]   display owner's Blogs 
@@ -64,3 +64,12 @@ likePage
 [x]   able to search
 [x]   display liked time
 [x]   each blog avatar icon can navigate to selected blogger home page
+
+calender
+[x] display selected day
+[x] clear the selected day
+
+setting
+[] name change
+[] password change
+[] avatar change
