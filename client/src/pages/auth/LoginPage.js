@@ -21,7 +21,6 @@ const LoginPage = ({ state }) => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  console.log(location.state)
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')

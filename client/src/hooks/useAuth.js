@@ -8,10 +8,11 @@ const useAuth = () => {
 
   const token = useSelector(selectCurrentToken)
 
+
+
   if (token) {
     const decoded = jwtDecode(token)
     const { username, userId, role, } = decoded.userInfo
-
     return { username, userId, role }
   }
 

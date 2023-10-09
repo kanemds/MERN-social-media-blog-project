@@ -15,7 +15,6 @@ const login = async (req, res) => {
   }
 
   const loginUser = await User.findOne({ username }).exec()
-  console.log(loginUser)
 
   if (!loginUser || !loginUser.active) {
     return res.status(401).json({ message: 'User is not authorized' })
@@ -45,7 +44,7 @@ const login = async (req, res) => {
   // refreshToken only provide username prevent data leak
   //    
   const refreshToken = jwt.sign({
-    'username': loginUser.username
+    'userId': loginUser._id.toString()
   },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: '1d' }
@@ -82,10 +81,9 @@ const refresh = (req, res) => {
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
     async (error, decoded) => {
-      console.log(decoded)
       if (error) return res.status(403).json({ message: 'User is not authorized' })
 
-      const loginUser = await User.findOne({ username: decoded.username }).exec()
+      const loginUser = await User.findById(decoded.userId).exec()
 
       if (!loginUser) return res.status(401).json({ message: 'User is not authorized' })
 
@@ -98,7 +96,6 @@ const refresh = (req, res) => {
           }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
       )
 
       res.status(200).json({ accessToken })
