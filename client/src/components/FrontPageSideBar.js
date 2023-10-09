@@ -80,7 +80,7 @@ const FrontPageSideBar = () => {
 
   const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
   const navigate = useNavigate()
-  const { username } = useAuth()
+  const { username, userId } = useAuth()
   const { id } = useParams()
   const { pathname } = useLocation()
 
@@ -180,7 +180,7 @@ const FrontPageSideBar = () => {
   }
   const handleToSetting = () => {
     if (username) {
-      navigate('/setting')
+      navigate(`/setting/${userId}`)
     } else {
       navigate('/login', { state: messages.user })
     }

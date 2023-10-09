@@ -222,6 +222,25 @@ const BloggerHomePage = () => {
     )
   }
 
+  if (isSearch) {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+        {
+          Array.isArray(searchResult) ?
+            (
+              searchResult?.map(blog =>
+                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+                  <BlogForBlogger blog={blog} setUpdateLoading={setUpdateLoading} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+                </Grid>)
+            ) :
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+              {searchResult}
+            </Box>
+        }
+      </Grid>
+    )
+  }
+
   return (
     <Box sx={{ width: '100%' }} >
       <Box sx={{ height: 120, width: '100%' }}>

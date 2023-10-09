@@ -21,6 +21,7 @@ import MainContent from './pages/mainPage/MainContent'
 import LikeList from './pages/likes/LikeList'
 import SubscribedList from './pages/subscribed/SubscribedList'
 import BookmarkList from './pages/bookmark/BookmarkList'
+import SettingPage from './pages/settings/SettingPage'
 
 
 
@@ -50,7 +51,9 @@ function App() {
               <Route path='subscribed' element={<SubscribedList />} />
               <Route path='post/edit/:id' element={<SingleBlogEditPage />} />
               <Route path='user/:id' element={<BloggerHomePage />} />
-
+            </Route>
+            <Route path='setting/:id'>
+              <Route index element={<SettingPage />} />
             </Route>
           </Route>
 
