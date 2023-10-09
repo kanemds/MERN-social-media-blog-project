@@ -305,7 +305,7 @@ const SingleBlog = () => {
         deleteLike({ id: currentBlog?.like?.likeId, blogId: id })
       }
     } else {
-      navigate('/login', { state: { message: messages.like } })
+      navigate('/login', { state: messages.like })
     }
   }
 
@@ -318,7 +318,7 @@ const SingleBlog = () => {
         deleteBookmark({ id: currentBlog?.bookmark?.bookmarkId, blog_id: id })
       }
     } else {
-      navigate('/login', { state: { message: messages.bookmark } })
+      navigate('/login', { state: messages.bookmark })
     }
   }
 
@@ -332,7 +332,7 @@ const SingleBlog = () => {
         deleteSubscribed({ blogId: id, id: currentBlog.subscribe.subscribedId })
       }
     } else {
-      navigate('/login', { state: { message: messages.subscribe } })
+      navigate('/login', { state: messages.subscribe })
     }
   }
 

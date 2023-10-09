@@ -16,9 +16,12 @@ import { resetCache } from '../blogs/blogSlice'
 
 const LoginPage = ({ state }) => {
 
+
+
+
   const navigate = useNavigate()
   const location = useLocation()
-
+  console.log(location.state)
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
@@ -30,7 +33,7 @@ const LoginPage = ({ state }) => {
   const [showPassword, setShowPassword] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [persist, setPersist] = usePersist()
-  const [requiredLoginMessage, setRequireLoginMessage] = useState(location.state ? location.state.message : '')
+  const [requiredLoginMessage, setRequireLoginMessage] = useState(location.state ? location.state : '')
 
 
   // testing purpose

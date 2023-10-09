@@ -218,9 +218,10 @@ export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, del
     }
   }
 
-  const handleBookmark = async () => {
+  const handleBookmark = async (e) => {
+    e.preventDefault()
     if (!username) {
-      navigate('/login', { state: { message: messages.like } })
+      navigate('/login', { state: messages.bookmark })
     } else {
 
       if (!isBookmarked) {
@@ -239,12 +240,15 @@ export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, del
     e.preventDefault()
     // setIsLiked(prev => !prev)
     if (!username) {
-      navigate('/login', { state: { message: messages.favorite } })
+      navigate('/login', { state: messages.like })
     } else {
       if (!isLiked) {
+        setUpdateLoading(true)
         await addedLike({ blog_id: blog._id, user_id: userId, username, is_like: true })
       } else {
-        await deleteLike({ id: blog._id, username })
+        setUpdateLoading(true)
+        const { data: deleteLikeInfo } = await deleteLike({ id: blog.like.likeId, blogId: blog._id, })
+        console.log(deleteLikeInfo)
       }
     }
   }

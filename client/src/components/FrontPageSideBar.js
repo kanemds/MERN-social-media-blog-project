@@ -139,7 +139,7 @@ const FrontPageSideBar = () => {
     if (username) {
       navigate('/blogs')
     } else {
-      navigate('/login', { state: { message: messages.user } })
+      navigate('/login', { state: messages.user })
     }
 
   }
@@ -147,42 +147,42 @@ const FrontPageSideBar = () => {
     if (username) {
       navigate(`/blogs/post/edit/${id}`)
     } else {
-      navigate('/login', { state: { message: messages.user } })
+      navigate('/login', { state: messages.user })
     }
   }
   const handleToCreatePost = () => {
     if (username) {
       navigate('/blogs/new')
     } else {
-      navigate('/login', { state: { message: messages.user } })
+      navigate('/login', { state: messages.user })
     }
   }
   const handleToSubscribed = () => {
     if (username) {
       navigate('/blogs/subscribed')
     } else {
-      navigate('/login', { state: { message: messages.user } })
+      navigate('/login', { state: messages.user })
     }
   }
   const handleToBookmark = () => {
     if (username) {
       navigate('/blogs/bookmarks')
     } else {
-      navigate('/login', { state: { message: messages.user } })
+      navigate('/login', { state: messages.user })
     }
   }
   const handleToLiked = () => {
     if (username) {
       navigate('/blogs/liked')
     } else {
-      navigate('/login', { state: { message: messages.user } })
+      navigate('/login', { state: messages.user })
     }
   }
   const handleToSetting = () => {
     if (username) {
       navigate('/setting')
     } else {
-      navigate('/login', { state: { message: messages.user } })
+      navigate('/login', { state: messages.user })
     }
   }
 
