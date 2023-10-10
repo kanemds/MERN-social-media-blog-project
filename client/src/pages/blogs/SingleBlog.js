@@ -217,8 +217,6 @@ const SingleBlog = () => {
 
   const numberSubscribers = useNumberDisplay(subscribers)
   const numberLikes = useNumberDisplay(likes)
-  console.log(numberSubscribers)
-  console.log(numberLikes)
 
   useEffect(() => {
     if (isSuccess) {
