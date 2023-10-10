@@ -16,8 +16,6 @@ import { useRefreshMutation } from '../auth/authApiSlice'
 
 const UserSettingForm = ({ currentUser }) => {
 
-  console.log(currentUser)
-
   const [updateUser, {
     isLoading,
     isSuccess,
@@ -95,7 +93,6 @@ const UserSettingForm = ({ currentUser }) => {
     if (canSave) {
       const updateReady = await updateUser({ id: currentUser.id, username, email, password, role, active }).unwrap()
       if (updateReady) {
-        console.log(updateReady)
         await refresh()
       }
     }
@@ -126,7 +123,6 @@ const UserSettingForm = ({ currentUser }) => {
           width: '50%',
           p: '10px',
           pb: '100px',
-
         }}
       >
 

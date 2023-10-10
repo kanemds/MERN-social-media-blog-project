@@ -343,8 +343,6 @@ const SingleBlog = () => {
   const localCreatedTime = new Date(Date.parse(currentBlog?.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
   const localUpdatedTime = new Date(Date.parse(currentBlog?.updatedAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
 
-  console.log(localUpdatedTime)
-
   let deleteModalMessage
 
   if (isDeleteReady === false) {
