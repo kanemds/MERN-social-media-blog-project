@@ -74,9 +74,5 @@ setting
 [x] navbar name display update
 [x] email update
 [x] password update
+[x] blog's username changed when updated
 [] avatar change
-
-issue:
-when username update, blogs become undefined
-needs to update all model that require from username.
-it should be userId and then look for username.

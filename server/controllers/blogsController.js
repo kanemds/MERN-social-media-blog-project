@@ -208,7 +208,6 @@ const getBlogsForUser = async (req, res) => {
     const perBlog = await Like.find({ blog_id: blog._id, is_like: true }).count()
     return { ...blog, likedCount: perBlog, createdDate: timeConvert }
   }))
-  console.log(countLikePerBlog)
 
   // find subscribe and then bookmard finally combine
 
@@ -264,8 +263,6 @@ const getSelectedBlogger = async (req, res) => {
 
   const findBlogger = await User.findById(id).exec()
 
-  console.log(findBlogger)
-
   if (!findBlogger) return res.status(200).json({ message: 'Net work error please try again' })
 
   const blogs = await Blog.find({ user_id: id }).lean().exec()
@@ -288,9 +285,6 @@ const getSelectedBlogger = async (req, res) => {
   })
 
   const info = await Promise.all(promises)
-
-  console.log(info)
-
 
   // loginUser = { ...blog, like, subscribe, bookmark, }
   // console.log('refetch single Blog')

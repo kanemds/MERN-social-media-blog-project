@@ -93,6 +93,7 @@ const updateUser = async (req, res) => {
     return res.status(409).json({ message: 'Email is taken' })
   }
 
+
   user.username = username
   user.email = email
   user.role = role
@@ -103,6 +104,19 @@ const updateUser = async (req, res) => {
   }
 
   const updatedUser = await user.save()
+
+  const blogs = await Blog.find({ user_id: updatedUser._id }).lean().exec()
+
+  if (blogs) {
+    const updateOperations = blogs.map(blog => ({
+      updateOne: {
+        filter: { _id: blog._id }, // Assuming _id is the identifier field for each blog
+        update: { $set: { username: updatedUser.username } }
+      }
+    }))
+    await Blog.bulkWrite(updateOperations)
+  }
+
 
   res.json({ message: `${updatedUser.username} updated` })
 }
