@@ -119,7 +119,6 @@ const SingleBlog = () => {
     error
   } = useGetSingleBlogQuery(currentSingleBlog)
 
-  console.log(data)
 
   const [
     deleteBlog,
@@ -343,8 +342,6 @@ const SingleBlog = () => {
   const localCreatedTime = new Date(Date.parse(currentBlog?.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
   const localUpdatedTime = new Date(Date.parse(currentBlog?.updatedAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
 
-  console.log(localUpdatedTime)
-
   let deleteModalMessage
 
   if (isDeleteReady === false) {
@@ -411,7 +408,7 @@ const SingleBlog = () => {
           </Box>
         </Modal>
         <Box sx={{ width: !smallBP ? '80%' : 500, m: 2, display: 'flex', flexDirection: !smallBP ? 'column' : 'row', justifyContent: 'center', alignItems: !smallBP ? 'flex-end' : 'center' }}>
-          <Typography variant='h8' sx={{ width: '220px', display: 'flex', justifyContent: !smallBP ? 'flex-start' : 'center' }}>
+          <Typography sx={{ fontSize: '13px', width: '220px', display: 'flex', justifyContent: !smallBP ? 'flex-start' : 'center' }}>
             Posted:
             {
               timeInMillisecond <= sevenDays ?
@@ -422,7 +419,7 @@ const SingleBlog = () => {
           </Typography>
 
 
-          <Typography variant='h8' sx={{ width: '220px', display: 'flex', justifyContent: !smallBP ? 'flex-start' : 'center' }}>
+          <Typography sx={{ fontSize: '13px', width: '220px', display: 'flex', justifyContent: !smallBP ? 'flex-start' : 'center' }}>
             Last Updated:
             {
               timeInMillisecond <= sevenDays ?

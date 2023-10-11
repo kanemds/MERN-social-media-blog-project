@@ -5,7 +5,7 @@ const blogSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,
+      default: ''
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,

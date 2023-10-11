@@ -242,7 +242,7 @@ const getSingleBlog = async (req, res) => {
   const bookmark = await currentBookmark(id, username)
 
   loginUser = { ...blog, like, subscribe, bookmark, }
-  console.log('refetch single Blog')
+
   res.status(200).json(loginUser)
 }
 
@@ -252,8 +252,7 @@ const getSingleBlog = async (req, res) => {
 const getSelectedBlogger = async (req, res) => {
   const { id } = req.params
   const { username } = req.query
-  console.log(id)
-  console.log(username)
+
 
   const bloggerInfo = {
     numberOfBlogs: 0,
@@ -326,8 +325,7 @@ const getPaginatedBlogs = async (req, res) => {
 // @access Private
 const createBlog = async (req, res) => {
 
-  // const { username, title, text, images } = req.body
-  const { username, title, text, visibleTo } = req.body
+  const { title, text, visibleTo, userId } = req.body
 
   const images = await req.files.images // same order from how frontend formData append
 
@@ -335,7 +333,11 @@ const createBlog = async (req, res) => {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
-  const currentUser = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+  const currentUser = await User.findById(userId).collation({ locale: 'en', strength: 2 }).lean().exec()
+
+  if (!currentUser) {
+    return res.status(400).json({ message: 'The current user is not exist' })
+  }
 
   const titleExist = await Blog.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
 

@@ -5,6 +5,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 
 import { useGetUsersQuery } from '../users/UserApiSlice'
 import UserSettingForm from './UserSettingForm'
+import { Box } from '@mui/material'
 
 const SettingPage = () => {
 
@@ -20,11 +21,16 @@ const SettingPage = () => {
   // ================================================================================
   let content
 
-  if (!currentUser) return <LoadingSpinner />
+  if (!currentUser) content = <LoadingSpinner />
 
-  if (currentUser) return <UserSettingForm currentUser={currentUser} />
+  if (currentUser) content = <UserSettingForm currentUser={currentUser} />
 
-  return content
+  return (
+    <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
+
+      {content}
+    </Box>
+  )
 
 }
 

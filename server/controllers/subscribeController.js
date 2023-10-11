@@ -17,6 +17,8 @@ const getBlogsForSubscribedList = async (req, res) => {
 
   const currentUserSubscribed = await Subscribe.find({ subscribed_by_user_username: username }).lean().exec()
 
+  console.log(currentUserSubscribed)
+
 
   if (!currentUserSubscribed || !currentUserSubscribed.length) return res.status(200).json([])
 
