@@ -76,3 +76,12 @@ setting
 [x] password update
 [x] blog's username changed when updated
 [] avatar change
+
+
+when user changes the username, it needs to update multiples data model 
+
+change model data
+[] create blog
+[] subscribe
+[] bookmark
+[] like

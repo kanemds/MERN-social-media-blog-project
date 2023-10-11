@@ -29,7 +29,7 @@ const NewBlog = () => {
   const matches = useMediaQuery('(min-width:1200px)')
 
 
-  const { username } = useAuth()
+  const { username, userId } = useAuth()
   const navigate = useNavigate()
 
   const [selectedImage, setSelectedImage] = useState(null)
@@ -78,7 +78,7 @@ const NewBlog = () => {
     e.preventDefault()
     const formData = new FormData()
 
-    formData.append('username', username)
+    formData.append('userId', userId)
     formData.append('title', title)
     formData.append('text', text)
     formData.append('visibleTo', status)
