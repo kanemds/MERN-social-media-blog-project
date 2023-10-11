@@ -7,7 +7,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useNavigate, useParams } from 'react-router-dom'
 import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { useAddNewBlogMutation, useUpdateBlogMutation, useGetBlogsQuery } from './blogsApiSlice'
+import { useAddNewBlogMutation, useUpdateBlogMutation } from './blogsApiSlice'
 import './imagesDisplaySlider.css'
 
 const SideButton = styled(Button)({
