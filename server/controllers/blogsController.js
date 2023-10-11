@@ -171,30 +171,53 @@ const currentBookmark = async (id, username) => {
 const getBlogsForUser = async (req, res) => {
   const { id } = req.query
 
-
   const findUser = await User.findById(id).exec()
-
 
   if (!findUser) return res.status(200).json({ message: 'No user found' })
 
-  const currentUserBlogs = await Blog.aggregate([
-    { $match: { user_id: findUser._id } }
+  const selectedUserBlogs = await Blog.aggregate([
+    {
+      $match: { user: findUser._id }
+    },
+    {
+      $lookup: {
+        from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+        localField: 'user',
+        foreignField: '_id',
+        as: 'userDetails'
+      },
+    },
+    {
+      $unwind: '$userDetails'
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        text: 1,
+        images: 1,
+        visible_to: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        user: 1,
+        username: '$userDetails.username', // Include the username
+        __v: 1
+      },
+    },
   ])
+    .sort({ createdAt: -1 }) // Sort by _id in descending order
 
-  if (!currentUserBlogs || currentUserBlogs.length === 0) return res.status(200).json([])
+
+  if (!selectedUserBlogs || selectedUserBlogs.length === 0) return res.status(200).json([])
 
 
-  const countLikePerBlog = await Promise.all(currentUserBlogs.map(async blog => {
+  const countLikePerBlog = await Promise.all(selectedUserBlogs.map(async blog => {
     const timeConvert = new Date(Date.parse(blog.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
     const perBlog = await Like.find({ blog_id: blog._id, is_like: true }).count()
     return { ...blog, likedCount: perBlog, createdDate: timeConvert }
   }))
 
-  // find subscribe and then bookmard finally combine
-
-  const decOrderBlogs = await countLikePerBlog?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-
-  res.status(200).json(decOrderBlogs)
+  res.status(200).json(countLikePerBlog)
 }
 
 
@@ -292,10 +315,37 @@ const getPaginatedBlogs = async (req, res) => {
 
   // the skip method is to skip the provided document, in this case which are the document from page 1,2,3 
   // sort({_id: -1 }) desc order
-  const blogs = await Blog.find().sort({ _id: -1 }).limit(limit).skip(startIndex)
 
-  console.log(blogs)
-
+  const blogs = await Blog.aggregate([
+    {
+      $lookup: {
+        from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+        localField: 'user',
+        foreignField: '_id',
+        as: 'userDetails'
+      },
+    },
+    {
+      $unwind: '$userDetails'
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        text: 1,
+        images: 1,
+        visible_to: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        user: 1,
+        username: '$userDetails.username', // Include the username
+        __v: 1
+      },
+    },
+  ])
+    .sort({ createdAt: -1 }) // Sort by _id in descending order
+    .limit(limit) // Limit the number of results
+    .skip(startIndex) // Skip a certain number of results
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
 
