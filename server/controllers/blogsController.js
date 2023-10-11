@@ -165,25 +165,6 @@ const currentBookmark = async (id, username) => {
 }
 
 
-// @desc Get all blogs
-// route Get /blogs
-// @access Private
-const getAllBlogs = async (req, res) => {
-  const blogs = await Blog.find().lean().exec()
-
-  if (!blogs || blogs.length === 0) {
-    return res.status(200).json([])
-  }
-
-  // // handle multiple promises concurrently and wait for all of them to resolve
-  // const blogsWithUsers = await Promise.all(blogs.map(async blog => {
-  //   const blogUser = await User.findById(blog.user).lean().exec()
-  //   return { ...blog, user: blogUser.username }
-  // }))
-
-  res.status(200).json(blogs)
-}
-
 // @desc Get blogs for user
 // route Get /blogs/user
 // @access Private
@@ -313,6 +294,8 @@ const getPaginatedBlogs = async (req, res) => {
   // sort({_id: -1 }) desc order
   const blogs = await Blog.find().sort({ _id: -1 }).limit(limit).skip(startIndex)
 
+  console.log(blogs)
+
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
 
@@ -356,7 +339,7 @@ const createBlog = async (req, res) => {
     processedImages = await processMultipleImages(images) // array
   }
 
-  const newBlog = await Blog.create({ username: currentUser.username, images: processedImages, user_id: currentUser._id, title, text, visible_to: visibleTo })
+  const newBlog = await Blog.create({ images: processedImages, user: currentUser._id, title, text, visible_to: visibleTo })
 
   // res.status(201).json({ message: 'New blog created' })
   if (newBlog) {
@@ -474,4 +457,4 @@ const deleteBlog = async (req, res) => {
 
 }
 
-module.exports = { getAllBlogs, createBlog, updateBlog, deleteBlog, getSingleBlog, getSelectedBlogger, getPaginatedBlogs, getBlogsForUser }
+module.exports = { createBlog, updateBlog, deleteBlog, getSingleBlog, getSelectedBlogger, getPaginatedBlogs, getBlogsForUser }

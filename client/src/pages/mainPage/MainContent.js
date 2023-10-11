@@ -7,7 +7,7 @@ import Note from '../../components/Note'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 import { blue } from '@mui/material/colors'
 import FrontPageSideBar from '../../components/FrontPageSideBar'
-import { useGetBlogsQuery, useGetPaginatedBlogsQuery } from '../blogs/blogsApiSlice'
+import { useGetPaginatedBlogsQuery } from '../blogs/blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
 import DehazeIcon from '@mui/icons-material/Dehaze'
@@ -91,14 +91,6 @@ const MainContent = () => {
 
   const [hasMore, setHasMore] = useState(true)
   const elementRef = useRef(null)
-
-
-  // const {
-  //   data: blogs,
-  //   isLoading,
-  //   isSuccess,
-  //   isError,
-  //   error } = useGetBlogsQuery()
 
   const {
     data: paginatedData,

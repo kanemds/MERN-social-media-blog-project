@@ -9,32 +9,6 @@ const initialState = blogsAdapter.getInitialState()
 
 export const blogsApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    getBlogs: builder.query({
-      query: () => ({
-        url: '/blogs',
-        validateStatus: (response, result) => {
-          return response.status === 200 && !result.isError
-        }
-      }),
-      keepUnusedDataFor: 300,
-      transformResponse: responseData => {
-        const loadedBlogs = responseData.map(blog => {
-          blog.id = blog._id
-          return blog
-        })
-        return blogsAdapter.setAll(initialState, loadedBlogs)
-      },
-      providesTags: (result, error, arg) => {
-        if (result?.ids) {
-          return [
-            { type: 'Blog', id: 'LIST' },
-            ...result.ids.map(id => ({ type: 'Blog', id }))
-          ]
-        } else {
-          return [{ type: 'Blog', id: 'LIST' }]
-        }
-      }
-    }),
     getSingleBlog: builder.query({
       query: (currentSingleBlog) => ({
         url: `/blogs/${currentSingleBlog.id}?username=${currentSingleBlog.username}`,
@@ -207,7 +181,6 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
 })
 
 export const {
-  useGetBlogsQuery,
   useGetSingleBlogQuery,
   useGetPaginatedBlogsQuery,
   useGetBloggerHomePageQuery,

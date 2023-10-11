@@ -2,7 +2,7 @@ import { Box, Container, Paper, Typography, TextField, Modal, Button, IconButton
 import React, { useContext, useEffect, useState } from 'react'
 import HorizontalSwiper from '../../components/swiper/HorizontalSwiper'
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
-import { blogsApiSlice, useDeleteBlogMutation, useGetBlogsQuery, useGetPaginatedBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
+import { blogsApiSlice, useDeleteBlogMutation, useGetPaginatedBlogsQuery, useGetSingleBlogQuery } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ImagesDisplaySlider from './ImagesDisplaySlider'

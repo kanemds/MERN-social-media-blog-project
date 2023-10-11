@@ -23,7 +23,6 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import RecommendIcon from '@mui/icons-material/Recommend'
 import SubdirectoryArrowRightOutlinedIcon from '@mui/icons-material/SubdirectoryArrowRightOutlined'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useGetBlogsQuery } from '../../client/src/pages/blogs/blogsApiSlice'
 
 
 const SideButton = styled(Button)({
@@ -73,12 +72,6 @@ export default function SideBarDrawer() {
   const navigate = useNavigate()
   const { id } = useParams()
   const { pathname } = useLocation()
-
-  const { currentBlog } = useGetBlogsQuery('BlogsList', {
-    selectFromResult: ({ data }) => ({
-      currentBlog: data?.entities[id]
-    })
-  })
 
   const [checked, setChecked] = useState(false)
 

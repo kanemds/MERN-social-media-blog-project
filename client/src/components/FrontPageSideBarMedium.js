@@ -12,7 +12,6 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import RecommendIcon from '@mui/icons-material/Recommend'
 import SubdirectoryArrowRightOutlinedIcon from '@mui/icons-material/SubdirectoryArrowRightOutlined'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useGetBlogsQuery } from '../pages/blogs/blogsApiSlice'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
@@ -66,11 +65,6 @@ const FrontPageSideBarMedium = () => {
   const { id } = useParams()
   const { pathname } = useLocation()
 
-  const { currentBlog } = useGetBlogsQuery('BlogsList', {
-    selectFromResult: ({ data }) => ({
-      currentBlog: data?.entities[id]
-    })
-  })
 
   const [checked, setChecked] = useState(false)
   const [open, setOpen] = React.useState(false)
