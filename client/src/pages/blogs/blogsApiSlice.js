@@ -112,10 +112,10 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
             // Provides a tag for each Blog in the current page,
             // as well as the 'PARTIAL-LIST' tag.
             ...result?.data?.map(blog => ({ type: 'Blog', id: blog.id })),
-            { type: 'Blog', id: 'PARTIAL-LIST' }, { type: 'Blog', id: 'LIST' }
+            { type: 'Blog', id: 'LIST' }
           ]
         } else {
-          return [{ type: 'Blog', id: 'PARTIAL-LIST' }, { type: 'Blog', id: 'LIST' }]
+          return [{ type: 'Blog', id: 'LIST' }]
         }
       },
       // Only have one cache entry because the arg always maps to one string
@@ -172,9 +172,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
           type: 'Blog', id: arg.id
         },
         { type: 'Blog', id: 'LIST' },
-        {
-          type: 'Blog', id: 'PARTIAL-LIST'
-        }]
+        ]
       }
     })
   })

@@ -129,7 +129,7 @@ const currentSubscribe = async (blog, username) => {
   const total = await Subscribe.find({ blog_owner_id: blog.user_id }).count()
 
   if (username) {
-    const status = await Subscribe.findOne({ blog_owner_id: blog.user_id.toString(), subscribed_by_user_username: username }).lean().exec()
+    const status = await Subscribe.findOne({ blog_owner_id: blog.user_id, subscribed_by_user_username: username }).lean().exec()
     if (status || status?.length) {
       subscribe.subscribedId = status._id
       subscribe.isSubscribed = status.is_subscribed
@@ -207,7 +207,6 @@ const getBlogsForUser = async (req, res) => {
   ])
     .sort({ createdAt: -1 }) // Sort by _id in descending order
 
-
   if (!selectedUserBlogs || selectedUserBlogs.length === 0) return res.status(200).json([])
 
 
@@ -222,8 +221,9 @@ const getBlogsForUser = async (req, res) => {
 
 
 
-// @desc Get single blog
-// route Get /blogs/post
+// @desc Get single blog info
+// frontend route Get '/blogs/post/:id'
+// backend route Get '/:id'
 // @access Private
 const getSingleBlog = async (req, res) => {
   const { id } = req.params
@@ -235,17 +235,15 @@ const getSingleBlog = async (req, res) => {
 
   if (!blog) return res.status(200).json({ message: 'No blog found' })
 
-
-  const findUser = await User.find({ username }).exec()
+  const findUser = await User.findOne({ username }).lean().exec()
 
   if (!findUser) return res.status(200).json({ message: 'No user found' })
-
 
   const like = await currentLike(id, username)
   const subscribe = await currentSubscribe(blog, username)
   const bookmark = await currentBookmark(id, username)
 
-  loginUser = { ...blog, like, subscribe, bookmark, }
+  loginUser = { ...blog, username: findUser.username, like, subscribe, bookmark, }
 
   res.status(200).json(loginUser)
 }
@@ -294,7 +292,7 @@ const getSelectedBlogger = async (req, res) => {
   res.status(200).json({ numberOfBlogs: totalBlogs, numberOfSubscribers: totalSubscribers, blogs: info })
 }
 
-// @desc Get limited blogs
+// @desc Get frontpage , scroll down for pages limited blogs
 // route Get /blogs/post
 // @access Private
 const getPaginatedBlogs = async (req, res) => {
@@ -348,6 +346,8 @@ const getPaginatedBlogs = async (req, res) => {
     .skip(startIndex) // Skip a certain number of results
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
+
+  console.log(blogs)
 
   // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
   res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })
