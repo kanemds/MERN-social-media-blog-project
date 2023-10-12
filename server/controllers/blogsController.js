@@ -166,7 +166,8 @@ const currentBookmark = async (id, username) => {
 
 
 // @desc Get blogs for user
-// route Get /blogs/user
+// frontend route Get /blogs
+// backend route Get router.route('/user')
 // @access Private
 const getBlogsForUser = async (req, res) => {
   const { id } = req.query
@@ -223,7 +224,7 @@ const getBlogsForUser = async (req, res) => {
 
 // @desc Get single blog info
 // frontend route Get '/blogs/post/:id'
-// backend route Get '/:id'
+// backend route Get router.route('/:id')
 // @access Private
 const getSingleBlog = async (req, res) => {
   const { id } = req.params
@@ -255,7 +256,6 @@ const getSelectedBlogger = async (req, res) => {
   const { id } = req.params
   const { username } = req.query
 
-
   const bloggerInfo = {
     numberOfBlogs: 0,
     numberOfSubscribers: 0,
@@ -266,7 +266,8 @@ const getSelectedBlogger = async (req, res) => {
 
   if (!findBlogger) return res.status(200).json({ message: 'Net work error please try again' })
 
-  const blogs = await Blog.find({ user_id: id }).lean().exec()
+  const blogs = await Blog.find({ user: id }).lean().exec()
+  console.log(blogs)
 
   const totalSubscribers = await Subscribe.find({ blog_owner_id: id }).count().exec()
   const totalBlogs = blogs.length

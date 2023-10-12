@@ -76,6 +76,7 @@ const removedStyles = `
 
 export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
 
+
   const dispatch = useDispatch()
 
   const number = useNumberDisplay(blog?.likedCount)
@@ -172,7 +173,7 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
 
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.user_id}`)
+      navigate(`/blogs/user/${blog.user}`)
     }
   }
 

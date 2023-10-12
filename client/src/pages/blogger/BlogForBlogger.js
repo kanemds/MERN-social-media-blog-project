@@ -214,7 +214,7 @@ export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, del
 
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.user_id}`)
+      navigate(`/blogs/user/${blog.user}`)
     }
   }
 
