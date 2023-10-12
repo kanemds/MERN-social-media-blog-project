@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const User = require('../models/User')
 const Blog = require('../models/Blog')
 const Like = require('../models/Like')
@@ -232,19 +233,51 @@ const getSingleBlog = async (req, res) => {
 
   let loginUser
 
-  const blog = await Blog.findById(id).lean().exec()
-
-  if (!blog) return res.status(200).json({ message: 'No blog found' })
-
   const findUser = await User.findOne({ username }).lean().exec()
 
   if (!findUser) return res.status(200).json({ message: 'No user found' })
+
+  // return as an array
+  const blog = await Blog.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(id)
+      }
+    },
+    {
+      $lookup: {
+        from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+        localField: 'user',
+        foreignField: '_id',
+        as: 'userDetails'
+      },
+    },
+    {
+      $unwind: '$userDetails'
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        text: 1,
+        images: 1,
+        visible_to: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        user: 1,
+        username: '$userDetails.username', // Include the username
+        __v: 1
+      },
+    },
+  ]).exec()
+
+  if (!blog) return res.status(200).json({ message: 'No blog found' })
 
   const like = await currentLike(id, username)
   const subscribe = await currentSubscribe(blog, username)
   const bookmark = await currentBookmark(id, username)
 
-  loginUser = { ...blog, username: findUser.username, like, subscribe, bookmark, }
+  loginUser = { ...blog[0], like, subscribe, bookmark, }
 
   res.status(200).json(loginUser)
 }

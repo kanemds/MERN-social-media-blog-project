@@ -167,6 +167,8 @@ export default function MainBlog({ blog }) {
     }
   }, [isDeleteLikeSuccess, isDeleteBookmarkSuccess])
 
+  console.log(blog)
+
   const handleToSelectedBlog = () => {
     if (!isClick) {
       navigate(`/blogs/post/${blog.id}`)
