@@ -291,7 +291,7 @@ const SingleBlog = () => {
   }
 
   const handleUserPage = () => {
-    navigate(`/blogs/user/${data.id}`)
+    navigate(`/blogs/user/${data.user}`)
   }
 
   const handleLiked = (e) => {
