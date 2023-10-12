@@ -134,6 +134,8 @@ const MainContent = () => {
     }
   }, [paginatedIsSuccess, paginatedData, isLikesSuccess, username]) // needs paginatedData as dependency for the latest update
 
+  console.log(allBlogs)
+  console.log(blogsWithoutUser)
 
 
   useEffect(() => {
