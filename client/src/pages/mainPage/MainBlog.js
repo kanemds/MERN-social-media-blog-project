@@ -175,7 +175,7 @@ export default function MainBlog({ blog }) {
 
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.user_id}`)
+      navigate(`/blogs/user/${blog.user}`)
     }
   }
 
