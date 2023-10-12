@@ -256,18 +256,12 @@ const getSelectedBlogger = async (req, res) => {
   const { id } = req.params
   const { username } = req.query
 
-  const bloggerInfo = {
-    numberOfBlogs: 0,
-    numberOfSubscribers: 0,
-    blogs: []
-  }
-
   const findBlogger = await User.findById(id).exec()
 
   if (!findBlogger) return res.status(200).json({ message: 'Net work error please try again' })
 
   const blogs = await Blog.find({ user: id }).lean().exec()
-  console.log(blogs)
+
 
   const totalSubscribers = await Subscribe.find({ blog_owner_id: id }).count().exec()
   const totalBlogs = blogs.length
@@ -290,7 +284,7 @@ const getSelectedBlogger = async (req, res) => {
 
   // loginUser = { ...blog, like, subscribe, bookmark, }
   // console.log('refetch single Blog')
-  res.status(200).json({ numberOfBlogs: totalBlogs, numberOfSubscribers: totalSubscribers, blogs: info })
+  res.status(200).json({ numberOfBlogs: totalBlogs, numberOfSubscribers: totalSubscribers, blogs: info, bloggerName: findBlogger.username })
 }
 
 // @desc Get frontpage , scroll down for pages limited blogs

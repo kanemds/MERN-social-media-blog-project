@@ -97,6 +97,8 @@ const BloggerHomePage = () => {
     })
   })
 
+  console.log(userBlogs)
+
 
   const [isSelected, setIsSelected] = useState('All')
   const [isDesc, setIsDesc] = useState(true) // high to low
@@ -111,12 +113,10 @@ const BloggerHomePage = () => {
   const [isReady, setIsReady] = useState(false)
   const [updateLoading, setUpdateLoading] = useState(false)
 
-
-
   useEffect(() => {
     if (isSuccess || refresh) {
       setCurrentUserBlogs(Object.values(userBlogs?.blogs))
-      setBloggerUsername(userBlogs?.blogs[0]?.username)
+      setBloggerUsername(userBlogs?.bloggerName)
       setNumberOfSubscribers(userBlogs?.numberOfSubscribers)
       setNumberOfBlogs(userBlogs?.numberOfBlogs)
       setRefresh(false)
@@ -125,7 +125,7 @@ const BloggerHomePage = () => {
     if (updateLoading) {
 
       setCurrentUserBlogs(Object.values(userBlogs?.blogs))
-      setBloggerUsername(userBlogs?.blogs[0]?.username)
+      setBloggerUsername(userBlogs?.bloggerName)
       setNumberOfSubscribers(userBlogs?.numberOfSubscribers)
       setNumberOfBlogs(userBlogs?.numberOfBlogs)
       setTimeout(() => {
@@ -134,7 +134,6 @@ const BloggerHomePage = () => {
     }
   }, [isSuccess, refresh, userBlogs, updateLoading])
 
-  console.log('currentUserBlogs', currentUserBlogs)
 
 
 
@@ -215,7 +214,7 @@ const BloggerHomePage = () => {
         {
           currentUserBlogs?.map(blog =>
             <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-              <BlogForBlogger blog={blog} setUpdateLoading={setUpdateLoading} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+              <BlogForBlogger blog={blog} bloggerUsername={bloggerUsername} setUpdateLoading={setUpdateLoading} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
             </Grid>
           )}
       </Grid>
@@ -230,7 +229,7 @@ const BloggerHomePage = () => {
             (
               searchResult?.map(blog =>
                 <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-                  <BlogForBlogger blog={blog} setUpdateLoading={setUpdateLoading} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
+                  <BlogForBlogger blog={blog} bloggerUsername={bloggerUsername} setUpdateLoading={setUpdateLoading} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
                 </Grid>)
             ) :
             <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>

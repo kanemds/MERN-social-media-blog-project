@@ -78,7 +78,7 @@ const removedStyles = `
 `
 
 
-export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
+export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
   const [
     addedLike,
     {
@@ -141,6 +141,9 @@ export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, del
   const sevenDays = 60 * 60 * 24 * 1000 * 7
 
   const timeInMillisecond = current - postedDay
+
+  console.log(username)
+  console.log(blog)
 
   useEffect(() => {
     if (isDeleteReady && removeMessage) {
@@ -370,7 +373,7 @@ export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, del
 
             {/* favorite and like */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
-              {username !== blog.username ?
+              {username !== bloggerUsername ?
                 <IconButton
                   disableRipple
                   onClick={handleBookmark}
@@ -401,7 +404,7 @@ export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, del
                     '&:hover': { color: red[400], background: 'white' }
                   }}
                 >
-                  {isLiked ?
+                  {isLiked || username === bloggerUsername ?
 
                     <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
                     :
@@ -423,7 +426,7 @@ export default function BlogForBlogger({ blog, setUpdateLoading, setRefresh, del
                     new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
                 }
               </Typography>
-              {blog.username === username ?
+              {bloggerUsername === username ?
                 <IconButton
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
