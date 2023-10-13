@@ -289,23 +289,59 @@ const getSingleBlog = async (req, res) => {
 // route Get /blogger
 // @access Private
 const getSelectedBlogger = async (req, res) => {
+  // blogger id
   const { id } = req.params
+  // login username 
   const { username } = req.query
 
   const findBlogger = await User.findById(id).exec()
 
   if (!findBlogger) return res.status(200).json({ message: 'Net work error please try again' })
 
-  const blogs = await Blog.find({ user: id }).lean().exec()
+  const findUser = await User.findOne({ username }).lean().exec()
 
+  if (!findUser) return res.status(200).json({ message: 'No user found' })
+
+  const blogs = await Blog.aggregate([
+    {
+      $match: {
+        user: new mongoose.Types.ObjectId(id)
+      }
+    },
+    {
+      $lookup: {
+        from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+        localField: 'user',
+        foreignField: '_id',
+        as: 'userDetails'
+      },
+    },
+    {
+      $unwind: '$userDetails'
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        text: 1,
+        images: 1,
+        visible_to: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        user: 1,
+        username: '$userDetails.username', // Include the username
+        __v: 1
+      },
+    },
+  ]).exec()
 
   const totalSubscribers = await Subscribe.find({ blog_owner_id: id }).count().exec()
   const totalBlogs = blogs.length
 
   const promises = blogs.map(async blog => {
-    const like = await currentLike(blog._id, username)
-    const subscribe = await currentSubscribe(blog, username)
-    const bookmark = await currentBookmark(blog._id, username)
+    const like = await currentLike(blog._id, findUser._id)
+    const subscribe = await currentSubscribe(blog, findUser._id)
+    const bookmark = await currentBookmark(blog._id, findUser._id)
 
     const [likeResult, subscribeResult, bookmarkResult] = await Promise.all([
       like,
@@ -377,8 +413,6 @@ const getPaginatedBlogs = async (req, res) => {
     .skip(startIndex) // Skip a certain number of results
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
-
-  console.log(blogs)
 
   // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
   res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })

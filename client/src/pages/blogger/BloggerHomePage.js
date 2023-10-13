@@ -97,9 +97,6 @@ const BloggerHomePage = () => {
     })
   })
 
-  console.log(userBlogs)
-
-
   const [isSelected, setIsSelected] = useState('All')
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentUserBlogs, setCurrentUserBlogs] = useState([])

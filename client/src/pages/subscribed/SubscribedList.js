@@ -97,6 +97,8 @@ const SubscribedList = () => {
   const [isSearch, setIsSearch] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
+  console.log(currentSubscribed)
+
   useEffect(() => {
 
     if (isSuccess || refresh) {
