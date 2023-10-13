@@ -33,26 +33,24 @@ const getBlogsForSubscribedList = async (req, res) => {
 }
 
 const addSubscribe = async (req, res) => {
-  const { id, userId, username, isSubscribed } = req.body
+  const { id, userId, isSubscribed } = req.body
 
   const user = await User.findById(id).lean().exec()
 
   if (!user) return res.status(404).json({ message: 'Sorry, the User is not exist, please try again' })
 
-  const isDuplicate = await Subscribe.find({ blog_owner_id: id, subscribed_by_user_id: userId }).exec()
+  const isDuplicate = await Subscribe.findOne({ blog_owner_id: id, subscribed_by_user_id: userId }).exec()
 
-  if (isDuplicate.length) return res.status(409).json({ message: 'The selected blogger has already subscribed' })
+  if (isDuplicate) return res.status(409).json({ message: 'The selected blogger has already subscribed' })
 
   const info = {
     blog_owner_id: user._id,
-    blog_owner_username: user.username,
     subscribed_by_user_id: userId,
-    subscribed_by_user_username: username,
     is_subscribed: isSubscribed,
   }
 
   await Subscribe.create(info)
-  res.status(200).json({ message: `${username} has subscribed to this Blog` })
+  res.status(200).json({ message: `The selected blog has been added to the 'subscribed' list` })
 }
 
 const deleteSubscribe = async (req, res) => {

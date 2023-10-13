@@ -6,18 +6,10 @@ const subscribeSchema = new mongoose.Schema({
     required: true,
     ref: 'User'
   },
-  blog_owner_username: {
-    type: String,
-    required: true
-  },
   subscribed_by_user_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User'
-  },
-  subscribed_by_user_username: {
-    type: String,
-    required: true,
   },
   is_subscribed: {
     type: Boolean,
