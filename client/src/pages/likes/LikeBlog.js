@@ -61,8 +61,6 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
   const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(false)
   const [timeDisplay, setTimeDisplay] = useState(useTimeDisplay(blog.addedBy) || null)
 
-  console.log(deleteMessage)
-
   useEffect(() => {
     if (isDeleteLikeReady && removeMessage) {
       setDeleteMessage(removeMessage?.message)
@@ -98,7 +96,6 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
     setDeleteLikeOpen(false)
   }
 
-  console.log(blog)
   const handleDeleteLikeConfirm = async (e) => {
     e.preventDefault()
     await deleteLike({ id: blog.likeId, blogId: blog._id })
@@ -106,7 +103,7 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
 
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.user_id}`)
+      navigate(`/blogs/user/${blog.user}`)
     }
   }
 

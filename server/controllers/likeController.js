@@ -63,7 +63,7 @@ const getBlogsForLikedList = async (req, res) => {
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
   // find all likes 
-  const likes = await Like.find({ liked_by_user_username: username }).lean().exec()
+  const likes = await Like.find({ liked_by_user_id: isUserExist._id }).lean().exec()
 
   if (!likes.length || !likes) return res.status(200).json([])
   // filter and get blog_id
@@ -85,7 +85,6 @@ const getBlogsForLikedList = async (req, res) => {
 
   const blogsWithLikes = await listOfBlogs.map(blog => {
     const findMatch = likes.find(like => like.blog_id.toString() === blog._id.toString())
-    console.log(findMatch)
     const timeConvert = new Date(Date.parse(findMatch?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
     return { ...blog, isLike: findMatch.is_like, likeId: findMatch._id.toString(), likedAt: timeConvert, addedBy: findMatch.createdAt }
   })
