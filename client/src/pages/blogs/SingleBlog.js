@@ -312,7 +312,7 @@ const SingleBlog = () => {
     e.preventDefault()
     if (username) {
       if (!isBookmarked) {
-        addBookmark({ blog_id: id, bookmark_by_user_id: userId, username, is_bookmark: true })
+        addBookmark({ blog_id: id, bookmark_by_user_id: userId, is_bookmark: true })
       } else {
         deleteBookmark({ id: currentBlog?.bookmark?.bookmarkId, blog_id: id })
       }

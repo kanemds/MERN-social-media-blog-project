@@ -145,14 +145,14 @@ const currentSubscribe = async (blog, username) => {
 
 }
 
-const currentBookmark = async (id, username) => {
+const currentBookmark = async (id, userId) => {
   const bookmark = {
     bookmarkId: null,
     isBookmarked: false
   }
 
-  if (username) {
-    const status = await Bookmark.findOne({ blog_id: id, bookmark_by_user_username: username }).lean().exec()
+  if (userId) {
+    const status = await Bookmark.findOne({ blog_id: id, bookmark_by_user_id: userId }).lean().exec()
     if (status || status?.length) {
       bookmark.bookmarkId = status._id
       bookmark.isBookmarked = status.is_bookmark
@@ -228,7 +228,9 @@ const getBlogsForUser = async (req, res) => {
 // backend route Get router.route('/:id')
 // @access Private
 const getSingleBlog = async (req, res) => {
+  // blog id
   const { id } = req.params
+  // current login username
   const { username } = req.query
 
   let loginUser
@@ -273,9 +275,9 @@ const getSingleBlog = async (req, res) => {
 
   if (!blog) return res.status(200).json({ message: 'No blog found' })
 
-  const like = await currentLike(id, username)
-  const subscribe = await currentSubscribe(blog, username)
-  const bookmark = await currentBookmark(id, username)
+  const like = await currentLike(id, findUser._id)
+  const subscribe = await currentSubscribe(blog, findUser._id)
+  const bookmark = await currentBookmark(id, findUser._id)
 
   loginUser = { ...blog[0], like, subscribe, bookmark, }
 

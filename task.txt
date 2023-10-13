@@ -81,7 +81,25 @@ setting
 when user changes the username, it needs to update multiples data model 
 
 change model data
-[] create blog
+blogs
+[x] create blog
+[x] blogList
+[x] single blog
+[x] blogger home
+[] like on blogger page subscribe add / delete
+[] bookmark blogger page on subscribe add / delete
+[] like on single blog add / delete
+[x] bookmark on single blog add / delete
+[] subscribe on single blog add / delete
+
+
+
+
+subscribe
 [] subscribe
+
+bookmark
 [] bookmark
+
+like
 [] like
