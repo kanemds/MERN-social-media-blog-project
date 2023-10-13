@@ -6,7 +6,7 @@ const bookmarkSchema = new mongoose.Schema({
     required: true,
     ref: 'Blog'
   },
-  blog_owner: {
+  blog_owner_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User'
@@ -16,10 +16,6 @@ const bookmarkSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User'
-  },
-  bookmark_by_user_username: {
-    type: String,
-    required: true,
   },
   is_bookmark: {
     type: Boolean,
