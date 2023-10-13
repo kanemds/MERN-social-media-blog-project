@@ -75,9 +75,6 @@ const deleteBookmark = async (req, res) => {
 
   if (!selectedBookmarkBlog) return res.status(404).json({ message: 'net work error, please try again' })
 
-  console.log('findBookmark', selectedBookmarkBlog)
-
-
   await selectedBookmarkBlog.deleteOne()
   console.log('bookmark removed')
 

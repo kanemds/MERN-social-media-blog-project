@@ -23,6 +23,7 @@ import useTimeDisplay from '../../hooks/useTimeDisplay'
 
 const iconStyle = {
   padding: '0px',
+
 }
 
 const styleDelete = {
@@ -45,8 +46,6 @@ const styleDelete = {
 
 
 export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeMessage, isDeleteBookmarkLoading }) {
-
-  console.log('Hey')
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -106,7 +105,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
 
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.user_id}`)
+      navigate(`/blogs/user/${blog.user}`)
     }
   }
 
