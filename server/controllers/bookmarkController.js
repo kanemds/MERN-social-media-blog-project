@@ -51,9 +51,9 @@ const addBookmark = async (req, res) => {
 
   if (!blog || blog.length === 0) return res.status(404).json({ message: 'The blog is not exist' })
 
-  const isDuplicate = await Bookmark.find({ blog_owner_id: blog.user, bookmark_by_user_id }).exec()
+  const isDuplicate = await Bookmark.findOne({ blog_id: blog_id, blog_owner_id: blog.user, bookmark_by_user_id }).exec()
 
-  if (isDuplicate.length) return res.status(409).json({ message: 'The selected blogger has already subscribed' })
+  if (isDuplicate) return res.status(409).json({ message: 'The selected blogger has already subscribed' })
 
   const info = {
     blog_id,
@@ -65,7 +65,7 @@ const addBookmark = async (req, res) => {
   await Bookmark.create(info)
   console.log('bookmarked')
 
-  res.status(200).json({ message: `${username} marked to this blog` })
+  res.status(200).json({ message: `The selected blog has been added to the 'bookmarks' list` })
 }
 
 const deleteBookmark = async (req, res) => {

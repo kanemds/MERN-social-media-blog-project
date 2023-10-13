@@ -298,8 +298,7 @@ const SingleBlog = () => {
     e.preventDefault()
     if (username) {
       if (!isLiked) {
-        addedLike({ blog_id: id, user_id: userId, username, is_like: true })
-
+        addedLike({ blog_id: id, user_id: userId, is_like: true })
       } else {
         deleteLike({ id: currentBlog?.like?.likeId, blogId: id })
       }
@@ -326,7 +325,7 @@ const SingleBlog = () => {
     e.preventDefault()
     if (username) {
       if (!isSubscribed) {
-        addSubscribe({ id: currentBlog?.user_id, userId, username, isSubscribed: true })
+        addSubscribe({ id: currentBlog?.user, userId, isSubscribed: true })
       } else {
         deleteSubscribed({ blogId: id, id: currentBlog.subscribe.subscribedId })
       }

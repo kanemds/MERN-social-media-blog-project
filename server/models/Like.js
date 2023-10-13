@@ -17,10 +17,6 @@ const likeSchema = new mongoose.Schema({
     required: true,
     ref: 'User'
   },
-  liked_by_user_username: {
-    type: String,
-    required: true,
-  },
   is_like: {
     type: Boolean,
     default: false

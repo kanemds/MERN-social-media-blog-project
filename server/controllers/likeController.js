@@ -26,11 +26,11 @@ const getLikesForUser = async (req, res) => {
 
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
-  const likes = await Like.find({ liked_by_user_username: isUserExist.username }).lean().exec()
+  const likes = await Like.find({ liked_by_user_id: isUserExist._id }).lean().exec()
 
   if (!likes.length || !likes) return res.status(200).json([])
 
-  res.status(200).json(currentUserLikes)
+  res.status(200).json(likes)
 }
 
 // @desc Get like for single blog page
@@ -95,33 +95,32 @@ const getBlogsForLikedList = async (req, res) => {
   res.status(200).json(decOrderBlogs)
 }
 
-// @desc created a like to specific blog
-// route post /lies
+// @desc added a like to specific blog
+// route post /likes
 // @access Private
 const addedLike = async (req, res) => {
-  const { blog_id, user_id, username, is_like } = req.body
+  const { blog_id, user_id, is_like } = req.body
 
-  if (!blog_id || !user_id || !username, !is_like) return res.status(200).json({ message: 'All fields are required' })
+  if (!blog_id || !user_id || !is_like) return res.status(200).json({ message: 'All fields are required' })
 
   const blog = await Blog.findById(blog_id).lean().exec()
 
   if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
 
-  const isDuplicate = await Like.find({ blog_id, liked_by_user_id: user_id }).exec()
+  const isDuplicate = await Like.findOne({ blog_id, liked_by_user_id: user_id }).exec()
 
-  if (isDuplicate.length) return res.status(409).json({ message: 'The selected blog has already liked' })
+  if (isDuplicate) return res.status(409).json({ message: 'The selected blog has already liked' })
 
   const info = {
     blog_id,
-    blog_owner: blog.user_id,
+    blog_owner: blog.user,
     liked_by_user_id: user_id,
-    liked_by_user_username: username,
     is_like,
   }
 
   await Like.create(info)
   console.log('like added')
-  res.status(200).json({ message: `${username} has liked to this Blog` })
+  res.status(200).json({ message: `The selected blog has been added to the 'liked' list` })
 }
 
 const editLIke = async (req, res) => {

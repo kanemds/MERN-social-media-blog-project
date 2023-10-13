@@ -96,7 +96,7 @@ const findUnmatchedUrls = (imagesFromBD, imagesFromFE) => {
   return notMatch
 }
 
-const currentLike = async (id, username) => {
+const currentLike = async (id, userId) => {
   const like = {
     likeId: null,
     isLike: false,
@@ -105,9 +105,9 @@ const currentLike = async (id, username) => {
 
   const total = await Like.find({ blog_id: id, is_like: true }).count()
 
-  if (username) {
-    const status = await Like.findOne({ blog_id: id, liked_by_user_username: username }).lean().exec()
-    if (status || status?.length) {
+  if (userId) {
+    const status = await Like.findOne({ blog_id: id, liked_by_user_id: userId }).lean().exec()
+    if (status) {
       like.isLike = status.is_like
       like.likeId = status._id
       like.totalLikes = total
@@ -120,18 +120,19 @@ const currentLike = async (id, username) => {
   }
 }
 
-const currentSubscribe = async (blog, username) => {
+const currentSubscribe = async (blog, userId) => {
   const subscribe = {
     subscribedId: null,
     isSubscribed: false,
     totalSubscribers: 0
   }
 
-  const total = await Subscribe.find({ blog_owner_id: blog.user_id }).count()
+  const total = await Subscribe.find({ blog_owner_id: blog.user }).count()
 
-  if (username) {
-    const status = await Subscribe.findOne({ blog_owner_id: blog.user_id, subscribed_by_user_username: username }).lean().exec()
-    if (status || status?.length) {
+  if (userId) {
+    const status = await Subscribe.findOne({ blog_owner_id: blog.user, subscribed_by_user_id: userId }).lean().exec()
+
+    if (status) {
       subscribe.subscribedId = status._id
       subscribe.isSubscribed = status.is_subscribed
       subscribe.totalSubscribers = total
@@ -153,7 +154,7 @@ const currentBookmark = async (id, userId) => {
 
   if (userId) {
     const status = await Bookmark.findOne({ blog_id: id, bookmark_by_user_id: userId }).lean().exec()
-    if (status || status?.length) {
+    if (status) {
       bookmark.bookmarkId = status._id
       bookmark.isBookmarked = status.is_bookmark
       return bookmark
@@ -276,7 +277,7 @@ const getSingleBlog = async (req, res) => {
   if (!blog) return res.status(200).json({ message: 'No blog found' })
 
   const like = await currentLike(id, findUser._id)
-  const subscribe = await currentSubscribe(blog, findUser._id)
+  const subscribe = await currentSubscribe(blog[0], findUser._id)
   const bookmark = await currentBookmark(id, findUser._id)
 
   loginUser = { ...blog[0], like, subscribe, bookmark, }
