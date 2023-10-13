@@ -11,11 +11,15 @@ const timeDisplayOptions = require('../config/timeDisplayOptions')
 const getBlogsForSubscribedList = async (req, res) => {
   const { username } = req.query
 
-  const isUserExist = await User.find({ username }).exec()
+  console.log(username)
+
+  const isUserExist = await User.findOne({ username }).exec()
+
+  console.log(isUserExist)
 
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
-  const currentUserSubscribed = await Subscribe.find({ subscribed_by_user_username: username }).lean().exec()
+  const currentUserSubscribed = await Subscribe.find({ subscribed_by_user_id: isUserExist._id }).lean().exec()
 
   console.log(currentUserSubscribed)
 

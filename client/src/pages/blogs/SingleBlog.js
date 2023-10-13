@@ -119,9 +119,6 @@ const SingleBlog = () => {
     error
   } = useGetSingleBlogQuery(currentSingleBlog)
 
-  console.log(data)
-
-
   const [
     deleteBlog,
     {
