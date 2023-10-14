@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 
 import { useNavigate, useParams } from 'react-router-dom'
-import { FormControl, MenuItem, Paper, Box, InputLabel, Select, Typography, Button } from '@mui/material'
+import { FormControl, MenuItem, Paper, Box, SvgIcon, InputLabel, Select, Typography, Button, CardMedia, IconButton } from '@mui/material'
 import UserInputField from '../../components/UserInputField'
 import LinkButton from '../../components/LinkButton'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -11,7 +11,9 @@ import ToggleButton from '../../components/ToggleButton'
 import { useUpdateUserMutation } from '../users/UserApiSlice'
 import { ROLES } from '../../config/roles'
 import { useRefreshMutation } from '../auth/authApiSlice'
-
+import img from './Dtqnxj1W4AAgFut.jpg'
+import CameraIcon from '@mui/icons-material/Camera'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
 
 const UserSettingForm = ({ currentUser }) => {
@@ -57,7 +59,7 @@ const UserSettingForm = ({ currentUser }) => {
   const [role, setRole] = useState(currentUser?.role)
   const [active, setActive] = useState(currentUser?.active)
   const [showPassword, setShowPassword] = useState(false)
-
+  const [userAvatar, setUserAvatar] = useState(currentUser?.avatar || null)
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
@@ -107,6 +109,8 @@ const UserSettingForm = ({ currentUser }) => {
     setShowPassword(prev => !prev)
   }
 
+
+
   let content
 
   if (!username.length || !email.length || !role.length || typeof active !== 'boolean') content = <LoadingSpinner />
@@ -125,11 +129,10 @@ const UserSettingForm = ({ currentUser }) => {
           pb: '100px',
         }}
       >
+        {/* <ImageEditor /> */}
 
-
-        <Box sx={{ pb: '40px', ml: '5%' }}>
+        <Box sx={{ ml: '5%' }}>
           <Typography variant='h4'>EDIT ACCOUNT</Typography>
-
         </Box>
         {isError ?
           <Typography>{error?.data?.message}</Typography>
@@ -145,6 +148,26 @@ const UserSettingForm = ({ currentUser }) => {
             justifyContent: 'center',
           }}
         >
+          {!userAvatar ?
+            <Box sx={{ height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Box sx={{ position: 'relative' }}>
+                <IconButton color='primary' sx={{ position: 'absolute', right: 0, p: 0 }} >
+                  <CameraIcon />
+                </IconButton>
+                <CardMedia
+                  sx={{ height: 166.76, width: 'auto', borderRadius: '50%' }}
+                  component="img"
+                  image={img}
+                />
+              </Box>
+            </Box>
+            :
+
+            <IconButton disableRipple sx={{ color: '#bdbdbd', margin: 0, display: 'inline-block' }}>
+              <AccountCircleIcon sx={{ fontSize: 200, p: 0, }} />
+            </IconButton>
+
+          }
 
           <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
           <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
