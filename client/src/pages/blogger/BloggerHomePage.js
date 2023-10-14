@@ -131,10 +131,6 @@ const BloggerHomePage = () => {
     }
   }, [isSuccess, refresh, userBlogs, updateLoading])
 
-
-
-
-
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
   }
