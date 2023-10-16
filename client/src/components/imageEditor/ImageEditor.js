@@ -1,11 +1,16 @@
-import React from 'react'
-import { Slider } from '@mui/material'
+import React, { useState } from 'react'
+import { Box, Button, Slider } from '@mui/material'
 import Cropper from 'react-easy-crop'
 
 
-const ImageEditor = ({ image }) => {
-  const [crop, setCrop] = React.useState({ x: 0, y: 0 })
-  const [zoom, setZoom] = React.useState(1)
+const ImageEditor = ({ avatarImage, setCroppedImg, handleClose }) => {
+
+  const { name, url } = avatarImage
+
+
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
 
   const onCropChange = (crop) => {
     setCrop(crop)
@@ -19,11 +24,13 @@ const ImageEditor = ({ image }) => {
     setZoom(zoom)
   }
 
+  const saveImg = () => { }
+
   return (
-    <>
-      <div className="crop-container">
+    <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>
+      <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: '180px' }}>
         <Cropper
-          image={image}
+          image={url}
           crop={crop}
           zoom={zoom}
           aspect={1}
@@ -33,8 +40,8 @@ const ImageEditor = ({ image }) => {
           onCropComplete={onCropComplete}
           onZoomChange={onZoomChange}
         />
-      </div>
-      <div className="controls">
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', position: 'absolute', bottom: 0, height: '180px', alignItems: 'center', justifyContent: 'center', width: '100%' }} >
         <Slider
           value={zoom}
           min={1}
@@ -43,9 +50,14 @@ const ImageEditor = ({ image }) => {
           aria-labelledby="Zoom"
           onChange={(e, zoom) => onZoomChange(zoom)}
           classes={{ container: 'slider' }}
+          sx={{ width: '50%', mb: 1 }}
         />
-      </div>
-    </>
+        <Box>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={saveImg}>Save</Button>
+        </Box>
+      </Box >
+    </Box>
   )
 }
 
