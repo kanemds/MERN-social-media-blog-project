@@ -215,7 +215,6 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
               <AddPhotoAlternateOutlinedIcon />
               {/* <input type="file" hidden multiple ref={fileInputRef} /> */}
               <input type="file" hidden multiple />
-
             </IconButton>
           </Box>
 

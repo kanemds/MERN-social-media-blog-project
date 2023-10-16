@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 
 import { useNavigate, useParams } from 'react-router-dom'
-import { FormControl, MenuItem, Paper, Box, SvgIcon, InputLabel, Select, Typography, Button, CardMedia, IconButton } from '@mui/material'
+import { FormControl, MenuItem, Paper, Box, SvgIcon, InputLabel, Modal, Select, Typography, CardActionArea, Button, CardMedia, IconButton } from '@mui/material'
 import UserInputField from '../../components/UserInputField'
 import LinkButton from '../../components/LinkButton'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -14,6 +14,22 @@ import { useRefreshMutation } from '../auth/authApiSlice'
 import img from './Dtqnxj1W4AAgFut.jpg'
 import CameraIcon from '@mui/icons-material/Camera'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import ImageEditor from '../../components/imageEditor/ImageEditor'
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
+import CameraAltIcon from '@mui/icons-material/CameraAlt'
+
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+}
 
 
 const UserSettingForm = ({ currentUser }) => {
@@ -46,8 +62,6 @@ const UserSettingForm = ({ currentUser }) => {
   }, [isSuccess, navigate])
 
 
-
-
   const [username, setUsername] = useState(currentUser?.username)
   const [validUsername, setValidUsername] = useState(false)
   const [email, setEmail] = useState(currentUser?.email)
@@ -60,6 +74,11 @@ const UserSettingForm = ({ currentUser }) => {
   const [active, setActive] = useState(currentUser?.active)
   const [showPassword, setShowPassword] = useState(false)
   const [userAvatar, setUserAvatar] = useState(currentUser?.avatar || null)
+  const [avatarImage, setAvatarImage] = useState({
+    name: null,
+    url: null
+  })
+  const [open, setOpen] = React.useState(false)
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
@@ -110,6 +129,16 @@ const UserSettingForm = ({ currentUser }) => {
   }
 
 
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
+  const onDataSelect = (e) => {
+    const files = e.target.files
+    console.log(files[0])
+    setAvatarImage({ name: files[0].name, url: URL.createObjectURL(files[0]) })
+  }
+
+
 
   let content
 
@@ -129,7 +158,17 @@ const UserSettingForm = ({ currentUser }) => {
           pb: '100px',
         }}
       >
-        {/* <ImageEditor /> */}
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <ImageEditor avatarImage={avatarImage} />
+          </Box>
+        </Modal>
+
 
         <Box sx={{ ml: '5%' }}>
           <Typography variant='h4'>EDIT ACCOUNT</Typography>
@@ -148,26 +187,32 @@ const UserSettingForm = ({ currentUser }) => {
             justifyContent: 'center',
           }}
         >
-          {!userAvatar ?
-            <Box sx={{ height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Box sx={{ position: 'relative' }}>
-                <IconButton color='primary' sx={{ position: 'absolute', right: 0, p: 0 }} >
-                  <CameraIcon />
-                </IconButton>
-                <CardMedia
-                  sx={{ height: 166.76, width: 'auto', borderRadius: '50%' }}
-                  component="img"
-                  image={img}
-                />
-              </Box>
-            </Box>
-            :
 
-            <IconButton disableRipple sx={{ color: '#bdbdbd', margin: 0, display: 'inline-block' }}>
+
+
+          <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+            <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
+              <CardMedia
+                sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, }}
+                component="img"
+                image={avatarImage.url}
+              />
+              <input type="file" hidden />
+              <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
+            </IconButton>
+          </Box>
+
+
+          <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+            <IconButton disableRipple sx={{ height: 200, width: 200, color: '#bdbdbd' }} component="label" onChange={onDataSelect} >
               <AccountCircleIcon sx={{ fontSize: 200, p: 0, }} />
+              <input type="file" hidden />
+              <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
             </IconButton>
 
-          }
+          </Box>
+
+
 
           <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
           <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
