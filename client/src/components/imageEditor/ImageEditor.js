@@ -3,7 +3,7 @@ import { Slider } from '@mui/material'
 import Cropper from 'react-easy-crop'
 
 
-const ImageEditor = () => {
+const ImageEditor = ({ image }) => {
   const [crop, setCrop] = React.useState({ x: 0, y: 0 })
   const [zoom, setZoom] = React.useState(1)
 
@@ -23,7 +23,7 @@ const ImageEditor = () => {
     <>
       <div className="crop-container">
         <Cropper
-          image="https://img.huffingtonpost.com/asset/5ab4d4ac2000007d06eb2c56.jpeg?cache=sih0jwle4e&ops=1910_1000"
+          image={image}
           crop={crop}
           zoom={zoom}
           aspect={1}
