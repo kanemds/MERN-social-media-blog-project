@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Button, Slider } from '@mui/material'
 import Cropper from 'react-easy-crop'
-
+import getCroppedImg from './CropImage'
 
 const ImageEditor = ({ avatarImage, setCroppedImg, handleClose }) => {
 
@@ -18,13 +18,17 @@ const ImageEditor = ({ avatarImage, setCroppedImg, handleClose }) => {
 
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
     console.log(croppedAreaPixels.width / croppedAreaPixels.height)
+    setCroppedAreaPixels(croppedAreaPixels)
   }
 
   const onZoomChange = (zoom) => {
     setZoom(zoom)
   }
 
-  const saveImg = () => { }
+  const saveImg = async () => {
+    const croppedImageUrl = await getCroppedImg(url, croppedAreaPixels)
+    setCroppedImg(croppedImageUrl)
+  }
 
   return (
     <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>

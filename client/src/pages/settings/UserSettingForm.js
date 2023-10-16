@@ -128,6 +128,9 @@ const UserSettingForm = ({ currentUser }) => {
   }
 
 
+  console.log(croppedImg)
+
+
   const handleChange = (event) => {
     setRole(event.target.value)
   }
@@ -148,8 +151,19 @@ const UserSettingForm = ({ currentUser }) => {
   }
 
   const onDataSelect = (e) => {
-    const files = e.target.files
-    setAvatarImage({ name: files[0]?.name, url: URL.createObjectURL(files[0]) })
+
+
+    if (e.target.files && e.target.files.length > 0) {
+      const files = e.target.files
+      setAvatarImage({ name: files[0]?.name, url: URL.createObjectURL(files[0]) })
+
+      // // turn into base64
+      // const reader = new FileReader()
+      // reader.readAsDataURL(files[0])
+      // reader.addEventListener('load', () => {
+      //   setAvatarImage({ name: files[0]?.name, url: reader.result })
+      // })
+    }
   }
 
 
@@ -205,14 +219,14 @@ const UserSettingForm = ({ currentUser }) => {
             <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
               {croppedImg ?
                 <CardMedia
-                  sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, }}
+                  sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'scale-down' }}
                   component="img"
-                  image={avatarImage.url}
+                  image={croppedImg}
                 /> :
                 <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
               }
 
-              <input type="file" hidden />
+              <input type="file" accept='image/*' hidden />
               <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
             </IconButton>
           </Box>
