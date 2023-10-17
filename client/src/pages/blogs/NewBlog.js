@@ -67,8 +67,6 @@ const NewBlog = () => {
     setText(e.target.value)
   }
 
-
-
   const handlePostTo = (e) => {
     setStatus(e.target.value)
   }

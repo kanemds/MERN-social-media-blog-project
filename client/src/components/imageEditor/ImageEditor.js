@@ -6,7 +6,6 @@ import { getCroppedImg, getRotatedImage } from './CropImage'
 
 const ImageEditor = ({ avatarImage, setAvatarImage, setCroppedImg, handleClose, setOpen }) => {
 
-  console.log(avatarImage)
   const { name, url } = avatarImage
 
   const [crop, setCrop] = useState({ x: 0, y: 0 })
@@ -33,7 +32,7 @@ const ImageEditor = ({ avatarImage, setAvatarImage, setCroppedImg, handleClose, 
 
   const saveImg = async () => {
     const croppedImageUrl = await getCroppedImg(url, croppedAreaPixels, rotation)
-    setCroppedImg(croppedImageUrl)
+    setCroppedImg({ name, url: croppedImageUrl })
     setAvatarImage({ name: null, url: null })
     setOpen(false)
   }

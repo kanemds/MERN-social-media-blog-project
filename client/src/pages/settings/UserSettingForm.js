@@ -15,7 +15,6 @@ import img from './Dtqnxj1W4AAgFut.jpg'
 import CameraIcon from '@mui/icons-material/Camera'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import ImageEditor from '../../components/imageEditor/ImageEditor'
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 import CameraAltIcon from '@mui/icons-material/CameraAlt'
 
 const style = {
@@ -155,7 +154,7 @@ const UserSettingForm = ({ currentUser }) => {
     }
   }
 
-  console.log(avatarImage)
+
   let content
 
   if (!username.length || !email.length || !role.length || typeof active !== 'boolean') content = <LoadingSpinner />
@@ -210,7 +209,7 @@ const UserSettingForm = ({ currentUser }) => {
                 <CardMedia
                   sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
                   component="img"
-                  image={croppedImg}
+                  image={croppedImg.url}
                 /> :
                 <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
               }
