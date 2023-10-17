@@ -18,18 +18,16 @@ import ImageEditor from '../../components/imageEditor/ImageEditor'
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 import CameraAltIcon from '@mui/icons-material/CameraAlt'
 
-
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '80%',
-  height: '80%',
+  width: '70%',
+  height: '70%',
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-  p: 4,
 }
 
 
@@ -144,7 +142,7 @@ const UserSettingForm = ({ currentUser }) => {
 
     if (e.target.files && e.target.files.length > 0) {
       const files = e.target.files
-      const name = files[0].name + `?t=${Date.now()}`
+      const name = files[0].name
       setAvatarImage({ name, url: URL.createObjectURL(files[0]) })
       setOpen(true)
       e.target.value = ''
@@ -210,7 +208,7 @@ const UserSettingForm = ({ currentUser }) => {
             <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
               {croppedImg ?
                 <CardMedia
-                  sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'scale-down' }}
+                  sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
                   component="img"
                   image={croppedImg}
                 /> :
