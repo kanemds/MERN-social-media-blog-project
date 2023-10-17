@@ -107,13 +107,6 @@ const UserSettingForm = ({ currentUser }) => {
     setConfirm('')
   }, [showPassword])
 
-  useEffect(() => {
-    if (avatarImage.url) {
-      setOpen(true)
-    } else {
-      setOpen(false)
-    }
-  }, [avatarImage.url])
 
   const canSave = showPassword ? [role, validEmail, validPassword, validUsername, validConfirm, typeof active === 'boolean'].every(Boolean) && !isLoading : [role, validEmail, validUsername, typeof active === 'boolean'].every(Boolean) && !isLoading
 
@@ -127,10 +120,6 @@ const UserSettingForm = ({ currentUser }) => {
     }
   }
 
-
-  console.log(croppedImg)
-
-
   const handleChange = (event) => {
     setRole(event.target.value)
   }
@@ -143,20 +132,22 @@ const UserSettingForm = ({ currentUser }) => {
 
   const handleClose = () => {
     setOpen(false)
-    setAvatarImage(
-      {
-        name: null,
-        url: null
-      })
+    setAvatarImage({
+      name: null,
+      url: null
+    })
   }
+
+
 
   const onDataSelect = (e) => {
 
-
     if (e.target.files && e.target.files.length > 0) {
       const files = e.target.files
-      setAvatarImage({ name: files[0]?.name, url: URL.createObjectURL(files[0]) })
-
+      const name = files[0].name + `?t=${Date.now()}`
+      setAvatarImage({ name, url: URL.createObjectURL(files[0]) })
+      setOpen(true)
+      e.target.value = ''
       // // turn into base64
       // const reader = new FileReader()
       // reader.readAsDataURL(files[0])
@@ -166,7 +157,7 @@ const UserSettingForm = ({ currentUser }) => {
     }
   }
 
-
+  console.log(avatarImage)
   let content
 
   if (!username.length || !email.length || !role.length || typeof active !== 'boolean') content = <LoadingSpinner />
@@ -192,7 +183,7 @@ const UserSettingForm = ({ currentUser }) => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <ImageEditor avatarImage={avatarImage} setCroppedImg={setCroppedImg} handleClose={handleClose} />
+            <ImageEditor avatarImage={avatarImage} setAvatarImage={setAvatarImage} setCroppedImg={setCroppedImg} handleClose={handleClose} setOpen={setOpen} />
           </Box>
         </Modal>
 
