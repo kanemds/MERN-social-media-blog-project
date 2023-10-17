@@ -33,7 +33,7 @@ const RegisterPage = () => {
     }
   }, [isSuccess, navigate])
 
-
+  console.log(error?.data?.message)
 
   const [username, setUsername] = useState('')
   const [validUsername, setValidUsername] = useState(false)
@@ -95,7 +95,7 @@ const RegisterPage = () => {
         <Typography variant='h4'>CREATE AN ACCOUNT</Typography>
       </Box>
       {isError ?
-        <Typography>{error}</Typography>
+        <Typography>{error?.data?.message}</Typography>
         : ''
       }
       <Box

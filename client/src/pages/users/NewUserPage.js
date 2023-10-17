@@ -101,7 +101,7 @@ const NewUserPage = () => {
         <Typography variant='h4'>CREATE AN ACCOUNT</Typography>
       </Box>
       {isError ?
-        <Typography>{error}</Typography>
+        <Typography>{error?.data?.message}</Typography>
         : ''
       }
       <Box

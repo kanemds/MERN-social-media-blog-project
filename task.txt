@@ -39,7 +39,7 @@ myPostPage
 [x]   each blog avatar icon can navigate to selected blogger home page
 
 editPage
-[x]   edit [x]
+[x]   edit 
 
 subscribePage
 [x]   displayUser
@@ -75,6 +75,14 @@ setting
 [x] email update
 [x] password update
 [x] blog's username changed when updated
-[] avatar change
+[x] avatar change
 
-
+creation
+[x] verify name
+[x] verify email
+[x] verify password
+[x] name
+[x] email
+[x] password
+[x] regex with name,email,password
+[] avatar img

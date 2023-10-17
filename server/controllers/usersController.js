@@ -19,6 +19,10 @@ const getAllUsers = async (req, res) => {
 // @access Private
 const createNewUser = async (req, res) => {
   const { username, email, password, role } = req.body
+  console.log(username)
+  console.log(email)
+  console.log(password)
+  console.log(role)
 
   if (!username || !email || !password) {
     return res.status(400).json({ message: 'All fields are required' })
@@ -59,9 +63,6 @@ const createNewUser = async (req, res) => {
   } else {
     res.status(400).json({ message: 'Invalid user data received' })
   }
-
-
-
 }
 
 // @desc Update a user
