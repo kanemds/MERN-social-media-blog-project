@@ -18,11 +18,11 @@ const getAllUsers = async (req, res) => {
 // route Post /users
 // @access Private
 const createNewUser = async (req, res) => {
-  const { username, email, password, role } = req.body
-  console.log(username)
-  console.log(email)
-  console.log(password)
-  console.log(role)
+  const { username, email, password, role, croppedImg } = req.body
+  console.log(croppedImg)
+
+  const { name, url } = croppedImg
+
 
   if (!username || !email || !password) {
     return res.status(400).json({ message: 'All fields are required' })
