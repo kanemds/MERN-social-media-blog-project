@@ -8,6 +8,6 @@ router.route('/')
   .get(getAllUsers)
   .post(createNewUser)
   .patch(updateUser)
-  .delete(verifyJWT, deleteUser)
+  .delete(deleteUser)
 
 module.exports = router
