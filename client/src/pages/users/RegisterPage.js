@@ -97,6 +97,13 @@ const RegisterPage = () => {
   const handleSave = async (e) => {
     e.preventDefault()
 
+    const formData = new FormData()
+
+    if (croppedImg.file !== null) {
+      formData.append("avatar", croppedImg.file)
+    }
+
+    await addNewUser(formData)
     if (canSave) {
       const formData = new FormData()
       formData.append('username', username)
@@ -196,7 +203,7 @@ const RegisterPage = () => {
           <Button
             variant='contained'
             sx={{ mr: '10px' }}
-            disabled={canSave ? false : true}
+            // disabled={canSave ? false : true}
 
             onClick={handleSave}
           >Submit</Button>
