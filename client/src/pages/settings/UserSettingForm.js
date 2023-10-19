@@ -32,6 +32,8 @@ const style = {
 
 const UserSettingForm = ({ currentUser }) => {
 
+  console.log(currentUser)
+
   const [updateUser, {
     isLoading,
     isSuccess,
@@ -75,7 +77,12 @@ const UserSettingForm = ({ currentUser }) => {
     name: null,
     url: null
   })
-  const [croppedImg, setCroppedImg] = useState(null)
+  const [croppedImg, setCroppedImg] = useState(currentUser?.avatar ? {
+    file: null,
+    url: currentUser?.avatar
+  } :
+    { file: null, url: null }
+  )
   const [open, setOpen] = React.useState(false)
 
   useEffect(() => {
@@ -109,8 +116,24 @@ const UserSettingForm = ({ currentUser }) => {
 
   const handleSave = async (e) => {
     e.preventDefault()
+    // const formData = new FormData()
+    // formData.append("avatar", croppedImg.file)
+    // const updateReady = await updateUser(formData).unwrap()
+    // console.log(updateReady)
     if (canSave) {
-      const updateReady = await updateUser({ id: currentUser.id, username, email, password, role, active }).unwrap()
+      const formData = new FormData()
+      formData.append('id', currentUser?.id)
+      formData.append('username', username)
+      formData.append('email', email)
+      formData.append('password', password)
+      formData.append('active', active)
+      formData.append('role', role)
+      formData.append("avatar", croppedImg.file)
+      // const updateReady = await updateUser({ id: currentUser.id, username, email, password, role, active }).unwrap()
+      const updateReady = await updateUser(formData).unwrap()
+        .catch(error => {
+          console.error('Error while updating user:', error)
+        })
       if (updateReady) {
         await refresh()
       }
@@ -256,13 +279,14 @@ const UserSettingForm = ({ currentUser }) => {
             : ''}
 
           <Box sx={{ mt: '30px' }}>
+            <LinkButton visit='/' name={'cancel'} />
             <Button
               variant='contained'
-              sx={{ mr: '10px' }}
+              sx={{ ml: '10px' }}
               disabled={canSave ? false : true}
               onClick={handleSave}
             >Submit</Button>
-            <LinkButton visit='/' name={'cancel'} />
+
           </Box>
         </Box>
       </Paper >

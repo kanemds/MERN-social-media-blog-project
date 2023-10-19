@@ -14,6 +14,20 @@ const processSingleImage = async image => {
   return singleImage
 }
 
+// note firebase does not need path to delete url
+const deleteImageFromFirebase = async (imageUrl) => {
+
+  // Create an array of promises for deleting images
+  try {
+    const imageRef = ref(storage, imageUrl)
+    await deleteObject(imageRef)
+
+    console.log('The avatar image has been deleted from Firebase Storage')
+  } catch (error) {
+    console.error('Error deleting images:', error)
+  }
+}
+
 // @desc Get all users
 // route Get /users
 // @access Private
@@ -89,9 +103,23 @@ const createNewUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const { id, username, email, role, active, password } = req.body
 
-  if (!id || !username || !email || !role.length || typeof active !== 'boolean') {
-    return res.status(400).json({ message: 'All fields are required' })
+  console.log(id)
+  console.log(username)
+  console.log(email)
+  console.log(role)
+  console.log(active)
+
+  let processedImages = null
+  if (req.files) {
+    const { avatar } = await req.files
+    console.log(avatar)
+    processedImages = await processSingleImage(avatar)
   }
+
+
+  // if (!id || !username || !email || !role.length || typeof active !== 'boolean') {
+  //   return res.status(400).json({ message: 'All fields are required' })
+  // }
 
 
   const user = await User.findById(id).exec()
@@ -112,15 +140,25 @@ const updateUser = async (req, res) => {
     return res.status(409).json({ message: 'Email is taken' })
   }
 
+  if (user.avatar) {
+    await deleteImageFromFirebase(user.avatar)
+  }
+
 
   user.username = username
   user.email = email
   user.role = role
   user.active = active
 
+  if (processedImages) {
+    user.avatar = processedImages
+  }
+
+
   if (password) {
     user.password = await bcrypt.hash(password, 10)
   }
+
 
   const updatedUser = await user.save()
 
