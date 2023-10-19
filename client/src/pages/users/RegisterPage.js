@@ -54,7 +54,10 @@ const RegisterPage = () => {
     name: null,
     url: null
   })
-  const [croppedImg, setCroppedImg] = useState(null)
+  const [croppedImg, setCroppedImg] = useState({
+    file: null,
+    url: null
+  })
   const [open, setOpen] = React.useState(false)
   const [username, setUsername] = useState('')
   const [validUsername, setValidUsername] = useState(false)
@@ -91,14 +94,8 @@ const RegisterPage = () => {
 
   const canSave = [role, validEmail, validPassword, validUsername, validConfirm].every(Boolean) && !isLoading
 
-  console.log(croppedImg.file)
-
   const handleSave = async (e) => {
     e.preventDefault()
-    const formData = new FormData()
-
-    formData.append("avatar", croppedImg.file)
-    await addNewUser(formData)
 
     if (canSave) {
       const formData = new FormData()
@@ -106,7 +103,7 @@ const RegisterPage = () => {
       formData.append('email', email)
       formData.append('password', password)
       formData.append('role', role)
-      formData.append("croppedImg", croppedImg)
+      formData.append("avatar", croppedImg.file)
 
       await addNewUser(formData)
       // await addNewUser({ username, email, password, role, croppedImg })
@@ -165,7 +162,7 @@ const RegisterPage = () => {
       >
         <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
           <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
-            {croppedImg ?
+            {croppedImg.url ?
               <CardMedia
                 sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
                 component="img"
@@ -199,7 +196,7 @@ const RegisterPage = () => {
           <Button
             variant='contained'
             sx={{ mr: '10px' }}
-            // disabled={canSave ? false : true}
+            disabled={canSave ? false : true}
 
             onClick={handleSave}
           >Submit</Button>
