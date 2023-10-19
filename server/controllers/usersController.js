@@ -1,6 +1,18 @@
 const User = require('../models/User')
 const Blog = require('../models/Blog')
 const bcrypt = require('bcrypt')
+const { ref, uploadBytes, getDownloadURL, deleteObject } = require('firebase/storage')
+const storage = require('../config/firebaseConfig')
+
+const processSingleImage = async image => {
+  let singleImage
+  const singleFile = new Date().getTime() + image.name
+  const imageRef = ref(storage, `users/${singleFile}`)
+  const uploadImage = await uploadBytes(imageRef, image.data,)
+  const url = await getDownloadURL(uploadImage.ref)
+  singleImage = url
+  return singleImage
+}
 
 // @desc Get all users
 // route Get /users
@@ -18,51 +30,64 @@ const getAllUsers = async (req, res) => {
 // route Post /users
 // @access Private
 const createNewUser = async (req, res) => {
-  const { username, email, password, role, croppedImg } = req.body
-  console.log(croppedImg)
+  const { username, email, password, role } = req.body
 
-  const { name, url } = croppedImg
+  const { avatar } = await req.files
 
+  console.log(avatar)
 
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: 'All fields are required' })
-  }
+  await processSingleImage(avatar)
 
-  // check exist username and email
-  const userExist = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
-  const emailExist = await User.findOne({ email }).collation({ locale: 'en', strength: 2 }).lean().exec()
+  // let processedImages = null
 
-  if (userExist) {
-    return res.status(409).json({ message: 'The username is already in used. Please choose another one' })
-  }
+  // if (croppedImg) {
+  //   console.log('run image')
+  //   processedImages = await processSingleImage(croppedImg)
+  // }
 
-  if (emailExist) {
-    return res.status(409).json({ message: 'The email has already been registered. Please choose another one' })
-  }
+  // console.log('processedImages', processedImages)
 
-  // bcrypt
-  const hashedPassword = await bcrypt.hash(password, 10)
+  // if (!username || !email || !password) {
+  //   return res.status(400).json({ message: 'All fields are required' })
+  // }
 
-  const userInfo = !role.length ? {
-    username,
-    email,
-    'password': hashedPassword,
-  }
-    :
-    {
-      username,
-      email,
-      'password': hashedPassword,
-      role
-    }
+  // // check exist username and email
+  // const userExist = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+  // const emailExist = await User.findOne({ email }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
-  const newUser = await User.create(userInfo)
+  // if (userExist) {
+  //   return res.status(409).json({ message: 'The username is already in used. Please choose another one' })
+  // }
 
-  if (newUser) {
-    res.status(201).json({ message: `New user ${username} created` })
-  } else {
-    res.status(400).json({ message: 'Invalid user data received' })
-  }
+  // if (emailExist) {
+  //   return res.status(409).json({ message: 'The email has already been registered. Please choose another one' })
+  // }
+
+  // // bcrypt
+  // const hashedPassword = await bcrypt.hash(password, 10)
+
+  // const userInfo = !role.length ? {
+  //   username,
+  //   email,
+  //   'password': hashedPassword,
+  //   avatar: processedImages
+  // }
+  //   :
+  //   {
+  //     username,
+  //     email,
+  //     'password': hashedPassword,
+  //     role,
+  //     avatar: processedImages
+  //   }
+
+  // const newUser = await User.create(userInfo)
+
+  // if (newUser) {
+  //   res.status(201).json({ message: `New user ${username} created` })
+  // } else {
+  //   res.status(400).json({ message: 'Invalid user data received' })
+  // }
 }
 
 // @desc Update a user

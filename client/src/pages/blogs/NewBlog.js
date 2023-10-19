@@ -71,6 +71,7 @@ const NewBlog = () => {
     setStatus(e.target.value)
   }
 
+  console.log(orgImages)
 
   const handleSubmit = async (e) => {
     e.preventDefault()

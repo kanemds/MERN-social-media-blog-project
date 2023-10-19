@@ -31,8 +31,8 @@ const ImageEditor = ({ avatarImage, setAvatarImage, setCroppedImg, handleClose, 
   }
 
   const saveImg = async () => {
-    const croppedImageUrl = await getCroppedImg(url, croppedAreaPixels, rotation)
-    setCroppedImg({ name, url: croppedImageUrl })
+    const { file, cropped } = await getCroppedImg(url, name, croppedAreaPixels, rotation)
+    setCroppedImg({ file, url: cropped })
     setAvatarImage({ name: null, url: null })
     setOpen(false)
   }

@@ -91,10 +91,25 @@ const RegisterPage = () => {
 
   const canSave = [role, validEmail, validPassword, validUsername, validConfirm].every(Boolean) && !isLoading
 
+  console.log(croppedImg.file)
+
   const handleSave = async (e) => {
     e.preventDefault()
+    const formData = new FormData()
+
+    formData.append("avatar", croppedImg.file)
+    await addNewUser(formData)
+
     if (canSave) {
-      await addNewUser({ username, email, password, role, croppedImg })
+      const formData = new FormData()
+      formData.append('username', username)
+      formData.append('email', email)
+      formData.append('password', password)
+      formData.append('role', role)
+      formData.append("croppedImg", croppedImg)
+
+      await addNewUser(formData)
+      // await addNewUser({ username, email, password, role, croppedImg })
     }
   }
 
@@ -184,7 +199,8 @@ const RegisterPage = () => {
           <Button
             variant='contained'
             sx={{ mr: '10px' }}
-            disabled={canSave ? false : true}
+            // disabled={canSave ? false : true}
+
             onClick={handleSave}
           >Submit</Button>
           <LinkButton name={'cancel'} />
