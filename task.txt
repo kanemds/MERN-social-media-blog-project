@@ -75,7 +75,7 @@ setting
 [x] email update
 [x] password update
 [x] blog's username changed when updated
-[x] avatar change
+[x] avatar change (upload and delete the old from firebase)
 
 creation
 [x] verify name
@@ -85,4 +85,10 @@ creation
 [x] email
 [x] password
 [x] regex with name,email,password
-[] avatar img
+[x] avatar img (with img or not)
+
+navbar
+[x] app title navigate home page
+[x] show sign up when no user
+[x] show login when no user
+[] display avatar if user login
