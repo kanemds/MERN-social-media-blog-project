@@ -1,16 +1,46 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import LinkButton from './LinkButton'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import { useGetUsersQuery } from '../pages/users/UserApiSlice'
 import { Avatar, AppBar, Box, Toolbar, Typography, Button, IconButton, MenuIcon, Popover } from '@mui/material'
 import { current } from '@reduxjs/toolkit'
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
+import { red } from '@mui/material/colors'
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
+import SettingsIcon from '@mui/icons-material/Settings'
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
+
+
+const SideButton = styled(Button)({
+  textTransform: 'none',
+  justifyContent: "flex-start",
+  borderRadius: '0px',
+  '&:hover': {
+    backgroundColor: '#1976d2',
+    color: 'white'
+  }
+
+})
+
+const ButtonInfo = styled(Typography)({
+  textAlign: 'left',
+  marginLeft: 12
+})
+
+const getWindowSize = () => {
+  const { innerWidth } = window
+  return { innerWidth }
+}
+
 
 
 
 export default function Navbar({ handleLogout, isSuccess }) {
 
   // export default function Navbar() {
+
+
 
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -23,9 +53,13 @@ export default function Navbar({ handleLogout, isSuccess }) {
     })
   })
 
+
   const [initial, setInitial] = useState(null)
   const [avatarImg, setAvatarImg] = useState(null)
   const [isOnClick, setIsOnClick] = useState(false)
+  const [windowSize, setWindowSize] = useState(getWindowSize())
+
+  console.log(windowSize)
 
   useEffect(() => {
     if (isSuccess) {
@@ -42,6 +76,24 @@ export default function Navbar({ handleLogout, isSuccess }) {
     }
   }, [username, currentUser])
 
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowSize(getWindowSize())
+    }
+
+    window.addEventListener('resize', handleWindowResize)
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isOnClick) {
+      setIsOnClick(false)
+      setAnchorEl(null)
+    }
+  }, [windowSize])
 
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -64,10 +116,9 @@ export default function Navbar({ handleLogout, isSuccess }) {
   const handleClose = () => {
     setIsOnClick(false)
     setAnchorEl(null)
+
   }
 
-  console.log(isOnClick)
-  console.log(anchorEl)
 
   const id = open ? 'simple-popover' : undefined
 
@@ -113,9 +164,10 @@ export default function Navbar({ handleLogout, isSuccess }) {
         id="mouse-over-popover"
         sx={{
           pointerEvents: 'none',
+          display: isOnClick ? 'none' : 'block'
         }}
         open={open}
-        anchorEl={!isOnClick ? anchorEl : false}
+        anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -137,23 +189,36 @@ export default function Navbar({ handleLogout, isSuccess }) {
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: 1,
             textOverflow: 'ellipsis',
-            m: 1,
+            m: 1
           }}
         >{username}</Typography>
       </Popover>
       <Popover
         id={id}
         open={isOnClick ? open : false}
-        anchorEl={isOnClick ? anchorEl : null}
+        anchorEl={anchorEl}
         onClose={isOnClick ? handleClose : null}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
         }}
       >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <SideButton  >
+            <ArticleOutlinedIcon sx={{ fontSize: '20px' }} />
+            <ButtonInfo >My post(s)</ButtonInfo>
+          </SideButton>
+          <SideButton >
+            <SettingsIcon sx={{ fontSize: '20px' }} />
+            <ButtonInfo >  Settings</ButtonInfo>
+          </SideButton>
+          <SideButton sx={{ color: 'white', backgroundColor: red[700], '&:hover': { color: red[700], backgroundColor: 'white', } }} >
+            <PowerSettingsNewIcon sx={{ fontSize: '20px' }} />
+            <ButtonInfo>Sign out</ButtonInfo>
+          </SideButton>
+        </Box>
       </Popover>
-    </AppBar>
+    </AppBar >
 
   )
 }
