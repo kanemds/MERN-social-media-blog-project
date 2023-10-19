@@ -33,6 +33,7 @@ export function rotateSize(width, height, rotation) {
  */
 export async function getCroppedImg(
   imageSrc,
+  name,
   pixelCrop,
   rotation = 0,
   flip = { horizontal: false, vertical: false }
@@ -93,14 +94,33 @@ export async function getCroppedImg(
   )
 
   // As Base64 string
-  // return croppedCanvas.toDataURL('image/jpeg');
+  const cropped = croppedCanvas.toDataURL('image/jpeg')
+
+  // Split the Data URI to get the base64 part
+  const base64String = cropped.split(',')[1]
+
+  // Convert the base64 data to a Uint8Array
+  const binaryData = new Uint8Array(atob(base64String).split('').map(char => char.charCodeAt(0)))
+
+  // Create a Blob from the Uint8Array
+  const blob = new Blob([binaryData], { type: 'image/jpeg' })
+
+  // Create a File from the Blob
+  const file = new File([blob], name, { type: 'image/jpeg' })
+
+  return { file, cropped }
+
+
+
+
+  // return croppedCanvas.toDataURL('image/jpeg')
 
   // As a blob
-  return new Promise((resolve, reject) => {
-    croppedCanvas.toBlob((file) => {
-      resolve(URL.createObjectURL(file))
-    }, 'image/jpeg')
-  })
+  // return new Promise((resolve, reject) => {
+  //   croppedCanvas.toBlob((file) => {
+  //     resolve(URL.createObjectURL(file))
+  //   }, 'image/jpeg')
+  // })
 }
 
 export async function getRotatedImage(imageSrc, rotation = 0) {
