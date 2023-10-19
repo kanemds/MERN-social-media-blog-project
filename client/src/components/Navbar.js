@@ -3,7 +3,7 @@ import LinkButton from './LinkButton'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import { useGetUsersQuery } from '../pages/users/UserApiSlice'
-import { Avatar, AppBar, Box, Toolbar, Typography, Button, IconButton, MenuIcon } from '@mui/material'
+import { Avatar, AppBar, Box, Toolbar, Typography, Button, IconButton, MenuIcon, Popover } from '@mui/material'
 import { current } from '@reduxjs/toolkit'
 
 
@@ -42,6 +42,19 @@ export default function Navbar({ handleLogout, isSuccess }) {
   }, [username, currentUser])
 
 
+  const [anchorEl, setAnchorEl] = React.useState(null)
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null)
+  }
+
+  const open = Boolean(anchorEl)
+
+
   return (
 
     <AppBar sx={{ flexGrow: 1, height: '70px' }}>
@@ -60,7 +73,15 @@ export default function Navbar({ handleLogout, isSuccess }) {
             </Box>
           )
           : username ?
-            <Avatar src={avatarImg}>{avatarImg ? '' : initial}</Avatar>
+            <IconButton
+              aria-owns={open ? 'mouse-over-popover' : undefined}
+              aria-haspopup="true"
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+            >
+              <Avatar src={avatarImg}>{avatarImg ? '' : initial}</Avatar>
+            </IconButton>
+
             :
             <Box>
               <LinkButton visit='/login' name='Login' />
@@ -69,6 +90,38 @@ export default function Navbar({ handleLogout, isSuccess }) {
         }
 
       </Toolbar>
+      <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: 'none',
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <Typography variant='12px'
+          sx={{
+            maxWidth: '100px', // Set your desired maximum width
+            color: 'black',
+            wordBreak: "break-word",
+            display: '-webkit-box',
+            overflow: 'hidden',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 1,
+            textOverflow: 'ellipsis',
+            m: 1,
+          }}
+        >{username}</Typography>
+      </Popover>
     </AppBar>
 
   )
