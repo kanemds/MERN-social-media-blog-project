@@ -61,7 +61,6 @@ const UserSettingForm = ({ currentUser }) => {
     }
   }, [isSuccess, navigate])
 
-
   const [username, setUsername] = useState(currentUser?.username)
   const [validUsername, setValidUsername] = useState(false)
   const [email, setEmail] = useState(currentUser?.email)
