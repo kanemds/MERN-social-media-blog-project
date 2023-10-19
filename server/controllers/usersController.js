@@ -34,60 +34,54 @@ const createNewUser = async (req, res) => {
 
   const { avatar } = await req.files
 
-  console.log(avatar)
+  let processedImages = null
 
-  await processSingleImage(avatar)
+  if (avatar) {
+    console.log('run image')
+    processedImages = await processSingleImage(avatar)
+  }
 
-  // let processedImages = null
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: 'All fields are required' })
+  }
 
-  // if (croppedImg) {
-  //   console.log('run image')
-  //   processedImages = await processSingleImage(croppedImg)
-  // }
+  // check exist username and email
+  const userExist = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+  const emailExist = await User.findOne({ email }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
-  // console.log('processedImages', processedImages)
+  if (userExist) {
+    return res.status(409).json({ message: 'The username is already in used. Please choose another one' })
+  }
 
-  // if (!username || !email || !password) {
-  //   return res.status(400).json({ message: 'All fields are required' })
-  // }
+  if (emailExist) {
+    return res.status(409).json({ message: 'The email has already been registered. Please choose another one' })
+  }
 
-  // // check exist username and email
-  // const userExist = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
-  // const emailExist = await User.findOne({ email }).collation({ locale: 'en', strength: 2 }).lean().exec()
+  // bcrypt
+  const hashedPassword = await bcrypt.hash(password, 10)
 
-  // if (userExist) {
-  //   return res.status(409).json({ message: 'The username is already in used. Please choose another one' })
-  // }
+  const userInfo = !role.length ? {
+    username,
+    email,
+    'password': hashedPassword,
+    avatar: processedImages
+  }
+    :
+    {
+      username,
+      email,
+      'password': hashedPassword,
+      role,
+      avatar: processedImages
+    }
 
-  // if (emailExist) {
-  //   return res.status(409).json({ message: 'The email has already been registered. Please choose another one' })
-  // }
+  const newUser = await User.create(userInfo)
 
-  // // bcrypt
-  // const hashedPassword = await bcrypt.hash(password, 10)
-
-  // const userInfo = !role.length ? {
-  //   username,
-  //   email,
-  //   'password': hashedPassword,
-  //   avatar: processedImages
-  // }
-  //   :
-  //   {
-  //     username,
-  //     email,
-  //     'password': hashedPassword,
-  //     role,
-  //     avatar: processedImages
-  //   }
-
-  // const newUser = await User.create(userInfo)
-
-  // if (newUser) {
-  //   res.status(201).json({ message: `New user ${username} created` })
-  // } else {
-  //   res.status(400).json({ message: 'Invalid user data received' })
-  // }
+  if (newUser) {
+    res.status(201).json({ message: `New user ${username} created` })
+  } else {
+    res.status(400).json({ message: 'Invalid user data received' })
+  }
 }
 
 // @desc Update a user
