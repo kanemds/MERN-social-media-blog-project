@@ -25,6 +25,7 @@ export default function Navbar({ handleLogout, isSuccess }) {
 
   const [initial, setInitial] = useState(null)
   const [avatarImg, setAvatarImg] = useState(null)
+  const [isOnClick, setIsOnClick] = useState(false)
 
   useEffect(() => {
     if (isSuccess) {
@@ -36,16 +37,18 @@ export default function Navbar({ handleLogout, isSuccess }) {
     if (username) {
       setInitial(username[0].toString().toUpperCase())
     }
-    if (currentUser.avatar) {
-      setAvatarImg(currentUser.avatar)
+    if (currentUser?.avatar) {
+      setAvatarImg(currentUser?.avatar)
     }
   }, [username, currentUser])
 
 
-  const [anchorEl, setAnchorEl] = React.useState(null)
+  const [anchorEl, setAnchorEl] = useState(null)
 
   const handlePopoverOpen = (event) => {
+
     setAnchorEl(event.currentTarget)
+
   }
 
   const handlePopoverClose = () => {
@@ -53,6 +56,20 @@ export default function Navbar({ handleLogout, isSuccess }) {
   }
 
   const open = Boolean(anchorEl)
+
+  const handleClick = (event) => {
+    setIsOnClick(true)
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setIsOnClick(false)
+    setAnchorEl(null)
+  }
+
+  console.log(isOnClick)
+  console.log(anchorEl)
+
+  const id = open ? 'simple-popover' : undefined
 
 
   return (
@@ -76,8 +93,10 @@ export default function Navbar({ handleLogout, isSuccess }) {
             <IconButton
               aria-owns={open ? 'mouse-over-popover' : undefined}
               aria-haspopup="true"
-              onMouseEnter={handlePopoverOpen}
-              onMouseLeave={handlePopoverClose}
+
+              onMouseEnter={!isOnClick ? handlePopoverOpen : null}
+              onMouseLeave={!isOnClick ? handlePopoverClose : null}
+              onClick={handleClick}
             >
               <Avatar src={avatarImg}>{avatarImg ? '' : initial}</Avatar>
             </IconButton>
@@ -96,7 +115,7 @@ export default function Navbar({ handleLogout, isSuccess }) {
           pointerEvents: 'none',
         }}
         open={open}
-        anchorEl={anchorEl}
+        anchorEl={!isOnClick ? anchorEl : false}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -121,6 +140,18 @@ export default function Navbar({ handleLogout, isSuccess }) {
             m: 1,
           }}
         >{username}</Typography>
+      </Popover>
+      <Popover
+        id={id}
+        open={isOnClick ? open : false}
+        anchorEl={isOnClick ? anchorEl : null}
+        onClose={isOnClick ? handleClose : null}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
       </Popover>
     </AppBar>
 
