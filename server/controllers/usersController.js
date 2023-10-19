@@ -32,14 +32,13 @@ const getAllUsers = async (req, res) => {
 const createNewUser = async (req, res) => {
   const { username, email, password, role } = req.body
 
-  const { avatar } = await req.files
-
   let processedImages = null
-
-  if (avatar) {
-    console.log('run image')
+  if (req.files) {
+    const { avatar } = await req.files
+    console.log(avatar)
     processedImages = await processSingleImage(avatar)
   }
+
 
   if (!username || !email || !password) {
     return res.status(400).json({ message: 'All fields are required' })
