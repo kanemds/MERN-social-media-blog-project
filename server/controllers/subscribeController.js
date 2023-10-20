@@ -11,29 +11,54 @@ const timeDisplayOptions = require('../config/timeDisplayOptions')
 const getBlogsForSubscribedList = async (req, res) => {
   const { username } = req.query
 
-  console.log(username)
-
   const isUserExist = await User.findOne({ username }).exec()
-
-  console.log(isUserExist)
 
   if (!isUserExist) return res.status(404).json({ message: 'The username is not exist' })
 
   const currentUserSubscribed = await Subscribe.find({ subscribed_by_user_id: isUserExist._id }).lean().exec()
 
-  console.log(currentUserSubscribed)
-
-
   if (!currentUserSubscribed || !currentUserSubscribed.length) return res.status(200).json([])
 
-  const addedDate = currentUserSubscribed.map(blog => {
+  const subscribersName = await Subscribe.aggregate([
+    {
+      $match: { subscribed_by_user_id: isUserExist._id }
+    },
+    {
+      $lookup: {
+        from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+        localField: 'blog_owner_id', // from the current Subscribe model blog_owner_id
+        foreignField: '_id', // match with user._id
+        as: 'userDetails' // return result as collection of user collection
+      },
+    },
+    {
+      $unwind: '$userDetails'
+    },
+    {
+      $project: {
+        _id: 1,
+        blog_owner_id: 1,
+        subscribed_by_user_id: 1,
+        is_subscribed: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        username: '$userDetails.username', // Include the username
+        ownerAvatar: '$userDetails.avatar',
+        __v: 1
+      },
+    },
+  ])
+    .sort({ createdAt: -1 }) // Sort by _id in descending order
+
+
+  const addedDate = subscribersName.map(blog => {
     const timeConvert = new Date(Date.parse(blog.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
     return { ...blog, subscribedAt: timeConvert }
   })
 
-  const decOrderSub = await addedDate?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  // const decOrderSub = await addedDate?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
-  res.status(200).json(decOrderSub)
+  res.status(200).json(addedDate)
 }
 
 const addSubscribe = async (req, res) => {

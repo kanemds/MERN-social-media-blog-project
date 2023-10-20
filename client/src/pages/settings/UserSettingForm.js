@@ -79,8 +79,10 @@ const UserSettingForm = ({ currentUser }) => {
     file: null,
     url: currentUser?.avatar
   } :
-    { file: null, url: null }
+    null
   )
+
+
   const [open, setOpen] = React.useState(false)
 
   useEffect(() => {
