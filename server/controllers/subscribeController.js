@@ -32,6 +32,14 @@ const getBlogsForSubscribedList = async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: 'subscribes',
+        localField: 'blog_owner_id',
+        foreignField: 'blog_owner_id',
+        as: 'subscriber'
+      },
+    },
+    {
       $unwind: '$userDetails'
     },
     {
@@ -44,11 +52,15 @@ const getBlogsForSubscribedList = async (req, res) => {
         updatedAt: 1,
         username: '$userDetails.username', // Include the username
         avatar: '$userDetails.avatar',
+        // returns the size (number of elements) of that array. 
+        countSubscribers: { $size: '$subscriber' },
         __v: 1
       },
     },
-  ])
-    .sort({ createdAt: -1 }) // Sort by _id in descending order
+
+  ]).sort({ createdAt: -1 }) // Sort by _id in descending order
+
+  console.log(subscribersName)
 
 
   const addedDate = subscribersName.map(blog => {

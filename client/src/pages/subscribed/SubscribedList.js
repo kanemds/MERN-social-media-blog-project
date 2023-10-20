@@ -97,7 +97,6 @@ const SubscribedList = () => {
   const [isSearch, setIsSearch] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
-  console.log(currentSubscribed)
 
   useEffect(() => {
 
@@ -142,7 +141,7 @@ const SubscribedList = () => {
     const inputLowerCase = searchInput.toLowerCase()
     // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
     const result = currentSubscribed.filter(blog =>
-      [inputLowerCase].some(character => blog.blog_owner_username.toLowerCase().includes(character))
+      [inputLowerCase].some(character => blog.username.toLowerCase().includes(character))
     )
     if (!result.length) {
       setSearchInput('')
