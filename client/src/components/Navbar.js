@@ -20,7 +20,6 @@ const SideButton = styled(Button)({
     backgroundColor: '#1976d2',
     color: 'white'
   }
-
 })
 
 const ButtonInfo = styled(Typography)({
@@ -33,13 +32,7 @@ const getWindowSize = () => {
   return { innerWidth }
 }
 
-
-
-
 export default function Navbar({ handleLogout, isSuccess }) {
-
-  // export default function Navbar() {
-
 
 
   const navigate = useNavigate()
@@ -53,13 +46,10 @@ export default function Navbar({ handleLogout, isSuccess }) {
     })
   })
 
-
   const [initial, setInitial] = useState(null)
   const [avatarImg, setAvatarImg] = useState(null)
   const [isOnClick, setIsOnClick] = useState(false)
   const [windowSize, setWindowSize] = useState(getWindowSize())
-
-  console.log(windowSize)
 
   useEffect(() => {
     if (isSuccess) {
@@ -79,6 +69,8 @@ export default function Navbar({ handleLogout, isSuccess }) {
   useEffect(() => {
     const handleWindowResize = () => {
       setWindowSize(getWindowSize())
+      setIsOnClick(false)
+      setAnchorEl(null)
     }
 
     window.addEventListener('resize', handleWindowResize)
@@ -88,12 +80,6 @@ export default function Navbar({ handleLogout, isSuccess }) {
     }
   }, [])
 
-  useEffect(() => {
-    if (isOnClick) {
-      setIsOnClick(false)
-      setAnchorEl(null)
-    }
-  }, [windowSize])
 
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -118,6 +104,14 @@ export default function Navbar({ handleLogout, isSuccess }) {
     setAnchorEl(null)
 
   }
+  const handleToMyPost = () => {
+    navigate('/blogs')
+  }
+
+  const handleToSetting = () => {
+    navigate(`/setting/${userId}`)
+  }
+
 
 
   const id = open ? 'simple-popover' : undefined
@@ -129,34 +123,22 @@ export default function Navbar({ handleLogout, isSuccess }) {
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <LinkButton visit='/' name='K-Blog' style='outlined' fontSize='2rem' />
 
+        {username ?
+          <IconButton
+            aria-owns={open ? 'mouse-over-popover' : undefined}
+            aria-haspopup="true"
 
-        {username && current.role === 'Admin' ?
-          (
-            <Box>
-              <LinkButton visit='/dash/users' name='users' />
-              <LinkButton visit='/dash/users/new' name='new user' />
-              <Avatar src={avatarImg}>{avatarImg ? '' : initial}</Avatar>
-              <Button sx={{ color: 'white' }}>{username}</Button>
-              <Button sx={{ color: 'white' }} onClick={handleLogout}>Logout</Button>
-            </Box>
-          )
-          : username ?
-            <IconButton
-              aria-owns={open ? 'mouse-over-popover' : undefined}
-              aria-haspopup="true"
-
-              onMouseEnter={!isOnClick ? handlePopoverOpen : null}
-              onMouseLeave={!isOnClick ? handlePopoverClose : null}
-              onClick={handleClick}
-            >
-              <Avatar src={avatarImg}>{avatarImg ? '' : initial}</Avatar>
-            </IconButton>
-
-            :
-            <Box>
-              <LinkButton visit='/login' name='Login' />
-              <LinkButton visit='/register' name='Signup' />
-            </Box>
+            onMouseEnter={!isOnClick ? handlePopoverOpen : null}
+            onMouseLeave={!isOnClick ? handlePopoverClose : null}
+            onClick={handleClick}
+          >
+            <Avatar src={avatarImg}>{avatarImg ? '' : initial}</Avatar>
+          </IconButton>
+          :
+          <Box>
+            <LinkButton visit='/login' name='Login' />
+            <LinkButton visit='/register' name='Signup' />
+          </Box>
         }
 
       </Toolbar>
@@ -204,15 +186,15 @@ export default function Navbar({ handleLogout, isSuccess }) {
         }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <SideButton  >
+          <SideButton onClick={handleToMyPost} >
             <ArticleOutlinedIcon sx={{ fontSize: '20px' }} />
             <ButtonInfo >My post(s)</ButtonInfo>
           </SideButton>
-          <SideButton >
+          <SideButton onClick={handleToSetting}>
             <SettingsIcon sx={{ fontSize: '20px' }} />
             <ButtonInfo >  Settings</ButtonInfo>
           </SideButton>
-          <SideButton sx={{ color: 'white', backgroundColor: red[700], '&:hover': { color: red[700], backgroundColor: 'white', } }} >
+          <SideButton sx={{ color: 'white', backgroundColor: red[700], '&:hover': { color: red[700], backgroundColor: 'white', } }} onClick={handleLogout} >
             <PowerSettingsNewIcon sx={{ fontSize: '20px' }} />
             <ButtonInfo>Sign out</ButtonInfo>
           </SideButton>

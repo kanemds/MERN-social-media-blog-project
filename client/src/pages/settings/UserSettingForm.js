@@ -32,7 +32,6 @@ const style = {
 
 const UserSettingForm = ({ currentUser }) => {
 
-  console.log(currentUser)
 
   const [updateUser, {
     isLoading,
