@@ -200,14 +200,15 @@ const RegisterPage = () => {
 
 
         <Box sx={{ mt: '30px' }}>
+
+          <LinkButton name={'cancel'} />
           <Button
             variant='contained'
-            sx={{ mr: '10px' }}
+            sx={{ ml: '10px' }}
             // disabled={canSave ? false : true}
 
             onClick={handleSave}
           >Submit</Button>
-          <LinkButton name={'cancel'} />
         </Box>
       </Box>
 
