@@ -21,6 +21,7 @@ import { set } from 'lodash'
 import img from './Dtqnxj1W4AAgFut.jpg'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
 import useTimeDisplay from '../../hooks/useTimeDisplay'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
 const iconStyle = {
   padding: '0px',
@@ -171,15 +172,21 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
         disableRipple={true}
         onClick={handleUserPage}
       >
-        <Box sx={{ height: 180, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
-          <CardMedia
-            sx={{ height: '100%', width: 'auto', borderRadius: '50%', objectFit: 'scale-down' }}
-            component="img"
-            image={img}
-            alt={'random'}
-          />
+
+        <Box sx={{ height: 180, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {blog.avatar ?
+            <CardMedia
+              sx={{ height: 150, width: 150, borderRadius: '50%', objectFit: 'scale-down' }}
+              component="img"
+              image={blog.avatar}
+              alt={''}
+            />
+            :
+            <AccountCircleIcon sx={{ fontSize: 180, p: 0, color: '#bdbdbd' }} />}
         </Box>
-        <CardContent sx={{ height: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }} >
+
+
+        <CardContent sx={{ height: 180, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', pt: 0 }} >
 
           <Typography sx={{
             wordBreak: "break-word",
@@ -188,10 +195,11 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: 2,
             textOverflow: 'ellipsis',
+            mb: 1
           }}
             variant='h5'
           >
-            {blog.blog_owner_username}
+            {blog.username}
           </Typography>
           <Button
             onMouseOver={() => setIsClick(true)}
@@ -201,6 +209,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
               '&:hover': { background: '#f4f4f4' },
               color: '#bdbdbd',
               textTransform: 'none',
+              mb: 1
             }}>
             <Diversity2OutlinedIcon sx={{
               color: 'rgba(0, 0, 0, 0.87)',

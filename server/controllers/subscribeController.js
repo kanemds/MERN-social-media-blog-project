@@ -43,7 +43,7 @@ const getBlogsForSubscribedList = async (req, res) => {
         createdAt: 1,
         updatedAt: 1,
         username: '$userDetails.username', // Include the username
-        ownerAvatar: '$userDetails.avatar',
+        avatar: '$userDetails.avatar',
         __v: 1
       },
     },
