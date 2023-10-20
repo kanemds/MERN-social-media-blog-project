@@ -48,8 +48,6 @@ const styleDelete = {
 
 export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, removeMessage, isDeleteSubscribedLoading }) {
 
-  console.log(blog)
-
   const dispatch = useDispatch()
 
   const navigate = useNavigate()

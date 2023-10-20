@@ -91,4 +91,9 @@ navbar
 [x] app title navigate home page
 [x] show sign up when no user
 [x] show login when no user
-[] display avatar if user login
+[x] display avatar if user login
+
+
+[] liked amount
+[] show subscribe amount on subscribe page
+[] show total of blogs on subscribe page
