@@ -23,6 +23,9 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import { SideBarContext } from '../useContext/SideBarContext'
 import { messages } from '../config/requireLoginMessage'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import { useGetUsersQuery } from '../pages/users/UserApiSlice'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -72,6 +75,7 @@ const IconButtonStyle = {
 
 const FrontPageSideBar = () => {
 
+
   const largeBP = useMediaQuery('(min-width:1300px)')
   const mediumBP = useMediaQuery('(max-width:1299px)')
   const small = useMediaQuery('(max-width:791px)')
@@ -82,6 +86,13 @@ const FrontPageSideBar = () => {
   const { username, userId } = useAuth()
   const { id } = useParams()
   const { pathname } = useLocation()
+
+  const { currentUser } = useGetUsersQuery('usersList', {
+    selectFromResult: ({ data }) => ({
+      currentUser: data?.entities[userId]
+    })
+  })
+
 
   const [checked, setChecked] = useState(false)
   const [showBack, setShowBack] = useState(false)
@@ -182,6 +193,17 @@ const FrontPageSideBar = () => {
       navigate(`/setting/${userId}`)
     } else {
       navigate('/login', { state: messages.user })
+    }
+  }
+
+  const handleToUsersSetting = () => {
+    if (currentUser?.role === 'Admin') {
+      navigate('/dash/users')
+    }
+  }
+  const handleToCreateNewUser = () => {
+    if (currentUser?.role === 'Admin') {
+      navigate('/dash/users/new')
     }
   }
 
@@ -286,6 +308,25 @@ const FrontPageSideBar = () => {
             <ButtonInfo>  Liked</ButtonInfo>
           </SideButton>
         </Section>
+        {currentUser?.role === 'Admin' ?
+          <>
+            <Divider />
+            <Typography sx={{ p: '6px 8px ' }}>Admin management</Typography>
+            <Section>
+              <SideButton onClick={handleToUsersSetting}>
+                <ManageAccountsIcon />
+                <ButtonInfo >  Users management</ButtonInfo>
+              </SideButton>
+            </Section>
+
+            <Section>
+              <SideButton onClick={handleToCreateNewUser}>
+                <PersonAddIcon />
+                <ButtonInfo >  Create new user</ButtonInfo>
+              </SideButton>
+            </Section>
+          </>
+          : ''}
         <Divider />
         <Section>
           <SideButton onClick={handleToSetting}>
@@ -367,6 +408,25 @@ const FrontPageSideBar = () => {
             <ButtonInfo>  Liked</ButtonInfo>
           </SideButton>
         </Section>
+        {currentUser?.role === 'Admin' ?
+          <>
+            <Divider />
+            <Typography sx={{ p: '6px 8px ' }} >Admin management</Typography>
+            <Section>
+              <SideButton onClick={handleToUsersSetting}>
+                <ManageAccountsIcon />
+                <ButtonInfo >  Users management</ButtonInfo>
+              </SideButton>
+            </Section>
+
+            <Section>
+              <SideButton onClick={handleToCreateNewUser}>
+                <PersonAddIcon />
+                <ButtonInfo >  Create new user</ButtonInfo>
+              </SideButton>
+            </Section>
+          </>
+          : ''}
         <Divider />
         <Section>
           <SideButton onClick={handleToSetting}>
@@ -374,7 +434,7 @@ const FrontPageSideBar = () => {
             <ButtonInfo >  Settings</ButtonInfo>
           </SideButton>
         </Section>
-      </Box>
+      </Box >
     )
   }
 
@@ -478,14 +538,27 @@ const FrontPageSideBar = () => {
           <IconButton color="primary" onClick={handleToLiked}>
             <FavoriteIcon color='primary' sx={{ fontSize: '1.3rem' }} />
           </IconButton>
-
         </Section>
+        {currentUser?.role === 'Admin' ?
+          <>
+            <Divider />
+            <Section>
+              <IconButton color="primary" onClick={handleToUsersSetting}>
+                <ManageAccountsIcon color='primary' />
+              </IconButton>
+            </Section>
+            <Section>
+              <IconButton color="primary" onClick={handleToCreateNewUser}>
+                <PersonAddIcon color='primary' />
+              </IconButton>
+            </Section>
+          </>
+          : ''}
         <Divider />
         <Section>
           <IconButton color="primary" onClick={handleToSetting}>
             <SettingsIcon color='primary' />
           </IconButton>
-
         </Section>
       </Box >
     )
