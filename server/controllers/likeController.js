@@ -82,6 +82,36 @@ const getBlogsForLikedList = async (req, res) => {
     }
   ])
 
+  const likeData = await Like.aggregate([
+    {
+      $match: {
+        liked_by_user_id: isUserExist._id
+      }
+    },
+    {
+      $lookup: {
+        from: 'blogs',
+        localField: 'blog_id',
+        foreignField: '_id',
+        as: 'blog'
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        blog_id: 1,
+        blog_owner: 1,
+        liked_by_user_id: 1,
+        is_like: 1,
+        images: '$blog.images',
+        createdAt: 1,
+        updatedAt: 1,
+        __v: 1
+      },
+    },
+  ]).sort({ createdAt: -1 })
+
+  console.log(likeData)
 
   const blogsWithLikes = await listOfBlogs.map(blog => {
     const findMatch = likes.find(like => like.blog_id.toString() === blog._id.toString())
