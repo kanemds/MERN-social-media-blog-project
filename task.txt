@@ -48,6 +48,9 @@ subscribePage
 [x]   able to search
 [x]   display subscribed time
 [x]   each blog avatar icon can navigate to selected blogger home page
+[x]    display avatar
+[x]    display number of blogs
+[x]    display number of subscribers
 
 bookmarkPage
 [x]   displayBlogs
@@ -64,6 +67,8 @@ likePage
 [x]   able to search
 [x]   display liked time
 [x]   each blog avatar icon can navigate to selected blogger home page
+[] liked amount
+
 
 calender
 [x] display selected day
@@ -94,6 +99,3 @@ navbar
 [x] display avatar if user login
 
 
-[] liked amount
-[] show subscribe amount on subscribe page
-[] show total of blogs on subscribe page
