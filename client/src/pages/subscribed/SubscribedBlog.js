@@ -22,6 +22,7 @@ import img from './Dtqnxj1W4AAgFut.jpg'
 import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined'
 import useTimeDisplay from '../../hooks/useTimeDisplay'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import useNumberDisplay from '../../hooks/useNumberDisplay'
 
 const iconStyle = {
   padding: '0px',
@@ -48,7 +49,11 @@ const styleDelete = {
 
 export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, removeMessage, isDeleteSubscribedLoading }) {
 
+  console.log(blog)
+
   const dispatch = useDispatch()
+  const numberOfSubscribers = useNumberDisplay(blog.countSubscribers ? blog.countSubscribers : 0)
+  const numberOfBlogs = useNumberDisplay(blog.countBlogs ? blog.countBlogs : 0)
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -198,6 +203,13 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
             variant='h5'
           >
             {blog.username}
+          </Typography>
+
+          <Typography color='black'>
+            subscribers {numberOfSubscribers}
+          </Typography>
+          <Typography color='black'>
+            blogs {numberOfBlogs}
           </Typography>
           <Button
             onMouseOver={() => setIsClick(true)}
