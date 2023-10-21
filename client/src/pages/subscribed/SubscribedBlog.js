@@ -49,7 +49,6 @@ const styleDelete = {
 
 export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, removeMessage, isDeleteSubscribedLoading }) {
 
-  console.log(blog)
 
   const dispatch = useDispatch()
   const numberOfSubscribers = useNumberDisplay(blog.countSubscribers ? blog.countSubscribers : 0)

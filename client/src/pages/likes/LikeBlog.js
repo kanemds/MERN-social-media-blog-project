@@ -45,6 +45,8 @@ const styleDelete = {
 
 export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, isDeleteLikeLoading }) {
 
+  console.log(blog)
+
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
@@ -198,7 +200,12 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
 
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
               >
-                <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+                {blog?.avatar ?
+                  <Avatar src={blog.avatar} />
+                  :
+                  <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+                }
+
               </IconButton>
             </Box>
 
