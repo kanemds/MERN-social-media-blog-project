@@ -61,7 +61,7 @@ const getBlogsForSubscribedList = async (req, res) => {
         username: '$userDetails.username', // Include the username
         avatar: '$userDetails.avatar',
         // returns the size (number of elements) of that array. 
-        countSubscribers: { $size: '$subscriber' },
+        count_subscribers: { $size: '$subscriber' },
         countBlogs: { $size: '$blogs' },
         __v: 1
       },

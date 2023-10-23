@@ -51,7 +51,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
 
 
   const dispatch = useDispatch()
-  const numberOfSubscribers = useNumberDisplay(blog.countSubscribers ? blog.countSubscribers : 0)
+  const numberOfSubscribers = useNumberDisplay(blog.count_subscribers ? blog.count_subscribers : 0)
   const numberOfBlogs = useNumberDisplay(blog.countBlogs ? blog.countBlogs : 0)
 
   const navigate = useNavigate()

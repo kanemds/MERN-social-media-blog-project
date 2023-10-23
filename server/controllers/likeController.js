@@ -119,9 +119,6 @@ const getBlogsForLikedList = async (req, res) => {
       $unwind: '$user'
     },
     {
-      $unwind: '$like'
-    },
-    {
       $project: {
         _id: 1,
         blog_id: 1,
@@ -133,6 +130,7 @@ const getBlogsForLikedList = async (req, res) => {
         blog_owner_avatar: '$user.avatar',
         text: '$blog.text',
         title: '$blog.title',
+        count_likes: { $size: '$like' },
         createdAt: 1,
         updatedAt: 1,
         __v: 1
@@ -140,25 +138,14 @@ const getBlogsForLikedList = async (req, res) => {
     },
   ]).sort({ createdAt: -1 })
 
-
-
-  const blogsWithLikes = await listOfBlogs.map(blog => {
-    const findMatch = likes.find(like => like.blog_id.toString() === blog._id.toString())
-    const timeConvert = new Date(Date.parse(findMatch?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
-    return { ...blog, isLike: findMatch.is_like, likeId: findMatch._id.toString(), likedAt: timeConvert, addedBy: findMatch.createdAt }
-  })
-
-  const date = likeData.map(blog => {
+  const collectionLikeData = likeData.map(blog => {
     const timeConvert = new Date(Date.parse(blog?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
     return { ...blog, likedAt: timeConvert, addedBy: blog.createdAt }
   })
 
-  console.log(date)
+  console.log(collectionLikeData)
 
-
-  const decOrderBlogs = await blogsWithLikes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-
-  res.status(200).json(date)
+  res.status(200).json(collectionLikeData)
 }
 
 // @desc added a like to specific blog
