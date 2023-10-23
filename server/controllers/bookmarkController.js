@@ -31,6 +31,60 @@ const getBlogsForBookmarkList = async (req, res) => {
     }
   ])
 
+  const bookmarkData = await Bookmark.aggregate([
+    {
+      $match: {
+        bookmark_by_user_id: isUserExist._id
+      }
+    },
+    {
+      $lookup: {
+        from: 'blogs',
+        localField: 'blog_id',
+        foreignField: '_id',
+        as: 'blog'
+      }
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'blog_owner_id',
+        foreignField: '_id',
+        as: 'user'
+      }
+    },
+    {
+      $unwind: '$blog'
+    },
+    {
+      $unwind: '$user'
+    },
+    {
+      $project: {
+        _id: 1,
+        blog_id: 1,
+        blog_owner_id: 1,
+        bookmark_by_user_id: 1,
+        is_bookmark: 1,
+        images: '$blog.images',
+        blog_username: '$user.username',
+        blog_owner_avatar: '$user.avatar',
+        text: '$blog.text',
+        title: '$blog.title',
+        createdAt: 1,
+        updatedAt: 1,
+        __v: 1
+      },
+    },
+  ]).sort({ createdAt: -1 })
+
+  const collectionBookmarkData = bookmarkData.map(blog => {
+    const timeConvert = new Date(Date.parse(blog?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+    return { ...blog, bookmarkedAt: timeConvert, addedBy: blog.createdAt }
+  })
+
+  console.log(collectionBookmarkData)
+
   const blogsWithBookmarks = await listOfBlogs.map(blog => {
     const findMatch = bookmarks.find(bookmark => bookmark.blog_id.toString() === blog._id.toString())
     const timeConvert = new Date(Date.parse(findMatch?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
@@ -38,7 +92,7 @@ const getBlogsForBookmarkList = async (req, res) => {
   })
 
   const decOrderBlogs = await blogsWithBookmarks?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-  res.status(200).json(decOrderBlogs)
+  res.status(200).json(collectionBookmarkData)
 }
 
 // @desc create a bookmark

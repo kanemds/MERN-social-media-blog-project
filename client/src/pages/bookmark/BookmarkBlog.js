@@ -47,6 +47,9 @@ const styleDelete = {
 
 export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeMessage, isDeleteBookmarkLoading }) {
 
+
+  console.log(blog)
+
   const navigate = useNavigate()
   const { username, userId } = useAuth()
   const { pathname } = useLocation()
@@ -54,12 +57,13 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [isClick, setIsClick] = useState(false)
-  const [isFavorite, setIsFavorite] = useState(blog?.isBookmark || null)
+  const [isFavorite, setIsFavorite] = useState(blog?.is_bookmark || null)
   const [deleteBookmarkOpen, setDeleteBookmarkOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isDeleteBookmarkReady, setIsDeleteBookmarkReady] = useState(false)
   const [timeDisplay, setTimeDisplay] = useState(useTimeDisplay(blog.addedBy) || null)
+  const [avatar, setAvatar] = useState(blog.blog_owner_avatar || null)
 
   useEffect(() => {
     if (isDeleteBookmarkReady && removeMessage) {
@@ -88,7 +92,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
 
   const handleToSelectedBlog = () => {
     if (!isClick) {
-      navigate(`/blogs/post/${blog.id}`)
+      navigate(`/blogs/post/${blog.blog_id}`)
     }
   }
 
@@ -99,13 +103,13 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
 
   const handleDeleteLikeConfirm = async (e) => {
     e.preventDefault()
-    await deleteBookmark({ blogId: blog.id, id: blog.bookmarkId })
+    await deleteBookmark({ blogId: blog.blog_id, id: blog._id })
   }
 
 
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.user}`)
+      navigate(`/blogs/user/${blog.blog_owner_id}`)
     }
   }
 
@@ -200,7 +204,12 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
 
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
               >
-                <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+                {avatar ?
+                  <Avatar src={avatar} />
+                  :
+                  <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+                }
+
               </IconButton>
             </Box>
 
