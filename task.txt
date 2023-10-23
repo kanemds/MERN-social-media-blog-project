@@ -59,6 +59,7 @@ bookmarkPage
 [x]   able to search 
 [x]   display bookmarked time
 [x]   each blog avatar icon can navigate to selected blogger home page
+[]   blogger avatar
 
 likePage
 [x]   displayBlogs
@@ -67,7 +68,7 @@ likePage
 [x]   able to search
 [x]   display liked time
 [x]   each blog avatar icon can navigate to selected blogger home page
-[] liked amount
+[x] liked amount
 
 
 calender

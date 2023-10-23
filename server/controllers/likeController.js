@@ -66,21 +66,6 @@ const getBlogsForLikedList = async (req, res) => {
   const likes = await Like.find({ liked_by_user_id: isUserExist._id }).lean().exec()
 
   if (!likes.length || !likes) return res.status(200).json([])
-  // filter and get blog_id
-  const listOfBlogId = await likes.map(like => {
-    return like.blog_id
-  })
-
-  // find the match blog.id from Blog collection
-  const listOfBlogs = await Blog.aggregate([
-    {
-      $match: {
-        _id: {
-          $in: listOfBlogId // Match documents where blog_id is in listOfBlogIds
-        }
-      }
-    }
-  ])
 
   const likeData = await Like.aggregate([
     {
