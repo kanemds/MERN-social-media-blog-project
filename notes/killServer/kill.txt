@@ -12,4 +12,4 @@
 
 3. kill
 
-  kill -9 {process ID}
+  kill -9 {PID}

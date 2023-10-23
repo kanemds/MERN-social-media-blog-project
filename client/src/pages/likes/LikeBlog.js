@@ -56,12 +56,13 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [isClick, setIsClick] = useState(false)
-  const [isLiked, setIsLiked] = useState(blog.isLike || null)
+  const [isLiked, setIsLiked] = useState(blog.is_like || null)
   const [deleteLikeOpen, setDeleteLikeOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isDeleteLikeReady, setIsDeleteLikeReady] = useState(false)
   const [timeDisplay, setTimeDisplay] = useState(useTimeDisplay(blog.addedBy) || null)
+  const [avatar, setAvatar] = useState(blog.blog_owner_avatar || null)
 
   useEffect(() => {
     if (isDeleteLikeReady && removeMessage) {
@@ -200,8 +201,8 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
 
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
               >
-                {blog?.avatar ?
-                  <Avatar src={blog.avatar} />
+                {avatar ?
+                  <Avatar src={avatar} />
                   :
                   <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
                 }
