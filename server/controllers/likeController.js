@@ -97,6 +97,31 @@ const getBlogsForLikedList = async (req, res) => {
       }
     },
     {
+      $lookup: {
+        from: 'users',
+        localField: 'blog_owner',
+        foreignField: '_id',
+        as: 'user'
+      }
+    },
+    {
+      $lookup: {
+        from: 'likes',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'like'
+      }
+    },
+    {
+      $unwind: '$blog'
+    },
+    {
+      $unwind: '$user'
+    },
+    {
+      $unwind: '$like'
+    },
+    {
       $project: {
         _id: 1,
         blog_id: 1,
@@ -104,6 +129,10 @@ const getBlogsForLikedList = async (req, res) => {
         liked_by_user_id: 1,
         is_like: 1,
         images: '$blog.images',
+        blog_username: '$user.username',
+        blog_owner_avatar: '$user.avatar',
+        text: '$blog.text',
+        title: '$blog.title',
         createdAt: 1,
         updatedAt: 1,
         __v: 1
@@ -111,7 +140,7 @@ const getBlogsForLikedList = async (req, res) => {
     },
   ]).sort({ createdAt: -1 })
 
-  console.log(likeData)
+
 
   const blogsWithLikes = await listOfBlogs.map(blog => {
     const findMatch = likes.find(like => like.blog_id.toString() === blog._id.toString())
@@ -119,9 +148,17 @@ const getBlogsForLikedList = async (req, res) => {
     return { ...blog, isLike: findMatch.is_like, likeId: findMatch._id.toString(), likedAt: timeConvert, addedBy: findMatch.createdAt }
   })
 
+  const date = likeData.map(blog => {
+    const timeConvert = new Date(Date.parse(blog?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+    return { ...blog, likedAt: timeConvert, addedBy: blog.createdAt }
+  })
+
+  console.log(date)
+
+
   const decOrderBlogs = await blogsWithLikes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
-  res.status(200).json(decOrderBlogs)
+  res.status(200).json(date)
 }
 
 // @desc added a like to specific blog
@@ -131,7 +168,6 @@ const addedLike = async (req, res) => {
   const { blog_id, user_id, is_like } = req.body
 
   if (!blog_id || !user_id || !is_like) return res.status(200).json({ message: 'All fields are required' })
-
   const blog = await Blog.findById(blog_id).lean().exec()
 
   if (!blog) return res.status(404).json({ message: 'net work error, please try again' })
