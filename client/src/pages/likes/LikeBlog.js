@@ -17,6 +17,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import { red, pink, yellow, orange } from '@mui/material/colors'
 import { useDispatch } from 'react-redux'
 import useTimeDisplay from '../../hooks/useTimeDisplay'
+import useNumberDisplay from '../../hooks/useNumberDisplay'
 
 
 
@@ -48,10 +49,12 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
   console.log(blog)
 
   const dispatch = useDispatch()
-
   const navigate = useNavigate()
   const { username, userId } = useAuth()
   const { pathname } = useLocation()
+
+  const numberOfLikes = useNumberDisplay(blog.count_likes ? blog.count_likes : 0)
+
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
@@ -91,7 +94,7 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
 
   const handleToSelectedBlog = () => {
     if (!isClick) {
-      navigate(`/blogs/post/${blog.id}`)
+      navigate(`/blogs/post/${blog.blog_id}`)
     }
   }
 
@@ -101,12 +104,12 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
 
   const handleDeleteLikeConfirm = async (e) => {
     e.preventDefault()
-    await deleteLike({ id: blog.likeId, blogId: blog._id })
+    await deleteLike({ id: blog.id, blogId: blog.blog_id })
   }
 
   const handleUserPage = () => {
     if (isClick) {
-      navigate(`/blogs/user/${blog.user}`)
+      navigate(`/blogs/user/${blog.blog_owner}`)
     }
   }
 
@@ -258,6 +261,9 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
                     <FavoriteBorderIcon sx={{ fontSize: '30px', color: '#bdbdbd' }} />
                   }
                 </IconButton>
+                <Typography color='black' sx={{ ml: 1 }}>
+                  {numberOfLikes}
+                </Typography>
 
               </Box>
             </Box>
