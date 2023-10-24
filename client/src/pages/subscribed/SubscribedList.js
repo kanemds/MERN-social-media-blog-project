@@ -9,12 +9,6 @@ import DehazeIcon from '@mui/icons-material/Dehaze'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import useAuth from '../../hooks/useAuth'
 import LoadingSpinner from '../../components/LoadingSpinner'
-import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
-import UpgradeOutlinedIcon from '@mui/icons-material/UpgradeOutlined'
-import VerticalAlignBottomOutlinedIcon from '@mui/icons-material/VerticalAlignBottomOutlined'
-import VerticalAlignTopOutlinedIcon from '@mui/icons-material/VerticalAlignTopOutlined'
-import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
-import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
 import { set } from 'lodash'
@@ -59,8 +53,6 @@ const PreView = styled(Button)({
 const buttonStyle = {
   padding: '4px',
 }
-
-
 
 
 const SubscribedList = () => {
@@ -134,6 +126,10 @@ const SubscribedList = () => {
       setCurrentSubscribed(descendingOrder)
       setIsDesc(true)
     }
+  }
+
+  const handleAllBlogs = () => {
+    setIsSearch(false)
   }
 
   const handleSearch = () => {
@@ -226,20 +222,20 @@ const SubscribedList = () => {
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
 
-          <Box>
-            {!isDesc ?
-              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
-                <KeyboardDoubleArrowDownIcon />
-                DESC
-              </Button>
-              :
-              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
+          <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAllBlogs}>All</Button>
+          {!isDesc ?
+            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
+              <KeyboardDoubleArrowDownIcon />
+              DESC
+            </Button>
+            :
+            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
 
-                <KeyboardDoubleArrowUpIcon />
-                ACES
-              </Button>
-            }
-          </Box>
+              <KeyboardDoubleArrowUpIcon />
+              ACES
+            </Button>
+          }
+
         </Box>
       </Box>
       <Box sx={{ pl: 2, pr: 2 }}>

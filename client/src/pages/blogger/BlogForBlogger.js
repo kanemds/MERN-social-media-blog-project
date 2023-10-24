@@ -137,16 +137,12 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [isDeleteReady, setIsDeleteReady] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [totalLikes, setTotalLieks] = useState(number || 0)
-  // const [isLiked, setIsLiked] = useState(blog?.like?.isLike || false)
-  // const [isBookmarked, setIsBookmarked] = useState(blog?.bookmark?.isBookmarked || false)
+  const [totalLikes, setTotalLikes] = useState(number || 0)
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
   const sevenDays = 60 * 60 * 24 * 1000 * 7
 
   const timeInMillisecond = current - postedDay
-
-  console.log(blog)
 
   useEffect(() => {
     if (isDeleteReady && removeMessage) {
