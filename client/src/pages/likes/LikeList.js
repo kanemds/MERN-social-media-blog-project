@@ -90,7 +90,6 @@ const LikeList = () => {
     })
   })
 
-
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentLikes, setCurrentLikes] = useState(null)
   const [searchInput, setSearchInput] = useState('')
