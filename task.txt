@@ -59,7 +59,7 @@ bookmarkPage
 [x]   able to search 
 [x]   display bookmarked time
 [x]   each blog avatar icon can navigate to selected blogger home page
-[]   blogger avatar
+[x]   blogger avatar
 
 likePage
 [x]   displayBlogs

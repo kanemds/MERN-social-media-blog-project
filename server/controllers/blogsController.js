@@ -325,25 +325,6 @@ const getSelectedBlogger = async (req, res) => {
     {
       $unwind: '$userDetails'
     },
-    // {
-    //   $lookup: {
-    //     from: 'blogs',
-    //     localField: '_id',
-    //     foreignField: '_id',
-    //     as: 'blog'
-    //   }
-    // },
-    // {
-    //   $unwind: '$blog'
-    // },
-    {
-      $lookup: {
-        from: 'subscribes',
-        localField: 'user',
-        foreignField: 'blog_owner_id',
-        as: 'total_subscriptions'
-      },
-    },
     {
       $lookup: {
         from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
@@ -442,12 +423,12 @@ const getSelectedBlogger = async (req, res) => {
           $cond: {
             if: { $eq: [{ $size: '$bookmark' }, 0] },
             then: {
-              bookmarkId: null,
-              isBookmarked: false
+              bookmark_id: null,
+              is_bookmarked: false
             }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
             else: {
-              bookmarkId: { $arrayElemAt: ['$bookmark._id', 0] },
-              isBookmarked: { $arrayElemAt: ['$bookmark.is_bookmark', 0] }
+              bookmark_id: { $arrayElemAt: ['$bookmark._id', 0] },
+              is_bookmarked: { $arrayElemAt: ['$bookmark.is_bookmark', 0] }
 
             }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
           }
@@ -459,7 +440,6 @@ const getSelectedBlogger = async (req, res) => {
         subscribe_data: {
           subscribe_id: { $arrayElemAt: ['$subscriptions._id', 0] },
           is_subscribed: { $arrayElemAt: ['$subscriptions.is_subscribed', 0] },
-          total_subscriptions: { $size: '$total_subscriptions' }
         },
       }
     },
@@ -482,33 +462,31 @@ const getSelectedBlogger = async (req, res) => {
         __v: 1
       }
     },
-
   ]).sort({ createdAt: -1 })
-
-  console.log(blogs)
 
   const totalSubscribers = await Subscribe.find({ blog_owner_id: id }).count().exec()
   const totalBlogs = blogs.length
 
-  const promises = blogs.map(async blog => {
-    const like = await currentLike(blog._id, findUser._id)
-    const subscribe = await currentSubscribe(blog, findUser._id)
-    const bookmark = await currentBookmark(blog._id, findUser._id)
+  // const promises = blogs.map(async blog => {
+  //   const like = await currentLike(blog._id, findUser._id)
+  //   const subscribe = await currentSubscribe(blog, findUser._id)
+  //   const bookmark = await currentBookmark(blog._id, findUser._id)
 
-    const [likeResult, subscribeResult, bookmarkResult] = await Promise.all([
-      like,
-      subscribe,
-      bookmark,
-    ])
+  //   const [likeResult, subscribeResult, bookmarkResult] = await Promise.all([
+  //     like,
+  //     subscribe,
+  //     bookmark,
+  //   ])
 
-    return { ...blog, like: likeResult, subscribe: subscribeResult, bookmark: bookmarkResult }
-  })
+  //   return { ...blog, like: likeResult, subscribe: subscribeResult, bookmark: bookmarkResult }
+  // })
 
-  const info = await Promise.all(promises)
+  // const info = await Promise.all(promises)
 
   // loginUser = { ...blog, like, subscribe, bookmark, }
   // console.log('refetch single Blog')
-  res.status(200).json({ numberOfBlogs: totalBlogs, numberOfSubscribers: totalSubscribers, blogs: info, bloggerName: findBlogger.username })
+  // res.status(200).json({ numberOfBlogs: totalBlogs, numberOfSubscribers: totalSubscribers, blogs: info, bloggerName: findBlogger.username })
+  res.status(200).json({ blogs, number_of_blogs: totalBlogs, number_of_subscribers: totalSubscribers, blogger_name: findBlogger.username, blogger_avatar: findBlogger.avatar })
 }
 
 // @desc Get frontpage , scroll down for pages limited blogs

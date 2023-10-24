@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 
-import { Box, Button, Paper, Container, Typography, Toolbar, useScrollTrigger, IconButton, CardMedia } from '@mui/material'
+import { Box, Button, Paper, Container, Typography, Toolbar, useScrollTrigger, IconButton, CardMedia, SvgIcon } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import { blue } from '@mui/material/colors'
@@ -24,6 +24,7 @@ import img from './Dtqnxj1W4AAgFut.jpg'
 import BlogForBlogger from './BlogForBlogger'
 import useAuth from '../../hooks/useAuth'
 import useNumberDisplay from '../../hooks/useNumberDisplay'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -97,6 +98,7 @@ const BloggerHomePage = () => {
     })
   })
 
+
   const [isSelected, setIsSelected] = useState('All')
   const [isDesc, setIsDesc] = useState(true) // high to low
   const [currentUserBlogs, setCurrentUserBlogs] = useState([])
@@ -107,27 +109,30 @@ const BloggerHomePage = () => {
   const [isSearch, setIsSearch] = useState(false)
   const [refresh, setRefresh] = useState(false)
   const [bloggerUsername, setBloggerUsername] = useState('')
+  const [bloggerAvatar, setBloggerAvatar] = useState(null)
   const [isReady, setIsReady] = useState(false)
   const [updateLoading, setUpdateLoading] = useState(false)
 
   useEffect(() => {
     if (isSuccess || refresh) {
       setCurrentUserBlogs(Object.values(userBlogs?.blogs))
-      setBloggerUsername(userBlogs?.bloggerName)
-      setNumberOfSubscribers(userBlogs?.numberOfSubscribers)
-      setNumberOfBlogs(userBlogs?.numberOfBlogs)
+      setBloggerUsername(userBlogs?.blogger_name)
+      setNumberOfSubscribers(userBlogs?.number_of_subscribers)
+      setNumberOfBlogs(userBlogs?.number_of_blogs)
+      setBloggerAvatar(userBlogs?.blogger_avatar)
       setRefresh(false)
       setIsReady(true)
     }
     if (updateLoading) {
 
       setCurrentUserBlogs(Object.values(userBlogs?.blogs))
-      setBloggerUsername(userBlogs?.bloggerName)
-      setNumberOfSubscribers(userBlogs?.numberOfSubscribers)
-      setNumberOfBlogs(userBlogs?.numberOfBlogs)
+      setBloggerUsername(userBlogs?.blogger_name)
+      setNumberOfSubscribers(userBlogs?.number_of_subscribers)
+      setNumberOfBlogs(userBlogs?.number_of_blogs)
+      setBloggerAvatar(userBlogs?.blogger_avatar)
       setTimeout(() => {
         setUpdateLoading(false)
-      }, 1000)
+      }, 500)
     }
   }, [isSuccess, refresh, userBlogs, updateLoading])
 
@@ -237,12 +242,24 @@ const BloggerHomePage = () => {
     <Box sx={{ width: '100%' }} >
       <Box sx={{ height: 120, width: '100%' }}>
         <Box sx={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'start-left', pl: 2, pr: 2 }}>
-          <CardMedia
-            sx={{ height: '100%', width: 'auto', borderRadius: '50%', objectFit: 'scale-down' }}
-            component="img"
-            image={img}
-            alt={'random'}
-          />
+          {bloggerAvatar ?
+            <CardMedia
+              sx={{ height: 116.67, width: 116.67, mr: '23.34px', borderRadius: '50%', objectFit: 'scale-down' }}
+              component="img"
+              image={bloggerAvatar}
+              alt={''}
+            />
+            :
+            <SvgIcon sx={{ fontSize: 140, p: 0, m: 0, color: '#bdbdbd' }} >
+              <svg
+                viewBox="2 0 24 24"
+              >
+                <AccountCircleIcon />
+              </svg>
+            </SvgIcon>
+
+          }
+
           <Box sx={{ display: 'flex', flexDirection: 'column', ml: 2 }}>
             <Typography variant='h5' sx={{
               width: 300,

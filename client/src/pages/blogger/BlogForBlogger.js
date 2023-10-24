@@ -119,7 +119,10 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
   ] = useDeleteBookmarkMutation()
 
 
-  const number = useNumberDisplay(blog?.like?.totalLikes)
+  // const number = useNumberDisplay(blog?.like?.totalLikes)
+  const number = useNumberDisplay(blog?.like_data?.total_likes)
+  const [isLiked, setIsLiked] = useState(blog?.like_data?.is_liked || false)
+  const [isBookmarked, setIsBookmarked] = useState(blog?.bookmark_data?.is_bookmarked || false)
 
   const navigate = useNavigate()
   const { username, userId } = useAuth()
@@ -134,15 +137,14 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
   const [isDeleteReady, setIsDeleteReady] = useState(null)
   const [loading, setLoading] = useState(false)
   const [totalLikes, setTotalLieks] = useState(number || 0)
-  const [isLiked, setIsLiked] = useState(blog?.like?.isLike || false)
-  const [isBookmarked, setIsBookmarked] = useState(blog?.bookmark?.isBookmarked || false)
+  // const [isLiked, setIsLiked] = useState(blog?.like?.isLike || false)
+  // const [isBookmarked, setIsBookmarked] = useState(blog?.bookmark?.isBookmarked || false)
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
   const sevenDays = 60 * 60 * 24 * 1000 * 7
 
   const timeInMillisecond = current - postedDay
 
-  console.log(username)
   console.log(blog)
 
   useEffect(() => {
@@ -232,7 +234,7 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
         await addBookmark({ blog_id: blog._id, bookmark_by_user_id: userId, username, is_bookmark: true })
       } else {
         setUpdateLoading(true)
-        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: blog.bookmark.bookmarkId, blogId: blog._id })
+        const { data: deleteBookmarkInfo } = await deleteBookmark({ id: blog.bookmark_data.bookmark_id, blogId: blog._id })
         console.log(deleteBookmarkInfo)
       }
     }
@@ -250,7 +252,7 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
         await addedLike({ blog_id: blog._id, user_id: userId, username, is_like: true })
       } else {
         setUpdateLoading(true)
-        const { data: deleteLikeInfo } = await deleteLike({ id: blog.like.likeId, blogId: blog._id, })
+        const { data: deleteLikeInfo } = await deleteLike({ id: blog.like_data.like_id, blogId: blog._id, })
         console.log(deleteLikeInfo)
       }
     }
