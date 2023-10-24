@@ -248,6 +248,9 @@ const getSingleBlog = async (req, res) => {
       }
     },
     {
+      $count: "totalBlogs"
+    },
+    {
       $lookup: {
         from: 'users', // Replace with the actual name of your "User" collection in MongoDB
         localField: 'user',
@@ -322,16 +325,24 @@ const getSelectedBlogger = async (req, res) => {
     {
       $unwind: '$userDetails'
     },
+    // {
+    //   $lookup: {
+    //     from: 'blogs',
+    //     localField: '_id',
+    //     foreignField: '_id',
+    //     as: 'blog'
+    //   }
+    // },
+    // {
+    //   $unwind: '$blog'
+    // },
     {
       $lookup: {
-        from: 'blogs',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'blog'
-      }
-    },
-    {
-      $unwind: '$blog'
+        from: 'subscribes',
+        localField: 'user',
+        foreignField: 'blog_owner_id',
+        as: 'total_subscriptions'
+      },
     },
     {
       $lookup: {
@@ -344,11 +355,66 @@ const getSelectedBlogger = async (req, res) => {
             }
           }
         ],
-        as: 'otherSubscriptions'
+        as: 'subscriptions'
       },
     },
     {
-      $unwind: '$otherSubscriptions'
+      $lookup: {
+        from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+        let: { blog_id: '$_id' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ['$blog_id', '$$blog_id'] },
+                  { $eq: ['$blog_owner', new mongoose.Types.ObjectId(id)] },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'likes_per_blog'
+      },
+    },
+    {
+      $lookup: {
+        from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+        let: { blog_id: '$_id' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ['$blog_id', '$$blog_id'] },
+                  { $eq: ['$blog_owner', new mongoose.Types.ObjectId(id)] },
+                  { $eq: ['$liked_by_user_id', findUser._id] },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'like'
+      },
+    },
+    {
+      $addFields: {
+        like_data: {
+          $cond: {
+            if: { $eq: [{ $size: '$like' }, 0] },
+            then: {
+              like_id: null,
+              is_liked: false,
+              total_likes: { $size: '$likes_per_blog' }
+            }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+            else: {
+              like_id: { $arrayElemAt: ['$like._id', 0] },
+              is_liked: { $arrayElemAt: ['$like.is_like', 0] },
+              total_likes: { $size: '$likes_per_blog' }
+            }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
+          }
+        }
+      }
     },
     {
       $lookup: {
@@ -371,11 +437,8 @@ const getSelectedBlogger = async (req, res) => {
       },
     },
     {
-      $unwind: '$otherSubscriptions'
-    },
-    {
       $addFields: {
-        isBookmarked: {
+        bookmark_data: {
           $cond: {
             if: { $eq: [{ $size: '$bookmark' }, 0] },
             then: {
@@ -385,9 +448,19 @@ const getSelectedBlogger = async (req, res) => {
             else: {
               bookmarkId: { $arrayElemAt: ['$bookmark._id', 0] },
               isBookmarked: { $arrayElemAt: ['$bookmark.is_bookmark', 0] }
+
             }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
           }
         }
+      }
+    },
+    {
+      $addFields: {
+        subscribe_data: {
+          subscribe_id: { $arrayElemAt: ['$subscriptions._id', 0] },
+          is_subscribed: { $arrayElemAt: ['$subscriptions.is_subscribed', 0] },
+          total_subscriptions: { $size: '$total_subscriptions' }
+        },
       }
     },
     {
@@ -400,10 +473,12 @@ const getSelectedBlogger = async (req, res) => {
         createdAt: 1,
         updatedAt: 1,
         user: 1,
-        subscribe_data: '$otherSubscriptions',
-        isBookmarked: 1,
+        subscribe_data: 1,
+        bookmark_data: 1,
+        like_data: 1,
         blogger_avatar: '$userDetails.avatar',
         username: '$userDetails.username',
+
         __v: 1
       }
     },
