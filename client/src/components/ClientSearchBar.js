@@ -36,7 +36,7 @@ export default function ClientSearchBar({ setSearchInput, searchInput, handleSea
         value={searchInput}
         onChange={handleChange}
         autoComplete='true'
-        placeholder='Search Posts...'
+        placeholder='Search...'
         startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
         endAdornment={
           searchInput.length ?
