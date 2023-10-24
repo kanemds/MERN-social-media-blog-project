@@ -46,7 +46,7 @@ const styleDelete = {
 
 export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, isDeleteLikeLoading }) {
 
-  console.log(blog)
+
 
   const dispatch = useDispatch()
   const navigate = useNavigate()

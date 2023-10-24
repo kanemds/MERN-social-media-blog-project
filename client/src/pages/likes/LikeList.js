@@ -135,6 +135,9 @@ const LikeList = () => {
     }
   }
 
+  const handleAllBlogs = () => {
+    setIsSearch(false)
+  }
 
   const handleSearch = () => {
     if (!searchInput.length) return console.log('nothing')
@@ -225,20 +228,20 @@ const LikeList = () => {
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
 
-          <Box>
-            {!isDesc ?
-              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
-                <KeyboardDoubleArrowDownIcon />
-                DESC
-              </Button>
-              :
-              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
+          <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAllBlogs}>All</Button>
+          {!isDesc ?
+            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
+              <KeyboardDoubleArrowDownIcon />
+              DESC
+            </Button>
+            :
+            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
 
-                <KeyboardDoubleArrowUpIcon />
-                ACES
-              </Button>
-            }
-          </Box>
+              <KeyboardDoubleArrowUpIcon />
+              ACES
+            </Button>
+          }
+
         </Box>
       </Box>
       <Box sx={{ pl: 2, pr: 2 }}>
