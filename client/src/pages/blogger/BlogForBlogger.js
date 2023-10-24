@@ -13,7 +13,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useAsyncError, useLocation, useNavigate } from 'react-router-dom'
 import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import useAuth from '../../hooks/useAuth'
 import Modal from '@mui/material/Modal'
@@ -127,6 +127,7 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
   const navigate = useNavigate()
   const { username, userId } = useAuth()
   const { pathname } = useLocation()
+  const [avatar, setAvatar] = useState(blog?.blogger_avatar ? blog?.blogger_avatar : null)
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
@@ -339,10 +340,14 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
                 onMouseOut={() => setIsClick(false)}
                 onClick={handleUserPage}
                 disableRipple={true}
-
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
               >
-                <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+                {avatar ?
+                  <Avatar src={avatar} />
+                  :
+                  <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+                }
+
               </IconButton>
             </Box>
 

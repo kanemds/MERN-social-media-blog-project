@@ -234,6 +234,8 @@ const getSingleBlog = async (req, res) => {
   // current login username
   const { username } = req.query
 
+
+
   let loginUser
 
   const findUser = await User.findOne({ username }).lean().exec()
@@ -246,9 +248,6 @@ const getSingleBlog = async (req, res) => {
       $match: {
         _id: new mongoose.Types.ObjectId(id)
       }
-    },
-    {
-      $count: "totalBlogs"
     },
     {
       $lookup: {
@@ -272,12 +271,15 @@ const getSingleBlog = async (req, res) => {
         updatedAt: 1,
         user: 1,
         username: '$userDetails.username', // Include the username
+        avatar: '$userDetails.avatar',
         __v: 1
       },
     },
   ]).exec()
 
   if (!blog) return res.status(200).json({ message: 'No blog found' })
+
+  console.log(blog)
 
   const like = await currentLike(id, findUser._id)
   const subscribe = await currentSubscribe(blog[0], findUser._id)

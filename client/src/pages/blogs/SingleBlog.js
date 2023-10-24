@@ -119,6 +119,8 @@ const SingleBlog = () => {
     error
   } = useGetSingleBlogQuery(currentSingleBlog)
 
+  console.log(data)
+
   const [
     deleteBlog,
     {
@@ -202,6 +204,7 @@ const SingleBlog = () => {
   /////////////// add and delete subscribe ///////////////////////
 
   const [currentBlog, setCurrentBlog] = useState('')
+  const [avatar, setAvatar] = useState(null)
   const [open, setOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
@@ -219,6 +222,7 @@ const SingleBlog = () => {
   useEffect(() => {
     if (isSuccess) {
       setCurrentBlog(data)
+      setAvatar(data.avatar)
       setIsLiked(data.like.isLike)
       setLikes(data.like.totalLikes)
       setIsSubscribed(data.subscribe.isSubscribed)
@@ -437,7 +441,12 @@ const SingleBlog = () => {
               disableRipple={true}
               sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
             >
-              <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+              {avatar ?
+                <Avatar src={avatar} />
+                :
+                <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+              }
+
             </IconButton>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
               <Typography sx={{
