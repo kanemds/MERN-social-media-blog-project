@@ -66,7 +66,6 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
-        console.log(response)
         const { blogs } = response
         if (!blogs.length) {
           return response
