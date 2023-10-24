@@ -302,6 +302,9 @@ const getSelectedBlogger = async (req, res) => {
 
   if (!findUser) return res.status(200).json({ message: 'No user found' })
 
+  // findUser is loggin user
+  // id is the blogger user id
+
   const blogs = await Blog.aggregate([
     {
       $match: {
@@ -320,6 +323,74 @@ const getSelectedBlogger = async (req, res) => {
       $unwind: '$userDetails'
     },
     {
+      $lookup: {
+        from: 'blogs',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'blog'
+      }
+    },
+    {
+      $unwind: '$blog'
+    },
+    {
+      $lookup: {
+        from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+        pipeline: [
+          {
+            $match: {
+              blog_owner_id: new mongoose.Types.ObjectId(id),
+              subscribed_by_user_id: findUser._id
+            }
+          }
+        ],
+        as: 'otherSubscriptions'
+      },
+    },
+    {
+      $unwind: '$otherSubscriptions'
+    },
+    {
+      $lookup: {
+        from: 'bookmarks', // Replace with the actual name of your "Subscribe" collection in MongoDB
+        let: { blogId: '$_id' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ['$blog_id', '$$blogId'] },
+                  { $eq: ['$blog_owner_id', new mongoose.Types.ObjectId(id)] },
+                  { $eq: ['$bookmark_by_user_id', findUser._id] },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'bookmark'
+      },
+    },
+    {
+      $unwind: '$otherSubscriptions'
+    },
+    {
+      $addFields: {
+        isBookmarked: {
+          $cond: {
+            if: { $eq: [{ $size: '$bookmark' }, 0] },
+            then: {
+              bookmarkId: null,
+              isBookmarked: false
+            }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+            else: {
+              bookmarkId: { $arrayElemAt: ['$bookmark._id', 0] },
+              isBookmarked: { $arrayElemAt: ['$bookmark.is_bookmark', 0] }
+            }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
+          }
+        }
+      }
+    },
+    {
       $project: {
         _id: 1,
         title: 1,
@@ -329,11 +400,17 @@ const getSelectedBlogger = async (req, res) => {
         createdAt: 1,
         updatedAt: 1,
         user: 1,
-        username: '$userDetails.username', // Include the username
+        subscribe_data: '$otherSubscriptions',
+        isBookmarked: 1,
+        blogger_avatar: '$userDetails.avatar',
+        username: '$userDetails.username',
         __v: 1
-      },
+      }
     },
-  ]).exec()
+
+  ]).sort({ createdAt: -1 })
+
+  console.log(blogs)
 
   const totalSubscribers = await Subscribe.find({ blog_owner_id: id }).count().exec()
   const totalBlogs = blogs.length

@@ -15,22 +15,6 @@ const getBlogsForBookmarkList = async (req, res) => {
 
   if (!bookmarks.length || !bookmarks) return res.status(200).json([])
 
-  // filter and get blog_id
-  const listOfBlogId = await bookmarks.map(bookmark => {
-    return bookmark.blog_id
-  })
-
-  // find the match blog.id from Blog collection
-  const listOfBlogs = await Blog.aggregate([
-    {
-      $match: {
-        _id: {
-          $in: listOfBlogId // Match documents where blog_id is in listOfBlogIds
-        }
-      }
-    }
-  ])
-
   const bookmarkData = await Bookmark.aggregate([
     {
       $match: {
@@ -85,13 +69,6 @@ const getBlogsForBookmarkList = async (req, res) => {
 
   console.log(collectionBookmarkData)
 
-  const blogsWithBookmarks = await listOfBlogs.map(blog => {
-    const findMatch = bookmarks.find(bookmark => bookmark.blog_id.toString() === blog._id.toString())
-    const timeConvert = new Date(Date.parse(findMatch?.createdAt?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
-    return { ...blog, isBookmark: findMatch.is_bookmark, bookmarkId: findMatch._id.toString(), bookmarkedAt: timeConvert, addedBy: findMatch.createdAt }
-  })
-
-  const decOrderBlogs = await blogsWithBookmarks?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
   res.status(200).json(collectionBookmarkData)
 }
 

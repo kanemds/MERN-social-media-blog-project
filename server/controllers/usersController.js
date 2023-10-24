@@ -103,12 +103,6 @@ const createNewUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const { id, username, email, role, active, password } = req.body
 
-  console.log(id)
-  console.log(username)
-  console.log(email)
-  console.log(role)
-  console.log(active)
-
   let processedImages = null
   if (req.files) {
     const { avatar } = await req.files

@@ -100,3 +100,6 @@ navbar
 [x] display avatar if user login
 
 
+check for delete like bookmark subscribe
+
+

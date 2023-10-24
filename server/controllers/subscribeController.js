@@ -44,7 +44,7 @@ const getBlogsForSubscribedList = async (req, res) => {
         from: 'blogs',
         localField: 'blog_owner_id',
         foreignField: 'user',
-        as: 'blogs'
+        as: 'blog'
       },
     },
     {
@@ -62,7 +62,7 @@ const getBlogsForSubscribedList = async (req, res) => {
         avatar: '$userDetails.avatar',
         // returns the size (number of elements) of that array. 
         count_subscribers: { $size: '$subscriber' },
-        countBlogs: { $size: '$blogs' },
+        countBlogs: { $size: '$blog' },
         __v: 1
       },
     },
