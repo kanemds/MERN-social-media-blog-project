@@ -234,13 +234,14 @@ const getSingleBlog = async (req, res) => {
   // current login username
   const { username } = req.query
 
+  console.log(id)
 
+  let existUser
+  let currentBlog
 
-  let loginUser
-
-  const findUser = await User.findOne({ username }).lean().exec()
-
-  if (!findUser) return res.status(200).json({ message: 'No user found' })
+  if (username) {
+    existUser = await User.findOne({ username }).lean().exec()
+  }
 
   // return as an array
   const blog = await Blog.aggregate([
@@ -281,13 +282,16 @@ const getSingleBlog = async (req, res) => {
 
   console.log(blog)
 
-  const like = await currentLike(id, findUser._id)
-  const subscribe = await currentSubscribe(blog[0], findUser._id)
-  const bookmark = await currentBookmark(id, findUser._id)
+  if (blog && existUser) {
+    const like = await currentLike(id, existUser._id)
+    const subscribe = await currentSubscribe(blog[0], existUser._id)
+    const bookmark = await currentBookmark(id, existUser._id)
+    currentBlog = { ...blog[0], like, subscribe, bookmark, }
+  } else {
+    currentBlog = blog[0]
+  }
 
-  loginUser = { ...blog[0], like, subscribe, bookmark, }
-
-  res.status(200).json(loginUser)
+  res.status(200).json(currentBlog)
 }
 
 // @desc Get view blogger blogs

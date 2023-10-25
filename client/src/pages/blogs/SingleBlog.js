@@ -119,7 +119,6 @@ const SingleBlog = () => {
     error
   } = useGetSingleBlogQuery(currentSingleBlog)
 
-  console.log(data)
 
   const [
     deleteBlog,
@@ -219,15 +218,21 @@ const SingleBlog = () => {
   const numberSubscribers = useNumberDisplay(subscribers)
   const numberLikes = useNumberDisplay(likes)
 
+  console.log(currentBlog)
+
+
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && username) {
       setCurrentBlog(data)
-      setAvatar(data.avatar)
-      setIsLiked(data.like.isLike)
-      setLikes(data.like.totalLikes)
-      setIsSubscribed(data.subscribe.isSubscribed)
-      setSubscribers(data.subscribe.totalSubscribers)
-      setIsBookmarked(data.bookmark.isBookmarked)
+      setAvatar(data?.avatar)
+      setIsLiked(data?.like?.isLike)
+      setLikes(data?.like?.totalLikes)
+      setIsSubscribed(data?.subscribe?.isSubscribed)
+      setSubscribers(data?.subscribe?.totalSubscribers)
+      setIsBookmarked(data?.bookmark?.isBookmarked)
+    } else {
+      setCurrentBlog(data)
+      setAvatar(data?.avatar)
     }
   }, [isSuccess, data])
 
@@ -491,7 +496,7 @@ const SingleBlog = () => {
               </Button>
             }
             <Box sx={{ display: 'flex' }}>
-              {username !== currentBlog.username ?
+              {username !== currentBlog?.username ?
                 <IconButton
                   disableRipple
                   onClick={handleBookmark}
@@ -567,7 +572,7 @@ const SingleBlog = () => {
             variant='standard'
             fullWidth
             multiline
-            defaultValue={currentBlog.title}
+            defaultValue={currentBlog?.title}
           />
           <Divider />
           <TextField
@@ -591,7 +596,7 @@ const SingleBlog = () => {
             variant='standard'
             fullWidth
             multiline
-            defaultValue={currentBlog.text}
+            defaultValue={currentBlog?.text}
           />
         </Box>
       </Box >
