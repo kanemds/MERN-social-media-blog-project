@@ -17,12 +17,14 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         }
       }),
       keepUnusedDataFor: 300,
-      transformResponse: (response, meta, arg) => {
-        const id = response._id
-        const blog = { ...response, id: id }
-        return blog
-      },
+      // transformResponse: (response, meta, arg) => {
+      //   const id = response._id
+      //   const blog = { ...response, id: id }
+      //   return blog
+      // },
       providesTags: (result, error, arg) => {
+        // console.log(arg)
+        // console.log(result)
         return [{ type: 'Blog', id: arg.id }]
       }
     }),

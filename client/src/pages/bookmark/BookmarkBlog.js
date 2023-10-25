@@ -48,8 +48,6 @@ const styleDelete = {
 export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeMessage, isDeleteBookmarkLoading }) {
 
 
-  console.log(blog)
-
   const navigate = useNavigate()
   const { username, userId } = useAuth()
   const { pathname } = useLocation()
