@@ -73,6 +73,7 @@ const MainContent = () => {
   const dispatch = useDispatch()
   const { pageNumber } = useSelector((state) => state?.blog)
 
+
   const small = useMediaQuery('(max-width:791px)')
   const smallScreenSize = useMediaQuery('(min-width:600px)')
 
@@ -88,6 +89,7 @@ const MainContent = () => {
   const [isSearch, setIsSearch] = useState(false)
   const [products, setProducts] = useState([])
   const [newBlogData, setNewBlogData] = useState([])
+  const [maxPage, setMaxPage] = useState('')
 
   const [hasMore, setHasMore] = useState(true)
   const elementRef = useRef(null)
@@ -120,6 +122,7 @@ const MainContent = () => {
     if (paginatedIsSuccess && !username) {
       // setPaginatedBlogs(paginatedData)
       setAllBlogs(paginatedData.data)
+      setMaxPage(paginatedData?.numberOfPages)
     }
     if (paginatedIsSuccess && username) {
       // setPaginatedBlogs(paginatedData)
@@ -141,7 +144,7 @@ const MainContent = () => {
       // console.log(entries)
       if (entry.isIntersecting && hasMore) {
 
-        if (Number(pageNumber) >= Number(products?.numberOfPages)) {
+        if (Number(pageNumber) >= Number(maxPage)) {
           setHasMore(false)
         } else {
           dispatch(increment(pageNumber + 1))
@@ -211,6 +214,10 @@ const MainContent = () => {
   const sevenDays = 60 * 60 * 24 * 1000 * 7
   const recentlyUpload = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
   const recentlyUploadWithoutUser = Array.isArray(blogsWithoutUser) && blogsWithoutUser?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
+
+
+  console.log(pageNumber)
+  console.log(paginatedData)
 
   let content
 

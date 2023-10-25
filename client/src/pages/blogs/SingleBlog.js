@@ -214,12 +214,8 @@ const SingleBlog = () => {
   const [subscribers, setSubscribers] = useState(0)
   const [likes, setLikes] = useState(0)
 
-
   const numberSubscribers = useNumberDisplay(subscribers)
   const numberLikes = useNumberDisplay(likes)
-
-  console.log(currentBlog)
-
 
   useEffect(() => {
     if (isSuccess && username) {
@@ -297,7 +293,7 @@ const SingleBlog = () => {
   }
 
   const handleUserPage = () => {
-    navigate(`/blogs/user/${data.user}`)
+    navigate(`/blogs/user/${currentBlog.user}`)
   }
 
   const handleLiked = (e) => {
