@@ -13,10 +13,10 @@ import useAuth from '../../hooks/useAuth'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { increment, resetCache } from '../blogs/blogSlice'
-import { entries } from 'lodash'
+import { entries, set } from 'lodash'
 import { apiSlice } from '../../app/api/apiSlice'
 import ClientSearchBar from '../../components/ClientSearchBar'
 import MainBlog from './MainBlog'
@@ -85,29 +85,22 @@ const MainContent = () => {
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
   const [maxPage, setMaxPage] = useState('')
-
   const [hasMore, setHasMore] = useState(true)
+  const [isReFetch, setIsReFetch] = useState(false)
 
   const observer = useRef(null)
 
-  // const {
-  //   data: paginatedData,
-  //   isSuccess: paginatedIsSuccess,
-  //   isLoading: paginatedIsLoading,
-  // } = useGetPaginatedBlogsQuery(Number(pageNumber))
 
   const {
     data: paginatedData,
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
     refetch
-  } = useGetPaginatedBlogsQuery(Number(page)) // when dependency change it re-retch
-
-
-
+  } = useGetPaginatedBlogsQuery(Number(page), {
+    refetchOnMountOrArgChange: true
+  }) // when dependency change it re-retch
 
   useEffect(() => {
-    console.log('out')
     if (page === paginatedData?.numberOfPages) {
       setHasMore(false)
     }
@@ -118,18 +111,13 @@ const MainContent = () => {
         const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
         setAllBlogs([...allBlogs, ...withoutUser])
       }
-    } else {
-      console.log('re-fetch')
-      refetch()
     }
-
   }, [paginatedData, username]) // needs paginatedData as dependency for the latest update
 
 
-
-  console.log(paginatedData)
-  console.log(page)
-  console.log(allBlogs)
+  console.log('paginatedData', paginatedData) //isExist
+  // console.log('paginatedIsSuccess', paginatedIsSuccess)
+  // console.log('allBlogs', allBlogs)
 
   const handleNext = () => {
     setPage(prev => prev + 1)
