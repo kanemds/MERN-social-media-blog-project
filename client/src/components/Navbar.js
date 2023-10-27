@@ -53,7 +53,7 @@ export default function Navbar({ handleLogout, isSuccess }) {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/')
+      navigate('/', { state: 'out' })
     }
   }, [isSuccess, navigate])
 

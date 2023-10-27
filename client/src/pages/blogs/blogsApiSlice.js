@@ -121,26 +121,26 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
           return [{ type: 'Blog', id: 'LIST' }]
         }
       },
-      // Only have one cache entry because the arg always maps to one string
-      serializeQueryArgs: ({ endpointName }) => {
-        return endpointName
-      },
-      // Always merge incoming data to the cache entry
-      merge: (currentCache, newItems) => {
-        // const checkDuplicate = newItems.filter(currentCache.data)
-        if (!currentCache || !newItems?.data) {
-          return currentCache
-        } else {
-          // return currentCache.data.push(...newItems?.data) // throw a promise error
-          const updatedData = [...currentCache.data, ...newItems.data]
-          return { ...currentCache, data: updatedData }
-        }
-      },
-      // Refetch when the page arg changes,is the argument in this case: pageNumber
-      forceRefetch({ currentArg, previousArg }) {
+      // // Only have one cache entry because the arg always maps to one string
+      // serializeQueryArgs: ({ endpointName }) => {
+      //   return endpointName
+      // },
+      // // Always merge incoming data to the cache entry
+      // merge: (currentCache, newItems) => {
+      //   // const checkDuplicate = newItems.filter(currentCache.data)
+      //   if (!currentCache || !newItems?.data) {
+      //     return currentCache
+      //   } else {
+      //     // return currentCache.data.push(...newItems?.data) // throw a promise error
+      //     const updatedData = [...currentCache.data, ...newItems.data]
+      //     return { ...currentCache, data: updatedData }
+      //   }
+      // },
+      // // Refetch when the page arg changes,is the argument in this case: pageNumber
+      // forceRefetch({ currentArg, previousArg }) {
 
-        return currentArg !== previousArg
-      },
+      //   return currentArg !== previousArg
+      // },
     }),
     addNewBlog: builder.mutation({
       query: blogData => ({

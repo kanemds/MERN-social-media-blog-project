@@ -652,8 +652,12 @@ const getPaginatedBlogs = async (req, res) => {
   //return  1
   const { page } = req.query
 
+  console.log(page)
 
-  if (page === undefined) return res.status(400).json([])
+
+  if (!page || isNaN(page) || page < 1) {
+    return res.status(400).json({ error: 'Invalid page parameter' })
+  }
 
   const limit = 6
 
@@ -694,8 +698,11 @@ const getPaginatedBlogs = async (req, res) => {
     },
   ])
     .sort({ createdAt: -1 }) // Sort by _id in descending order
-    .limit(limit) // Limit the number of results
     .skip(startIndex) // Skip a certain number of results
+    .limit(limit) // Limit the number of results
+
+
+  console.log(blogs)
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
 

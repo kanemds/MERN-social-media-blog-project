@@ -17,6 +17,7 @@ import './scrollbar.css'
 import { useDispatch, useSelector } from "react-redux"
 import { increment, resetCache } from "../pages/blogs/blogSlice"
 import { apiSlice } from "../app/api/apiSlice"
+import { useGetPaginatedBlogsQuery } from "../pages/blogs/blogsApiSlice"
 
 const theme = createTheme({
   breakpoints: {
@@ -44,6 +45,8 @@ const Layout = () => {
   const small = useMediaQuery('(max-width:791px)')
   const dispatch = useDispatch()
 
+  const { refetch } = useGetPaginatedBlogsQuery(1)
+
   const [
     sendLogOut, {
       isLoading,
@@ -63,9 +66,10 @@ const Layout = () => {
 
   const handleLogout = () => {
     dispatch(resetCache())
-    dispatch(apiSlice.util.resetApiState())
+    // dispatch(apiSlice.util.resetApiState())
     // dispatch(api.util.invalidateTags(['CompanySettings'])
     sendLogOut()
+    refetch()
   }
 
   const drawerDirection = ['left']

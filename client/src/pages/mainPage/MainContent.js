@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState, useCallback } from 'react'
 import ActiveCalender from '../blogs/ActiveCalender'
 import { Box, Button, Paper, Container, Typography, IconButton, AppBar, Toolbar, SvgIcon } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
@@ -81,101 +81,55 @@ const MainContent = () => {
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState([])
-  const [blogsWithoutUser, setBlogsWithoutUser] = useState([])
-  const [paginatedBlogs, setPaginatedBlogs] = useState(null)
-  const [likesFromUser, setLikesFromUser] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
-  const [products, setProducts] = useState([])
-  const [newBlogData, setNewBlogData] = useState([])
   const [maxPage, setMaxPage] = useState('')
 
   const [hasMore, setHasMore] = useState(true)
-  const elementRef = useRef(null)
+
+  const observer = useRef(null)
+
+  // const {
+  //   data: paginatedData,
+  //   isSuccess: paginatedIsSuccess,
+  //   isLoading: paginatedIsLoading,
+  // } = useGetPaginatedBlogsQuery(Number(pageNumber))
 
   const {
     data: paginatedData,
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
-  } = useGetPaginatedBlogsQuery(Number(pageNumber))
+    refetch
+  } = useGetPaginatedBlogsQuery(Number(page)) // when dependency change it re-retch
 
 
-  const {
-    data: likes,
-    isLoading: isLikesLoading,
-    isSuccess: isLikesSuccess,
-  } = useGetLikedBlogsFromUserQuery(username)
-
-
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     const { entities } = blogs
-  //     const list = Object.values(entities)
-  //     const withOutCurrentUser = list?.filter(blog => blog?.user !== username)
-  //     setAllBlogs(withOutCurrentUser)
-  //   }
-  // }, [isSuccess])
 
 
   useEffect(() => {
-    if (paginatedIsSuccess && !username) {
-      // setPaginatedBlogs(paginatedData)
-      setAllBlogs(paginatedData.data)
-      setMaxPage(paginatedData?.numberOfPages)
+    console.log('out')
+    if (page === paginatedData?.numberOfPages) {
+      setHasMore(false)
     }
-    if (paginatedIsSuccess && username) {
-      // setPaginatedBlogs(paginatedData)
-      const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
-      setBlogsWithoutUser(withoutUser)
-    }
-
-    if (username && isLikesSuccess) {
-      const entities = likes?.entities
-      const listOfLikes = Object.values(entities)
-      setLikesFromUser(listOfLikes)
-    }
-  }, [paginatedIsSuccess, paginatedData, isLikesSuccess, username]) // needs paginatedData as dependency for the latest update
-
-
-  useEffect(() => {
-
-    const observer = new IntersectionObserver(([entry]) => {
-      // console.log(entries)
-      if (entry.isIntersecting && hasMore) {
-
-        if (Number(pageNumber) >= Number(maxPage)) {
-          setHasMore(false)
-        } else {
-          dispatch(increment(pageNumber + 1))
-        }
+    if (paginatedIsSuccess) {
+      if (username) {
+        setAllBlogs([...allBlogs, ...paginatedData.data])
+      } else {
+        const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
+        setAllBlogs([...allBlogs, ...withoutUser])
       }
-    })
-    if (!elementRef.current) return ''
-    observer.observe(elementRef.current)
-
-    return () => {
-      if (elementRef.current) {
-
-        observer.disconnect()
-      }
+    } else {
+      console.log('re-fetch')
+      refetch()
     }
-  }, [allBlogs])
+
+  }, [paginatedData, username]) // needs paginatedData as dependency for the latest update
 
 
-  // IntersectionObserver and use observer.observe(elementRef.current); to tell the observer to start observing the DOM element referenced by elementRef.current.
-  // When the DOM element referenced by elementRef (in your case, the empty <Box> element) becomes visible in the viewport (e.g., as the user scrolls down)
-  // the IntersectionObserver triggers the callback function you provided 
-  // if (entry.isIntersecting && hasMore) {
-  //   console.log(entry.isIntersecting)
 
-  //   if (Number(pageNumber) >= Number(products?.numberOfPages)) {
-  //     setHasMore(false)
-  //   } else {
-  //     dispatch(increment(pageNumber + 1))
-  //   }
-  // }
-  // then the [products] to disconnect the observer
+  console.log(paginatedData)
+  console.log(page)
+  console.log(allBlogs)
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -195,7 +149,7 @@ const MainContent = () => {
     if (!searchInput.length) return console.log('nothing')
     const inputLowerCase = searchInput.toLowerCase()
     // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
-    const result = products.data.filter(blog =>
+    const result = allBlogs.filter(blog =>
       [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
     )
 
@@ -210,18 +164,25 @@ const MainContent = () => {
     }
   }
 
+  const moreBlogs = useCallback(node => {
+    if (paginatedIsLoading) return
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1)
+      }
+    })
+    if (node) observer.current.observe(node)
+  }, [paginatedIsLoading, hasMore])
+
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
   const recentlyUpload = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
-  const recentlyUploadWithoutUser = Array.isArray(blogsWithoutUser) && blogsWithoutUser?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
-
-
-  console.log(pageNumber)
-  console.log(paginatedData)
+  const recentlyUploadWithoutUser = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
   let content
 
-  if (paginatedIsLoading || isLikesLoading) {
+  if (paginatedIsLoading) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -230,7 +191,7 @@ const MainContent = () => {
   }
 
 
-  if ((paginatedIsSuccess && allBlogs?.length === 0) || (paginatedIsSuccess && blogsWithoutUser?.length === 0)) {
+  if (paginatedIsSuccess && allBlogs?.length === 0) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>
@@ -241,7 +202,7 @@ const MainContent = () => {
   }
 
   // user not exist and all
-  if (paginatedIsSuccess && isLikesSuccess && allBlogs?.length > 0 && !username && isSelected === 'All') {
+  if (paginatedIsSuccess && allBlogs?.length > 0 && !username && isSelected === 'All') {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {allBlogs?.map(blog =>
@@ -252,7 +213,7 @@ const MainContent = () => {
     )
   }
   // user not exist and recently upload
-  if (paginatedIsSuccess && isLikesSuccess && recentlyUpload?.length > 0 && !username && isSelected === 'Recently Upload') {
+  if (paginatedIsSuccess && recentlyUpload?.length > 0 && !username && isSelected === 'Recently Upload') {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {recentlyUpload?.map(blog =>
@@ -265,10 +226,10 @@ const MainContent = () => {
 
 
   // if login user exist 
-  if (paginatedIsSuccess && isLikesSuccess && blogsWithoutUser?.length > 0 && username && isSelected === 'All') {
+  if (paginatedIsSuccess && allBlogs?.length > 0 && username && isSelected === 'All') {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-        {blogsWithoutUser?.map(blog =>
+        {allBlogs?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} />
           </Grid>)}
@@ -277,7 +238,7 @@ const MainContent = () => {
   }
 
   // if login user exist 
-  if (paginatedIsSuccess && isLikesSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload') {
+  if (paginatedIsSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload') {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {recentlyUploadWithoutUser?.map(blog =>
@@ -288,70 +249,6 @@ const MainContent = () => {
     )
   }
 
-
-
-  // if (paginatedIsSuccess && isLikesSuccess && !username) {
-  //   content = (
-  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-  //       {/* {
-  //         isSelected === 'All' ?
-  //           (
-  //             allBlogs?.map(blog =>
-  //               <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-  //                 <Note blog={blog} />
-  //               </Grid>)
-  //           ) :
-  //           isSelected === 'Recently Upload' ?
-  //             (
-  //               recentlyUpload?.map(blog =>
-  //                 <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-  //                   <Note blog={blog} />
-  //                 </Grid>)
-  //             ) :
-  //             ''
-  //       } */}
-  //       {/* 
-  //       {paginatedBlogs?.data?.map(blog =>
-  //         <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
-  //           <Note blog={blog} />
-  //         </Grid>)} */}
-
-  //       {/* {newData?.map(blog =>
-  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-  //           <Note blog={blog} />
-  //         </Grid>)} */}
-  //       {products.data?.map(blog =>
-  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-  //           <Note blog={blog} />
-  //         </Grid>)}
-  //     </Grid>
-  //   )
-  // }
-
-  // if (paginatedIsSuccess && isLikesSuccess && username && newBlogData) {
-
-  //   const newData = products?.data?.map((blog) => {
-  //     // Find the like that matches the current blog's ID
-  //     const matchingLike = likesFromUser?.find((like) => like.blog_id === blog.id)
-
-  //     // If a matching like is found, update the blog with the like information
-  //     if (matchingLike) {
-  //       return { ...blog, isLike: matchingLike.is_like }
-  //     }
-  //     // If no matching like is found, keep the original blog object
-  //     return { ...blog }
-  //   })
-
-  //   content = (
-  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-
-  //       {newData?.map(blog =>
-  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-  //           <Note blog={blog} />
-  //         </Grid>)}
-  //     </Grid>
-  //   )
-  // }
 
 
   return (
@@ -389,20 +286,14 @@ const MainContent = () => {
         {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}
           <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}
-
-        <Box sx={{ height: 20 }}>
-          {
-            hasMore &&
-            <Box ref={elementRef}> </Box>
-          }
-        </Box>
       </Box >
-
+      <Box >
+        {
+          hasMore &&
+          <Box ref={moreBlogs}> </Box>
+        }
+      </Box>
     </Box >
-
-
-
-
   )
 }
 
