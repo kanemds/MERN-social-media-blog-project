@@ -793,7 +793,6 @@ const getPaginatedBlogs = async (req, res) => {
               else: {
                 bookmark_id: { $arrayElemAt: ['$bookmark._id', 0] },
                 is_bookmarked: { $arrayElemAt: ['$bookmark.is_bookmark', 0] }
-
               }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
             }
           }
@@ -822,7 +821,6 @@ const getPaginatedBlogs = async (req, res) => {
           like_data: 1,
           blogger_avatar: '$userDetails.avatar',
           username: '$userDetails.username',
-
           __v: 1
         }
       },
@@ -851,6 +849,8 @@ const getPaginatedBlogs = async (req, res) => {
               $match: {
                 $expr: {
                   $and: [
+                    // '$blog_id' form the like data 
+                    //  '$$blog_id' reference to the blog_id ===  let: { blog_id: '$_id' }
                     { $eq: ['$blog_id', '$$blog_id'] },
                   ],
                 },
@@ -902,7 +902,6 @@ const getPaginatedBlogs = async (req, res) => {
           like_data: 1,
           blogger_avatar: '$userDetails.avatar',
           username: '$userDetails.username',
-
           __v: 1
         }
       },
