@@ -12,6 +12,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 
 
+
 const SideButton = styled(Button)({
   textTransform: 'none',
   justifyContent: "flex-start",
@@ -37,7 +38,6 @@ export default function Navbar({ handleLogout, isSuccess }) {
 
   const navigate = useNavigate()
   const { pathname } = useLocation()
-
   const { username, userId } = useAuth()
 
   const { currentUser } = useGetUsersQuery('usersList', {
@@ -53,7 +53,7 @@ export default function Navbar({ handleLogout, isSuccess }) {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/', { state: 'out' })
+      navigate('/')
     }
   }, [isSuccess, navigate])
 
