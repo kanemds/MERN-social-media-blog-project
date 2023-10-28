@@ -120,6 +120,8 @@ const SingleBlog = () => {
   } = useGetSingleBlogQuery(currentSingleBlog)
 
 
+  console.log(data)
+
   const [
     deleteBlog,
     {

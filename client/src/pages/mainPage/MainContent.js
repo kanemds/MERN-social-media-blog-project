@@ -114,11 +114,6 @@ const MainContent = () => {
     }
   }, [paginatedData, username]) // needs paginatedData as dependency for the latest update
 
-
-  console.log('paginatedData', paginatedData) //isExist
-  // console.log('paginatedIsSuccess', paginatedIsSuccess)
-  // console.log('allBlogs', allBlogs)
-
   const handleNext = () => {
     setPage(prev => prev + 1)
   }

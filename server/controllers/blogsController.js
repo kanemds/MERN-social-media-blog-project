@@ -234,63 +234,310 @@ const getSingleBlog = async (req, res) => {
   // current login username
   const { username } = req.query
 
-  console.log(id)
-
-  let existUser
-  let currentBlog
-
   if (username) {
-    existUser = await User.findOne({ username }).lean().exec()
+    findUser = await User.findOne({ username }).lean().exec()
   }
 
-  // return as an array
-  const blog = await Blog.aggregate([
-    {
-      $match: {
-        _id: new mongoose.Types.ObjectId(id)
-      }
-    },
-    {
-      $lookup: {
-        from: 'users', // Replace with the actual name of your "User" collection in MongoDB
-        localField: 'user',
-        foreignField: '_id',
-        as: 'userDetails'
+  // // return as an array
+  // const blog = await Blog.aggregate([
+  //   {
+  //     $match: {
+  //       _id: new mongoose.Types.ObjectId(id)
+  //     }
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+  //       localField: 'user',
+  //       foreignField: '_id',
+  //       as: 'userDetails'
+  //     },
+  //   },
+  //   {
+  //     $unwind: '$userDetails'
+  //   },
+  //   {
+  //     $project: {
+  //       _id: 1,
+  //       title: 1,
+  //       text: 1,
+  //       images: 1,
+  //       visible_to: 1,
+  //       createdAt: 1,
+  //       updatedAt: 1,
+  //       user: 1,
+  //       username: '$userDetails.username', // Include the username
+  //       avatar: '$userDetails.avatar',
+  //       __v: 1
+  //     },
+  //   },
+  // ]).exec()
+
+  // if (!blog) return res.status(200).json({ message: 'No blog found' })
+
+
+  // if (blog && existUser) {
+  //   const like = await currentLike(id, existUser._id)
+  //   const subscribe = await currentSubscribe(blog[0], existUser._id)
+  //   const bookmark = await currentBookmark(id, existUser._id)
+  //   currentBlog = { ...blog[0], like, subscribe, bookmark, }
+  // } else {
+  //   currentBlog = blog[0]
+  // }
+
+  // res.status(200).json(currentBlog)
+
+  let blogs
+  if (findUser) {
+    blogs = await Blog.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id)
+        }
       },
-    },
-    {
-      $unwind: '$userDetails'
-    },
-    {
-      $project: {
-        _id: 1,
-        title: 1,
-        text: 1,
-        images: 1,
-        visible_to: 1,
-        createdAt: 1,
-        updatedAt: 1,
-        user: 1,
-        username: '$userDetails.username', // Include the username
-        avatar: '$userDetails.avatar',
-        __v: 1
+      {
+        $lookup: {
+          from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+          localField: 'user',
+          foreignField: '_id',
+          as: 'userDetails'
+        },
       },
-    },
-  ]).exec()
+      {
+        $unwind: '$userDetails'
+      },
+      {
+        $lookup: {
+          from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+          pipeline: [
+            {
+              $match: {
+                blog_owner_id: new mongoose.Types.ObjectId(id),
+                subscribed_by_user_id: findUser._id
+              }
+            }
+          ],
+          as: 'subscriptions'
+        },
+      },
+      {
+        $lookup: {
+          from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+          let: { blog_id: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$blog_id', '$$blog_id'] },
+                    { $eq: ['$blog_owner', new mongoose.Types.ObjectId(id)] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'likes_per_blog'
+        },
+      },
+      {
+        $lookup: {
+          from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+          let: { blog_id: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$blog_id', '$$blog_id'] },
+                    { $eq: ['$blog_owner', new mongoose.Types.ObjectId(id)] },
+                    { $eq: ['$liked_by_user_id', findUser._id] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'like'
+        },
+      },
+      {
+        $addFields: {
+          like_data: {
+            $cond: {
+              if: { $eq: [{ $size: '$like' }, 0] },
+              then: {
+                like_id: null,
+                is_liked: false,
+                total_likes: { $size: '$likes_per_blog' }
+              }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+              else: {
+                like_id: { $arrayElemAt: ['$like._id', 0] },
+                is_liked: { $arrayElemAt: ['$like.is_like', 0] },
+                total_likes: { $size: '$likes_per_blog' }
+              }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'bookmarks', // Replace with the actual name of your "Subscribe" collection in MongoDB
+          let: { blogId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$blog_id', '$$blogId'] },
+                    { $eq: ['$blog_owner_id', new mongoose.Types.ObjectId(id)] },
+                    { $eq: ['$bookmark_by_user_id', findUser._id] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'bookmark'
+        },
+      },
+      {
+        $addFields: {
+          bookmark_data: {
+            $cond: {
+              if: { $eq: [{ $size: '$bookmark' }, 0] },
+              then: {
+                bookmark_id: null,
+                is_bookmarked: false
+              }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+              else: {
+                bookmark_id: { $arrayElemAt: ['$bookmark._id', 0] },
+                is_bookmarked: { $arrayElemAt: ['$bookmark.is_bookmark', 0] }
 
-  if (!blog) return res.status(200).json({ message: 'No blog found' })
+              }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
+            }
+          }
+        }
+      },
+      {
+        $addFields: {
+          subscribe_data: {
+            subscribe_id: { $arrayElemAt: ['$subscriptions._id', 0] },
+            is_subscribed: { $arrayElemAt: ['$subscriptions.is_subscribed', 0] },
+          },
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          text: 1,
+          images: 1,
+          visible_to: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          user: 1,
+          subscribe_data: 1,
+          bookmark_data: 1,
+          like_data: 1,
+          blogger_avatar: '$userDetails.avatar',
+          username: '$userDetails.username',
 
-
-  if (blog && existUser) {
-    const like = await currentLike(id, existUser._id)
-    const subscribe = await currentSubscribe(blog[0], existUser._id)
-    const bookmark = await currentBookmark(id, existUser._id)
-    currentBlog = { ...blog[0], like, subscribe, bookmark, }
+          __v: 1
+        }
+      },
+    ]).sort({ createdAt: -1 })
   } else {
-    currentBlog = blog[0]
+    blogs = await Blog.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id)
+        }
+      },
+      {
+        $lookup: {
+          from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+          localField: 'user',
+          foreignField: '_id',
+          as: 'userDetails'
+        },
+      },
+      {
+        $unwind: '$userDetails'
+      },
+      {
+        $lookup: {
+          from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+          localField: 'user',
+          foreignField: 'blog_owner_id',
+          as: 'subscriptions'
+        },
+      },
+      {
+        $lookup: {
+          from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+          let: { blog_id: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$blog_id', '$$blog_id'] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'likes_per_blog'
+        },
+      },
+      {
+        $addFields: {
+          like_data: {
+            like_id: null,
+            is_liked: false,
+            total_likes: { $size: '$likes_per_blog' }
+          }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+        }
+      },
+      {
+        $addFields: {
+          bookmark_data: {
+            then: {
+              bookmark_id: null,
+              is_bookmarked: false
+            }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+          }
+        }
+      },
+      {
+        $addFields: {
+          subscribe_data: {
+            subscribe_id: null,
+            is_subscribed: null,
+            total_subscription: { $size: '$subscriptions' }
+          },
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          text: 1,
+          images: 1,
+          visible_to: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          user: 1,
+          subscribe_data: 1,
+          bookmark_data: 1,
+          like_data: 1,
+          blogger_avatar: '$userDetails.avatar',
+          username: '$userDetails.username',
+          __v: 1
+        }
+      },
+    ]).sort({ createdAt: -1 })
   }
 
-  res.status(200).json(currentBlog)
+  res.status(200).json(blogs)
 }
 
 // @desc Get view blogger blogs
