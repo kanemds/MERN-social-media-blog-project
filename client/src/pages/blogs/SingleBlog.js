@@ -119,9 +119,6 @@ const SingleBlog = () => {
     error
   } = useGetSingleBlogQuery(currentSingleBlog)
 
-
-  console.log(data)
-
   const [
     deleteBlog,
     {
@@ -220,20 +217,18 @@ const SingleBlog = () => {
   const numberLikes = useNumberDisplay(likes)
 
   useEffect(() => {
-    if (isSuccess && username) {
+    if (isSuccess) {
       setCurrentBlog(data)
-      setAvatar(data?.avatar)
-      setIsLiked(data?.like?.isLike)
-      setLikes(data?.like?.totalLikes)
-      setIsSubscribed(data?.subscribe?.isSubscribed)
-      setSubscribers(data?.subscribe?.totalSubscribers)
-      setIsBookmarked(data?.bookmark?.isBookmarked)
-    } else {
-      setCurrentBlog(data)
-      setAvatar(data?.avatar)
+      setAvatar(data?.blogger_avatar)
+      setIsLiked(data?.like_data?.is_liked)
+      setLikes(data?.like_data?.total_likes)
+      setIsSubscribed(data?.subscribe_data?.is_subscribed)
+      setSubscribers(data?.subscribe_data?.total_subscription)
+      setIsBookmarked(data?.bookmark_data?.is_bookmarked)
     }
   }, [isSuccess, data])
 
+  console.log(currentBlog)
 
   // useEffect(() => {
   //   if (isAddLikeSuccess) {
@@ -304,7 +299,7 @@ const SingleBlog = () => {
       if (!isLiked) {
         addedLike({ blog_id: id, user_id: userId, is_like: true })
       } else {
-        deleteLike({ id: currentBlog?.like?.likeId, blogId: id })
+        deleteLike({ id: currentBlog?.like_data?.like_id, blogId: id })
       }
     } else {
       navigate('/login', { state: messages.like })
@@ -317,7 +312,7 @@ const SingleBlog = () => {
       if (!isBookmarked) {
         addBookmark({ blog_id: id, bookmark_by_user_id: userId, is_bookmark: true })
       } else {
-        deleteBookmark({ id: currentBlog?.bookmark?.bookmarkId, blog_id: id })
+        deleteBookmark({ id: currentBlog?.bookmark_data?.bookmark_id, blog_id: id })
       }
     } else {
       navigate('/login', { state: messages.bookmark })
@@ -331,7 +326,7 @@ const SingleBlog = () => {
       if (!isSubscribed) {
         addSubscribe({ id: currentBlog?.user, userId, isSubscribed: true })
       } else {
-        deleteSubscribed({ blogId: id, id: currentBlog.subscribe.subscribedId })
+        deleteSubscribed({ blogId: id, id: currentBlog.subscribe_data.subscribe_id })
       }
     } else {
       navigate('/login', { state: messages.subscribe })
