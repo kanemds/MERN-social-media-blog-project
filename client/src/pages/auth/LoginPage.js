@@ -103,8 +103,8 @@ const LoginPage = ({ state }) => {
         const { accessToken } = await login({ username, password }).unwrap()
         // after login success, will get accessToken generate by backend login controller and the refresh token will store in the cookie  
         // set auth.token = accessToken
-        dispatch(resetCache())
-        dispatch(apiSlice.util.invalidateTags(['Blog']))
+        // dispatch(resetCache())
+        // dispatch(apiSlice.util.invalidateTags(['Blog']))
         dispatch(setCredentials({ accessToken }))
         setUsername('')
         setPassword('')
@@ -123,6 +123,9 @@ const LoginPage = ({ state }) => {
     }
   }
 
+  const handleCancel = () => {
+    navigate(-1)
+  }
 
   let content
 
@@ -148,11 +151,12 @@ const LoginPage = ({ state }) => {
         alignItems: 'center'
       }}
     >
-
-      <Box sx={{ pb: '40px', width: '100%', minWidth: '380px', maxWidth: '420px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Typography variant='h8' sx={{ mb: 1 }}>{requiredLoginMessage}</Typography>
+      </Box>
+      <Box sx={{ pb: '40px', width: '100%', minWidth: '380px', maxWidth: '420px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Typography variant='h4' >Login</Typography>
+          <Typography variant='h4' sx={{ ml: 1 }}>Login</Typography>
         </Box>
       </Box>
       {
@@ -224,12 +228,18 @@ const LoginPage = ({ state }) => {
         </FormControl>
 
         <Box sx={{ mt: '40px' }}>
+
           <Button
             variant='contained'
-            sx={{ mr: '10px' }}
+            sx={{ ml: '10px' }}
+            onClick={handleCancel}
+          >Cancel</Button>
+          <Button
+            variant='contained'
+            sx={{ ml: '10px' }}
             onClick={handleSave}
           >Submit</Button>
-          <LinkButton name={'cancel'} visit='/' />
+
         </Box>
       </Box>
     </Paper >

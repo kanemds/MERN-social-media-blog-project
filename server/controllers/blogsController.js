@@ -238,55 +238,6 @@ const getSingleBlog = async (req, res) => {
     findUser = await User.findOne({ username }).lean().exec()
   }
 
-  // // return as an array
-  // const blog = await Blog.aggregate([
-  //   {
-  //     $match: {
-  //       _id: new mongoose.Types.ObjectId(id)
-  //     }
-  //   },
-  //   {
-  //     $lookup: {
-  //       from: 'users', // Replace with the actual name of your "User" collection in MongoDB
-  //       localField: 'user',
-  //       foreignField: '_id',
-  //       as: 'userDetails'
-  //     },
-  //   },
-  //   {
-  //     $unwind: '$userDetails'
-  //   },
-  //   {
-  //     $project: {
-  //       _id: 1,
-  //       title: 1,
-  //       text: 1,
-  //       images: 1,
-  //       visible_to: 1,
-  //       createdAt: 1,
-  //       updatedAt: 1,
-  //       user: 1,
-  //       username: '$userDetails.username', // Include the username
-  //       avatar: '$userDetails.avatar',
-  //       __v: 1
-  //     },
-  //   },
-  // ]).exec()
-
-  // if (!blog) return res.status(200).json({ message: 'No blog found' })
-
-
-  // if (blog && existUser) {
-  //   const like = await currentLike(id, existUser._id)
-  //   const subscribe = await currentSubscribe(blog[0], existUser._id)
-  //   const bookmark = await currentBookmark(id, existUser._id)
-  //   currentBlog = { ...blog[0], like, subscribe, bookmark, }
-  // } else {
-  //   currentBlog = blog[0]
-  // }
-
-  // res.status(200).json(currentBlog)
-
   let blogs
   if (findUser) {
     blogs = await Blog.aggregate([
@@ -309,11 +260,17 @@ const getSingleBlog = async (req, res) => {
       {
         $lookup: {
           from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+          let: { blog_owner: '$user' },
           pipeline: [
             {
               $match: {
-                blog_owner_id: new mongoose.Types.ObjectId(id),
-                subscribed_by_user_id: findUser._id
+                $expr: {
+                  $and: [
+                    { $eq: ['$blog_owner_id', '$$blog_owner'] },
+                    { $eq: ['$subscribed_by_user_id', findUser._id] },
+                  ],
+                },
+
               }
             }
           ],
@@ -322,15 +279,23 @@ const getSingleBlog = async (req, res) => {
       },
       {
         $lookup: {
+          from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+          localField: 'user',
+          foreignField: 'blog_owner_id',
+          as: 'subscriptions_per_blog'
+        },
+      },
+      {
+        $lookup: {
           from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
-          let: { blog_id: '$_id' },
+          let: { blog_id: '$_id', blog_owner: '$user' },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
                     { $eq: ['$blog_id', '$$blog_id'] },
-                    { $eq: ['$blog_owner', new mongoose.Types.ObjectId(id)] },
+                    { $eq: ['$blog_owner', '$$blog_owner'] },
                   ],
                 },
               },
@@ -342,14 +307,14 @@ const getSingleBlog = async (req, res) => {
       {
         $lookup: {
           from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
-          let: { blog_id: '$_id' },
+          let: { blog_id: '$_id', blog_owner: '$user' },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
                     { $eq: ['$blog_id', '$$blog_id'] },
-                    { $eq: ['$blog_owner', new mongoose.Types.ObjectId(id)] },
+                    { $eq: ['$blog_owner', '$$blog_owner'] },
                     { $eq: ['$liked_by_user_id', findUser._id] },
                   ],
                 },
@@ -381,14 +346,14 @@ const getSingleBlog = async (req, res) => {
       {
         $lookup: {
           from: 'bookmarks', // Replace with the actual name of your "Subscribe" collection in MongoDB
-          let: { blogId: '$_id' },
+          let: { blogId: '$_id', blog_owner: '$user' },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
                     { $eq: ['$blog_id', '$$blogId'] },
-                    { $eq: ['$blog_owner_id', new mongoose.Types.ObjectId(id)] },
+                    { $eq: ['$blog_owner_id', '$$blog_owner'] },
                     { $eq: ['$bookmark_by_user_id', findUser._id] },
                   ],
                 },
@@ -421,7 +386,8 @@ const getSingleBlog = async (req, res) => {
           subscribe_data: {
             subscribe_id: { $arrayElemAt: ['$subscriptions._id', 0] },
             is_subscribed: { $arrayElemAt: ['$subscriptions.is_subscribed', 0] },
-          },
+            total_subscription: { $size: '$subscriptions_per_blog' }
+          }
         }
       },
       {
@@ -467,7 +433,7 @@ const getSingleBlog = async (req, res) => {
           from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
           localField: 'user',
           foreignField: 'blog_owner_id',
-          as: 'subscriptions'
+          as: 'subscriptions_per_blog'
         },
       },
       {
@@ -500,10 +466,8 @@ const getSingleBlog = async (req, res) => {
       {
         $addFields: {
           bookmark_data: {
-            then: {
-              bookmark_id: null,
-              is_bookmarked: false
-            }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+            bookmark_id: null,
+            is_bookmarked: false
           }
         }
       },
@@ -512,7 +476,7 @@ const getSingleBlog = async (req, res) => {
           subscribe_data: {
             subscribe_id: null,
             is_subscribed: null,
-            total_subscription: { $size: '$subscriptions' }
+            total_subscription: { $size: '$subscriptions_per_blog' }
           },
         }
       },
@@ -537,7 +501,9 @@ const getSingleBlog = async (req, res) => {
     ]).sort({ createdAt: -1 })
   }
 
-  res.status(200).json(blogs)
+  console.log(blogs)
+
+  res.status(200).json(blogs[0])
 }
 
 // @desc Get view blogger blogs
