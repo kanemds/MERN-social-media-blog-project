@@ -270,7 +270,6 @@ const getSingleBlog = async (req, res) => {
                     { $eq: ['$subscribed_by_user_id', findUser._id] },
                   ],
                 },
-
               }
             }
           ],

@@ -31,11 +31,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path='/' element={<Layout />}>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
+      <Route element={<Layout />}>
+        <Route path='/' element={<MainContent />} />
         <Route element={<PersistLogin />}>
-          <Route index element={<MainContent />} />
 
           <Route path='/blogs/post/:id' element={<SingleBlog />} />
           <Route path='/blogs/user/:id' element={<BloggerHomePage />} />
@@ -71,6 +69,10 @@ function App() {
             </Route>
           </Route>
         </Route>
+      </Route>
+      <Route element={<Layout />}>
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
       </Route>
     </Routes >
   )

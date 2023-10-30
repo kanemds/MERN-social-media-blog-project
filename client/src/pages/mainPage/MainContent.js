@@ -15,7 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { increment, resetCache } from '../blogs/blogSlice'
+import { increment, resetCache, userLogout } from '../blogs/blogSlice'
 import { entries, set } from 'lodash'
 import { apiSlice } from '../../app/api/apiSlice'
 import ClientSearchBar from '../../components/ClientSearchBar'
@@ -69,9 +69,14 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 
 const MainContent = () => {
 
+
+
   const { username, userId } = useAuth()
   const dispatch = useDispatch()
   const { pageNumber } = useSelector((state) => state?.blog)
+  const logout = useSelector(state => state.blog.logout)
+
+  console.log(logout)
 
 
   const small = useMediaQuery('(max-width:791px)')
@@ -96,23 +101,29 @@ const MainContent = () => {
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
     refetch
-  } = useGetPaginatedBlogsQuery(Number(page), {
-    refetchOnMountOrArgChange: true
-  }) // when dependency change it re-retch
+  } = useGetPaginatedBlogsQuery(Number(page)) // when dependency change it re-retch
+
+  console.log(paginatedData)
+
 
   useEffect(() => {
+    if (logout) {
+      setAllBlogs([])
+      dispatch(userLogout(false))
+    }
     if (page === paginatedData?.numberOfPages) {
       setHasMore(false)
     }
     if (paginatedIsSuccess) {
       if (username) {
-        setAllBlogs([...allBlogs, ...paginatedData.data])
+        setAllBlogs([...new Set([...allBlogs, ...paginatedData.data])])
       } else {
         const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
-        setAllBlogs([...allBlogs, ...withoutUser])
+        setAllBlogs([...new Set([...allBlogs, ...withoutUser])])
       }
     }
-  }, [paginatedData, username]) // needs paginatedData as dependency for the latest update
+  }, [paginatedData, logout]) // needs paginatedData as dependency for the latest update
+
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -122,7 +133,6 @@ const MainContent = () => {
       setPage((prevPage) => prevPage - 1)
     }
   }
-
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
   }

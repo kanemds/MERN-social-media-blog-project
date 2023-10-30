@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 
 
 const initialState = {
-  pageNumber: 1
+  pageNumber: 1,
+  logout: false
 }
 
 const blogSlice = createSlice({
@@ -15,9 +16,12 @@ const blogSlice = createSlice({
     resetCache: (state) => {
       state.pageNumber = 1
     },
+    userLogout: (state, action) => {
+      state.logout = action.payload
+    }
   }
 })
 
-export const { increment, resetCache } = blogSlice.actions
+export const { increment, resetCache, userLogout } = blogSlice.actions
 
 export default blogSlice.reducer
