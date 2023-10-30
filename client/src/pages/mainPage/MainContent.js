@@ -107,13 +107,13 @@ const MainContent = () => {
 
 
   useEffect(() => {
-    if (logout) {
-      setAllBlogs([])
-      dispatch(userLogout(false))
-    }
     if (page === paginatedData?.numberOfPages) {
       setHasMore(false)
     }
+    // if (logout) {
+    //   setAllBlogs(allBlogs)
+    //   dispatch(userLogout(false))
+    // }
     if (paginatedIsSuccess) {
       if (username) {
         setAllBlogs([...new Set([...allBlogs, ...paginatedData.data])])
@@ -122,7 +122,7 @@ const MainContent = () => {
         setAllBlogs([...new Set([...allBlogs, ...withoutUser])])
       }
     }
-  }, [paginatedData, logout]) // needs paginatedData as dependency for the latest update
+  }, [paginatedData]) // needs paginatedData as dependency for the latest update
 
 
   const handleNext = () => {

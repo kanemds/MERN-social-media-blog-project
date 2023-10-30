@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from "./Navbar"
 import { Box, Container } from "@mui/material"
 import { useSendLogOutMutation } from '../pages/auth/authApiSlice'
@@ -72,6 +72,15 @@ const Layout = () => {
     dispatch(userLogout(true))
     // navigate('/')
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      // navigate('/')
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    }
+  }, [isSuccess, navigate])
 
   const drawerDirection = ['left']
   const toggleDrawer = (anchor, open) => (event) => {
