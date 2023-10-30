@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom"
+import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import React, { useState } from 'react'
 import Navbar from "./Navbar"
 import { Box, Container } from "@mui/material"
@@ -15,7 +15,7 @@ import FrontPageSideBarMedium from "./FrontPageSideBarMedium"
 import BlogsList from "../pages/blogs/BlogsList"
 import './scrollbar.css'
 import { useDispatch, useSelector } from "react-redux"
-import { increment, resetCache } from "../pages/blogs/blogSlice"
+import { increment, resetCache, userLogout } from "../pages/blogs/blogSlice"
 import { apiSlice } from "../app/api/apiSlice"
 
 
@@ -44,6 +44,7 @@ const Layout = () => {
   // const mediumBP = useMediaQuery('(min-width:750px)')
   const small = useMediaQuery('(max-width:791px)')
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
 
   const [
@@ -56,7 +57,7 @@ const Layout = () => {
   ] = useSendLogOutMutation()
 
   const { pathname } = useLocation()
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     left: false,
   })
 
@@ -64,10 +65,12 @@ const Layout = () => {
 
 
   const handleLogout = () => {
-    // dispatch(resetCache())
+    // dispatch(resetCache()) // blogSLice set page back to 1
     // dispatch(apiSlice.util.resetApiState())
     // dispatch(api.util.invalidateTags(['CompanySettings'])
     sendLogOut()
+    dispatch(userLogout(true))
+    // navigate('/')
   }
 
   const drawerDirection = ['left']
