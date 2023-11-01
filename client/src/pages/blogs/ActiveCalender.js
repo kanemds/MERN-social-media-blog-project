@@ -10,6 +10,7 @@ import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout'
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker'
 import { SideBarContext } from '../../useContext/SideBarContext'
 import { timeDisplayOptions } from '../../config/timeDisplayOptions'
+import { useLocation } from 'react-router-dom'
 
 
 function ActionList(props) {
@@ -40,14 +41,18 @@ export default function ActiveCalender() {
 
   // dayjs is giving the current timezone no need to convert
 
-  const { selectedDate, setSelectedDate, path, calendarDate, setCalendarDate } = useContext(SideBarContext)
+  const { selectedDate, setSelectedDate, path, setPath, calendarDate, setCalendarDate } = useContext(SideBarContext)
+  const { pathname } = useLocation()
 
 
+  useEffect(() => {
+    setPath(pathname)
+  }, [pathname])
 
   const handleSelectedDate = (date) => {
-    console.log(date)
+
     const timeConvert = date ? new Date(Date.parse(date?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo) : null
-    if (path === '/') {
+    if (pathname === '/') {
       setCalendarDate({ ...calendarDate, frontPage: date })
       setSelectedDate({ ...selectedDate, frontPage: timeConvert })
     }
@@ -68,11 +73,14 @@ export default function ActiveCalender() {
       setCalendarDate({ ...calendarDate, bookmarkPage: date })
       setSelectedDate({ ...selectedDate, bookmarkPage: timeConvert })
     }
-
   }
 
+  // display on the sidebar calender
   let displayDate = ''
 
+  if (path === '/') {
+    displayDate = calendarDate.frontPage
+  }
   if (path === '/blogs/liked') {
     displayDate = calendarDate.likedPage
   }
@@ -82,7 +90,6 @@ export default function ActiveCalender() {
   if (path === '/blogs/bookmarks') {
     displayDate = calendarDate.bookmarkPage
   }
-
 
   return (
 
