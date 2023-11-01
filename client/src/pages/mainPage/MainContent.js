@@ -70,19 +70,14 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 const MainContent = () => {
 
 
-
   const { username, userId } = useAuth()
   const dispatch = useDispatch()
   const { pageNumber } = useSelector((state) => state?.blog)
-  const logout = useSelector(state => state.blog.logout)
-
-  console.log(logout)
-
 
   const small = useMediaQuery('(max-width:791px)')
   const smallScreenSize = useMediaQuery('(min-width:600px)')
 
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, calendarDate } = useContext(SideBarContext)
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState([])
@@ -95,22 +90,15 @@ const MainContent = () => {
 
   const observer = useRef(null)
 
-
   const {
     data: paginatedData,
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
-    refetch
-  } = useGetPaginatedBlogsQuery(Number(page)) // when dependency change it re-retch
+  } = useGetPaginatedBlogsQuery(Number(page))
 
-  console.log(paginatedData)
 
 
   useEffect(() => {
-    if (logout) {
-      setAllBlogs([])
-      dispatch(userLogout(false))
-    }
     if (page === paginatedData?.numberOfPages) {
       setHasMore(false)
     }
@@ -122,8 +110,10 @@ const MainContent = () => {
         setAllBlogs([...new Set([...allBlogs, ...withoutUser])])
       }
     }
-  }, [paginatedData, logout]) // needs paginatedData as dependency for the latest update
+  }, [paginatedData, selectedDate.frontPage]) // needs paginatedData as dependency for the latest update
 
+  console.log(JSON.stringify(selectedDate?.frontPage))
+  console.log(new Date(selectedDate.frontPage))
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -136,7 +126,6 @@ const MainContent = () => {
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
   }
-
 
   const handleSearch = () => {
     if (!searchInput.length) return console.log('nothing')

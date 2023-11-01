@@ -51,11 +51,7 @@ export default function Navbar({ handleLogout, isSuccess }) {
   const [isOnClick, setIsOnClick] = useState(false)
   const [windowSize, setWindowSize] = useState(getWindowSize())
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate('/')
-    }
-  }, [isSuccess, navigate])
+
 
   useEffect(() => {
     if (username) {

@@ -89,8 +89,6 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
   }, [isDeleteSubscribedLoading])
 
 
-
-
   const handleDeleteClose = () => {
     setDeleteSubscribedOpen(false)
   }
