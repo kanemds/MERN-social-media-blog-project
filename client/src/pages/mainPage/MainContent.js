@@ -7,7 +7,7 @@ import Note from '../../components/Note'
 import FrontPageSearchBar from '../../components/FrontPageSearchBar'
 import { blue } from '@mui/material/colors'
 import FrontPageSideBar from '../../components/FrontPageSideBar'
-import { useGetPaginatedBlogsQuery } from '../blogs/blogsApiSlice'
+import { useGetPaginatedBlogsQuery, useGetSelectedDateBlogsFromHomePageQuery } from '../blogs/blogsApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
 import DehazeIcon from '@mui/icons-material/Dehaze'
@@ -87,6 +87,11 @@ const MainContent = () => {
   const [maxPage, setMaxPage] = useState('')
   const [hasMore, setHasMore] = useState(true)
   const [isReFetch, setIsReFetch] = useState(false)
+  const [getSelectedDateBlogsInfo, setGetSelectedDateBlogsInfo] = useState({
+    id: null,
+    date: null
+  })
+  const [selectedDateBlogs, setSelectedDateBlogs] = useState([])
 
   const observer = useRef(null)
 
@@ -95,6 +100,31 @@ const MainContent = () => {
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
   } = useGetPaginatedBlogsQuery(Number(page))
+
+  const {
+    data: selectedDateBlogsData,
+    isSuccess: selectedDateBlogsIsSuccess,
+    isLoading: selectedDateBlogsIsLoading,
+  } = useGetSelectedDateBlogsFromHomePageQuery(getSelectedDateBlogsInfo)
+
+
+  useEffect(() => {
+    if (selectedDate) {
+      setGetSelectedDateBlogsInfo({
+        ...getSelectedDateBlogsInfo,
+        date: JSON.stringify(selectedDate.frontPage)
+      })
+    }
+    if (userId) {
+      setGetSelectedDateBlogsInfo({
+        ...getSelectedDateBlogsInfo,
+        id: userId,
+      })
+    }
+    if (selectedDateBlogsIsSuccess) {
+      setSelectedDateBlogs(selectedDateBlogsData)
+    }
+  }, [userId, selectedDate.frontPage, selectedDateBlogsData])
 
 
 
@@ -112,8 +142,7 @@ const MainContent = () => {
     }
   }, [paginatedData, selectedDate.frontPage]) // needs paginatedData as dependency for the latest update
 
-  console.log(JSON.stringify(selectedDate?.frontPage))
-  console.log(new Date(selectedDate.frontPage))
+
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -162,9 +191,11 @@ const MainContent = () => {
   const recentlyUpload = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
   const recentlyUploadWithoutUser = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
+  console.log(selectedDateBlogs)
+  console.log(selectedDateBlogsIsSuccess)
   let content
 
-  if (paginatedIsLoading) {
+  if ((paginatedIsLoading && selectedDate.frontPage === null) || (selectedDateBlogsIsLoading && selectedDate.frontPage !== null)) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -172,8 +203,7 @@ const MainContent = () => {
     )
   }
 
-
-  if (paginatedIsSuccess && allBlogs?.length === 0) {
+  if ((paginatedIsSuccess && allBlogs?.length === 0)) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>
@@ -184,7 +214,7 @@ const MainContent = () => {
   }
 
   // user not exist and all
-  if (paginatedIsSuccess && allBlogs?.length > 0 && !username && isSelected === 'All') {
+  if (paginatedIsSuccess && allBlogs?.length > 0 && !username && isSelected === 'All' && selectedDate.frontPage === null) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {allBlogs?.map(blog =>
@@ -195,7 +225,7 @@ const MainContent = () => {
     )
   }
   // user not exist and recently upload
-  if (paginatedIsSuccess && recentlyUpload?.length > 0 && !username && isSelected === 'Recently Upload') {
+  if (paginatedIsSuccess && recentlyUpload?.length > 0 && !username && isSelected === 'Recently Upload' && selectedDate.frontPage === null) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {recentlyUpload?.map(blog =>
@@ -208,7 +238,7 @@ const MainContent = () => {
 
 
   // if login user exist 
-  if (paginatedIsSuccess && allBlogs?.length > 0 && username && isSelected === 'All') {
+  if (paginatedIsSuccess && allBlogs?.length > 0 && username && isSelected === 'All' && selectedDate.frontPage === null) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {allBlogs?.map(blog =>
@@ -220,7 +250,7 @@ const MainContent = () => {
   }
 
   // if login user exist 
-  if (paginatedIsSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload') {
+  if (paginatedIsSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload' && selectedDate.frontPage === null) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {recentlyUploadWithoutUser?.map(blog =>
@@ -231,6 +261,26 @@ const MainContent = () => {
     )
   }
 
+  if (selectedDateBlogs?.length === 0 && selectedDateBlogsIsSuccess && selectedDate.frontPage !== null) {
+    content =
+      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography>
+          No Blogs for the selected date are available at the moment
+        </Typography>
+      </Box>
+      )
+  }
+
+  if (selectedDateBlogs?.length > 0 && selectedDateBlogsIsSuccess) {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {selectedDateBlogs?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <MainBlog blog={blog} />
+          </Grid>)}
+      </Grid>
+    )
+  }
 
 
   return (

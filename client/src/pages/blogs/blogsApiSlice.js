@@ -142,20 +142,13 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       // },
     }),
     getSelectedDateBlogsFromHomePage: builder.query({
-      query: (date) => ({
-        url: `/blogs/selectedDate?date=${date}`,
+      query: (info) => ({
+        url: `/blogs/selectedDate/${info.id}?date=${info.date}`,
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError
         }
       }),
       keepUnusedDataFor: 300,
-      transformResponse: (response, meta, arg) => {
-        const loadedBlogs = response?.data?.map(blog => {
-          blog.id = blog._id
-          return blog
-        })
-        return { ...response, data: loadedBlogs }
-      },
       providesTags: (result, error, pageNumber) => {
         if (result?.data && Array.isArray(result?.data)) {
           return [
@@ -215,5 +208,6 @@ export const {
   useAddNewBlogMutation,
   useUpdateBlogMutation,
   useDeleteBlogMutation,
-  useGetUserBlogsFromUserIdQuery
+  useGetUserBlogsFromUserIdQuery,
+  useGetSelectedDateBlogsFromHomePageQuery
 } = blogsApiSlice
