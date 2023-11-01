@@ -44,6 +44,7 @@ export default function ActiveCalender() {
   const { selectedDate, setSelectedDate, path, setPath, calendarDate, setCalendarDate } = useContext(SideBarContext)
   const { pathname } = useLocation()
 
+  console.log(selectedDate.frontPage)
 
   useEffect(() => {
     setPath(pathname)

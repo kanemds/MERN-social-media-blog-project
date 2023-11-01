@@ -1123,10 +1123,114 @@ const getPaginatedBlogs = async (req, res) => {
   }
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
-  console.log(blogs)
+
   // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
 
   res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })
+}
+
+// @desc Get selected date for user or none user
+// frontend route Get /blogs/selectedDate
+// backend route Get router.route('/selectedDate')
+// @access Public or Private
+const getSelectedDateBlogsFromHomePage = async (req, res) => {
+  const { date } = req.query
+  const { id } = req.params
+  console.log(new Date(date))
+  console.log(id)
+
+  // const findUser = await User.findById(id).exec()
+
+  // const blogs = await Blog.aggregate([
+  //   {
+  //     $match: {
+  //       createdAt: new Date(date)
+  //     }
+  //   },
+  //   // {
+  //   //   $lookup: {
+  //   //     from: 'users', // Replace with the actual name of your "User" collection in MongoDB
+  //   //     localField: 'user',
+  //   //     foreignField: '_id',
+  //   //     as: 'userDetails'
+  //   //   },
+  //   // },
+  //   // {
+  //   //   $unwind: '$userDetails'
+  //   // },
+  //   // {
+  //   //   $lookup: {
+  //   //     from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+  //   //     let: { blog_id: '$_id' },
+  //   //     pipeline: [
+  //   //       {
+  //   //         $match: {
+  //   //           $expr: {
+  //   //             $and: [
+  //   //               { $eq: ['$blog_id', '$$blog_id'] },
+  //   //               { $eq: ['$liked_by_user_id', findUser._id] },
+  //   //             ],
+  //   //           },
+  //   //         },
+  //   //       },
+  //   //     ],
+  //   //     as: 'like'
+  //   //   },
+  //   // },
+  //   // {
+  //   //   $addFields: {
+  //   //     like_data: {
+  //   //       $cond: {
+  //   //         if: { $eq: [{ $size: '$like' }, 0] },
+  //   //         then: {
+  //   //           like_id: null,
+  //   //           is_liked: false,
+  //   //           total_likes: { $size: '$likes_per_blog' }
+  //   //         }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+  //   //         else: {
+  //   //           like_id: { $arrayElemAt: ['$like._id', 0] },
+  //   //           is_liked: { $arrayElemAt: ['$like.is_like', 0] },
+  //   //           total_likes: { $size: '$likes_per_blog' }
+  //   //         }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
+  //   //       }
+  //   //     }
+  //   //   }
+  //   // },
+  //   {
+  //     $project: {
+  //       _id: 1,
+  //       title: 1,
+  //       text: 1,
+  //       images: 1,
+  //       visible_to: 1,
+  //       createdAt: 1,
+  //       updatedAt: 1,
+  //       user: 1,
+  //       // blogger_avatar: '$userDetails.avatar',
+  //       // username: '$userDetails.username',
+  //       __v: 1
+  //     }
+  //   },
+  // ]).sort({ createdAt: -1 }) // Sort by _id in descending order
+
+  // const blogs = await Blog.find().exec()
+  const dynamicDate = new Date(date)
+  const blogs = await Blog.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: new Date(dynamicDate), // Match documents created on or after the dynamic date
+          $lt: new Date(dynamicDate.getTime() + 24 * 60 * 60 * 1000), // Match documents created within the same day
+        }
+      }
+    },
+    // Additional pipeline stages go here
+  ])
+
+
+  console.log(blogs)
+
+  res.status(200).json(blogs)
 }
 
 // @desc Create a blog
@@ -1282,4 +1386,4 @@ const deleteBlog = async (req, res) => {
 
 }
 
-module.exports = { createBlog, updateBlog, deleteBlog, getSingleBlog, getSelectedBlogger, getPaginatedBlogs, getBlogsForUser }
+module.exports = { createBlog, updateBlog, deleteBlog, getSingleBlog, getSelectedBlogger, getPaginatedBlogs, getBlogsForUser, getSelectedDateBlogsFromHomePage }
