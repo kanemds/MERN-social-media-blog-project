@@ -10,6 +10,9 @@ router.route('/')
 router.route('/single')
   .get(getSingleLike)
 
+router.route('/selected-date')
+  .get(getSingleLike)
+
 router.route('/user')
   .get(getLikesForUser)
 

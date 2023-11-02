@@ -12,7 +12,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import useAuth from '../../hooks/useAuth'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { useGetLikedBlogsFromUserQuery } from '../likes/likesApiSlice'
+import { useGetLikedBlogsFromUserQuery, useGetSelectedDateLikesQuery } from '../likes/likesApiSlice'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { increment, resetCache, userLogout } from '../blogs/blogSlice'
@@ -87,11 +87,34 @@ const MainContent = () => {
   const [maxPage, setMaxPage] = useState('')
   const [hasMore, setHasMore] = useState(true)
   const [isReFetch, setIsReFetch] = useState(false)
+
+  // --------------------------- selected date ---------------------------
+
+  const [date, setDate] = useState(selectedDate.frontPage ? JSON.stringify(selectedDate.frontPage) : null)
+
   const [getSelectedDateBlogsInfo, setGetSelectedDateBlogsInfo] = useState({
     id: null,
     date: null
   })
-  const [selectedDateBlogs, setSelectedDateBlogs] = useState([])
+  const [selectedDateBlogs, setSelectedDateBlogs] = useState({ userExist: [], userNotExist: [] })
+  const [selectedDateLikes, setSelectedDateLikes] = useState([])
+
+  const {
+    data: selectedDateBlogsData,
+    isSuccess: isSuccessSelectedDateBlogs,
+    isLoading: isLoadingSelectedDateBlogs,
+  } = useGetSelectedDateBlogsFromHomePageQuery(getSelectedDateBlogsInfo)
+
+  // const {
+  //   data: selectedDateLikesData,
+  //   isSuccess: isSuccessSelectedDateLikes,
+  //   isLoading: isLoadingSelectedDateLikes,
+  // } = useGetSelectedDateLikesQuery(date)
+
+
+
+  // --------------------------- selected date ---------------------------
+
 
   const observer = useRef(null)
 
@@ -101,30 +124,39 @@ const MainContent = () => {
     isLoading: paginatedIsLoading,
   } = useGetPaginatedBlogsQuery(Number(page))
 
-  const {
-    data: selectedDateBlogsData,
-    isSuccess: selectedDateBlogsIsSuccess,
-    isLoading: selectedDateBlogsIsLoading,
-  } = useGetSelectedDateBlogsFromHomePageQuery(getSelectedDateBlogsInfo)
-
 
   useEffect(() => {
-    if (selectedDate) {
-      setGetSelectedDateBlogsInfo({
-        ...getSelectedDateBlogsInfo,
-        date: JSON.stringify(selectedDate.frontPage)
-      })
+    if (selectedDate.frontPage !== null) {
+      if (userId) {
+        setGetSelectedDateBlogsInfo({
+          ...getSelectedDateBlogsInfo,
+          id: userId,
+          date: JSON.stringify(selectedDate.frontPage)
+        })
+      } else {
+        setGetSelectedDateBlogsInfo({
+          ...getSelectedDateBlogsInfo,
+          date: JSON.stringify(selectedDate.frontPage)
+        })
+      }
     }
-    if (userId) {
-      setGetSelectedDateBlogsInfo({
-        ...getSelectedDateBlogsInfo,
-        id: userId,
-      })
+  }, [selectedDate.frontPage])
+
+  useEffect(() => {
+
+    if (selectedDate.frontPage !== null) {
+      if (isSuccessSelectedDateBlogs && username) {
+        const withOutUserBlogs = selectedDateBlogsData?.filter(blog => blog.user !== userId)
+        setSelectedDateBlogs({ ...selectedDateBlogs, userExist: { date: selectedDate?.frontPage, blogs: withOutUserBlogs } })
+      }
+      if (isSuccessSelectedDateBlogs && !username) {
+        setSelectedDateBlogs({ ...selectedDateBlogs, userNotExist: selectedDateBlogs?.userNotExist.concat({ date: selectedDate?.frontPage, blogs: selectedDateBlogsData }) })
+      }
     }
-    if (selectedDateBlogsIsSuccess) {
-      setSelectedDateBlogs(selectedDateBlogsData)
-    }
-  }, [userId, selectedDate.frontPage, selectedDateBlogsData])
+  }, [isSuccessSelectedDateBlogs])
+
+
+  console.log(selectedDateBlogs)
 
 
 
@@ -141,7 +173,6 @@ const MainContent = () => {
       }
     }
   }, [paginatedData, selectedDate.frontPage]) // needs paginatedData as dependency for the latest update
-
 
 
   const handleNext = () => {
@@ -191,11 +222,10 @@ const MainContent = () => {
   const recentlyUpload = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
   const recentlyUploadWithoutUser = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
-  console.log(selectedDateBlogs)
-  console.log(selectedDateBlogsIsSuccess)
+
   let content
 
-  if ((paginatedIsLoading && selectedDate.frontPage === null) || (selectedDateBlogsIsLoading && selectedDate.frontPage !== null)) {
+  if (paginatedIsLoading && selectedDate.frontPage === null) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -261,26 +291,47 @@ const MainContent = () => {
     )
   }
 
-  if (selectedDateBlogs?.length === 0 && selectedDateBlogsIsSuccess && selectedDate.frontPage !== null) {
-    content =
-      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <Typography>
-          No Blogs for the selected date are available at the moment
-        </Typography>
-      </Box>
-      )
-  }
+  // if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null) {
+  //   content = (
+  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+  //       <LoadingSpinner />
+  //     </Box>
+  //   )
+  // }
 
-  if (selectedDateBlogs?.length > 0 && selectedDateBlogsIsSuccess) {
-    content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-        {selectedDateBlogs?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <MainBlog blog={blog} />
-          </Grid>)}
-      </Grid>
-    )
-  }
+
+  // if (username && selectedDateBlogs?.userExist?.blogs?.length === 0 && isSuccessSelectedDateBlogs && selectedDate.frontPage !== null) {
+  //   content =
+  //     (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+  //       <Typography>
+  //         No Blogs for the selected date are available at the moment
+  //       </Typography>
+  //     </Box>
+  //     )
+  // }
+
+  // if (!username && selectedDateBlogs?.userNotExist?.blogs?.length === 0 && isSuccessSelectedDateBlogs && selectedDate.frontPage !== null) {
+  //   content =
+  //     (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+  //       <Typography>
+  //         No Blogs for the selected date are available at the moment
+  //       </Typography>
+  //     </Box>
+  //     )
+  // }
+
+  // if (!username && selectedDateBlogs?.userNotExist?.blogs.length > 0 && isSuccessSelectedDateBlogs) {
+
+  //   content = (
+  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //       {
+  //         selectedDateBlogs?.userNotExist?.blogs.map(blog =>
+  //           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //             <MainBlog blog={blog} />
+  //           </Grid>)}
+  //     </Grid>
+  //   )
+  // }
 
 
   return (

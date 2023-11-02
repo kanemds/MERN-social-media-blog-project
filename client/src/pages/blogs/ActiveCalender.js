@@ -44,12 +44,11 @@ export default function ActiveCalender() {
   const { selectedDate, setSelectedDate, path, setPath, calendarDate, setCalendarDate } = useContext(SideBarContext)
   const { pathname } = useLocation()
 
-  console.log(selectedDate.frontPage)
-
   useEffect(() => {
     setPath(pathname)
   }, [pathname])
 
+  // the selected date start from 12:00am
   const handleSelectedDate = (date) => {
 
     const timeConvert = date ? new Date(Date.parse(date?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo) : null
