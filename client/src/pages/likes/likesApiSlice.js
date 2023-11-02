@@ -80,6 +80,33 @@ export const likesApiSlice = apiSlice.injectEndpoints({
         }
       }
     }),
+    getSelectedDateLikes: builder.query({
+      query: (date) => ({
+        url: `/likes/selected-date?date=${date}`,
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError
+        }
+      }),
+      keepUnusedDataFor: 300,
+      transformResponse: (response, meta, arg) => {
+        const likes = response?.map(like => {
+          like.id = like._id
+          return like
+        })
+        return likes
+      },
+      providesTags: (result, error, arg) => {
+        if (result) {
+          return [{
+            type: 'Like', id: 'LIST'
+          },
+          { type: 'Like', id: result._id }
+          ]
+        } else {
+          return [{ type: 'Like', id: 'LIST' }]
+        }
+      }
+    }),
     addLikedToBlog: builder.mutation({
       query: likedInfo => ({
         url: '/likes',
@@ -107,4 +134,4 @@ export const likesApiSlice = apiSlice.injectEndpoints({
   })
 })
 
-export const { useGetLikedBlogsFromUserQuery, useGetLikeForSingleBlogQuery, useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetUserLikedBlogsQuery } = likesApiSlice
+export const { useGetLikedBlogsFromUserQuery, useGetLikeForSingleBlogQuery, useAddLikedToBlogMutation, useDeleteLikedFromBlogMutation, useGetUserLikedBlogsQuery, useGetSelectedDateLikesQuery } = likesApiSlice

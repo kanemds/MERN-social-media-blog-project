@@ -52,6 +52,19 @@ const getSingleLike = async (req, res) => {
   res.status(200).json(like)
 }
 
+// @desc Get like for single blog page
+// route Get /likes
+// @access Private
+const getSelectedDateLikes = async (req, res) => {
+
+  const { date } = req.query
+
+  console.log(date)
+  if (!date) return res.status(200).json('like')
+
+  // res.status(200).json(like)
+}
+
 
 // @desc Get blogs for likedList
 // route Get /likes/user
@@ -128,8 +141,6 @@ const getBlogsForLikedList = async (req, res) => {
     return { ...blog, likedAt: timeConvert, addedBy: blog.createdAt }
   })
 
-  console.log(collectionLikeData)
-
   res.status(200).json(collectionLikeData)
 }
 
@@ -194,4 +205,4 @@ const deleteLike = async (req, res) => {
 }
 
 
-module.exports = { getAllLikes, getLikesForUser, getSingleLike, addedLike, editLIke, deleteLike, getBlogsForLikedList }
+module.exports = { getAllLikes, getLikesForUser, getSingleLike, addedLike, editLIke, deleteLike, getBlogsForLikedList, getSelectedDateLikes }

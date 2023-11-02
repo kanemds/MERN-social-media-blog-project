@@ -143,12 +143,19 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
     }),
     getSelectedDateBlogsFromHomePage: builder.query({
       query: (info) => ({
-        url: `/blogs/selectedDate/${info.id}?date=${info.date}`,
+        url: `/blogs/selected-date/${info.id}?date=${info.date}`,
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError
         }
       }),
       keepUnusedDataFor: 300,
+      transformResponse: (response, meta, arg) => {
+        const loadedBlogs = response?.map(blog => {
+          blog.id = blog._id
+          return blog
+        })
+        return loadedBlogs
+      },
       providesTags: (result, error, pageNumber) => {
         if (result?.data && Array.isArray(result?.data)) {
           return [

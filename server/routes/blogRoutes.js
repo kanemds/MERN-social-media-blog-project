@@ -9,7 +9,7 @@ router.route('/')
 router.route('/paginatedBlogs')
   .get(getPaginatedBlogs)
 
-router.route('/selectedDate/:id')
+router.route('/selected-date/:id')
   .get(getSelectedDateBlogsFromHomePage)
 
 router.route('/user')
