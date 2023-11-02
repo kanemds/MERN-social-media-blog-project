@@ -143,7 +143,6 @@ const MainContent = () => {
   }, [selectedDate.frontPage])
 
   useEffect(() => {
-
     if (selectedDate.frontPage !== null) {
       if (isSuccessSelectedDateBlogs && username) {
         const withOutUserBlogs = selectedDateBlogsData?.filter(blog => blog.user !== userId)
@@ -320,18 +319,29 @@ const MainContent = () => {
   //     )
   // }
 
-  // if (!username && selectedDateBlogs?.userNotExist?.blogs.length > 0 && isSuccessSelectedDateBlogs) {
-
-  //   content = (
-  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-  //       {
-  //         selectedDateBlogs?.userNotExist?.blogs.map(blog =>
-  //           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-  //             <MainBlog blog={blog} />
-  //           </Grid>)}
-  //     </Grid>
-  //   )
-  // }
+  if (!username && selectedDate.frontPage !== null && isSuccessSelectedDateBlogs) {
+    const findSelectedDate = selectedDateBlogs?.userNotExist.filter(blog => blog.date === selectedDate.frontPage)
+    const currentDate = findSelectedDate[0]?.blogs
+    console.log(currentDate)
+    currentDate?.length > 0 ?
+      content = (
+        <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+          {
+            currentDate?.map(blog =>
+              <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+                <MainBlog blog={blog} />
+              </Grid>)}
+        </Grid>
+      )
+      :
+      content = (
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+          <Typography>
+            No Blogs for the selected date are available at the moment
+          </Typography>
+        </Box>
+      )
+  }
 
 
   return (
