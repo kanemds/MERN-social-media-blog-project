@@ -60,7 +60,7 @@ const getSelectedDateLikes = async (req, res) => {
   const { date } = req.query
 
   console.log(date)
-  if (!date) return res.status(200).json('like')
+
 
   // res.status(200).json(like)
 }

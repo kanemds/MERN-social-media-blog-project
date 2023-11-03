@@ -109,11 +109,11 @@ const MainContent = () => {
   //   data: selectedDateLikesData,
   //   isSuccess: isSuccessSelectedDateLikes,
   //   isLoading: isLoadingSelectedDateLikes,
-  // } = useGetSelectedDateLikesQuery(date)
+  // } = useGetSelectedDateLikesQuery(getSelectedDateBlogsInfo)
 
   // console.log(getSelectedDateBlogsInfo)
-  console.log(isSuccessSelectedDateBlogs)
-  console.log(selectedDateBlogsData)
+  // console.log(isSuccessSelectedDateBlogs)
+  // console.log(selectedDateBlogsData)
 
   // --------------------------- selected date ---------------------------
 

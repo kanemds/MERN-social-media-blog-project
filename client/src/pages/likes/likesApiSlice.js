@@ -82,7 +82,7 @@ export const likesApiSlice = apiSlice.injectEndpoints({
     }),
     getSelectedDateLikes: builder.query({
       query: (date) => ({
-        url: `/likes/selected-date?date=${date}`,
+        url: `/likes/selected-date?date=${date.date}`,
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError
         }
