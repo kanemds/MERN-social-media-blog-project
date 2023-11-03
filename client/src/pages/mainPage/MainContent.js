@@ -93,8 +93,8 @@ const MainContent = () => {
   const [date, setDate] = useState(selectedDate.frontPage ? JSON.stringify(selectedDate.frontPage) : null)
 
   const [getSelectedDateBlogsInfo, setGetSelectedDateBlogsInfo] = useState({
-    id: null,
-    date: null
+    id: userId ? userId : null,
+    date: selectedDate.frontPage ? selectedDate.frontPage : null
   })
   const [selectedDateBlogs, setSelectedDateBlogs] = useState({ userExist: [], userNotExist: [] })
   const [selectedDateLikes, setSelectedDateLikes] = useState([])
@@ -111,7 +111,9 @@ const MainContent = () => {
   //   isLoading: isLoadingSelectedDateLikes,
   // } = useGetSelectedDateLikesQuery(date)
 
-
+  // console.log(getSelectedDateBlogsInfo)
+  console.log(isSuccessSelectedDateBlogs)
+  console.log(selectedDateBlogsData)
 
   // --------------------------- selected date ---------------------------
 
@@ -124,19 +126,18 @@ const MainContent = () => {
     isLoading: paginatedIsLoading,
   } = useGetPaginatedBlogsQuery(Number(page))
 
-
+  // --------------------------- selected date ---------------------------
   useEffect(() => {
     if (selectedDate.frontPage !== null) {
       if (userId) {
         setGetSelectedDateBlogsInfo({
-          ...getSelectedDateBlogsInfo,
           id: userId,
-          date: JSON.stringify(selectedDate.frontPage)
+          date: selectedDate.frontPage
         })
       } else {
         setGetSelectedDateBlogsInfo({
           ...getSelectedDateBlogsInfo,
-          date: JSON.stringify(selectedDate.frontPage)
+          date: selectedDate.frontPage
         })
       }
     }
@@ -144,21 +145,46 @@ const MainContent = () => {
 
   useEffect(() => {
     if (selectedDate.frontPage !== null) {
-      if (isSuccessSelectedDateBlogs && username) {
-        const withOutUserBlogs = selectedDateBlogsData?.filter(blog => blog.user !== userId)
-        setSelectedDateBlogs({ ...selectedDateBlogs, userExist: { date: selectedDate?.frontPage, blogs: withOutUserBlogs } })
+      if (selectedDateBlogsData && userId) {
+        const withOutUserBlogs = selectedDateBlogsData.filter(blog => blog.user !== userId)
+        const newBlogsEntry = { date: getSelectedDateBlogsInfo.date, blogs: withOutUserBlogs }
+        const updatedUserExist = [...selectedDateBlogs.userExist]
+
+        // Check if the date already exists in userExist and update it
+        const existingIndex = updatedUserExist.findIndex(entry => entry.date === newBlogsEntry.date)
+        if (existingIndex !== -1) {
+          updatedUserExist[existingIndex] = newBlogsEntry
+        } else {
+          updatedUserExist.push(newBlogsEntry)
+        }
+
+        setSelectedDateBlogs(prevSelectedDateBlogs => ({
+          ...prevSelectedDateBlogs,
+          userExist: updatedUserExist,
+        }))
       }
-      if (isSuccessSelectedDateBlogs && !username) {
-        setSelectedDateBlogs({ ...selectedDateBlogs, userNotExist: selectedDateBlogs?.userNotExist.concat({ date: selectedDate?.frontPage, blogs: selectedDateBlogsData }) })
+      if (selectedDateBlogsData && !userId) {
+        const newBlogsEntry = { date: getSelectedDateBlogsInfo.date, blogs: selectedDateBlogsData }
+        const updatedUserNotExist = [...selectedDateBlogs.userNotExist]
+
+        // Check if the date already exists in userNotExist and update it
+        const existingIndex = updatedUserNotExist.findIndex(entry => entry.date === newBlogsEntry.date)
+        if (existingIndex !== -1) {
+          updatedUserNotExist[existingIndex] = newBlogsEntry
+        } else {
+          updatedUserNotExist.push(newBlogsEntry)
+        }
+
+        setSelectedDateBlogs(prevSelectedDateBlogs => ({
+          ...prevSelectedDateBlogs,
+          userNotExist: updatedUserNotExist,
+        }))
       }
     }
-  }, [isSuccessSelectedDateBlogs])
+  }, [selectedDateBlogsData])
 
 
-  console.log(selectedDateBlogs)
-
-
-
+  // --------------------------- selected date ---------------------------
   useEffect(() => {
     if (page === paginatedData?.numberOfPages) {
       setHasMore(false)
@@ -171,8 +197,7 @@ const MainContent = () => {
         setAllBlogs([...new Set([...allBlogs, ...withoutUser])])
       }
     }
-  }, [paginatedData, selectedDate.frontPage]) // needs paginatedData as dependency for the latest update
-
+  }, [paginatedData]) // needs paginatedData as dependency for the latest update
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -290,57 +315,52 @@ const MainContent = () => {
     )
   }
 
-  // if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null) {
-  //   content = (
-  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-  //       <LoadingSpinner />
-  //     </Box>
-  //   )
-  // }
+  if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <LoadingSpinner />
+      </Box>
+    )
+  }
 
+  console.log(getSelectedDateBlogsInfo)
+  console.log(selectedDateBlogs)
 
-  // if (username && selectedDateBlogs?.userExist?.blogs?.length === 0 && isSuccessSelectedDateBlogs && selectedDate.frontPage !== null) {
-  //   content =
-  //     (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-  //       <Typography>
-  //         No Blogs for the selected date are available at the moment
-  //       </Typography>
-  //     </Box>
-  //     )
-  // }
-
-  // if (!username && selectedDateBlogs?.userNotExist?.blogs?.length === 0 && isSuccessSelectedDateBlogs && selectedDate.frontPage !== null) {
-  //   content =
-  //     (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-  //       <Typography>
-  //         No Blogs for the selected date are available at the moment
-  //       </Typography>
-  //     </Box>
-  //     )
-  // }
-
-  if (!username && selectedDate.frontPage !== null && isSuccessSelectedDateBlogs) {
-    const findSelectedDate = selectedDateBlogs?.userNotExist.filter(blog => blog.date === selectedDate.frontPage)
+  if (selectedDate.frontPage !== null && isSuccessSelectedDateBlogs) {
+    const findSelectedDateWithOutUser = selectedDateBlogs?.userExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
+    const findSelectedDate = selectedDateBlogs?.userNotExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
     const currentDate = findSelectedDate[0]?.blogs
-    console.log(currentDate)
-    currentDate?.length > 0 ?
+    const currentDateWithoutUser = findSelectedDateWithOutUser[0]?.blogs
+
+    userId && currentDateWithoutUser?.length > 0 ?
       content = (
         <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
           {
-            currentDate?.map(blog =>
+            currentDateWithoutUser?.map(blog =>
               <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
                 <MainBlog blog={blog} />
               </Grid>)}
         </Grid>
       )
       :
-      content = (
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-          <Typography>
-            No Blogs for the selected date are available at the moment
-          </Typography>
-        </Box>
-      )
+      !userId && currentDate?.length > 0 ?
+        content = (
+          <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+            {
+              currentDate?.map(blog =>
+                <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+                  <MainBlog blog={blog} />
+                </Grid>)}
+          </Grid>
+        )
+        :
+        content = (
+          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+            <Typography>
+              No Blogs for the selected date are available at the moment
+            </Typography>
+          </Box>
+        )
   }
 
 

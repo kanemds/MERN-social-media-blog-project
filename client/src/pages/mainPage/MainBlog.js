@@ -428,6 +428,7 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
                     :
                     new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionTwo)
                 }
+
               </Typography>
               {bloggerUsername === username ?
                 <IconButton

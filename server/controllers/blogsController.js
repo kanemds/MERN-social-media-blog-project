@@ -1134,23 +1134,37 @@ const getPaginatedBlogs = async (req, res) => {
 // backend route Get router.route('/selectedDate')
 // @access Public or Private
 const getSelectedDateBlogsFromHomePage = async (req, res) => {
-  const { date } = req.query
-  const { id } = req.params
+  // date is a local time
+  const { date } = req.query // Oct 17, 2023
 
-  console.log(date)
-  console.log(id)
+  //   // data from mongodb
+  //   2023-10-27T02:41:36.386Z
+  //   console.log(blog.createdAt) 
 
-  if (!date) return
-  const dynamicDate = new Date(date)
+  //   Thu Oct 26 2023 19:41:36 GMT-0700 (Pacific Daylight Time)
+  //   console.log(new Date(Date.parse(blog.createdAt))) 
 
+  //   Oct 26, 2023, 7:41 PM
+  //   console.log(new Date(Date.parse(blog.createdAt)).toLocaleString(undefined, timeDisplayOptions.optionThree))
+
+  // UTC time
+  const utcTime = new Date(date) // 2023-10-30T07:00:00.000Z
+  console.log(utcTime)
+
+  // Get the current time zone offset in minutes
+  const timeZoneOffset = new Date().getTimezoneOffset() // 420
+
+  const localTime = new Date(utcTime.getTime() + timeZoneOffset * 60000) // 2023-10-31T00:00:00.000Z
+
+  console.log(new Date(utcTime.getTime() + 24 * 60 * 60 * 1000))
 
   // the selected date start from 12:00am
   const blogs = await Blog.aggregate([
     {
       $match: {
         createdAt: {
-          $gte: new Date(dynamicDate), // Match documents created on or after the dynamic date
-          $lt: new Date(dynamicDate.getTime() + 24 * 60 * 60 * 1000), // Match documents created within the same day
+          $gte: utcTime,
+          $lt: new Date(utcTime.getTime() + 24 * 60 * 60 * 1000)
         }
       }
     },
@@ -1182,6 +1196,7 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
     },
   ])
 
+  console.log(blogs)
 
   res.status(200).json(blogs)
 }
