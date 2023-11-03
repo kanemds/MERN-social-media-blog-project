@@ -863,7 +863,7 @@ const getPaginatedBlogs = async (req, res) => {
   //return  1
   const { page } = req.query
 
-  console.log(page)
+  // console.log(page)
 
 
   if (!page || isNaN(page) || page < 1) {
@@ -1134,6 +1134,12 @@ const getPaginatedBlogs = async (req, res) => {
 // backend route Get router.route('/selectedDate')
 // @access Public or Private
 const getSelectedDateBlogsFromHomePage = async (req, res) => {
+
+  const { id } = req.params
+
+  console.log(id)
+
+
   // date is a local time
   const { date } = req.query // Oct 17, 2023
 
@@ -1149,14 +1155,14 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
 
   // UTC time
   const utcTime = new Date(date) // 2023-10-30T07:00:00.000Z
-  console.log(utcTime)
+  // console.log(utcTime)
 
   // Get the current time zone offset in minutes
   const timeZoneOffset = new Date().getTimezoneOffset() // 420
 
   const localTime = new Date(utcTime.getTime() + timeZoneOffset * 60000) // 2023-10-31T00:00:00.000Z
 
-  console.log(new Date(utcTime.getTime() + 24 * 60 * 60 * 1000))
+  // console.log(new Date(utcTime.getTime() + 24 * 60 * 60 * 1000))
 
   // the selected date start from 12:00am
   const blogs = await Blog.aggregate([
@@ -1180,6 +1186,53 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
       $unwind: '$userDetails'
     },
     {
+      $lookup: {
+        from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+        let: { blog_id: '$_id' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  // '$blog_id' form the like data 
+                  //  '$$blog_id' reference to the blog_id ===  let: { blog_id: '$_id' }
+                  { $eq: ['$blog_id', '$$blog_id'] },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'likes_per_blog'
+      },
+    },
+    {
+      $addFields: {
+        like_data: {
+          like_id: null,
+          is_liked: false,
+          total_likes: { $size: '$likes_per_blog' }
+        },
+      }
+    },
+    {
+      $addFields: {
+        bookmark_data: {
+          then: {
+            bookmark_id: null,
+            is_bookmarked: false
+          }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+        }
+      }
+    },
+    {
+      $addFields: {
+        subscribe_data: {
+          subscribe_id: null,
+          is_subscribed: null,
+        },
+      }
+    },
+    {
       $project: {
         _id: 1,
         title: 1,
@@ -1189,6 +1242,9 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
         createdAt: 1,
         updatedAt: 1,
         user: 1,
+        subscribe_data: 1,
+        bookmark_data: 1,
+        like_data: 1,
         blogger_avatar: '$userDetails.avatar',
         username: '$userDetails.username',
         __v: 1
@@ -1196,7 +1252,7 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
     },
   ])
 
-  console.log(blogs)
+  // console.log(blogs)
 
   res.status(200).json(blogs)
 }
