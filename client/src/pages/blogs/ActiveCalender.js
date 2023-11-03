@@ -51,7 +51,32 @@ export default function ActiveCalender() {
   // the selected date start from 12:00am
   const handleSelectedDate = (date) => {
 
+
+
+    // // UTC time
+    // const utcTime = new Date(date)
+    // console.log('utcTime', utcTime)  // Mon Oct 23 2023 00:00:00 GMT-0700 (Pacific Daylight Time)
+
+    // // Get the current time zone offset in minutes
+    // const timeZoneOffset = new Date().getTimezoneOffset() // 420
+    // console.log('timeZoneOffset', timeZoneOffset)
+
+    // const localDate = new Date(utcTime.getTime() + utcTime.getTimezoneOffset() * 60 * 1000)
+    // console.log('localDate', localDate)
+
+    // // const localTime = new Date(utcTime.getTime() - timeZoneOffset * 60000) // 2023-10-31T00:00:00.000Z
+    // // console.log(localTime)
+
+    // const a = localDate.toLocaleString(undefined, timeDisplayOptions.optionTwo)
+
+    // console.log('a', a)
+
+
     const timeConvert = date ? new Date(Date.parse(date?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo) : null
+
+    // console.log(new Date(Date.parse(date?.toString()))) // Mon Oct 23 2023 00:00:00 GMT-0700 (Pacific Daylight Time)
+    // console.log(timeConvert)
+
     if (pathname === '/') {
       setCalendarDate({ ...calendarDate, frontPage: date })
       setSelectedDate({ ...selectedDate, frontPage: timeConvert })
