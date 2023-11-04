@@ -890,6 +890,16 @@ const getPaginatedBlogs = async (req, res) => {
   if (findUser) {
     blogs = await Blog.aggregate([
       {
+        $match: {
+          $expr: { // aggregation expressions
+            // compare the value of the 'user' field in each document to the value of findUser._id.
+            //  This involves comparing a field in the document with an external value, and for such scenarios, 
+            // $expr is used to access fields within the document itself. 
+            $ne: ['$user', findUser._id] // // Exclude user's blogs if findUser exists
+          }
+        }
+      },
+      {
         $lookup: {
           from: 'users', // Replace with the actual name of your "User" collection in MongoDB
           localField: 'user',
@@ -900,19 +910,19 @@ const getPaginatedBlogs = async (req, res) => {
       {
         $unwind: '$userDetails'
       },
-      {
-        $lookup: {
-          from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
-          pipeline: [
-            {
-              $match: {
-                subscribed_by_user_id: findUser._id
-              }
-            }
-          ],
-          as: 'subscriptions'
-        },
-      },
+      // {
+      //   $lookup: {
+      //     from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+      //     pipeline: [
+      //       {
+      //         $match: {
+      //           subscribed_by_user_id: findUser._id
+      //         }
+      //       }
+      //     ],
+      //     as: 'subscriptions'
+      //   },
+      // },
       {
         $lookup: {
           from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
@@ -1005,14 +1015,14 @@ const getPaginatedBlogs = async (req, res) => {
           }
         }
       },
-      {
-        $addFields: {
-          subscribe_data: {
-            subscribe_id: { $arrayElemAt: ['$subscriptions._id', 0] },
-            is_subscribed: { $arrayElemAt: ['$subscriptions.is_subscribed', 0] },
-          },
-        }
-      },
+      // {
+      //   $addFields: {
+      //     subscribe_data: {
+      //       subscribe_id: { $arrayElemAt: ['$subscriptions._id', 0] },
+      //       is_subscribed: { $arrayElemAt: ['$subscriptions.is_subscribed', 0] },
+      //     },
+      //   }
+      // },
       {
         $project: {
           _id: 1,
@@ -1023,7 +1033,7 @@ const getPaginatedBlogs = async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           user: 1,
-          subscribe_data: 1,
+          // subscribe_data: 1,
           bookmark_data: 1,
           like_data: 1,
           blogger_avatar: '$userDetails.avatar',
@@ -1121,6 +1131,8 @@ const getPaginatedBlogs = async (req, res) => {
 
   // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
 
+
+
   res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })
 }
 
@@ -1171,12 +1183,20 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
   let blogs
   if (existedUser !== null) {
     blogs = await Blog.aggregate([
+      // {
+      //   $match: {
+      //     createdAt: {
+      //       $gte: utcTime,
+      //       $lt: new Date(utcTime.getTime() + 24 * 60 * 60 * 1000)
+      //     }
+      //   }
+      // },
       {
         $match: {
-          createdAt: {
-            $gte: utcTime,
-            $lt: new Date(utcTime.getTime() + 24 * 60 * 60 * 1000)
-          }
+          $and: [
+            { createdAt: { $gte: utcTime, $lt: new Date(utcTime.getTime() + 24 * 60 * 60 * 1000) } },
+            { user: { $ne: existedUser._id } }
+          ]
         }
       },
       {
@@ -1190,20 +1210,20 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
       {
         $unwind: '$userDetails'
       },
-      {
-        $lookup: {
-          from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
-          pipeline: [
-            {
-              $match: {
-                blog_owner_id: new mongoose.Types.ObjectId(id),
-                subscribed_by_user_id: existedUser._id
-              }
-            }
-          ],
-          as: 'subscriptions'
-        },
-      },
+      // {
+      //   $lookup: {
+      //     from: 'subscribes', // Replace with the actual name of your "Subscribe" collection in MongoDB
+      //     pipeline: [
+      //       {
+      //         $match: {
+      //           blog_owner_id: new mongoose.Types.ObjectId(id),
+      //           subscribed_by_user_id: existedUser._id
+      //         }
+      //       }
+      //     ],
+      //     as: 'subscriptions'
+      //   },
+      // },
       {
         $lookup: {
           from: 'likes', // Replace with the actual name of your "Subscribe" collection in MongoDB
@@ -1233,7 +1253,7 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
                 $expr: {
                   $and: [
                     { $eq: ['$blog_id', '$$blog_id'] },
-                    { $eq: ['$blog_owner', new mongoose.Types.ObjectId(id)] },
+                    // { $eq: ['$blog_owner', new mongoose.Types.ObjectId(id)] },
                     { $eq: ['$liked_by_user_id', existedUser._id] },
                   ],
                 },
@@ -1272,7 +1292,7 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
                 $expr: {
                   $and: [
                     { $eq: ['$blog_id', '$$blogId'] },
-                    { $eq: ['$blog_owner_id', new mongoose.Types.ObjectId(id)] },
+                    // { $eq: ['$blog_owner_id', new mongoose.Types.ObjectId(id)] },
                     { $eq: ['$bookmark_by_user_id', existedUser._id] },
                   ],
                 },
@@ -1300,14 +1320,14 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
           }
         }
       },
-      {
-        $addFields: {
-          subscribe_data: {
-            subscribe_id: { $arrayElemAt: ['$subscriptions._id', 0] },
-            is_subscribed: { $arrayElemAt: ['$subscriptions.is_subscribed', 0] },
-          },
-        }
-      },
+      // {
+      //   $addFields: {
+      //     subscribe_data: {
+      //       subscribe_id: { $arrayElemAt: ['$subscriptions._id', 0] },
+      //       is_subscribed: { $arrayElemAt: ['$subscriptions.is_subscribed', 0] },
+      //     },
+      //   }
+      // },
       {
         $project: {
           _id: 1,
@@ -1318,12 +1338,11 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           user: 1,
-          subscribe_data: 1,
+          // subscribe_data: 1,
           bookmark_data: 1,
           like_data: 1,
           blogger_avatar: '$userDetails.avatar',
           username: '$userDetails.username',
-
           __v: 1
         }
       },
@@ -1388,14 +1407,14 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
           }
         }
       },
-      {
-        $addFields: {
-          subscribe_data: {
-            subscribe_id: null,
-            is_subscribed: null,
-          },
-        }
-      },
+      // {
+      //   $addFields: {
+      //     subscribe_data: {
+      //       subscribe_id: null,
+      //       is_subscribed: null,
+      //     },
+      //   }
+      // },
       {
         $project: {
           _id: 1,
@@ -1406,7 +1425,7 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           user: 1,
-          subscribe_data: 1,
+          // subscribe_data: 1,
           bookmark_data: 1,
           like_data: 1,
           blogger_avatar: '$userDetails.avatar',
@@ -1417,9 +1436,7 @@ const getSelectedDateBlogsFromHomePage = async (req, res) => {
     ]).sort({ createdAt: -1 })
   }
 
-
-
-  // console.log(blogs)
+  console.log(blogs)
 
   res.status(200).json(blogs)
 }
