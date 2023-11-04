@@ -40,6 +40,7 @@ export const bookmarkApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => {
         // { type: 'Blog', id: arg.blog_id } would invalidates the current single blog cache
+        console.log('add', arg)
         return [{ type: 'Bookmark', id: 'LIST' }, { type: 'Blog', id: arg.blog_id }, { type: 'Blog', id: 'LIST' }]
       }
     }),
@@ -51,9 +52,11 @@ export const bookmarkApiSlice = apiSlice.injectEndpoints({
         body: { id, blogId }
       }),
       invalidatesTags: (result, error, arg) => {
+        console.log('delete', arg)
         return [
           { type: 'Bookmark', id: arg.id },
-          { type: 'Blog', id: arg.blogId }
+          { type: 'Blog', id: arg.blogId },
+          { type: 'Blog', id: 'LIST' }
         ]
       }
 

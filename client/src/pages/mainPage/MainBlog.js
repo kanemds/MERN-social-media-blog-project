@@ -78,7 +78,7 @@ const removedStyles = `
 `
 
 
-export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
+export default function MainBlog({ blog, setUpdateLoading }) {
   const [
     addedLike,
     {
@@ -119,6 +119,7 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
   ] = useDeleteBookmarkMutation()
 
   console.log(blog)
+
 
   // const number = useNumberDisplay(blog?.like?.totalLikes)
   const number = useNumberDisplay(blog?.like_data?.total_likes)
@@ -228,10 +229,10 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
     } else {
 
       if (!isBookmarked) {
-        // setUpdateLoading(true)
+        setUpdateLoading(true)
         await addBookmark({ blog_id: blog._id, bookmark_by_user_id: userId, username, is_bookmark: true })
       } else {
-        // setUpdateLoading(true)
+        setUpdateLoading(true)
         const { data: deleteBookmarkInfo } = await deleteBookmark({ id: blog.bookmark_data.bookmark_id, blogId: blog._id })
         console.log(deleteBookmarkInfo)
       }
