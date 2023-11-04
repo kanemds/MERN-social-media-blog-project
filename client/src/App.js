@@ -32,9 +32,9 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path='/' element={<MainContent />} />
-        <Route element={<PersistLogin />}>
 
+        <Route element={<PersistLogin />}>
+          <Route path='/' element={<MainContent />} />
           <Route path='/blogs/post/:id' element={<SingleBlog />} />
           <Route path='/blogs/user/:id' element={<BloggerHomePage />} />
           {/* prefetch will only execute when user is browsing routes below */}

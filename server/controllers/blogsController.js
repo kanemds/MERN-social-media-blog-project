@@ -863,9 +863,6 @@ const getPaginatedBlogs = async (req, res) => {
   //return  1
   const { page } = req.query
 
-  // console.log(page)
-
-
   if (!page || isNaN(page) || page < 1) {
     return res.status(400).json({ error: 'Invalid page parameter' })
   }
@@ -885,8 +882,6 @@ const getPaginatedBlogs = async (req, res) => {
   const { username } = req.query
 
   const findUser = await User.findOne({ username }).lean().exec()
-
-  // if (!findUser) return res.status(200).json({ message: 'No user found' })
 
   // findUser is loggin user
   // id is the blogger user id
@@ -977,13 +972,13 @@ const getPaginatedBlogs = async (req, res) => {
       {
         $lookup: {
           from: 'bookmarks', // Replace with the actual name of your "Subscribe" collection in MongoDB
-          let: { blogId: '$_id' },
+          let: { blog_id: '$_id' },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ['$blog_id', '$$blogId'] },
+                    { $eq: ['$blog_id', '$$blog_id'] },
                     { $eq: ['$bookmark_by_user_id', findUser._id] },
                   ],
                 },
@@ -1001,11 +996,11 @@ const getPaginatedBlogs = async (req, res) => {
               then: {
                 bookmark_id: null,
                 is_bookmarked: false
-              }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+              },
               else: {
                 bookmark_id: { $arrayElemAt: ['$bookmark._id', 0] },
                 is_bookmarked: { $arrayElemAt: ['$bookmark.is_bookmark', 0] }
-              }, // Set isBookmarked to true // Set isBookmarked to true if there is at least one bookmark
+              }
             }
           }
         }
@@ -1084,10 +1079,8 @@ const getPaginatedBlogs = async (req, res) => {
       {
         $addFields: {
           bookmark_data: {
-            then: {
-              bookmark_id: null,
-              is_bookmarked: false
-            }, // Set isBookmarked to false, // Set isBookmarked to null if there are no bookmarks
+            bookmark_id: null,
+            is_bookmarked: false
           }
         }
       },
@@ -1121,6 +1114,8 @@ const getPaginatedBlogs = async (req, res) => {
       .skip(startIndex) // Skip a certain number of results
       .limit(limit) // Limit the number of results
   }
+
+  console.log(blogs)
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
 
