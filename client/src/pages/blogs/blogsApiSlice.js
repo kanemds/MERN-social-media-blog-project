@@ -93,8 +93,8 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }
     }),
     getPaginatedBlogs: builder.query({
-      query: (pageNumber) => ({
-        url: `/blogs/paginatedBlogs?page=${pageNumber}`,
+      query: (info) => ({
+        url: `/blogs/paginatedBlogs?page=${info.page}&username=${info.username}`,
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError
         }

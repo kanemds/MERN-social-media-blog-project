@@ -87,17 +87,16 @@ const MainContent = () => {
   const [maxPage, setMaxPage] = useState('')
   const [hasMore, setHasMore] = useState(true)
   const [isReFetch, setIsReFetch] = useState(false)
+  const [paginationQueryInfo, setPaginationQueryInfo] = useState({ page: 1, username: null })
 
   // --------------------------- selected date ---------------------------
 
-  const [date, setDate] = useState(selectedDate.frontPage ? JSON.stringify(selectedDate.frontPage) : null)
 
   const [getSelectedDateBlogsInfo, setGetSelectedDateBlogsInfo] = useState({
     id: userId ? userId : null,
     date: selectedDate.frontPage ? selectedDate.frontPage : null
   })
   const [selectedDateBlogs, setSelectedDateBlogs] = useState({ userExist: [], userNotExist: [] })
-  const [selectedDateLikes, setSelectedDateLikes] = useState([])
 
   const {
     data: selectedDateBlogsData,
@@ -124,7 +123,13 @@ const MainContent = () => {
     data: paginatedData,
     isSuccess: paginatedIsSuccess,
     isLoading: paginatedIsLoading,
-  } = useGetPaginatedBlogsQuery(Number(page))
+  } = useGetPaginatedBlogsQuery(paginationQueryInfo)
+
+  useEffect(() => {
+    if (username) {
+      setPaginationQueryInfo({ ...paginationQueryInfo, username: username })
+    }
+  }, [username])
 
   // --------------------------- selected date ---------------------------
   useEffect(() => {
@@ -235,7 +240,8 @@ const MainContent = () => {
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && hasMore) {
-        setPage(prevPage => prevPage + 1)
+        // setPage(prevPage => prevPage + 1)
+        setPaginationQueryInfo(prev => ({ ...prev, page: prev.page + 1 }))
       }
     })
     if (node) observer.current.observe(node)
@@ -322,9 +328,6 @@ const MainContent = () => {
       </Box>
     )
   }
-
-  console.log(getSelectedDateBlogsInfo)
-  console.log(selectedDateBlogs)
 
   if (selectedDate.frontPage !== null && isSuccessSelectedDateBlogs) {
     const findSelectedDateWithOutUser = selectedDateBlogs?.userExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)

@@ -118,6 +118,7 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
     }
   ] = useDeleteBookmarkMutation()
 
+  console.log(blog)
 
   // const number = useNumberDisplay(blog?.like?.totalLikes)
   const number = useNumberDisplay(blog?.like_data?.total_likes)
@@ -133,10 +134,10 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
   const [images, setImage] = useState(blog?.images[0]?.url)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
-  const [deleteMessage, setDeleteMessage] = useState(null)
-  const [isDeleteReady, setIsDeleteReady] = useState(null)
-  const [loading, setLoading] = useState(false)
+  // const [deleteOpen, setDeleteOpen] = useState(false)
+  // const [deleteMessage, setDeleteMessage] = useState(null)
+  // const [isDeleteReady, setIsDeleteReady] = useState(null)
+  // const [loading, setLoading] = useState(false)
   const [totalLikes, setTotalLikes] = useState(number || 0)
   const current = Date.parse(new Date())
   const postedDay = Date.parse(blog.createdAt)
@@ -144,30 +145,30 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
 
   const timeInMillisecond = current - postedDay
 
-  useEffect(() => {
-    if (isDeleteReady && removeMessage) {
-      setDeleteMessage(removeMessage?.message)
-      setTimeout(() => {
-        setDeleteOpen(false)
-        setAnchorEl(null)
-        setRefresh(true)
-        setIsDeleteReady(false)
-        setLoading(false)
-        console.log('remove blog')
-      }, 1400)
-    }
-  }, [isDeleteReady])
+  // useEffect(() => {
+  //   if (isDeleteReady && removeMessage) {
+  //     setDeleteMessage(removeMessage?.message)
+  //     setTimeout(() => {
+  //       setDeleteOpen(false)
+  //       setAnchorEl(null)
+  //       setRefresh(true)
+  //       setIsDeleteReady(false)
+  //       setLoading(false)
+  //       console.log('remove blog')
+  //     }, 1400)
+  //   }
+  // }, [isDeleteReady])
 
 
 
-  useEffect(() => {
-    if (isDeleteLoading) {
-      setLoading(true)
-      setTimeout(() => {
-        setIsDeleteReady(true)
-      }, 1400)
-    }
-  }, [isDeleteLoading])
+  // useEffect(() => {
+  //   if (isDeleteLoading) {
+  //     setLoading(true)
+  //     setTimeout(() => {
+  //       setIsDeleteReady(true)
+  //     }, 1400)
+  //   }
+  // }, [isDeleteLoading])
 
 
   const handleClick = (event) => {
@@ -190,29 +191,29 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
     }
   }
 
-  const handleLook = () => {
-    if (isClick) {
-      navigate(`/blogs/post/${blog.id}`)
-    }
-  }
+  // const handleLook = () => {
+  //   if (isClick) {
+  //     navigate(`/blogs/post/${blog.id}`)
+  //   }
+  // }
 
-  const handleEdit = () => {
-    navigate(`/blogs/post/edit/${blog.id}`)
-  }
+  // const handleEdit = () => {
+  //   navigate(`/blogs/post/edit/${blog.id}`)
+  // }
 
 
-  const handleDeleteClose = () => {
-    setDeleteOpen(false)
-    setIsClick(false)
-    setAnchorEl(null)
-  }
+  // const handleDeleteClose = () => {
+  //   setDeleteOpen(false)
+  //   setIsClick(false)
+  //   setAnchorEl(null)
+  // }
 
-  const handleDelete = () => setDeleteOpen(true)
+  // const handleDelete = () => setDeleteOpen(true)
 
-  const handleDeleteConfirm = async (e) => {
-    e.preventDefault()
-    await deleteBlog({ id: blog.id })
-  }
+  // const handleDeleteConfirm = async (e) => {
+  //   e.preventDefault()
+  //   await deleteBlog({ id: blog.id })
+  // }
 
   const handleUserPage = () => {
     if (isClick) {
@@ -227,10 +228,10 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
     } else {
 
       if (!isBookmarked) {
-        setUpdateLoading(true)
+        // setUpdateLoading(true)
         await addBookmark({ blog_id: blog._id, bookmark_by_user_id: userId, username, is_bookmark: true })
       } else {
-        setUpdateLoading(true)
+        // setUpdateLoading(true)
         const { data: deleteBookmarkInfo } = await deleteBookmark({ id: blog.bookmark_data.bookmark_id, blogId: blog._id })
         console.log(deleteBookmarkInfo)
       }
@@ -245,10 +246,10 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
       navigate('/login', { state: messages.like })
     } else {
       if (!isLiked) {
-        setUpdateLoading(true)
+        // setUpdateLoading(true)
         await addedLike({ blog_id: blog._id, user_id: userId, username, is_like: true })
       } else {
-        setUpdateLoading(true)
+        // setUpdateLoading(true)
         const { data: deleteLikeInfo } = await deleteLike({ id: blog.like_data.like_id, blogId: blog._id, })
         console.log(deleteLikeInfo)
       }
@@ -256,40 +257,40 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
   }
 
 
-  ////////////////////////////////////////////////// delete blog ////////////////////////////////////////////////////
-  let deleteModalMessage
+  // ////////////////////////////////////////////////// delete blog ////////////////////////////////////////////////////
+  // let deleteModalMessage
 
-  if (loading) {
-    deleteModalMessage = <LoadingSpinner />
-  }
+  // if (loading) {
+  //   deleteModalMessage = <LoadingSpinner />
+  // }
 
-  if (!loading) {
-    deleteModalMessage = (
-      <>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Delete the selected blog?
-        </Typography>
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
-          <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
-          <Button variant='contained' onClick={handleDeleteConfirm} sx={{
-            backgroundColor: red[600],
-            color: 'white',
-            '&:hover': {
-              backgroundColor: red[800]
-            }
-          }}>Delete Blog</Button>
-        </Box>
-      </>
-    )
-  }
+  // if (!loading) {
+  //   deleteModalMessage = (
+  //     <>
+  //       <Typography id="modal-modal-title" variant="h6" component="h2">
+  //         Delete the selected blog?
+  //       </Typography>
+  //       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', mt: 2 }}>
+  //         <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+  //         <Button variant='contained' onClick={handleDeleteConfirm} sx={{
+  //           backgroundColor: red[600],
+  //           color: 'white',
+  //           '&:hover': {
+  //             backgroundColor: red[800]
+  //           }
+  //         }}>Delete Blog</Button>
+  //       </Box>
+  //     </>
+  //   )
+  // }
 
-  if (isDeleteReady) {
-    deleteModalMessage = (
-      <Typography id="modal-modal-title" variant="h6" component="h2">
-        {deleteMessage}
-      </Typography>
-    )
-  }
+  // if (isDeleteReady) {
+  //   deleteModalMessage = (
+  //     <Typography id="modal-modal-title" variant="h6" component="h2">
+  //       {deleteMessage}
+  //     </Typography>
+  //   )
+  // }
 
 
   return (
@@ -376,26 +377,26 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
 
             {/* favorite and like */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '40%' }}>
-              {username !== bloggerUsername ?
-                <IconButton
-                  disableRipple
-                  onClick={handleBookmark}
-                  onMouseOver={() => setIsClick(true)}
-                  onMouseOut={() => setIsClick(false)}
-                  style={iconStyle}
-                  sx={{
-                    mr: 1,
-                    '&:hover': { color: yellow[800], background: 'white' }
-                  }}
-                >
-                  {isBookmarked ?
-                    <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
-                    :
-                    <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
-                  }
-                </IconButton>
-                : ''
-              }
+
+              <IconButton
+                disableRipple
+                onClick={handleBookmark}
+                onMouseOver={() => setIsClick(true)}
+                onMouseOut={() => setIsClick(false)}
+                style={iconStyle}
+                sx={{
+                  mr: 1,
+                  '&:hover': { color: yellow[800], background: 'white' }
+                }}
+              >
+                {isBookmarked ?
+                  <StarRoundedIcon sx={{ fontSize: '24px', color: yellow[800] }} />
+                  :
+                  <StarOutlineRoundedIcon sx={{ fontSize: '24px', color: '#bdbdbd' }} />
+                }
+              </IconButton>
+
+
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IconButton
                   disableRipple
@@ -407,7 +408,7 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
                     '&:hover': { color: red[400], background: 'white' }
                   }}
                 >
-                  {isLiked || username === bloggerUsername ?
+                  {isLiked ?
 
                     <FavoriteIcon sx={{ fontSize: '20px', color: red[400] }} />
                     :
@@ -430,7 +431,7 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
                 }
 
               </Typography>
-              {bloggerUsername === username ?
+              {/* {bloggerUsername === username ?
                 <IconButton
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
@@ -442,9 +443,9 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
                 >
                   <MoreVertOutlinedIcon sx={{ fontSize: '20px' }} />
                 </IconButton>
-                : ''}
+                : ''} */}
 
-              <Popover
+              {/* <Popover
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
                 id={id}
@@ -474,7 +475,7 @@ export default function MainBlog({ blog, bloggerUsername, setUpdateLoading, setR
                 </Modal>
                 <Button onClick={handleEdit}><EditNoteIcon /></Button>
                 <Button onClick={handleLook}><RemoveRedEyeOutlinedIcon /></Button>
-              </Popover>
+              </Popover> */}
             </Box>
 
           </Box>
