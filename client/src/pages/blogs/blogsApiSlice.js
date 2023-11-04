@@ -109,15 +109,16 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         return { ...response, data: loadedBlogs }
       },
       providesTags: (result, error, pageNumber) => {
-        if (result?.data && Array.isArray(result?.data)) {
+        console.log('result', result)
+        if (result) {
+          const { data } = result
           return [
-            // Provides a tag for each Blog in the current page,
-            // as well as the 'PARTIAL-LIST' tag.
-            ...result?.data?.map(blog => ({ type: 'Blog', id: blog.id })),
-            { type: 'Blog', id: 'LIST' }
+            { type: 'Blog', id: 'LIST' },
+            { type: 'Like', id: 'LIST' }, { type: 'Bookmark', id: 'LIST' },
+            ...data.map(blog => ({ type: 'Blog', id: blog._id }, { type: 'Like', id: blog.like_data.like_id }, { type: 'Bookmark', id: blog.bookmark_data.bookmark_id }))
           ]
         } else {
-          return [{ type: 'Blog', id: 'LIST' }]
+          return [{ type: 'Blog', id: 'LIST' }, { type: 'Like', id: 'LIST' }, { type: 'Bookmark', id: 'LIST' }]
         }
       },
       // // Only have one cache entry because the arg always maps to one string

@@ -203,6 +203,7 @@ const getBlogsForUser = async (req, res) => {
         createdAt: 1,
         updatedAt: 1,
         user: 1,
+        blogger_avatar: '$userDetails.avatar',
         username: '$userDetails.username', // Include the username
         __v: 1
       },
@@ -1125,12 +1126,10 @@ const getPaginatedBlogs = async (req, res) => {
       .limit(limit) // Limit the number of results
   }
 
-  console.log(blogs)
 
   if (!blogs || blogs.length === 0) return res.status(200).json([])
 
   // prevent odd number 9(blogs)/2(blogs/perPage) = Match.ceil(4.5) === 5 pages
-
 
 
   res.status(200).json({ data: blogs, currentPage: Number(page), numberOfPages: Math.ceil(totalCount / limit) })

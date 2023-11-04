@@ -76,6 +76,8 @@ const removedStyles = `
 
 export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
 
+  console.log(blog)
+
 
   const dispatch = useDispatch()
 
@@ -87,6 +89,7 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
   const [title, setTitle] = useState(blog?.title)
   const [text, setText] = useState(blog?.text)
   const [images, setImage] = useState(blog?.images[0]?.url)
+  const [userAvatar, setUserAvatar] = useState(blog?.blogger_avatar ? blog?.blogger_avatar : null)
   const [anchorEl, setAnchorEl] = useState(null)
   const [isClick, setIsClick] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -261,7 +264,12 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
 
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
               >
-                <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+                {userAvatar ?
+                  <Avatar src={userAvatar} />
+                  :
+                  <Avatar sx={{ '&:hover': { background: '#1976d2', color: 'white' } }} />
+                }
+
               </IconButton>
             </Box>
 
