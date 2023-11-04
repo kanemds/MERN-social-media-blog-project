@@ -247,10 +247,10 @@ export default function MainBlog({ blog, setUpdateLoading }) {
       navigate('/login', { state: messages.like })
     } else {
       if (!isLiked) {
-        // setUpdateLoading(true)
+        setUpdateLoading(true)
         await addedLike({ blog_id: blog._id, user_id: userId, username, is_like: true })
       } else {
-        // setUpdateLoading(true)
+        setUpdateLoading(true)
         const { data: deleteLikeInfo } = await deleteLike({ id: blog.like_data.like_id, blogId: blog._id, })
         console.log(deleteLikeInfo)
       }

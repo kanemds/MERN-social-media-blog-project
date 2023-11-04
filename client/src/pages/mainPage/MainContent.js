@@ -105,6 +105,7 @@ const MainContent = () => {
   //   isLoading: isLoadingSelectedDateBlogs,
   // } = useGetSelectedDateBlogsFromHomePageQuery(getSelectedDateBlogsInfo)
 
+  // some how this one works better with invalidatesTags
   const { selectedDateBlogsData, isLoadingSelectedDateBlogs, isSuccessSelectedDateBlogs } = useGetSelectedDateBlogsFromHomePageQuery(getSelectedDateBlogsInfo, {
     selectFromResult: ({ data: selectedDateBlogsData, isLoading: isLoadingSelectedDateBlogs, isSuccess: isSuccessSelectedDateBlogs }) => ({
       selectedDateBlogsData,
@@ -128,11 +129,19 @@ const MainContent = () => {
 
   const observer = useRef(null)
 
-  const {
-    data: paginatedData,
-    isSuccess: paginatedIsSuccess,
-    isLoading: paginatedIsLoading,
-  } = useGetPaginatedBlogsQuery(paginationQueryInfo)
+  // const {
+  //   data: paginatedData,
+  //   isSuccess: paginatedIsSuccess,
+  //   isLoading: paginatedIsLoading,
+  // } = useGetPaginatedBlogsQuery(paginationQueryInfo)
+
+  const { paginatedData, paginatedIsLoading, paginatedIsSuccess } = useGetPaginatedBlogsQuery(paginationQueryInfo, {
+    selectFromResult: ({ data: paginatedData, isLoading: paginatedIsLoading, isSuccess: paginatedIsSuccess }) => ({
+      paginatedData,
+      paginatedIsLoading,
+      paginatedIsSuccess,
+    })
+  })
 
   useEffect(() => {
     if (username) {
@@ -198,7 +207,7 @@ const MainContent = () => {
 
         setTimeout(() => {
           setUpdateLoading(false)
-        }, 1000)
+        }, 600)
 
       }
     }
@@ -219,12 +228,6 @@ const MainContent = () => {
       }
     }
     if (updateLoading) {
-      if (username) {
-        setAllBlogs([...new Set([...allBlogs, ...paginatedData.data])])
-      } else {
-        // const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
-        setAllBlogs([...new Set([...allBlogs, ...paginatedData.data])])
-      }
       setTimeout(() => {
         setUpdateLoading(false)
       }, 1000)
@@ -283,7 +286,7 @@ const MainContent = () => {
 
   let content
 
-  if (paginatedIsLoading && selectedDate.frontPage === null && updateLoading) {
+  if (paginatedIsLoading && selectedDate.frontPage === null || updateLoading) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -349,7 +352,7 @@ const MainContent = () => {
     )
   }
 
-  if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null && updateLoading) {
+  if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null || updateLoading) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
