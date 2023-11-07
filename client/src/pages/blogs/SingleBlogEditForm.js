@@ -73,7 +73,7 @@ const SingleBlogEditForm = ({ blog }) => {
   }
 
   const handleBack = () => {
-    navigate(`/blogs/post/${blog.id}`, { replace: true })
+    navigate(-1)
   }
 
   const handleSubmit = async (e) => {
