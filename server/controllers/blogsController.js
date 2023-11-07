@@ -868,11 +868,12 @@ const getPaginatedBlogs = async (req, res) => {
     return res.status(400).json({ error: 'Invalid page parameter' })
   }
 
+  console.log(page)
   const limit = 6
 
   // current page 4, 
   // startIndex (4 - 1) * 2 = 6 
-  const startIndex = (Number(page) - 1) * limit
+  const startIndex = page === 1 ? (Number(page) - 1) * limit : 0
 
   const totalCount = await Blog.countDocuments({})
 
@@ -1043,8 +1044,8 @@ const getPaginatedBlogs = async (req, res) => {
         }
       },
     ]).sort({ createdAt: -1 }) // Sort by _id in descending order
-      .skip(startIndex) // Skip a certain number of results
-      .limit(limit) // Limit the number of results
+      // .skip(startIndex) // Skip a certain number of results
+      .limit(limit * page) // Limit the number of results
   } else {
     blogs = await Blog.aggregate([
       {
@@ -1122,8 +1123,8 @@ const getPaginatedBlogs = async (req, res) => {
         }
       },
     ]).sort({ createdAt: -1 }) // Sort by _id in descending order
-      .skip(startIndex) // Skip a certain number of results
-      .limit(limit) // Limit the number of results
+      // .skip(startIndex) // Skip a certain number of results
+      .limit(limit * page) // Limit the number of results
   }
 
 
