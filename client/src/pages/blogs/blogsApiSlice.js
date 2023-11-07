@@ -109,8 +109,7 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
         return { ...response, data: loadedBlogs }
       },
       providesTags: (result, error, pageNumber) => {
-        console.log('result', result)
-        if (result) {
+        if (result?.data?.length >= 1) {
           const { data } = result
           return [
             { type: 'Blog', id: 'LIST' },

@@ -216,15 +216,26 @@ const MainContent = () => {
 
   // --------------------------- selected date ---------------------------
   useEffect(() => {
-    if (page === paginatedData?.numberOfPages) {
+    // if (page === paginatedData?.numberOfPages) {
+    //   setHasMore(false)
+    // }
+    if (paginationQueryInfo.page === paginatedData?.numberOfPages) {
       setHasMore(false)
     }
+    // if (paginatedIsSuccess) {
+    //   if (username) {
+    //     setAllBlogs([...new Set([...allBlogs, ...paginatedData.data])])
+    //   } else {
+    //     // const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
+    //     setAllBlogs([...new Set([...allBlogs, ...paginatedData.data])])
+    //   }
+    // }
     if (paginatedIsSuccess) {
       if (username) {
-        setAllBlogs([...new Set([...allBlogs, ...paginatedData.data])])
+        setAllBlogs(paginatedData.data)
       } else {
         // const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
-        setAllBlogs([...new Set([...allBlogs, ...paginatedData.data])])
+        setAllBlogs(paginatedData.data)
       }
     }
     if (updateLoading) {
@@ -234,6 +245,8 @@ const MainContent = () => {
     }
 
   }, [paginatedData, updateLoading, page]) // needs paginatedData as dependency for the latest update
+
+  console.log(allBlogs)
 
   const handleNext = () => {
     setPage(prev => prev + 1)
