@@ -118,8 +118,6 @@ export default function MainBlog({ blog, setUpdateLoading }) {
     }
   ] = useDeleteBookmarkMutation()
 
-  console.log(blog)
-
 
   // const number = useNumberDisplay(blog?.like?.totalLikes)
   const number = useNumberDisplay(blog?.like_data?.total_likes)
