@@ -63,7 +63,7 @@ const buttonStyle = {
 }
 
 
-const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }]
+const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }, { id: 3, type: 'Clear from Search' }]
 
 
 
@@ -246,7 +246,7 @@ const MainContent = () => {
 
   }, [paginatedData, updateLoading, page]) // needs paginatedData as dependency for the latest update
 
-  console.log(allBlogs)
+
 
   const handleNext = () => {
     setPage(prev => prev + 1)
@@ -261,12 +261,22 @@ const MainContent = () => {
   }
 
   const handleSearch = () => {
+    let result
     if (!searchInput.length) return console.log('nothing')
     const inputLowerCase = searchInput.toLowerCase()
     // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
-    const result = allBlogs.filter(blog =>
-      [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
-    )
+
+    if (selectedDateBlogsData && selectedDate === null) {
+      result = selectedDateBlogsData.filter(blog =>
+        [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
+      )
+    }
+
+    if (allBlogs && selectedDate !== null) {
+      result = allBlogs.filter(blog =>
+        [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
+      )
+    }
 
     if (!result.length) {
       setSearchInput('')
@@ -278,6 +288,9 @@ const MainContent = () => {
       return setSearchResult(result)
     }
   }
+
+  console.log(searchResult)
+  console.log(isSelected)
 
   const moreBlogs = useCallback(node => {
     if (paginatedIsLoading) return
@@ -307,7 +320,7 @@ const MainContent = () => {
     )
   }
 
-  if ((paginatedIsSuccess && allBlogs?.length === 0)) {
+  if (paginatedIsSuccess && allBlogs?.length === 0 || paginatedIsSuccess && recentlyUpload?.length === 0) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>
@@ -341,6 +354,8 @@ const MainContent = () => {
   }
 
 
+
+
   // if login user exist 
   if (paginatedIsSuccess && allBlogs?.length > 0 && username && isSelected === 'All' && selectedDate.frontPage === null && !updateLoading) {
     content = (
@@ -352,6 +367,8 @@ const MainContent = () => {
       </Grid>
     )
   }
+
+
 
   // if login user exist 
   if (paginatedIsSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload' && selectedDate.frontPage === null && !updateLoading) {
