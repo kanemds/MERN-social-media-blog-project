@@ -518,7 +518,7 @@ const SingleBlog = () => {
                 <IconButton
                   disableRipple
                   onClick={handleLiked}
-
+                  disabled={currentBlog?.username === username ? true : false}
                   style={iconStyle}
                   sx={{
 
