@@ -63,7 +63,7 @@ const buttonStyle = {
 }
 
 
-const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }, { id: 3, type: 'Clear from Search' }]
+const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }]
 
 
 
@@ -281,7 +281,7 @@ const MainContent = () => {
     if (!result.length) {
       setSearchInput('')
       setIsSearch(true)
-      return setSearchResult('No search results found for blog(s)')
+      return setSearchResult([])
     } else {
       setSearchInput('')
       setIsSearch(true)
@@ -289,7 +289,13 @@ const MainContent = () => {
     }
   }
 
+  const handleClearFromSearch = () => {
+    setIsSearch(false)
+    setSearchResult([])
+  }
+
   console.log(searchResult)
+  console.log(isSearch)
   console.log(isSelected)
 
   const moreBlogs = useCallback(node => {
@@ -329,6 +335,7 @@ const MainContent = () => {
       </Box>
       )
   }
+
 
   // user not exist and all
   if (paginatedIsSuccess && allBlogs?.length > 0 && !username && isSelected === 'All' && selectedDate.frontPage === null && !updateLoading) {
@@ -370,7 +377,7 @@ const MainContent = () => {
 
 
 
-  // if login user exist 
+  // if login user exist and recently upload
   if (paginatedIsSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload' && selectedDate.frontPage === null && !updateLoading) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
@@ -427,6 +434,30 @@ const MainContent = () => {
         )
   }
 
+  if (isSearch && searchResult?.length === 0) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography>
+          No Blogs for the selected date are available at the moment
+        </Typography>
+      </Box>
+    )
+  }
+
+  if ((isSearch && searchResult?.length > 0 && isSelected === 'All') || (isSearch && searchResult?.length > 0 && isSelected === 'Recently Upload')) {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {searchResult?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+          </Grid>)}
+      </Grid>
+    )
+  }
+
+
+
+
 
   return (
 
@@ -453,6 +484,7 @@ const MainContent = () => {
             )
           }
           )}
+          <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
         </Box>
       </Box>
 
