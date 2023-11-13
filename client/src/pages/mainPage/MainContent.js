@@ -322,11 +322,9 @@ const MainContent = () => {
 
 
   const recentlyUploadWithAllUsers = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
-  console.log(recentlyUploadWithAllUsers)
-  const recentlyUploadWithAllUsersSearchResult = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
-
   const recentlyUploadWithoutUser = Array.isArray(blogsWithoutCurrentUser) && blogsWithoutCurrentUser?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
-  const recentlyUploadWithoutUserSearchResult = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
+
+  const searchResultFromRecentlyUpload = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
 
   let content
@@ -482,58 +480,51 @@ const MainContent = () => {
 
   // ---------------------- normal front page -------------------------------
 
-  // // ---------------------- search result -----------------------------------
+  // ---------------------- search result -----------------------------------
+  // user login or logout it refetch data no need to have 2 state
+  // searchResult already filter if user exist or not
 
-  // if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null || updateLoading) {
-  //   content = (
-  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-  //       <LoadingSpinner />
-  //     </Box>
-  //   )
-  // }
+  if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null || updateLoading) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <LoadingSpinner />
+      </Box>
+    )
+  }
 
-  // if (isSearch && searchResult?.length === 0 && isSelected === 'All') {
-  //   content = (
-  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-  //       <Typography>
-  //         No Blogs for the selected date are available at the moment
-  //       </Typography>
-  //     </Box>
-  //   )
-  // }
+  if ((isSearch && searchResult?.length == 0 && isSelected === 'Recently Upload') || (isSearch && searchResult?.length === 0 && isSelected === 'All')) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography>
+          No Blogs for the selected date are available at the moment
+        </Typography>
+      </Box>
+    )
+  }
 
-  // if (isSearch && searchResult?.length > 0 && isSelected === 'All') {
-  //   content = (
-  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-  //       {searchResult?.map(blog =>
-  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-  //           <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
-  //         </Grid>)}
-  //     </Grid>
-  //   )
-  // }
-
-  // if (isSearch && searchResult?.length === 0 && isSelected === 'Recently Upload') {
-  //   content = (
-  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-  //       <Typography>
-  //         No Blogs for the selected date are available at the moment
-  //       </Typography>
-  //     </Box>
-  //   )
-  // }
+  if (isSearch && searchResult?.length > 0 && isSelected === 'All') {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {searchResult?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+          </Grid>)}
+      </Grid>
+    )
+  }
 
 
-  // if (isSearch && searchResult?.length > 0 && isSelected === 'Recently Upload') {
-  //   content = (
-  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-  //       {recentlyUploadWithoutUserSearchResult?.map(blog =>
-  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-  //           <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
-  //         </Grid>)}
-  //     </Grid>
-  //   )
-  // }
+
+  if (isSearch && searchResultFromRecentlyUpload?.length > 0 && isSelected === 'Recently Upload') {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {searchResultFromRecentlyUpload?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+          </Grid>)}
+      </Grid>
+    )
+  }
 
   // // ---------------------- search result -----------------------------------
 
