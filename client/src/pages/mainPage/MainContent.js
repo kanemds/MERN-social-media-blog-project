@@ -81,6 +81,7 @@ const MainContent = () => {
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState([])
+  const [blogsWithoutCurrentUser, setBlogsWithoutCurrentUser] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [searchResult, setSearchResult] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
@@ -232,10 +233,10 @@ const MainContent = () => {
     // }
     if (paginatedIsSuccess) {
       if (username) {
-        setAllBlogs(paginatedData.data)
+        setBlogsWithoutCurrentUser(paginatedData?.data)
       } else {
         // const withoutUser = paginatedData?.data?.filter(blog => blog.username !== username)
-        setAllBlogs(paginatedData.data)
+        setAllBlogs(paginatedData?.data)
       }
     }
     if (updateLoading) {
@@ -272,8 +273,14 @@ const MainContent = () => {
       )
     }
 
-    if (allBlogs && selectedDate !== null) {
+    if (allBlogs && selectedDate !== null && !username) {
       result = allBlogs.filter(blog =>
+        [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
+      )
+    }
+
+    if (allBlogs && selectedDate !== null && username) {
+      result = blogsWithoutCurrentUser.filter(blog =>
         [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
       )
     }
@@ -312,21 +319,110 @@ const MainContent = () => {
 
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
-  const recentlyUpload = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
-  const recentlyUploadWithoutUser = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
+
+
+  const recentlyUploadWithAllUsers = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
+  console.log(recentlyUploadWithAllUsers)
+  const recentlyUploadWithAllUsersSearchResult = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
+
+  const recentlyUploadWithoutUser = Array.isArray(blogsWithoutCurrentUser) && blogsWithoutCurrentUser?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
+  const recentlyUploadWithoutUserSearchResult = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
 
   let content
 
-  if (paginatedIsLoading && selectedDate.frontPage === null || updateLoading) {
-    content = (
-      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <LoadingSpinner />
-      </Box>
-    )
-  }
 
-  if (paginatedIsSuccess && allBlogs?.length === 0 || paginatedIsSuccess && recentlyUpload?.length === 0) {
+  // // ---------------------- date select --------------------------------
+
+  // if (paginatedIsLoading && selectedDate.frontPage === null || updateLoading) {
+  //   content = (
+  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+  //       <LoadingSpinner />
+  //     </Box>
+  //   )
+  // }
+
+  // if (selectedDate.frontPage !== null && isSuccessSelectedDateBlogs && !updateLoading) {
+  //   const findSelectedDateWithOutUser = selectedDateBlogs?.userExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
+  //   const findSelectedDate = selectedDateBlogs?.userNotExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
+  //   const currentDate = findSelectedDate[0]?.blogs
+  //   const currentDateWithoutUser = findSelectedDateWithOutUser[0]?.blogs
+
+  //   userId && currentDateWithoutUser?.length > 0 ?
+  //     content = (
+  //       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //         {
+  //           currentDateWithoutUser?.map(blog =>
+  //             <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //               <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+  //             </Grid>)}
+  //       </Grid>
+  //     )
+  //     :
+  //     !userId && currentDate?.length > 0 ?
+  //       content = (
+  //         <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //           {
+  //             currentDate?.map(blog =>
+  //               <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //                 <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+  //               </Grid>)}
+  //         </Grid>
+  //       )
+  //       :
+  //       content = (
+  //         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+  //           <Typography>
+  //             No Blogs for the selected date are available at the moment
+  //           </Typography>
+  //         </Box>
+  //       )
+  // }
+
+
+  // // user not exist and all
+  // if (paginatedIsSuccess && allBlogs?.length > 0 && !username && isSelected === 'All' && selectedDate.frontPage === null && !updateLoading) {
+  //   content = (
+  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //       {allBlogs?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //           <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+  //         </Grid>)}
+  //     </Grid>
+  //   )
+  // }
+
+  // // user not exist and recently upload
+  // if (paginatedIsSuccess && recentlyUploadWithAllUsers?.length > 0 && !username && isSelected === 'Recently Upload' && selectedDate.frontPage === null && !updateLoading) {
+  //   content = (
+  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //       {recentlyUploadWithAllUsers?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //           <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+  //         </Grid>)}
+  //     </Grid>
+  //   )
+  // }
+
+
+
+  // // user exist and recently upload
+  // if (paginatedIsSuccess && recentlyUploadWithoutUser?.length > 0 && !username && isSelected === 'Recently Upload' && selectedDate.frontPage === null && !updateLoading) {
+  //   content = (
+  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //       {recentlyUploadWithoutUser?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //           <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+  //         </Grid>)}
+  //     </Grid>
+  //   )
+  // }
+
+  // // ---------------------- date select --------------------------------
+
+  // ---------------------- normal front page -------------------------------
+
+  if ((paginatedIsSuccess && allBlogs?.length === 0) || (paginatedIsSuccess && recentlyUploadWithAllUsers?.length === 0)) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>
@@ -336,6 +432,29 @@ const MainContent = () => {
       )
   }
 
+  // user exist 
+  if (paginatedIsSuccess && blogsWithoutCurrentUser?.length > 0 && username && isSelected === 'All' && selectedDate.frontPage === null && !updateLoading) {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {blogsWithoutCurrentUser?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+          </Grid>)}
+      </Grid>
+    )
+  }
+
+  // user exist and recently upload
+  if (paginatedIsSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload' && selectedDate.frontPage === null && !updateLoading) {
+    content = (
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+        {recentlyUploadWithoutUser?.map(blog =>
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+            <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+          </Grid>)}
+      </Grid>
+    )
+  }
 
   // user not exist and all
   if (paginatedIsSuccess && allBlogs?.length > 0 && !username && isSelected === 'All' && selectedDate.frontPage === null && !updateLoading) {
@@ -348,11 +467,12 @@ const MainContent = () => {
       </Grid>
     )
   }
+
   // user not exist and recently upload
-  if (paginatedIsSuccess && recentlyUpload?.length > 0 && !username && isSelected === 'Recently Upload' && selectedDate.frontPage === null && !updateLoading) {
+  if (paginatedIsSuccess && recentlyUploadWithAllUsers?.length > 0 && !username && isSelected === 'Recently Upload' && selectedDate.frontPage === null && !updateLoading) {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-        {recentlyUpload?.map(blog =>
+        {recentlyUploadWithAllUsers?.map(blog =>
           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
@@ -360,101 +480,62 @@ const MainContent = () => {
     )
   }
 
+  // ---------------------- normal front page -------------------------------
+
+  // // ---------------------- search result -----------------------------------
+
+  // if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null || updateLoading) {
+  //   content = (
+  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+  //       <LoadingSpinner />
+  //     </Box>
+  //   )
+  // }
+
+  // if (isSearch && searchResult?.length === 0 && isSelected === 'All') {
+  //   content = (
+  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+  //       <Typography>
+  //         No Blogs for the selected date are available at the moment
+  //       </Typography>
+  //     </Box>
+  //   )
+  // }
+
+  // if (isSearch && searchResult?.length > 0 && isSelected === 'All') {
+  //   content = (
+  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //       {searchResult?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //           <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+  //         </Grid>)}
+  //     </Grid>
+  //   )
+  // }
+
+  // if (isSearch && searchResult?.length === 0 && isSelected === 'Recently Upload') {
+  //   content = (
+  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+  //       <Typography>
+  //         No Blogs for the selected date are available at the moment
+  //       </Typography>
+  //     </Box>
+  //   )
+  // }
 
 
+  // if (isSearch && searchResult?.length > 0 && isSelected === 'Recently Upload') {
+  //   content = (
+  //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+  //       {recentlyUploadWithoutUserSearchResult?.map(blog =>
+  //         <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+  //           <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+  //         </Grid>)}
+  //     </Grid>
+  //   )
+  // }
 
-  // if login user exist 
-  if (paginatedIsSuccess && allBlogs?.length > 0 && username && isSelected === 'All' && selectedDate.frontPage === null && !updateLoading) {
-    content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-        {allBlogs?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
-          </Grid>)}
-      </Grid>
-    )
-  }
-
-
-
-  // if login user exist and recently upload
-  if (paginatedIsSuccess && recentlyUploadWithoutUser?.length > 0 && username && isSelected === 'Recently Upload' && selectedDate.frontPage === null && !updateLoading) {
-    content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-        {recentlyUploadWithoutUser?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
-          </Grid>)}
-      </Grid>
-    )
-  }
-
-  if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null || updateLoading) {
-    content = (
-      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <LoadingSpinner />
-      </Box>
-    )
-  }
-
-  if (selectedDate.frontPage !== null && isSuccessSelectedDateBlogs && !updateLoading) {
-    const findSelectedDateWithOutUser = selectedDateBlogs?.userExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
-    const findSelectedDate = selectedDateBlogs?.userNotExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
-    const currentDate = findSelectedDate[0]?.blogs
-    const currentDateWithoutUser = findSelectedDateWithOutUser[0]?.blogs
-
-    userId && currentDateWithoutUser?.length > 0 ?
-      content = (
-        <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-          {
-            currentDateWithoutUser?.map(blog =>
-              <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-                <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
-              </Grid>)}
-        </Grid>
-      )
-      :
-      !userId && currentDate?.length > 0 ?
-        content = (
-          <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-            {
-              currentDate?.map(blog =>
-                <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-                  <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
-                </Grid>)}
-          </Grid>
-        )
-        :
-        content = (
-          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <Typography>
-              No Blogs for the selected date are available at the moment
-            </Typography>
-          </Box>
-        )
-  }
-
-  if (isSearch && searchResult?.length === 0) {
-    content = (
-      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <Typography>
-          No Blogs for the selected date are available at the moment
-        </Typography>
-      </Box>
-    )
-  }
-
-  if ((isSearch && searchResult?.length > 0 && isSelected === 'All') || (isSearch && searchResult?.length > 0 && isSelected === 'Recently Upload')) {
-    content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-        {searchResult?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-            <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
-          </Grid>)}
-      </Grid>
-    )
-  }
-
+  // // ---------------------- search result -----------------------------------
 
 
 
