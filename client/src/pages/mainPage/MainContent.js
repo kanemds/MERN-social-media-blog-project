@@ -101,7 +101,10 @@ const MainContent = () => {
     id: userId ? userId : null,
     date: selectedDate.frontPage ? selectedDate.frontPage : null
   })
+
+  // stored blogs from  selected date
   const [selectedDateBlogs, setSelectedDateBlogs] = useState({ userExist: [], userNotExist: [] })
+
 
   // const {
   //   data: selectedDateBlogsData,
@@ -170,6 +173,8 @@ const MainContent = () => {
     }
   }, [selectedDate.frontPage])
 
+
+
   useEffect(() => {
     if (selectedDate.frontPage !== null) {
       if (selectedDateBlogsData && userId) {
@@ -216,7 +221,7 @@ const MainContent = () => {
       }
     }
   }, [isSuccessSelectedDateBlogs, selectedDateBlogsData, updateLoading])
-
+  console.log(selectedDateBlogsData)
 
   // --------------------------- selected date ---------------------------
   useEffect(() => {
@@ -299,16 +304,12 @@ const MainContent = () => {
     }
   }
 
-  console.log(searchResultForRecently)
 
   const handleClearFromSearch = () => {
     setIsSearch(false)
     setSearchResult([])
   }
 
-  console.log(searchResult)
-  console.log(isSearch)
-  console.log(isSelected)
 
   const moreBlogs = useCallback(node => {
     if (paginatedIsLoading) return
@@ -330,27 +331,27 @@ const MainContent = () => {
 
   const searchResultFromRecentlyUpload = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
-  console.log(searchResultFromRecentlyUpload)
+
   let content
 
 
   // // ---------------------- date select --------------------------------
 
-  // if (paginatedIsLoading && selectedDate.frontPage === null || updateLoading) {
-  //   content = (
-  //     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-  //       <LoadingSpinner />
-  //     </Box>
-  //   )
-  // }
+  if (paginatedIsLoading && selectedDate.frontPage === null || updateLoading) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <LoadingSpinner />
+      </Box>
+    )
+  }
 
   if (selectedDate.frontPage !== null && isSuccessSelectedDateBlogs && !updateLoading) {
     const findSelectedDateWithOutUser = selectedDateBlogs?.userExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
     const findSelectedDate = selectedDateBlogs?.userNotExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
     const currentDate = findSelectedDate[0]?.blogs
     const currentDateWithoutUser = findSelectedDateWithOutUser[0]?.blogs
-
-    userId && currentDateWithoutUser?.length > 0 ?
+    console.log(currentDateWithoutUser)
+    if (userId && currentDateWithoutUser?.length > 0) {
       content = (
         <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
           {
@@ -360,25 +361,55 @@ const MainContent = () => {
               </Grid>)}
         </Grid>
       )
-      :
-      !userId && currentDate?.length > 0 ?
-        content = (
-          <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
-            {
-              currentDate?.map(blog =>
-                <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
-                  <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
-                </Grid>)}
-          </Grid>
-        )
-        :
-        content = (
-          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <Typography>
-              No Blogs for the selected date are available at the moment
-            </Typography>
-          </Box>
-        )
+    } else if (!userId && currentDate?.length > 0) {
+      content = (
+        <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+          {
+            currentDate?.map(blog =>
+              <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+                <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+              </Grid>)}
+        </Grid>
+      )
+    } else {
+      content = (
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+          <Typography>
+            No Blogs for the selected date are available at the moment
+          </Typography>
+        </Box>
+      )
+    }
+
+    // userId && currentDateWithoutUser?.length > 0 ?
+    //   content = (
+    //     <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+    //       {
+    //         currentDateWithoutUser?.map(blog =>
+    //           <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+    //             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+    //           </Grid>)}
+    //     </Grid>
+    //   )
+    //   :
+    //   !userId && currentDate?.length > 0 ?
+    //     content = (
+    //       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
+    //         {
+    //           currentDate?.map(blog =>
+    //             <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
+    //               <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
+    //             </Grid>)}
+    //       </Grid>
+    //     )
+    //     :
+    //     content = (
+    //       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+    //         <Typography>
+    //           No Blogs for the selected date are available at the moment
+    //         </Typography>
+    //       </Box>
+    //     )
   }
 
 
@@ -424,7 +455,7 @@ const MainContent = () => {
 
   // ---------------------- normal front page -------------------------------
 
-  if ((paginatedIsSuccess && allBlogs?.length === 0) || (paginatedIsSuccess && recentlyUploadWithAllUsers?.length === 0)) {
+  if ((paginatedIsSuccess && allBlogs?.length === 0 && selectedDate.frontPage === null) || (paginatedIsSuccess && recentlyUploadWithAllUsers?.length === 0 && selectedDate.frontPage === null)) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>
