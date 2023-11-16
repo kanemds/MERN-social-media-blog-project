@@ -269,29 +269,31 @@ const MainContent = () => {
     setIsSelected(e.target.value)
   }
 
+  console.log(selectedDate)
   const handleSearch = () => {
     let result
     if (!searchInput.length) return console.log('nothing')
     const inputLowerCase = searchInput.toLowerCase()
     // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
 
-    if (selectedDateBlogsData && selectedDate === null) {
+    if (selectedDateBlogsData && selectedDate.frontPage !== null) {
       result = selectedDateBlogsData.filter(blog =>
         [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
       )
     }
 
-    if (allBlogs && selectedDate !== null && !username) {
+    if (allBlogs && selectedDate.frontPage === null && !username) {
       result = allBlogs.filter(blog =>
         [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
       )
     }
 
-    if (allBlogs && selectedDate !== null && username) {
+    if (allBlogs && selectedDate.frontPage === null && username) {
       result = blogsWithoutCurrentUser.filter(blog =>
         [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
       )
     }
+
 
     if (!result.length) {
       setSearchInput('')
@@ -597,10 +599,11 @@ const MainContent = () => {
         <Box  >
           {dataList?.map(category => {
             return (
-              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
+              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ minWidth: 0, mr: 2, display: selectedDate.frontPage !== null && category.type === 'Recently Upload' ? 'none' : 'inline-block', }} value={category.type} onClick={handleSelect} > {category.type}</Button>
             )
           }
           )}
+
           <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
         </Box>
       </Box>
