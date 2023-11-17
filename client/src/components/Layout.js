@@ -72,7 +72,7 @@ const Layout = () => {
     // dispatch(userLogout(true))
     // setLoggingOut(true)
 
-    // sendLogOut()
+    sendLogOut()
   }
 
 

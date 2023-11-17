@@ -4,6 +4,7 @@ import { Box, CircularProgress, Typography } from '@mui/material'
 import useAuth from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux"
+import { onLoggingOut } from './authSlice'
 
 const UserLogout = () => {
 
@@ -26,7 +27,10 @@ const UserLogout = () => {
     }
 
     if (isLoggingOut) {
-      console.log('loggingout')
+      setTimeout(() => {
+        dispatch(onLoggingOut(false))
+        navigate('/')
+      }, 3000)
     }
   }, [isLoggingOut])
 
