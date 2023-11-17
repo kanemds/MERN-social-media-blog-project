@@ -17,6 +17,7 @@ import './scrollbar.css'
 import { useDispatch, useSelector } from "react-redux"
 import { increment, resetCache, userLogout } from "../pages/blogs/blogSlice"
 import { apiSlice } from "../app/api/apiSlice"
+import { onLoggingOut } from "../pages/auth/authSlice"
 
 
 const theme = createTheme({
@@ -66,14 +67,14 @@ const Layout = () => {
     // dispatch(resetCache()) // blogSLice set page back to 1
     // dispatch(apiSlice.util.resetApiState())
     // dispatch(api.util.invalidateTags(['CompanySettings'])
-    // sendLogOut()
-
-    // dispatch(userLogout(true))
-    setLoggingOut(true)
+    dispatch(onLoggingOut(true))
     navigate('/logout')
+    // dispatch(userLogout(true))
+    // setLoggingOut(true)
+
+    // sendLogOut()
   }
 
-  console.log(isSuccess)
 
   // useEffect(() => {
   //   if (isSuccess) {

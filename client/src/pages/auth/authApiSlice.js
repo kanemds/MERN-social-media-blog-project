@@ -24,7 +24,7 @@ const authApiSlice = apiSlice.injectEndpoints({
           // dispatch(apiSlice.util.resetApiState())
           setTimeout(() => {
             dispatch(apiSlice.util.resetApiState())
-          }, 900) // clear out the cache data, giving extra time to clear cache data
+          }, 1000) // clear out the cache data, giving extra time to clear cache data
         } catch (error) {
           console.log(error)
         }

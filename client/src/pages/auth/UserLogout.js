@@ -3,27 +3,36 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import { Box, CircularProgress, Typography } from '@mui/material'
 import useAuth from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from "react-redux"
 
 const UserLogout = () => {
 
-  const [loggingOut, setLoggingOut] = useState(true)
-  const { username } = useAuth()
-
-  console.log(username)
-
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { isLoggingOut } = useSelector(state => state?.auth)
 
-  // useEffect(() => {
-  //   if (loggingOut) {
-  //     navigate('/')
-  //   }
-  // }, [])
+  console.log(isLoggingOut)
+  // const { username } = useAuth()
+
+
+
+  // let content
+
+
+
+  useEffect(() => {
+    if (!isLoggingOut) {
+      navigate('/')
+    }
+
+    if (isLoggingOut) {
+      console.log('loggingout')
+    }
+  }, [isLoggingOut])
 
   let content
 
-
-
-  if (loggingOut) {
+  if (isLoggingOut) {
     content =
       (<Box sx={{ position: 'relative', display: 'inline-flex' }}>
         <CircularProgress size={74} />
@@ -52,6 +61,7 @@ const UserLogout = () => {
   }
 
   return content
+
 }
 
 export default UserLogout

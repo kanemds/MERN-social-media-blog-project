@@ -69,10 +69,11 @@ function App() {
               </Route>
             </Route>
           </Route>
-          <Route path='logout' element={<UserLogout />} />
+
         </Route>
       </Route>
       <Route element={<Layout />}>
+        <Route path='/logout' element={<UserLogout />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
       </Route>
