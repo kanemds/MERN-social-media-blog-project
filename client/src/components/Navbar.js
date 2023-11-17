@@ -10,6 +10,7 @@ import { red } from '@mui/material/colors'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import SettingsIcon from '@mui/icons-material/Settings'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
+import { useSelector } from 'react-redux'
 
 
 
@@ -35,11 +36,13 @@ const getWindowSize = () => {
 
 export default function Navbar({ handleLogout, isSuccess, loggingOut, setLoggingOut }) {
 
-  console.log(loggingOut)
+  // console.log(isSuccess, 'isSuccess')
+  // console.log(loggingOut)
 
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { username, userId } = useAuth()
+  const { isLoggingOut } = useSelector(state => state?.auth)
 
   const { currentUser } = useGetUsersQuery('usersList', {
     selectFromResult: ({ data }) => ({
@@ -78,13 +81,13 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
   }, [])
 
   useEffect(() => {
-    if (loggingOut) {
+    if (isSuccess) {
       setTimeout(() => {
         navigate('/')
-        setLoggingOut(false)
-      }, 2000)
+        // setLoggingOut(false)
+      }, 10000)
     }
-  }, [loggingOut])
+  }, [isSuccess])
 
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -128,7 +131,7 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
     <AppBar sx={{ flexGrow: 1, height: '70px' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         {
-          !loggingOut ?
+          !isLoggingOut ?
 
             <Link to='/' component={RouterLink} underline='none' color='white' sx={{ fontSize: '32px', p: 0 }}>
               K-BLOG
@@ -140,7 +143,7 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
         }
 
 
-        {username && !loggingOut ?
+        {username && !isLoggingOut ?
           <IconButton
             aria-owns={open ? 'mouse-over-popover' : undefined}
             aria-haspopup="true"
@@ -151,7 +154,7 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
           >
             <Avatar src={avatarImg}>{avatarImg ? '' : initial}</Avatar>
           </IconButton>
-          : username && loggingOut ?
+          : isLoggingOut ?
             <Typography>Logging out...</Typography>
             :
             <Box>
