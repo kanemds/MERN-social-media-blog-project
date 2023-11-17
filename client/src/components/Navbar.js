@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import LinkButton from './LinkButton'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import { useGetUsersQuery } from '../pages/users/UserApiSlice'
-import { Avatar, AppBar, Box, Toolbar, Typography, Button, IconButton, MenuIcon, Popover } from '@mui/material'
+import { Avatar, AppBar, Box, Toolbar, Typography, Button, IconButton, MenuIcon, Popover, Link } from '@mui/material'
 import { current } from '@reduxjs/toolkit'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import { red } from '@mui/material/colors'
@@ -33,8 +33,9 @@ const getWindowSize = () => {
   return { innerWidth }
 }
 
-export default function Navbar({ handleLogout, isSuccess }) {
+export default function Navbar({ handleLogout, isSuccess, loggingOut, setLoggingOut }) {
 
+  console.log(loggingOut)
 
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -75,6 +76,15 @@ export default function Navbar({ handleLogout, isSuccess }) {
       window.removeEventListener('resize', handleWindowResize)
     }
   }, [])
+
+  useEffect(() => {
+    if (loggingOut) {
+      setTimeout(() => {
+        navigate('/')
+        setLoggingOut(false)
+      }, 2000)
+    }
+  }, [loggingOut])
 
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -117,9 +127,20 @@ export default function Navbar({ handleLogout, isSuccess }) {
 
     <AppBar sx={{ flexGrow: 1, height: '70px' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <LinkButton visit='/' name='K-Blog' style='outlined' fontSize='2rem' />
+        {
+          !loggingOut ?
 
-        {username ?
+            <Link to='/' component={RouterLink} underline='none' color='white' sx={{ fontSize: '32px', p: 0 }}>
+              K-BLOG
+            </Link>
+
+            :
+            <Typography fontSize='32px'>K-BLOG</Typography>
+
+        }
+
+
+        {username && !loggingOut ?
           <IconButton
             aria-owns={open ? 'mouse-over-popover' : undefined}
             aria-haspopup="true"
@@ -130,11 +151,13 @@ export default function Navbar({ handleLogout, isSuccess }) {
           >
             <Avatar src={avatarImg}>{avatarImg ? '' : initial}</Avatar>
           </IconButton>
-          :
-          <Box>
-            <LinkButton visit='/login' name='Login' />
-            <LinkButton visit='/register' name='Signup' />
-          </Box>
+          : username && loggingOut ?
+            <Typography>Logging out...</Typography>
+            :
+            <Box>
+              <LinkButton visit='/login' name='Login' />
+              <LinkButton visit='/register' name='Signup' />
+            </Box>
         }
 
       </Toolbar>

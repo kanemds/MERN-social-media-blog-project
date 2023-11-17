@@ -35,9 +35,6 @@ const theme = createTheme({
 
 
 
-
-
-
 const Layout = () => {
 
   // const largeBP = useMediaQuery('(min-width:1200px)')
@@ -45,6 +42,7 @@ const Layout = () => {
   const small = useMediaQuery('(max-width:791px)')
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
 
   const [
@@ -56,11 +54,11 @@ const Layout = () => {
     }
   ] = useSendLogOutMutation()
 
-  const { pathname } = useLocation()
+
   const [state, setState] = useState({
     left: false,
   })
-
+  const [loggingOut, setLoggingOut] = useState(false)
 
 
 
@@ -68,22 +66,23 @@ const Layout = () => {
     // dispatch(resetCache()) // blogSLice set page back to 1
     // dispatch(apiSlice.util.resetApiState())
     // dispatch(api.util.invalidateTags(['CompanySettings'])
-    sendLogOut()
-    dispatch(userLogout(true))
-    // navigate('/')
+    // sendLogOut()
+
+    // dispatch(userLogout(true))
+    setLoggingOut(true)
+    navigate('/logout')
   }
 
   console.log(isSuccess)
 
-  useEffect(() => {
-    if (isSuccess) {
-      // navigate('/')
-      setTimeout(() => {
-        console.log('refresh')
-        navigate('/')
-      }, 1000)
-    }
-  }, [isSuccess, navigate])
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     // navigate('/')
+  //     setTimeout(() => {
+  //       navigate('/')
+  //     }, 1000)
+  //   }
+  // }, [isSuccess, navigate])
 
   const drawerDirection = ['left']
   const toggleDrawer = (anchor, open) => (event) => {
@@ -115,7 +114,8 @@ const Layout = () => {
           { content }
           :
           <>
-            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
+            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
+
 
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
@@ -143,7 +143,7 @@ const Layout = () => {
           { content }
           :
           <>
-            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
+            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
             <Box sx={{ display: 'flex', position: 'relative', minHeight: 'calc(100vh - 80px)', mt: '80px', width: '100%' }}>
               <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
@@ -163,7 +163,7 @@ const Layout = () => {
   if (pathname !== '/blogs' && pathname !== '/') {
     return main = (
       <>
-        <Navbar handleLogout={handleLogout} isSuccess={isSuccess} />
+        <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} setLoggingOut={setLoggingOut} />
         <ThemeProvider theme={theme}  >
           <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 70px)', pt: '100px', pb: '100px' }}>
             {isLoading || isError ?

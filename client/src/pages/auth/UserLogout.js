@@ -1,12 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { Box, CircularProgress, Typography } from '@mui/material'
+import useAuth from '../../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 const UserLogout = () => {
 
   const [loggingOut, setLoggingOut] = useState(true)
+  const { username } = useAuth()
+
+  console.log(username)
+
+  const navigate = useNavigate()
+
+  // useEffect(() => {
+  //   if (loggingOut) {
+  //     navigate('/')
+  //   }
+  // }, [])
 
   let content
+
+
 
   if (loggingOut) {
     content =
@@ -34,7 +49,6 @@ const UserLogout = () => {
           </Box>
         </Box>
       </Box>)
-
   }
 
   return content
