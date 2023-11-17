@@ -94,6 +94,8 @@ const MainContent = () => {
   const [paginationQueryInfo, setPaginationQueryInfo] = useState({ page: 1, username: null })
   const [updateLoading, setUpdateLoading] = useState(false)
 
+
+
   // --------------------------- selected date ---------------------------
 
 
@@ -221,7 +223,7 @@ const MainContent = () => {
       }
     }
   }, [isSuccessSelectedDateBlogs, selectedDateBlogsData, updateLoading])
-  console.log(selectedDateBlogsData)
+
 
   // --------------------------- selected date ---------------------------
   useEffect(() => {
@@ -269,7 +271,7 @@ const MainContent = () => {
     setIsSelected(e.target.value)
   }
 
-  console.log(selectedDate)
+
   const handleSearch = () => {
     let result
     if (!searchInput.length) return console.log('nothing')
@@ -333,13 +335,15 @@ const MainContent = () => {
 
   const searchResultFromRecentlyUpload = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
+  console.log('allBlogs', allBlogs)
+  console.log('blogsWithoutCurrentUser', blogsWithoutCurrentUser)
 
   let content
 
 
   // // ---------------------- date select --------------------------------
 
-  if (paginatedIsLoading && selectedDate.frontPage === null || updateLoading) {
+  if ((paginatedIsLoading && selectedDate.frontPage === null) || (updateLoading)) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -521,7 +525,7 @@ const MainContent = () => {
   // user login or logout it refetch data no need to have 2 state
   // searchResult already filter if user exist or not
 
-  if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null || updateLoading) {
+  if ((isLoadingSelectedDateBlogs && selectedDate.frontPage !== null) || (updateLoading)) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -604,7 +608,7 @@ const MainContent = () => {
           }
           )}
 
-          <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
+          <Button size='small' sx={{ minWidth: 0, p: '4px', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
         </Box>
       </Box>
 

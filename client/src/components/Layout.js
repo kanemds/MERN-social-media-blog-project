@@ -73,12 +73,15 @@ const Layout = () => {
     // navigate('/')
   }
 
+  console.log(isSuccess)
+
   useEffect(() => {
     if (isSuccess) {
       // navigate('/')
       setTimeout(() => {
+        console.log('refresh')
         navigate('/')
-      }, 2000)
+      }, 1000)
     }
   }, [isSuccess, navigate])
 
