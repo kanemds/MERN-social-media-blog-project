@@ -22,6 +22,7 @@ import LikeList from './pages/likes/LikeList'
 import SubscribedList from './pages/subscribed/SubscribedList'
 import BookmarkList from './pages/bookmark/BookmarkList'
 import SettingPage from './pages/settings/SettingPage'
+import UserLogout from './pages/auth/UserLogout'
 
 
 
@@ -68,6 +69,7 @@ function App() {
               </Route>
             </Route>
           </Route>
+          <Route path='logout' element={<UserLogout />} />
         </Route>
       </Route>
       <Route element={<Layout />}>

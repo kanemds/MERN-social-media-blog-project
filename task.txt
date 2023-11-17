@@ -103,3 +103,8 @@ navbar
 check for delete like bookmark subscribe
 
 
+note:
+
+blogs 
+
+first 

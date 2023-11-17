@@ -94,6 +94,8 @@ const MainContent = () => {
   const [paginationQueryInfo, setPaginationQueryInfo] = useState({ page: 1, username: null })
   const [updateLoading, setUpdateLoading] = useState(false)
 
+
+
   // --------------------------- selected date ---------------------------
 
 
@@ -221,7 +223,7 @@ const MainContent = () => {
       }
     }
   }, [isSuccessSelectedDateBlogs, selectedDateBlogsData, updateLoading])
-  console.log(selectedDateBlogsData)
+
 
   // --------------------------- selected date ---------------------------
   useEffect(() => {
@@ -269,29 +271,31 @@ const MainContent = () => {
     setIsSelected(e.target.value)
   }
 
+
   const handleSearch = () => {
     let result
     if (!searchInput.length) return console.log('nothing')
     const inputLowerCase = searchInput.toLowerCase()
     // console.log([...inputLowerCase]) // ['s', 'd', 'f', 'd', 's']
 
-    if (selectedDateBlogsData && selectedDate === null) {
+    if (selectedDateBlogsData && selectedDate.frontPage !== null) {
       result = selectedDateBlogsData.filter(blog =>
         [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
       )
     }
 
-    if (allBlogs && selectedDate !== null && !username) {
+    if (allBlogs && selectedDate.frontPage === null && !username) {
       result = allBlogs.filter(blog =>
         [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
       )
     }
 
-    if (allBlogs && selectedDate !== null && username) {
+    if (allBlogs && selectedDate.frontPage === null && username) {
       result = blogsWithoutCurrentUser.filter(blog =>
         [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
       )
     }
+
 
     if (!result.length) {
       setSearchInput('')
@@ -331,13 +335,15 @@ const MainContent = () => {
 
   const searchResultFromRecentlyUpload = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
+  console.log('allBlogs', allBlogs)
+  console.log('blogsWithoutCurrentUser', blogsWithoutCurrentUser)
 
   let content
 
 
   // // ---------------------- date select --------------------------------
 
-  if (paginatedIsLoading && selectedDate.frontPage === null || updateLoading) {
+  if ((paginatedIsLoading && selectedDate.frontPage === null) || (updateLoading)) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -519,7 +525,7 @@ const MainContent = () => {
   // user login or logout it refetch data no need to have 2 state
   // searchResult already filter if user exist or not
 
-  if (isLoadingSelectedDateBlogs && selectedDate.frontPage !== null || updateLoading) {
+  if ((isLoadingSelectedDateBlogs && selectedDate.frontPage !== null) || (updateLoading)) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <LoadingSpinner />
@@ -597,11 +603,12 @@ const MainContent = () => {
         <Box  >
           {dataList?.map(category => {
             return (
-              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ minWidth: 0, mr: 2 }} value={category.type} onClick={handleSelect} > {category.type}</Button>
+              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ minWidth: 0, mr: 2, display: selectedDate.frontPage !== null && category.type === 'Recently Upload' ? 'none' : 'inline-block', }} value={category.type} onClick={handleSelect} > {category.type}</Button>
             )
           }
           )}
-          <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
+
+          <Button size='small' sx={{ minWidth: 0, p: '4px', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
         </Box>
       </Box>
 
