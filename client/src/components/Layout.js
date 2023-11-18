@@ -136,7 +136,7 @@ const Layout = () => {
   }
 
   // startWith /blogs pages with slider,sidebar and searchbar 
-  if (pathname.includes('/blogs') || pathname.includes('/setting')) {
+  if (pathname.includes('/blogs') || pathname.includes('/setting') || pathname.includes('/dash')) {
     return main = (
 
       <Box >

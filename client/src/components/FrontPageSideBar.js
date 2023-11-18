@@ -96,6 +96,7 @@ const FrontPageSideBar = () => {
 
   const [checked, setChecked] = useState(false)
   const [showBack, setShowBack] = useState(false)
+  const [showCalendar, setShowCalendar] = useState(true)
   const [open, setOpen] = React.useState(false)
   const [isShow, setIsShow] = useState(true)
   const [keepOpen, setKeepOpen] = useState(true)
@@ -111,6 +112,10 @@ const FrontPageSideBar = () => {
 
     if (pathname !== '/') {
       setShowBack(true)
+    }
+
+    if (pathname.includes('/setting')) {
+      setShowCalendar(false)
     }
   }, [pathname])
 
@@ -264,8 +269,14 @@ const FrontPageSideBar = () => {
           }
         </Section>
 
-        <Divider />
-        <ActiveCalender />
+        {showCalendar ?
+          <>
+            <Divider />
+            <ActiveCalender />
+          </>
+          : ''
+        }
+
         <Divider />
         <Section >
           <SideButton onClick={handleToMyPost}>
@@ -364,8 +375,13 @@ const FrontPageSideBar = () => {
           }
         </Section>
 
-        <Divider />
-        <ActiveCalender />
+        {showCalendar ?
+          <>
+            <Divider />
+            <ActiveCalender />
+          </>
+          : ''
+        }
         <Divider />
         <Section >
           <SideButton onClick={handleToMyPost}>
@@ -475,10 +491,17 @@ const FrontPageSideBar = () => {
             </IconButton>
             : ''
         }
-        <Divider />
-        <IconButton color="primary" onClick={handleOpen}>
-          <CalendarMonthIcon color='primary' />
-        </IconButton>
+
+        {showCalendar ?
+          <>
+            <Divider />
+            <IconButton color="primary" onClick={handleOpen}>
+              <CalendarMonthIcon color='primary' />
+            </IconButton>
+          </>
+          : ''
+        }
+
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"

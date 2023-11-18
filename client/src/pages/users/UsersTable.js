@@ -23,7 +23,7 @@ import DeleteActionButton from './DeleteActionButton'
 import { useDeleteUserMutation } from './UserApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 
-export default function UsersTable({ user }) {
+export default function UsersTable({ user, smallerThan1459, smallerThan1026, smallerThan971, smallerThan699, smallerThan501, smallerThan401 }) {
 
   const options = { year: 'numeric', month: 'short', day: 'numeric' }
 
@@ -42,8 +42,6 @@ export default function UsersTable({ user }) {
   const handleChange = (event) => {
     setRole(event.target.value)
   }
-
-
 
 
   return (
@@ -68,39 +66,60 @@ export default function UsersTable({ user }) {
 
 
     >
-      <TableCell component="th" scope="row">
+      <TableCell component="th" scope="row" sx={{ width: '100px' }} >
         {user.avatar ?
           <Avatar src={user.avatar} />
           :
-          <Avatar sx={{ backgroundColor: grey[600] }}>
+          <Avatar sx={{ backgroundColor: '#bdbdbd' }}>
             <PersonIcon />
           </Avatar>
         }
       </TableCell>
 
-      <TableCell align="left">{user.username}</TableCell>
-      <TableCell align="left">{user.email}</TableCell>
-      <TableCell align="left">
-        {
-          <Select
-            sx={{
-              width: 120,
-              color: 'white',
-              backgroundColor: role === 'Admin' ? green[700] : role === 'Employee' ? orange[700] : yellow[700],
-              "&& fieldset": {
-                border: "none"
-              }
-            }}
-            value={role}
-            onChange={handleChange}
-          >
-            <MenuItem value='User'>User</MenuItem>
-            <MenuItem value='Employee'>Employee</MenuItem>
-            <MenuItem value='Admin'>Admin</MenuItem>
-          </Select>
-        }
+      <TableCell align="left" sx={{ width: smallerThan401 ? '80px' : '160px' }}>
+        <Typography sx={{
+          minWidth: '80px',
+          maxWidth: '160px',
+          wordBreak: "break-word",
+          display: '-webkit-box',
+          overflow: 'hidden',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 1,
+          textOverflow: 'ellipsis',
+        }}>
+          {user.username}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        </Typography>
       </TableCell>
-      <TableCell align="left">
+      {smallerThan971 ? ''
+        :
+        <TableCell align="left">{user.email}</TableCell>
+      }
+
+      {smallerThan1026 ? ''
+        :
+        <TableCell align="left">
+          {
+            <Select
+              sx={{
+                width: 120,
+                color: 'white',
+                backgroundColor: role === 'Admin' ? green[700] : role === 'Employee' ? orange[700] : yellow[700],
+                "&& fieldset": {
+                  border: "none"
+                }
+              }}
+              value={role}
+              onChange={handleChange}
+            >
+              <MenuItem value='User'>User</MenuItem>
+              <MenuItem value='Employee'>Employee</MenuItem>
+              <MenuItem value='Admin'>Admin</MenuItem>
+            </Select>
+          }
+        </TableCell>
+      }
+
+      <TableCell align={smallerThan501 ? 'right' : 'left'}>
         <IconButton
           sx={{ fontSize: 35, color: 'white', backgroundColor: orange[400], '&:hover': { color: orange[400], backgroundColor: 'white' } }}
           onClick={() => handleEdit(user._id)}
@@ -109,21 +128,38 @@ export default function UsersTable({ user }) {
           <GridViewIcon />
         </IconButton>
       </TableCell>
-      <TableCell align="left"><ToggleButton active={active} setActive={setActive} /></TableCell>
-      <TableCell align="left">{new Intl.DateTimeFormat('en-US', options).format(new Date(user.createdAt))}</TableCell>
-      <TableCell align="left">{new Intl.DateTimeFormat('en-US', options).format(new Date(user.updatedAt))}</TableCell>
-      <TableCell align="left">
-        < SaveActionFromUsersList
-          user={user}
-          stateActive={stateActive}
-          stateRole={stateRole}
-          active={active}
-          role={role}
-        />
-      </TableCell>
-      <TableCell align="left">
-        <DeleteActionButton userId={user._id} />
-      </TableCell>
+      {smallerThan699 ? ''
+        :
+        <TableCell align="left"><ToggleButton active={active} setActive={setActive} /></TableCell>
+      }
+
+      {smallerThan1459 ? '' :
+        <>
+          <TableCell align="left">{new Intl.DateTimeFormat('en-US', options).format(new Date(user.createdAt))}</TableCell>
+          <TableCell align="left">{new Intl.DateTimeFormat('en-US', options).format(new Date(user.updatedAt))}</TableCell>
+        </>}
+
+      {smallerThan699 ?
+        ''
+        :
+        <TableCell align="left">
+          < SaveActionFromUsersList
+            user={user}
+            stateActive={stateActive}
+            stateRole={stateRole}
+            active={active}
+            role={role}
+          />
+        </TableCell>
+      }
+
+      {smallerThan501 ? ''
+        :
+        <TableCell align="left">
+          <DeleteActionButton userId={user._id} />
+        </TableCell>
+      }
+
     </ TableRow>
   )
 

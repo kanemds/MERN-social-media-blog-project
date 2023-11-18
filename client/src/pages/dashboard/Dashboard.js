@@ -6,7 +6,7 @@ import FooterDash from './FooterDash'
 const Dashboard = () => {
   return (
     <>
-      <HeaderDash />
+
       <Outlet />
     </>
 

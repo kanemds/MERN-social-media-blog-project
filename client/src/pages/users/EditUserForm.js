@@ -99,6 +99,10 @@ const EditUserForm = ({ currentUser }) => {
     setShowPassword(prev => !prev)
   }
 
+  const handleCancel = () => {
+    navigate(-1)
+  }
+
   let content
 
   if (!username.length || !email.length || !role.length || typeof active !== 'boolean') content = <LoadingSpinner />
@@ -175,13 +179,14 @@ const EditUserForm = ({ currentUser }) => {
           </Box>
 
           <Box sx={{ mt: '30px' }}>
+            <Button variant='contained' onClick={handleCancel}>Cancel</Button>
             <Button
               variant='contained'
-              sx={{ mr: '10px' }}
+              sx={{ ml: '10px' }}
               disabled={canSave ? false : true}
               onClick={handleSave}
             >Submit</Button>
-            <LinkButton visit='/' name={'cancel'} />
+
           </Box>
         </Box>
       </Paper >
