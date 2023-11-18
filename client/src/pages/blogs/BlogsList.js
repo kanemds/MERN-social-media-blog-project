@@ -185,7 +185,7 @@ const BlogsList = () => {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>
-          No Blogs are created
+          No Blogs are created on the selected date
         </Typography>
       </Box>
       )

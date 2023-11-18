@@ -1,7 +1,7 @@
 
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ErrorMessage from '../../components/ErrorMessage'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useGetUsersQuery } from './UserApiSlice'
 import { Avatar, FormControl, MenuItem, Paper, Box, InputLabel, Select, Typography, Button, IconButton, TablePagination } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
@@ -20,7 +20,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const UsersList = () => {
 
@@ -41,10 +41,19 @@ const UsersList = () => {
 
   })
 
+  const smallerThan1459 = useMediaQuery('(max-width:1459px)')
+  const smallerThan1026 = useMediaQuery('(max-width:1026px)')
+  const smallerThan971 = useMediaQuery('(max-width:971px)')
+  const smallerThan699 = useMediaQuery('(max-width:699px)')
+  const smallerThan501 = useMediaQuery('(max-width:501px)')
+  const smallerThan401 = useMediaQuery('(max-width:421px)')
+
+
 
 
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -71,25 +80,50 @@ const UsersList = () => {
 
 
     // content = usersList.map(user => <UserListTable key={user._id} user={user} usersList={usersList} />)
-    content = (<Paper sx={{ border: 2, borderColor: blue[500] }}>
+    content = (<Box >
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 360 }} aria-label="simple table">
           <TableHead sx={{ backgroundColor: blue[500] }}>
             <TableRow sx={{ color: 'white' }} >
+
               <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} >Avatar</TableCell>
               <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Username </TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">E-mail</TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Role</TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">View</TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">State</TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Created At</TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Last Updated</TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Save</TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Delete</TableCell>
+              {smallerThan971 ? ''
+                :
+                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">E-mail</TableCell>
+              }
+
+              {smallerThan1026 ? ''
+                :
+                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Role</TableCell>
+              }
+
+              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align={smallerThan501 ? 'right' : "left"}>View</TableCell>
+              {smallerThan699 ? ''
+                :
+                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">State</TableCell>
+              }
+
+              {smallerThan1459 ? '' :
+                <>
+                  <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Created At</TableCell>
+                  <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Last Updated</TableCell>
+                </>
+              }
+
+              {smallerThan699 ? ''
+                :
+                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Save</TableCell>
+              }
+              {smallerThan501 ? ''
+                :
+                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Delete</TableCell>
+              }
+
             </TableRow>
           </TableHead>
-          <TableBody >
-            {usersList.map(user => <UsersTable key={user._id} user={user} />)}
+          <TableBody  >
+            {usersList.map(user => <UsersTable key={user._id} user={user} smallerThan1459={smallerThan1459} smallerThan1026={smallerThan1026} smallerThan971={smallerThan971} smallerThan699={smallerThan699} smallerThan501={smallerThan501} smallerThan401={smallerThan401} />)}
           </TableBody>
         </Table>
       </TableContainer>
@@ -103,14 +137,14 @@ const UsersList = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Paper>
+    </Box>
     )
   }
 
 
   return (
     <>
-      <div>UsersList</div>
+
 
       {content}
 

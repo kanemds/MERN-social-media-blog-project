@@ -165,7 +165,7 @@ const SubscribedList = () => {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography >
-          No Blogs are available at the moment
+          No subscribed blogger(s) on the selected date
         </Typography>
       </Box>
       )
