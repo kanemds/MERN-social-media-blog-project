@@ -82,7 +82,7 @@ const UsersList = () => {
     // content = usersList.map(user => <UserListTable key={user._id} user={user} usersList={usersList} />)
     content = (<Box >
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 360 }} aria-label="simple table">
+        <Table sx={{ minWidth: 368 }} aria-label="simple table">
           <TableHead sx={{ backgroundColor: blue[500] }}>
             <TableRow sx={{ color: 'white' }} >
 
@@ -98,7 +98,7 @@ const UsersList = () => {
                 <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Role</TableCell>
               }
 
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align={smallerThan501 ? 'right' : "left"}>View</TableCell>
+              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align={smallerThan699 ? 'right' : "left"}>View</TableCell>
               {smallerThan699 ? ''
                 :
                 <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">State</TableCell>
@@ -117,7 +117,7 @@ const UsersList = () => {
               }
               {smallerThan501 ? ''
                 :
-                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Delete</TableCell>
+                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align={smallerThan699 ? 'right' : "left"}>Delete</TableCell>
               }
 
             </TableRow>
@@ -137,7 +137,7 @@ const UsersList = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Box>
+    </Box >
     )
   }
 
