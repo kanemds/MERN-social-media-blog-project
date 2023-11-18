@@ -76,7 +76,7 @@ export default function UsersTable({ user, smallerThan1459, smallerThan1026, sma
         }
       </TableCell>
 
-      <TableCell align="left" sx={{ width: smallerThan401 ? '80px' : '160px' }}>
+      <TableCell align="left" >
         <Typography sx={{
           minWidth: '80px',
           maxWidth: '160px',
@@ -119,7 +119,7 @@ export default function UsersTable({ user, smallerThan1459, smallerThan1026, sma
         </TableCell>
       }
 
-      <TableCell align={smallerThan501 ? 'right' : 'left'}>
+      <TableCell align={smallerThan699 ? 'right' : 'left'}>
         <IconButton
           sx={{ fontSize: 35, color: 'white', backgroundColor: orange[400], '&:hover': { color: orange[400], backgroundColor: 'white' } }}
           onClick={() => handleEdit(user._id)}
@@ -155,7 +155,7 @@ export default function UsersTable({ user, smallerThan1459, smallerThan1026, sma
 
       {smallerThan501 ? ''
         :
-        <TableCell align="left">
+        <TableCell align={smallerThan699 ? 'right' : "left"}>
           <DeleteActionButton userId={user._id} />
         </TableCell>
       }

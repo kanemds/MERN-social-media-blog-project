@@ -114,7 +114,7 @@ const FrontPageSideBar = () => {
       setShowBack(true)
     }
 
-    if (pathname.includes('/setting')) {
+    if (pathname.includes('/setting') || pathname.includes('/dash')) {
       setShowCalendar(false)
     }
   }, [pathname])
