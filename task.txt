@@ -108,3 +108,14 @@ note:
 blogs 
 
 first 
+
+responsive:
+
+width: 375, screen: 343
+
+
+user page:
+[x] user List 
+
+
+

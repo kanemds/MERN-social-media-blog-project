@@ -56,7 +56,7 @@ const UsersList = () => {
   const smallerThan971 = useMediaQuery('(max-width:971px)')
   const smallerThan699 = useMediaQuery('(max-width:699px)')
   const smallerThan501 = useMediaQuery('(max-width:501px)')
-  const smallerThan401 = useMediaQuery('(max-width:421px)')
+  const smallerThan401 = useMediaQuery('(max-width:401px)')
 
   const hiddenMenu = useMediaQuery('(max-width:791px)')
 
@@ -108,7 +108,7 @@ const UsersList = () => {
 
 
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 368 }} aria-label="simple table">
+        <Table sx={{ minWidth: 343 }} aria-label="simple table">
           <TableHead sx={{ backgroundColor: blue[500] }}>
             <TableRow sx={{ color: 'white' }} >
 
@@ -154,7 +154,7 @@ const UsersList = () => {
         </Table>
       </TableContainer>
       <TablePagination
-        sx={{ color: 'white', backgroundColor: grey[500], fontSize: '1.1rem' }}
+        sx={{ color: 'white', backgroundColor: grey[500], fontSize: '1rem', '& .MuiTablePagination-input': { marginRight: smallerThan401 ? '10px' : '32px' }, '& .MuiTablePagination-actions': { marginLeft: smallerThan401 ? '0px' : '20px' } }}
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
         count={usersList.length}
