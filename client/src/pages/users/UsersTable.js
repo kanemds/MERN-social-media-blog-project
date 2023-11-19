@@ -76,7 +76,7 @@ export default function UsersTable({ user, smallerThan1459, smallerThan1026, sma
         }
       </TableCell>
 
-      <TableCell align="left" >
+      <TableCell align="left">
         <Typography sx={{
           minWidth: '80px',
           maxWidth: '160px',
@@ -87,7 +87,7 @@ export default function UsersTable({ user, smallerThan1459, smallerThan1026, sma
           WebkitLineClamp: 1,
           textOverflow: 'ellipsis',
         }}>
-          {user.username}
+          {user.username}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         </Typography>
       </TableCell>
       {smallerThan971 ? ''
