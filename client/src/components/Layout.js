@@ -23,7 +23,7 @@ import { onLoggingOut } from "../pages/auth/authSlice"
 const theme = createTheme({
   breakpoints: {
     values: {
-      xs: 0,
+      xs: 320,
       sm: 600,
       md: 750,
       lg: 1200,
@@ -159,6 +159,7 @@ const Layout = () => {
 
     )
   }
+
 
   // other pages no slider, sidebar and searchbar
   if (pathname !== '/blogs' && pathname !== '/') {

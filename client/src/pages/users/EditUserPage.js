@@ -5,6 +5,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import EditUserForm from './EditUserForm'
 import { useSelector } from 'react-redux'
 import { memo } from 'react'
+import { Box } from '@mui/material'
 
 const EditUserPage = () => {
 
@@ -33,9 +34,20 @@ const EditUserPage = () => {
   // ================================================================================
   let content
 
-  if (!currentUser) return <LoadingSpinner />
+  if (!currentUser) {
+    return <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+      <LoadingSpinner />
+    </Box>
 
-  if (currentUser) return <EditUserForm currentUser={currentUser} />
+  }
+
+  if (currentUser) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <EditUserForm currentUser={currentUser} />
+      </Box>
+    )
+  }
 
   return content
 
