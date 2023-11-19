@@ -115,8 +115,8 @@ const EditUserForm = ({ currentUser }) => {
         noValidate
         autoComplete="off"
         sx={{
-          minWidth: '500px',
-          width: '50%',
+          minWidth: '300px',
+          maxWidth: '420px',
           p: '10px',
           pb: '100px',
 
@@ -126,7 +126,7 @@ const EditUserForm = ({ currentUser }) => {
           <DeleteActionButton userId={currentUser.id} />
         </Box>
 
-        <Box sx={{ pb: '40px', ml: '5%' }}>
+        <Box sx={{ pb: '40px' }}>
           <Typography variant='h4'>EDIT ACCOUNT</Typography>
 
         </Box>

@@ -1,7 +1,7 @@
 
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ErrorMessage from '../../components/ErrorMessage'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useGetUsersQuery } from './UserApiSlice'
 import { Avatar, FormControl, MenuItem, Paper, Box, InputLabel, Select, Typography, Button, IconButton, TablePagination } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
@@ -21,8 +21,18 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import DehazeIcon from '@mui/icons-material/Dehaze'
+import { SideBarContext } from '../../useContext/SideBarContext'
+
+const IconButtonStyle = {
+  width: '40px', height: '40px'
+}
+
 
 const UsersList = () => {
+
+  const navigate = useNavigate()
+  const { toggleDrawer, drawerDirection } = useContext(SideBarContext)
 
 
   const {
@@ -48,6 +58,7 @@ const UsersList = () => {
   const smallerThan501 = useMediaQuery('(max-width:501px)')
   const smallerThan401 = useMediaQuery('(max-width:421px)')
 
+  const hiddenMenu = useMediaQuery('(max-width:791px)')
 
 
 
@@ -62,6 +73,10 @@ const UsersList = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value)
     setPage(0)
+  }
+
+  const handleBack = () => {
+    navigate(-1)
   }
 
 
@@ -81,6 +96,17 @@ const UsersList = () => {
 
     // content = usersList.map(user => <UserListTable key={user._id} user={user} usersList={usersList} />)
     content = (<Box >
+      {hiddenMenu ?
+        <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
+          onClick={toggleDrawer(drawerDirection, true)}
+        >
+          <DehazeIcon color='primary' />
+        </IconButton>
+        :
+        ''
+      }
+
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 368 }} aria-label="simple table">
           <TableHead sx={{ backgroundColor: blue[500] }}>
@@ -137,6 +163,15 @@ const UsersList = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      {hiddenMenu ?
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: '20px' }}>
+          <Button variant='contained' onClick={handleBack}>Back</Button>
+        </Box>
+
+        :
+        ''
+      }
+
     </Box >
     )
   }
