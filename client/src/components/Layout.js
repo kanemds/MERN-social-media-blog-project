@@ -167,7 +167,7 @@ const Layout = () => {
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} setLoggingOut={setLoggingOut} />
         <ThemeProvider theme={theme}  >
-          <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 70px)', mt: '70px' }}>
+          <Container maxWidth='xxl' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 70px)', mt: '70px', width: '100%' }}>
             {isLoading || isError ?
               { content }
               :

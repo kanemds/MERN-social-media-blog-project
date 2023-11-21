@@ -136,114 +136,111 @@ const LoginPage = ({ state }) => {
 
 
   content = (
-
-    <Paper
-      component="form"
-      noValidate
-      autoComplete="off"
-      sx={{
-
-        width: '500px',
-        p: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Typography variant='h8' sx={{ mb: 1 }}>{requiredLoginMessage}</Typography>
-      </Box>
-      <Box sx={{ pb: '40px', width: '100%', minWidth: '380px', maxWidth: '420px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <Box textAlign='center'>
-          <Typography sx={{ fontSize: '1.7rem' }}>Login</Typography>
-        </Box>
-      </Box>
-      {
-        errorMessage ?
-          <Typography>{errorMessage}</Typography>
-          : ''
-      }
-      <Box
+    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', }}>
+      <Paper
+        component="form"
+        noValidate
+        autoComplete="off"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
+          width: '500px',
+          p: '10px',
+          pb: '100px'
         }}
       >
-
-        <FormControl sx={{ minWidth: '343px', maxWidth: '420px', width: '85%', height: '130px', p: 2 }}>
-          <FormLabel
-            error={!username?.length && focusedUser === null ? true : username.length && focusedUser === null && !checkUsername ? true : false}
-          >Username</FormLabel>
-          <OutlinedInput
-            required
-            // placeholder=''
-            onFocus={handleFocusUser}
-            onBlur={handleBlurUser}
-            onChange={handleChangeUser}
-            value={username}
-            type='text'
-            error={!username?.length && focusedUser === null ? true : username.length && focusedUser === null && !checkUsername ? true : false}
-          />
-          <FormHelperText error>
-            {!username.length && focusedUser === null ? 'Please enter a username' : username.length && focusedUser === null && !checkUsername ? 'Please enter a valid username, it must be with at least 4 characters' : ''}
-          </FormHelperText>
-        </FormControl>
-
-
-        <FormControl sx={{ minWidth: '380px', maxWidth: '420px', width: '85%', height: '130px', p: 2 }}>
-          <FormLabel
-            error={!password?.length && focusedPassword === null ? true : false}
-          >Password</FormLabel>
-          <OutlinedInput
-            required
-            // placeholder=''
-            onFocus={handleFocusPassword}
-            onBlur={handleBlurPassword}
-            onChange={handleChangePassword}
-            value={password}
-            type={showPassword ? 'text' : 'password'}
-            error={!password?.length && focusedPassword === null ? true : false}
-          />
-          <FormHelperText error>
-            {!password.length && focusedPassword === null ? 'Please enter a password' : password.length && focusedPassword === null && !checkPassword ? 'Invalid password, it must be at least 8 characters and contain both letters and numbers' : ''}
-          </FormHelperText>
-
-          <Box sx={{ pb: '50px' }}>
-            <FormControlLabel control={<Checkbox onChange={handleShowPassword} />} label="Show Password" />
-          </Box>
-
-        </FormControl>
-
-        <FormControl sx={{ width: '100%' }}>
-          <FormControlLabel
-            sx={{ display: 'flex', justifyContent: 'flex-end' }}
-            value='end'
-            control={<Checkbox onChange={handlePersist} checked={persist} />}
-            label='Keep me logged in'
-            labelPlacement="end"
-          />
-        </FormControl>
-
-        <Box sx={{ mt: '40px' }}>
-
-          <Button
-            variant='contained'
-            sx={{ ml: '10px' }}
-            onClick={handleCancel}
-          >Cancel</Button>
-          <Button
-            variant='contained'
-            sx={{ ml: '10px' }}
-            onClick={handleSave}
-          >Submit</Button>
-
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Typography variant='h8' sx={{ mb: 1 }}>{requiredLoginMessage}</Typography>
         </Box>
-      </Box>
-    </Paper >
 
+        <Box sx={{ pb: '40px', }} textAlign='center'>
+          <Box textAlign='center'>
+            <Typography sx={{ fontSize: '1.7rem' }}>Login</Typography>
+          </Box>
+        </Box>
+        {
+          errorMessage ?
+            <Typography>{errorMessage}</Typography>
+            : ''
+        }
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+
+          <FormControl sx={{ width: '85%', height: '130px', }}>
+            <FormLabel
+              error={!username?.length && focusedUser === null ? true : username.length && focusedUser === null && !checkUsername ? true : false}
+            >Username</FormLabel>
+            <OutlinedInput
+              required
+              // placeholder=''
+              onFocus={handleFocusUser}
+              onBlur={handleBlurUser}
+              onChange={handleChangeUser}
+              value={username}
+              type='text'
+              error={!username?.length && focusedUser === null ? true : username.length && focusedUser === null && !checkUsername ? true : false}
+            />
+            <FormHelperText error>
+              {!username.length && focusedUser === null ? 'Please enter a username' : username.length && focusedUser === null && !checkUsername ? 'Please enter a valid username, it must be with at least 4 characters' : ''}
+            </FormHelperText>
+          </FormControl>
+
+
+          <FormControl sx={{ width: '85%', height: '130px', }}>
+            <FormLabel
+              error={!password?.length && focusedPassword === null ? true : false}
+            >Password</FormLabel>
+            <OutlinedInput
+              required
+              // placeholder=''
+              onFocus={handleFocusPassword}
+              onBlur={handleBlurPassword}
+              onChange={handleChangePassword}
+              value={password}
+              type={showPassword ? 'text' : 'password'}
+              error={!password?.length && focusedPassword === null ? true : false}
+            />
+            <FormHelperText error>
+              {!password.length && focusedPassword === null ? 'Please enter a password' : password.length && focusedPassword === null && !checkPassword ? 'Invalid password, it must be at least 8 characters and contain both letters and numbers' : ''}
+            </FormHelperText>
+
+            <Box sx={{ pb: '50px' }}>
+              <FormControlLabel control={<Checkbox onChange={handleShowPassword} />} label="Show Password" />
+            </Box>
+
+          </FormControl>
+
+          <FormControl sx={{ width: '100%' }}>
+            <FormControlLabel
+              sx={{ display: 'flex', justifyContent: 'flex-end' }}
+              value='end'
+              control={<Checkbox onChange={handlePersist} checked={persist} />}
+              label='Keep me logged in'
+              labelPlacement="end"
+            />
+          </FormControl>
+
+          <Box sx={{ mt: '40px' }}>
+
+            <Button
+              variant='contained'
+              sx={{ ml: '10px' }}
+              onClick={handleCancel}
+            >Cancel</Button>
+            <Button
+              variant='contained'
+              sx={{ ml: '10px' }}
+              onClick={handleSave}
+            >Submit</Button>
+
+          </Box>
+        </Box>
+      </Paper >
+    </Box>
   )
 
 
