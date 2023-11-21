@@ -127,8 +127,8 @@ const EditUserForm = ({ currentUser }) => {
           <DeleteActionButton userId={currentUser.id} />
         </Box>
 
-        <Box sx={{ pb: '40px' }}>
-          <Typography sx={{ fontSize: '2rem' }}>EDIT ACCOUNT</Typography>
+        <Box sx={{ pb: '40px', }} textAlign='center'>
+          <Typography sx={{ fontSize: '1.7rem' }}>Edit Account</Typography>
         </Box>
         {isError ?
           <Typography>{error?.data?.message}</Typography>
@@ -179,7 +179,7 @@ const EditUserForm = ({ currentUser }) => {
           </Box>
 
           <Box sx={{ mt: '30px' }}>
-            <Button variant='contained' onClick={handleCancel}>Cancel</Button>
+            <Button variant='contained' onClick={handleCancel}>Back</Button>
             <Button
               variant='contained'
               sx={{ ml: '10px' }}

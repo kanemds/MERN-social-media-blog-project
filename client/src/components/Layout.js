@@ -162,19 +162,19 @@ const Layout = () => {
 
 
   // other pages no slider, sidebar and searchbar
-  if (pathname !== '/blogs' && pathname !== '/') {
+  if (pathname !== '/blogs' && pathname !== '/' && !pathname.includes('/dash')) {
     return main = (
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} setLoggingOut={setLoggingOut} />
         <ThemeProvider theme={theme}  >
-          <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 70px)', pt: '100px', pb: '100px' }}>
+          <Container maxWidth='xxl' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 70px)', mt: '70px' }}>
             {isLoading || isError ?
               { content }
               :
               <Outlet />
             }
           </Container>
-        </ThemeProvider>
+        </ThemeProvider >
       </>)
   }
   return { main }
