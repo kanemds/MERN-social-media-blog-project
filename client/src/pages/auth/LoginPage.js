@@ -136,15 +136,15 @@ const LoginPage = ({ state }) => {
 
 
   content = (
+
     <Paper
       component="form"
       noValidate
       autoComplete="off"
       sx={{
-        minWidth: '380px',
-        maxWidth: '420px',
-        p: 3,
-        width: '50%',
+
+        width: '500px',
+        p: '10px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -155,8 +155,8 @@ const LoginPage = ({ state }) => {
         <Typography variant='h8' sx={{ mb: 1 }}>{requiredLoginMessage}</Typography>
       </Box>
       <Box sx={{ pb: '40px', width: '100%', minWidth: '380px', maxWidth: '420px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Typography variant='h4' sx={{ ml: 1 }}>Login</Typography>
+        <Box textAlign='center'>
+          <Typography sx={{ fontSize: '1.7rem' }}>Login</Typography>
         </Box>
       </Box>
       {
@@ -173,7 +173,7 @@ const LoginPage = ({ state }) => {
         }}
       >
 
-        <FormControl sx={{ minWidth: '380px', maxWidth: '420px', width: '85%', height: '130px', p: 2 }}>
+        <FormControl sx={{ minWidth: '343px', maxWidth: '420px', width: '85%', height: '130px', p: 2 }}>
           <FormLabel
             error={!username?.length && focusedUser === null ? true : username.length && focusedUser === null && !checkUsername ? true : false}
           >Username</FormLabel>
@@ -243,6 +243,7 @@ const LoginPage = ({ state }) => {
         </Box>
       </Box>
     </Paper >
+
   )
 
 

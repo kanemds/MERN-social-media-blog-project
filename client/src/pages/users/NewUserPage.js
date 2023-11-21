@@ -83,6 +83,10 @@ const NewUserPage = () => {
     setRole(event.target.value)
   }
 
+  const handleBack = () => {
+    navigate(-1)
+  }
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
 
@@ -98,7 +102,7 @@ const NewUserPage = () => {
         }}
       >
         <Box sx={{ pb: '40px' }}>
-          <Typography sx={{ fontSize: '2rem' }}>CREATE AN ACCOUNT</Typography>
+          <Typography sx={{ fontSize: '1.7rem' }} textAlign='center'>Create Account</Typography>
         </Box>
         {isError ?
           <Typography>{error?.data?.message}</Typography>
@@ -138,13 +142,14 @@ const NewUserPage = () => {
           </FormControl>
 
           <Box sx={{ mt: '30px' }}>
+            <Button variant='contained' onClick={handleBack}>Back</Button>
             <Button
               variant='contained'
-              sx={{ mr: '10px' }}
+              sx={{ ml: '10px' }}
               disabled={canSave ? false : true}
               onClick={handleSave}
             >Submit</Button>
-            <LinkButton name={'cancel'} />
+
           </Box>
         </Box>
 
