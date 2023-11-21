@@ -24,6 +24,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import DehazeIcon from '@mui/icons-material/Dehaze'
 import { SideBarContext } from '../../useContext/SideBarContext'
 
+
 const IconButtonStyle = {
   width: '40px', height: '40px'
 }

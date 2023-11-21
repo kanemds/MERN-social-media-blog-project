@@ -23,6 +23,7 @@ import SubscribedList from './pages/subscribed/SubscribedList'
 import BookmarkList from './pages/bookmark/BookmarkList'
 import SettingPage from './pages/settings/SettingPage'
 import UserLogout from './pages/auth/UserLogout'
+import NotAuth from './components/NotAuth'
 
 
 
@@ -76,6 +77,7 @@ function App() {
         <Route path='/logout' element={<UserLogout />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
+        <Route path='/no-auth' element={<NotAuth />} />
       </Route>
     </Routes >
   )

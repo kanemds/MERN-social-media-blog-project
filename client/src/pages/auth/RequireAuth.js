@@ -32,7 +32,8 @@ const RequireAuth = ({ allowedRoles }) => {
 
     allowedRoles.includes(role) ? <Outlet />
       :
-      <Navigate to='login' state={{ from: location }} replace />
+      // <Navigate to='login' state={{ from: location }} replace />
+      <Navigate to='no-auth' replace />
   )
 
   return content

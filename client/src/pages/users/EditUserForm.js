@@ -115,8 +115,9 @@ const EditUserForm = ({ currentUser }) => {
         noValidate
         autoComplete="off"
         sx={{
-          minWidth: '300px',
-          maxWidth: '420px',
+          // minWidth: '343px',
+          // maxWidth: '500px',
+          width: '500px',
           p: '10px',
           pb: '100px',
 
@@ -127,8 +128,7 @@ const EditUserForm = ({ currentUser }) => {
         </Box>
 
         <Box sx={{ pb: '40px' }}>
-          <Typography variant='h4'>EDIT ACCOUNT</Typography>
-
+          <Typography sx={{ fontSize: '2rem' }}>EDIT ACCOUNT</Typography>
         </Box>
         {isError ?
           <Typography>{error?.data?.message}</Typography>
