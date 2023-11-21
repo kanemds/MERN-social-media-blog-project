@@ -111,7 +111,7 @@ first
 
 responsive:
 
-width: 375, screen: 343
+width: 375, screen: 343, header title: 2rem
 
 
 user page:

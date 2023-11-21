@@ -84,72 +84,72 @@ const NewUserPage = () => {
   }
 
   return (
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
 
-    <Paper
-      component="form"
-      noValidate
-      autoComplete="off"
-      sx={{
-        minWidth: '500px',
-        width: '50%',
-        p: '50px',
-        pb: '100px',
-
-      }}
-    >
-      <Box sx={{ pb: '40px' }}>
-        <Typography variant='h4'>CREATE AN ACCOUNT</Typography>
-      </Box>
-      {isError ?
-        <Typography>{error?.data?.message}</Typography>
-        : ''
-      }
-      <Box
+      <Paper
+        component="form"
+        noValidate
+        autoComplete="off"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
+          width: '500px',
+          p: '10px',
+          pb: '100px',
+
         }}
       >
-
-
-        <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
-        <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
-        <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
-        <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
-
-
-        <FormControl sx={{ m: 3, width: 130 }}>
-          <InputLabel>Select Role</InputLabel>
-          <Select
-            value={role}
-            onChange={handleChange}
-            autoWidth
-            label="Select Role"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value='User'>User</MenuItem>
-            <MenuItem value='Employee'>Employee</MenuItem>
-            <MenuItem value='Admin'>Admin</MenuItem>
-          </Select>
-        </FormControl>
-
-        <Box sx={{ mt: '30px' }}>
-          <Button
-            variant='contained'
-            sx={{ mr: '10px' }}
-            disabled={canSave ? false : true}
-            onClick={handleSave}
-          >Submit</Button>
-          <LinkButton name={'cancel'} />
+        <Box sx={{ pb: '40px' }}>
+          <Typography sx={{ fontSize: '2rem' }}>CREATE AN ACCOUNT</Typography>
         </Box>
-      </Box>
+        {isError ?
+          <Typography>{error?.data?.message}</Typography>
+          : ''
+        }
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
 
-    </Paper >
 
+          <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
+          <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
+          <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
+          <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
+
+
+          <FormControl sx={{ m: 3, width: 130 }}>
+            <InputLabel>Select Role</InputLabel>
+            <Select
+              value={role}
+              onChange={handleChange}
+              autoWidth
+              label="Select Role"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value='User'>User</MenuItem>
+              <MenuItem value='Employee'>Employee</MenuItem>
+              <MenuItem value='Admin'>Admin</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Box sx={{ mt: '30px' }}>
+            <Button
+              variant='contained'
+              sx={{ mr: '10px' }}
+              disabled={canSave ? false : true}
+              onClick={handleSave}
+            >Submit</Button>
+            <LinkButton name={'cancel'} />
+          </Box>
+        </Box>
+
+      </Paper >
+    </Box>
   )
 }
 
