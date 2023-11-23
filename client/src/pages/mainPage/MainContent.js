@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState, useCallback } from 'react'
 import ActiveCalender from '../blogs/ActiveCalender'
-import { Box, Button, Paper, Container, Typography, IconButton, AppBar, Toolbar, SvgIcon } from '@mui/material'
+import { Box, Button, Paper, Container, Typography, IconButton, AppBar, Toolbar, SvgIcon, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 import Note from '../../components/Note'
@@ -67,7 +67,7 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Recently Upload' }
 
 
 
-const MainContent = () => {
+const MainContent = (props) => {
 
 
   const { username, userId } = useAuth()
@@ -76,10 +76,11 @@ const MainContent = () => {
 
   const small = useMediaQuery('(max-width:791px)')
   const smallScreenSize = useMediaQuery('(min-width:600px)')
+  const smallerThan425 = useMediaQuery('(max-width:425px)')
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
 
-  const { state, setState, drawerDirection, toggleDrawer, selectedDate, calendarDate } = useContext(SideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, calendarDate, clearSelectedDate, setClearSelectedDate } = useContext(SideBarContext)
   const [page, setPage] = useState(1)
   const [isSelected, setIsSelected] = useState('All')
   const [allBlogs, setAllBlogs] = useState([])
@@ -93,6 +94,7 @@ const MainContent = () => {
   const [isReFetch, setIsReFetch] = useState(false)
   const [paginationQueryInfo, setPaginationQueryInfo] = useState({ page: 1, username: null })
   const [updateLoading, setUpdateLoading] = useState(false)
+
 
 
 
@@ -176,7 +178,7 @@ const MainContent = () => {
   }, [selectedDate.frontPage])
 
 
-
+  // get pre selected date blogs into one object
   useEffect(() => {
     if (selectedDate.frontPage !== null) {
       if (selectedDateBlogsData && userId) {
@@ -215,7 +217,6 @@ const MainContent = () => {
         }))
       }
       if (updateLoading) {
-
         setTimeout(() => {
           setUpdateLoading(false)
         }, 600)
@@ -223,6 +224,7 @@ const MainContent = () => {
       }
     }
   }, [isSuccessSelectedDateBlogs, selectedDateBlogsData, updateLoading])
+
 
 
   // --------------------------- selected date ---------------------------
@@ -269,6 +271,10 @@ const MainContent = () => {
   }
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
+  }
+
+  const handleClearFromSelectedDate = (e) => {
+    setClearSelectedDate(true)
   }
 
 
@@ -328,15 +334,14 @@ const MainContent = () => {
   }, [paginatedIsLoading, hasMore])
 
 
+  console.log(selectedDate.frontPage)
+
 
 
   const recentlyUploadWithAllUsers = Array.isArray(allBlogs) && allBlogs?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
   const recentlyUploadWithoutUser = Array.isArray(blogsWithoutCurrentUser) && blogsWithoutCurrentUser?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
 
   const searchResultFromRecentlyUpload = Array.isArray(searchResult) && searchResult?.filter(blog => current - Date.parse(blog?.createdAt) < sevenDays)
-
-  console.log('allBlogs', allBlogs)
-  console.log('blogsWithoutCurrentUser', blogsWithoutCurrentUser)
 
   let content
 
@@ -356,7 +361,7 @@ const MainContent = () => {
     const findSelectedDate = selectedDateBlogs?.userNotExist.filter(blog => blog.date === getSelectedDateBlogsInfo.date)
     const currentDate = findSelectedDate[0]?.blogs
     const currentDateWithoutUser = findSelectedDateWithOutUser[0]?.blogs
-    console.log(currentDateWithoutUser)
+
     if (userId && currentDateWithoutUser?.length > 0) {
       content = (
         <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
@@ -381,7 +386,7 @@ const MainContent = () => {
       content = (
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
           <Typography>
-            No Blogs for the selected date are available at the moment
+            The selected date has no blog(s).
           </Typography>
         </Box>
       )
@@ -603,12 +608,14 @@ const MainContent = () => {
         <Box  >
           {dataList?.map(category => {
             return (
-              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ minWidth: 0, mr: 2, display: selectedDate.frontPage !== null && category.type === 'Recently Upload' ? 'none' : 'inline-block', }} value={category.type} onClick={handleSelect} > {category.type}</Button>
+              <Button style={buttonStyle} key={category.id} size='small' variant={isSelected === category.type ? 'contained' : 'text'} sx={{ minWidth: 0, mr: 2, display: selectedDate.frontPage !== null ? 'none' : 'inline-block', }} value={category.type} onClick={handleSelect} > {category.type}</Button>
             )
           }
           )}
-
-          <Button size='small' sx={{ minWidth: 0, p: '4px', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
+          <Box sx={{ display: 'inline-flex', flexDirection: smallerThan425 ? 'column' : 'row' }}>
+            <Button size='small' sx={{ minWidth: 0, p: '4px', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', mr: 2, backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
+            <Button size='small' sx={{ minWidth: 0, p: '4px', display: selectedDate.frontPage !== null ? 'inline-block' : 'none', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' }, mt: smallerThan425 && isSearch ? 2 : 0 }} onClick={handleClearFromSelectedDate} variant='contained' >Clear selected date</Button>
+          </Box>
         </Box>
       </Box>
 

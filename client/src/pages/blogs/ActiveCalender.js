@@ -15,6 +15,7 @@ import { useLocation } from 'react-router-dom'
 
 function ActionList(props) {
   const { onAccept, onClear, onCancel, onSetToday, className } = props
+
   const actions = [
     { text: 'Today', method: onSetToday },
     // { text: 'Accept', method: onAccept },
@@ -31,18 +32,22 @@ function ActionList(props) {
             <ListItemText primary={text} />
           </ListItemButton>
         </ListItem>
-      ))}
-    </List>
+      ))
+      }
+    </List >
   )
 }
 
 
 export default function ActiveCalender() {
 
+
+
   // dayjs is giving the current timezone no need to convert
 
-  const { selectedDate, setSelectedDate, path, setPath, calendarDate, setCalendarDate } = useContext(SideBarContext)
+  const { selectedDate, setSelectedDate, path, setPath, calendarDate, setCalendarDate, clearSelectedDate, setClearSelectedDate } = useContext(SideBarContext)
   const { pathname } = useLocation()
+
 
   useEffect(() => {
     setPath(pathname)
@@ -50,8 +55,6 @@ export default function ActiveCalender() {
 
   // the selected date start from 12:00am
   const handleSelectedDate = (date) => {
-
-
 
     // // UTC time
     // const utcTime = new Date(date)
@@ -100,8 +103,14 @@ export default function ActiveCalender() {
     }
   }
 
+
+
+
+
+
   // display on the sidebar calender
   let displayDate = ''
+
 
   if (path === '/') {
     displayDate = calendarDate.frontPage
@@ -115,6 +124,36 @@ export default function ActiveCalender() {
   if (path === '/blogs/bookmarks') {
     displayDate = calendarDate.bookmarkPage
   }
+
+
+  useEffect(() => {
+    if (clearSelectedDate) {
+      if (path === '/') {
+        setCalendarDate({ ...calendarDate, frontPage: null })
+        setSelectedDate({ ...selectedDate, frontPage: null })
+        setClearSelectedDate(false)
+      }
+      if (path === '/blogs') {
+        setCalendarDate({ ...calendarDate, myPostPage: null })
+        setSelectedDate({ ...selectedDate, myPostPage: null })
+      }
+
+      if (path === '/blogs/liked') {
+        setCalendarDate({ ...calendarDate, likedPage: null })
+        setSelectedDate({ ...selectedDate, likedPage: null })
+      }
+      if (path === '/blogs/subscribed') {
+        setCalendarDate({ ...calendarDate, subscribePage: null })
+        setSelectedDate({ ...selectedDate, subscribePage: null })
+      }
+      if (path === '/blogs/bookmarks') {
+        setCalendarDate({ ...calendarDate, bookmarkPage: null })
+        setSelectedDate({ ...selectedDate, bookmarkPage: null })
+      }
+    }
+  }, [clearSelectedDate])
+
+
 
   return (
 
@@ -231,13 +270,10 @@ export default function ActiveCalender() {
             },
           },
         }}
-        slots={{
-          actionBar: ActionList,
-        }}
+        slots={{ actionBar: ActionList }}
         value={displayDate}
         onChange={newDate => handleSelectedDate(newDate)}
       />
     </LocalizationProvider>
-
   )
 }

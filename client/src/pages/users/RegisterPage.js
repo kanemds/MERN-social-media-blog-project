@@ -138,82 +138,86 @@ const RegisterPage = () => {
     }
   }
 
+  const handleBack = () => {
+    navigate(-1)
+  }
+
   return (
-
-    <Paper
-      component="form"
-      noValidate
-      autoComplete="off"
-      sx={{
-        minWidth: '500px',
-        width: '50%',
-        p: '50px',
-        pb: '100px',
-
-      }}
-    >
-      <Box sx={{ pb: '40px' }}>
-        <Typography variant='h4'>CREATE AN ACCOUNT</Typography>
-      </Box>
-      {isError ?
-        <Typography>{error?.data?.message}</Typography>
-        : ''
-      }
-      <Box
+    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', }}>
+      <Paper
+        component="form"
+        noValidate
+        autoComplete="off"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
+          width: '500px',
+          p: '10px',
+          pb: '100px'
         }}
       >
-        <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
-          <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
-            {croppedImg.url ?
-              <CardMedia
-                sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
-                component="img"
-                image={croppedImg.url}
-              /> :
-              <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
-            }
-
-            <input type="file" accept='image/*' hidden />
-            <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
-          </IconButton>
+        <Box x={{ pb: '40px', }} textAlign='center'>
+          <Typography sx={{ fontSize: '1.7rem' }}>Create Account</Typography>
         </Box>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+        {isError ?
+          <Typography>{error?.data?.message}</Typography>
+          : ''
+        }
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          <Box sx={style}>
-            <ImageEditor avatarImage={avatarImage} setAvatarImage={setAvatarImage} setCroppedImg={setCroppedImg} handleClose={handleClose} setOpen={setOpen} />
+          <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+            <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
+              {croppedImg.url ?
+                <CardMedia
+                  sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
+                  component="img"
+                  image={croppedImg.url}
+                /> :
+                <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
+              }
+
+              <input type="file" accept='image/*' hidden />
+              <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
+            </IconButton>
           </Box>
-        </Modal>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <ImageEditor avatarImage={avatarImage} setAvatarImage={setAvatarImage} setCroppedImg={setCroppedImg} handleClose={handleClose} setOpen={setOpen} />
+            </Box>
+          </Modal>
 
-        <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
-        <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
-        <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
-        <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
+          <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
+          <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
+          <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />
+          <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
 
 
-        <Box sx={{ mt: '30px' }}>
+          <Box sx={{ mt: '30px' }}>
+            <Button
+              variant='contained'
+              onClick={handleBack}
+            >Back</Button>
+            <Button
+              variant='contained'
+              sx={{ ml: '10px' }}
+              // disabled={canSave ? false : true}
 
-          <LinkButton name={'cancel'} />
-          <Button
-            variant='contained'
-            sx={{ ml: '10px' }}
-            // disabled={canSave ? false : true}
-
-            onClick={handleSave}
-          >Submit</Button>
+              onClick={handleSave}
+            >Submit</Button>
+          </Box>
         </Box>
-      </Box>
 
-    </Paper >
-
+      </Paper >
+    </Box>
   )
 }
 
