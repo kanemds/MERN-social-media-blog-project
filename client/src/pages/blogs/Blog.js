@@ -76,8 +76,6 @@ const removedStyles = `
 
 export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, removeMessage }) {
 
-  console.log(blog)
-
 
   const dispatch = useDispatch()
 

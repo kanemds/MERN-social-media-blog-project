@@ -115,6 +115,9 @@ export default function ActiveCalender() {
   if (path === '/') {
     displayDate = calendarDate.frontPage
   }
+  if (path === '/blogs') {
+    displayDate = calendarDate.myPostPage
+  }
   if (path === '/blogs/liked') {
     displayDate = calendarDate.likedPage
   }
@@ -136,22 +139,27 @@ export default function ActiveCalender() {
       if (path === '/blogs') {
         setCalendarDate({ ...calendarDate, myPostPage: null })
         setSelectedDate({ ...selectedDate, myPostPage: null })
+        setClearSelectedDate(false)
       }
-
       if (path === '/blogs/liked') {
         setCalendarDate({ ...calendarDate, likedPage: null })
         setSelectedDate({ ...selectedDate, likedPage: null })
+        setClearSelectedDate(false)
       }
       if (path === '/blogs/subscribed') {
         setCalendarDate({ ...calendarDate, subscribePage: null })
         setSelectedDate({ ...selectedDate, subscribePage: null })
+        setClearSelectedDate(false)
       }
       if (path === '/blogs/bookmarks') {
         setCalendarDate({ ...calendarDate, bookmarkPage: null })
         setSelectedDate({ ...selectedDate, bookmarkPage: null })
+        setClearSelectedDate(false)
       }
     }
   }, [clearSelectedDate])
+
+  console.log()
 
 
 
