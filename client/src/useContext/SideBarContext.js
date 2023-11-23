@@ -31,6 +31,8 @@ const SideBarProvider = ({ children }) => {
     left: false,
   })
 
+  const [clearSelectedDate, setClearSelectedDate] = useState(false)
+
   const drawerDirection = ['left']
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -47,7 +49,7 @@ const SideBarProvider = ({ children }) => {
 
 
   return (
-    <SideBarContext.Provider value={{ state, setState, drawerDirection, toggleDrawer, selectedDate, setSelectedDate, path, setPath, calendarDate, setCalendarDate }}>
+    <SideBarContext.Provider value={{ state, setState, drawerDirection, toggleDrawer, selectedDate, setSelectedDate, path, setPath, calendarDate, setCalendarDate, clearSelectedDate, setClearSelectedDate }}>
       {children}
     </SideBarContext.Provider>
   )
