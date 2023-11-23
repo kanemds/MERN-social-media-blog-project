@@ -12,43 +12,91 @@ import TextField from '@mui/material/TextField'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import SearchIcon from '@mui/icons-material/Search'
-import { Button, AppBar } from '@mui/material'
+import { Button, AppBar, Icon, Paper, InputBase, Divider, Typography } from '@mui/material'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined'
 import useAuth from '../hooks/useAuth'
+import MenuIcon from '@mui/icons-material/Menu'
+import DirectionsIcon from '@mui/icons-material/Directions'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 
-
-export default function ClientSearchBar({ setSearchInput, searchInput, handleSearch }) {
+export default function ClientSearchBar({ setSearchInput, searchInput, isSearch, isSelectedDate, handleSearch, handleClearFromSearch, handleClearFromSelectedDate }) {
 
   const handleChange = (e) => {
     setSearchInput(e.target.value)
   }
   const handleClear = (e) => {
-    setSearchInput('')
+    if (isSearch) {
+      handleClearFromSearch()
+    } else {
+      setSearchInput('')
+    }
   }
+
 
   return (
 
-    <FormControl sx={{ display: 'flex', flexDirection: 'row' }}>
+    // <Paper
+    //   component="form" sx={{ display: 'flex', flexDirection: 'row' }}>
+    //   {/* <Button variant='contained' onClick={handleSearch}><SearchIcon /></Button> */}
+    //   <OutlinedInput
+    //     sx={{ width: '100%', padding: 0 }}
+    //     value={searchInput}
+    //     onChange={handleChange}
+    //     autoComplete='true'
+    //     placeholder='Search...'
+    //     startAdornment={<InputAdornment position="start" ><IconButton onClick={handleSearch} variant='contained' ><SearchIcon /></IconButton></InputAdornment>}
+    //     endAdornment={
+    //       searchInput.length ?
+    //         <InputAdornment position="end">
+    //           <IconButton onClick={handleClear}>
+    //             <ClearOutlinedIcon />
+    //           </IconButton>
+    //         </InputAdornment>
+    //         : ''}
+    //   />
+    <Paper
+      component="form"
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '100%' }}
+    >
 
-      <OutlinedInput
-        sx={{ width: '100%' }}
+      <IconButton size='small' type="button" aria-label="search" onClick={handleSearch}>
+        <SearchIcon />
+      </IconButton>
+      <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+      <InputBase
         value={searchInput}
-        onChange={handleChange}
-        autoComplete='true'
+        sx={{ ml: 1, flex: 1 }}
         placeholder='Search...'
-        startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
-        endAdornment={
-          searchInput.length ?
-            <InputAdornment position="end">
-              <IconButton onClick={handleClear}>
-                <ClearOutlinedIcon />
-              </IconButton>
-            </InputAdornment>
-            : ''}
+        inputProps={{ 'aria-label': 'Search...' }}
+        onChange={handleChange}
       />
-      <Button variant='contained' onClick={handleSearch}><SearchIcon /></Button>
 
-    </FormControl>
+      {searchInput || isSearch ?
+        <IconButton size='small' type="button" aria-label="clear search" onClick={handleClear}>
+          <ClearOutlinedIcon />
+        </IconButton>
+        :
+        ''
+      }
+
+      {isSelectedDate ?
+        <> <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+          <IconButton type="button" aria-label="clear date"
+            size='small'
+            variant='contained'
+            sx={{ backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' }, color: 'white' }}
+            onClick={handleClearFromSelectedDate}>
+            <CalendarMonthIcon />
+
+          </IconButton></>
+        : ''
+      }
+
+
+
+    </Paper>
+
+    // </Paper>
   )
 }

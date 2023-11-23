@@ -304,11 +304,11 @@ const MainContent = (props) => {
 
 
     if (!result.length) {
-      setSearchInput('')
+
       setIsSearch(true)
       setSearchResult([])
     } else {
-      setSearchInput('')
+
       setIsSearch(true)
       setSearchResult(result)
     }
@@ -316,10 +316,11 @@ const MainContent = (props) => {
 
 
   const handleClearFromSearch = () => {
+    setSearchInput('')
     setIsSearch(false)
     setSearchResult([])
   }
-
+  console.log(isSearch)
 
   const moreBlogs = useCallback(node => {
     if (paginatedIsLoading) return
@@ -333,8 +334,6 @@ const MainContent = (props) => {
     if (node) observer.current.observe(node)
   }, [paginatedIsLoading, hasMore])
 
-
-  console.log(selectedDate.frontPage)
 
 
 
@@ -602,7 +601,7 @@ const MainContent = (props) => {
             : ''
           }
           <Box sx={{ width: '100%', pt: '10px' }}>
-            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearch={isSearch} isSelectedDate={selectedDate.frontPage} handleSearch={handleSearch} handleClearFromSearch={handleClearFromSearch} handleClearFromSelectedDate={handleClearFromSelectedDate} />
           </Box>
         </Box>
         <Box  >
@@ -612,10 +611,11 @@ const MainContent = (props) => {
             )
           }
           )}
-          <Box sx={{ display: 'inline-flex', flexDirection: smallerThan425 ? 'column' : 'row' }}>
+          {/* move to search bar */}
+          {/* <Box sx={{ display: 'inline-flex', flexDirection: smallerThan425 ? 'column' : 'row' }}>
             <Button size='small' sx={{ minWidth: 0, p: '4px', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', mr: 2, backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
             <Button size='small' sx={{ minWidth: 0, p: '4px', display: selectedDate.frontPage !== null ? 'inline-block' : 'none', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' }, mt: smallerThan425 && isSearch ? 2 : 0 }} onClick={handleClearFromSelectedDate} variant='contained' >Clear selected date</Button>
-          </Box>
+          </Box> */}
         </Box>
       </Box>
 

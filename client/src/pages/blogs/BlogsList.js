@@ -64,10 +64,11 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Public' }, { id: 3
 const BlogsList = () => {
 
   const small = useMediaQuery('(max-width:791px)')
+  const smallerThan425 = useMediaQuery('(max-width:425px)')
 
   const { username, userId } = useAuth()
   const { pathname } = useLocation()
-  const { state, setState, drawerDirection, toggleDrawer, selectedDate, setPath } = useContext(SideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, setPath, setClearSelectedDate } = useContext(SideBarContext)
 
 
   const [
@@ -162,6 +163,17 @@ const BlogsList = () => {
     }
 
   }
+
+  const handleClearFromSearch = () => {
+    setIsSearch(false)
+    setSearchResult([])
+  }
+
+
+  const handleClearFromSelectedDate = (e) => {
+    setClearSelectedDate(true)
+  }
+
 
   const searchPublicBlogs = Array.isArray(searchResult) && searchResult?.filter(blog => blog.visible_to === 'public')
   const searchPrivateBlogs = Array.isArray(searchResult) && searchResult?.filter(blog => blog.visible_to === 'private')
@@ -283,6 +295,10 @@ const BlogsList = () => {
               )
             }
             )}
+            <Box sx={{ display: 'inline-flex', flexDirection: smallerThan425 ? 'column' : 'row' }}>
+              <Button size='small' sx={{ minWidth: 0, p: '4px', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', mr: 2, backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
+              <Button size='small' sx={{ minWidth: 0, p: '4px', display: selectedDate.myPostPage !== null ? 'inline-block' : 'none', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' }, mt: smallerThan425 && isSearch ? 2 : 0 }} onClick={handleClearFromSelectedDate} variant='contained' >Clear selected date</Button>
+            </Box>
           </Box>
           <Box>
             {!isDesc ?
