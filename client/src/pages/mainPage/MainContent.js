@@ -59,7 +59,7 @@ const IconButtonStyle = {
 
 
 const buttonStyle = {
-  padding: '4px',
+  padding: '2px',
 }
 
 

@@ -55,7 +55,7 @@ const PreView = styled(Button)({
 })
 
 const buttonStyle = {
-  padding: '4px',
+  padding: '2px',
 }
 
 
@@ -284,7 +284,7 @@ const BlogsList = () => {
             : ''
           }
           <Box sx={{ width: '100%', pt: '10px' }}>
-            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearch={isSearch} isSelectedDate={selectedDate.myPostPage} handleSearch={handleSearch} handleClearFromSearch={handleClearFromSearch} handleClearFromSelectedDate={handleClearFromSelectedDate} />
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
@@ -295,23 +295,25 @@ const BlogsList = () => {
               )
             }
             )}
-            <Box sx={{ display: 'inline-flex', flexDirection: smallerThan425 ? 'column' : 'row' }}>
+            {/* <Box sx={{ display: 'inline-flex', flexDirection: smallerThan425 ? 'column' : 'row' }}>
               <Button size='small' sx={{ minWidth: 0, p: '4px', alignItems: 'center', justifyContent: 'center', display: isSearch ? 'inline-block' : 'none', mr: 2, backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' } }} onClick={handleClearFromSearch} variant='contained' >Clear search result</Button>
               <Button size='small' sx={{ minWidth: 0, p: '4px', display: selectedDate.myPostPage !== null ? 'inline-block' : 'none', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' }, mt: smallerThan425 && isSearch ? 2 : 0 }} onClick={handleClearFromSelectedDate} variant='contained' >Clear selected date</Button>
-            </Box>
+            </Box> */}
           </Box>
           <Box>
             {!isDesc ?
-              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
+              <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleDescendent}>
 
                 <KeyboardDoubleArrowDownIcon />
-                DESC
+                {/* <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>  DESC</Typography> */}
+
               </Button>
               :
-              <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
+              <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleAscendent}>
 
                 <KeyboardDoubleArrowUpIcon />
-                ACES
+                {/* <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>       ACES</Typography> */}
+
               </Button>
             }
           </Box>
