@@ -118,4 +118,7 @@ user page:
 [x] user List 
 
 
+[] when selected date should have a clear button
+
+
 

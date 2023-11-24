@@ -13,33 +13,11 @@ import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import { useLocation } from 'react-router-dom'
 
 
-function ActionList(props) {
-  const { onAccept, onClear, onCancel, onSetToday, className } = props
-
-  const actions = [
-    { text: 'Today', method: onSetToday },
-    // { text: 'Accept', method: onAccept },
-    { text: 'Clear', method: onClear },
-    // { text: 'Cancel', method: onCancel }
-  ]
-
-  return (
-    // Propagate the className such that CSS selectors can be applied
-    <List className={className} sx={{ display: 'flex' }}>
-      {actions.map(({ text, method }) => (
-        <ListItem key={text} disablePadding>
-          <ListItemButton onClick={method}>
-            <ListItemText primary={text} />
-          </ListItemButton>
-        </ListItem>
-      ))
-      }
-    </List >
-  )
-}
 
 
 export default function ActiveCalender() {
+
+  const [isDisabled, setIsDisabled] = useState(false)
 
 
 
@@ -157,9 +135,39 @@ export default function ActiveCalender() {
         setClearSelectedDate(false)
       }
     }
-  }, [clearSelectedDate])
 
-  console.log()
+    if (pathname.includes('/setting') || pathname.includes('/dash') || pathname.includes('/blogs/new')) {
+      setIsDisabled(true)
+    } else {
+      setIsDisabled(false)
+    }
+  }, [clearSelectedDate, path])
+
+
+  function ActionList(props) {
+    const { onAccept, onClear, onCancel, onSetToday, className } = props
+
+    const actions = [
+      { text: 'Today', method: onSetToday },
+      // { text: 'Accept', method: onAccept },
+      { text: 'Clear', method: onClear },
+      // { text: 'Cancel', method: onCancel }
+    ]
+
+    return (
+      // Propagate the className such that CSS selectors can be applied
+      <List className={className} sx={{ display: 'flex' }}>
+        {actions.map(({ text, method }) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton onClick={method} disabled={isDisabled}>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))
+        }
+      </List >
+    )
+  }
 
 
 
@@ -167,11 +175,12 @@ export default function ActiveCalender() {
 
     <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ maxWidth: '240px', minWidth: '240px', }}>
       <StaticDatePicker
-
+        disabled={isDisabled}
         orientation='portrait'
         // disablePast={true}
         disableFuture={true}
         slotProps={{
+
           layout: {
             sx: {
               minWidth: '240px',
