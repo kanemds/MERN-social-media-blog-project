@@ -55,9 +55,9 @@ export default function ClientSearchBar({ setSearchInput, searchInput, isSearch,
     //         </InputAdornment>
     //         : ''}
     //   />
-    <Paper
+    <Box
       component="form"
-      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '100%' }}
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '100%', border: 'solid 2px #1976d2', borderRadius: '5px' }}
     >
 
       <IconButton size='small' type="button" aria-label="search" onClick={handleSearch}>
@@ -93,9 +93,7 @@ export default function ClientSearchBar({ setSearchInput, searchInput, isSearch,
         : ''
       }
 
-
-
-    </Paper>
+    </Box>
 
     // </Paper>
   )
