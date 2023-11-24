@@ -61,7 +61,7 @@ const SubscribedList = () => {
 
   const { username } = useAuth()
   const { pathname } = useLocation()
-  const { state, setState, drawerDirection, toggleDrawer, selectedDate, setPath } = useContext(SideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, setPath, setClearSelectedDate } = useContext(SideBarContext)
 
   const [
     deleteSubscribed,
@@ -150,6 +150,17 @@ const SubscribedList = () => {
     }
   }
 
+  const handleClearFromSearch = () => {
+    setIsSearch(false)
+    setSearchResult([])
+  }
+
+
+  const handleClearFromSelectedDate = (e) => {
+    setClearSelectedDate(true)
+  }
+
+
   let content
 
   if (isLoading) {
@@ -217,22 +228,22 @@ const SubscribedList = () => {
             : ''
           }
           <Box sx={{ width: '100%', pt: '10px' }}>
-            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearch={isSearch} isSelectedDate={selectedDate.subscribePage} handleSearch={handleSearch} handleClearFromSearch={handleClearFromSearch} handleClearFromSelectedDate={handleClearFromSelectedDate} />
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
 
-          <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAllBlogs}>All</Button>
+          <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleAllBlogs}>All</Button>
           {!isDesc ?
-            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
+            <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleDescendent}>
               <KeyboardDoubleArrowDownIcon />
-              DESC
+
             </Button>
             :
-            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
+            <Button size='small' sx={{ minWidth: 0, p: '2px', }} variant='contained' onClick={handleAscendent}>
 
               <KeyboardDoubleArrowUpIcon />
-              ACES
+
             </Button>
           }
 
