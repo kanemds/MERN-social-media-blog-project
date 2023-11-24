@@ -114,8 +114,10 @@ const FrontPageSideBar = () => {
       setShowBack(true)
     }
 
-    if (pathname.includes('/setting') || pathname.includes('/dash')) {
+    if (pathname.includes('/setting') || pathname.includes('/dash') || pathname.includes('/blogs/new')) {
       setShowCalendar(false)
+    } else {
+      setShowCalendar(true)
     }
   }, [pathname])
 
@@ -236,12 +238,14 @@ const FrontPageSideBar = () => {
     </SideButton>
   )
 
+  //////////////////////////////////////////////////////////////////drawer side bar//////////////////////////////////////////////////////////////////////////////////////////////////////
   const list = (anchor) => (
     <Box
 
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
+      // onClick={toggleDrawer(anchor, false)}
+      // onKeyDown={toggleDrawer(anchor, false)}
+      sx={{ width: '272px', pb: '10px' }}
     >
       <Box sx={{ height: '70px', width: '100%', background: '#1976d2' }}>
 
@@ -268,15 +272,8 @@ const FrontPageSideBar = () => {
             : ''
           }
         </Section>
-
-        {showCalendar ?
-          <>
-            <Divider />
-            <ActiveCalender />
-          </>
-          : ''
-        }
-
+        <Divider />
+        <ActiveCalender />
         <Divider />
         <Section >
           <SideButton onClick={handleToMyPost}>
@@ -304,8 +301,8 @@ const FrontPageSideBar = () => {
             <Diversity2OutlinedIcon />
             <ButtonInfo> Subscribers</ButtonInfo>
           </SideButton>
-          <SideButton >
-            <StarRoundedIcon onClick={handleToBookmark} />
+          <SideButton onClick={handleToBookmark}>
+            <StarRoundedIcon />
             <ButtonInfo>  Bookmarks</ButtonInfo>
           </SideButton>
           <SideButton onClick={handleToLiked}>
@@ -350,7 +347,7 @@ const FrontPageSideBar = () => {
   )
 
   let sideBar
-
+  //////////////////////////////////////////////////////////////////biggest side bar//////////////////////////////////////////////////////////////////////////////////////////////////////
   if (largeBP) {
     sideBar = (
       <Box >
@@ -375,13 +372,9 @@ const FrontPageSideBar = () => {
           }
         </Section>
 
-        {showCalendar ?
-          <>
-            <Divider />
-            <ActiveCalender />
-          </>
-          : ''
-        }
+
+        <Divider />
+        <ActiveCalender />
         <Divider />
         <Section >
           <SideButton onClick={handleToMyPost}>
@@ -454,6 +447,8 @@ const FrontPageSideBar = () => {
     )
   }
 
+
+  //////////////////////////////////////////////////////////////////smallest side bar//////////////////////////////////////////////////////////////////////////////////////////////////////
   if (mediumBP || !isShow) {
     sideBar = (
       <Box sx={{ width: '40px' }}>
@@ -492,15 +487,11 @@ const FrontPageSideBar = () => {
             : ''
         }
 
-        {showCalendar ?
-          <>
-            <Divider />
-            <IconButton color="primary" onClick={handleOpen}>
-              <CalendarMonthIcon color='primary' />
-            </IconButton>
-          </>
-          : ''
-        }
+        <Divider />
+        <IconButton color="primary" onClick={handleOpen} disabled={!showCalendar} >
+          <CalendarMonthIcon sx={!showCalendar ? { color: '#bdbdbd' } : { color: '#1976d2' }} />
+        </IconButton>
+
 
         <Modal
           aria-labelledby="transition-modal-title"
@@ -562,21 +553,23 @@ const FrontPageSideBar = () => {
             <FavoriteIcon color='primary' sx={{ fontSize: '1.3rem' }} />
           </IconButton>
         </Section>
-        {currentUser?.role === 'Admin' ?
-          <>
-            <Divider />
-            <Section>
-              <IconButton color="primary" onClick={handleToUsersSetting}>
-                <ManageAccountsIcon color='primary' />
-              </IconButton>
-            </Section>
-            <Section>
-              <IconButton color="primary" onClick={handleToCreateNewUser}>
-                <PersonAddIcon color='primary' />
-              </IconButton>
-            </Section>
-          </>
-          : ''}
+        {
+          currentUser?.role === 'Admin' ?
+            <>
+              <Divider />
+              <Section>
+                <IconButton color="primary" onClick={handleToUsersSetting}>
+                  <ManageAccountsIcon color='primary' />
+                </IconButton>
+              </Section>
+              <Section>
+                <IconButton color="primary" onClick={handleToCreateNewUser}>
+                  <PersonAddIcon color='primary' />
+                </IconButton>
+              </Section>
+            </>
+            : ''
+        }
         <Divider />
         <Section>
           <IconButton color="primary" onClick={handleToSetting}>

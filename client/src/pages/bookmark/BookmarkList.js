@@ -122,12 +122,12 @@ const BookmarkList = () => {
     }
   }, [pathname])
 
-  console.log(Object.values(currentBookmarks))
+
 
   const handleAscendent = () => {
     if (isDesc) {
 
-      const ascendingOrder = Object.values(currentBookmarks).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      const ascendingOrder = Object.values(currentBookmarks)?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       setCurrentBookmarks(ascendingOrder)
       setIsDesc(false)
     }
@@ -135,7 +135,7 @@ const BookmarkList = () => {
 
   const handleDescendent = () => {
     if (!isDesc) {
-      const descendingOrder = Object.values(currentBookmarks).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      const descendingOrder = Object.values(currentBookmarks)?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       setCurrentBookmarks(descendingOrder)
       setIsDesc(true)
     }
