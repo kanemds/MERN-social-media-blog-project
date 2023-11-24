@@ -68,7 +68,7 @@ const BookmarkList = () => {
   const small = useMediaQuery('(max-width:791px)')
   const { pathname } = useLocation()
   const { username } = useAuth()
-  const { state, setState, drawerDirection, toggleDrawer, selectedDate, path, setPath } = useContext(SideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, path, setPath, setClearSelectedDate } = useContext(SideBarContext)
 
 
   const { bookmarkBlogs, isSuccess, isLoading } = useGetBookmarksQuery(username, {
@@ -106,7 +106,6 @@ const BookmarkList = () => {
     if (isSuccess || refresh) {
       if (selectedDate.bookmarkPage) {
         const selectedDay = bookmarkBlogs.filter(blog => blog?.bookmarkedAt === selectedDate.bookmarkPage)
-        console.log(selectedDate.bookmarkPage)
         setCurrentBookmarks(selectedDay)
         setRefresh(false)
       } else {
@@ -123,10 +122,12 @@ const BookmarkList = () => {
     }
   }, [pathname])
 
+  console.log(Object.values(currentBookmarks))
+
   const handleAscendent = () => {
     if (isDesc) {
 
-      const ascendingOrder = currentBookmarks?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      const ascendingOrder = Object.values(currentBookmarks).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       setCurrentBookmarks(ascendingOrder)
       setIsDesc(false)
     }
@@ -134,7 +135,7 @@ const BookmarkList = () => {
 
   const handleDescendent = () => {
     if (!isDesc) {
-      const descendingOrder = currentBookmarks?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      const descendingOrder = Object.values(currentBookmarks).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       setCurrentBookmarks(descendingOrder)
       setIsDesc(true)
     }
@@ -160,6 +161,17 @@ const BookmarkList = () => {
       setIsSearch(true)
       return setSearchResult(result)
     }
+  }
+
+
+  const handleClearFromSearch = () => {
+    setIsSearch(false)
+    setSearchResult([])
+  }
+
+
+  const handleClearFromSelectedDate = (e) => {
+    setClearSelectedDate(true)
   }
 
 
@@ -231,22 +243,22 @@ const BookmarkList = () => {
             : ''
           }
           <Box sx={{ width: '100%', pt: '10px' }}>
-            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearch={isSearch} isSelectedDate={selectedDate.bookmarkPage} handleSearch={handleSearch} handleClearFromSearch={handleClearFromSearch} handleClearFromSelectedDate={handleClearFromSelectedDate} />
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
 
-          <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAllBlogs}>All</Button>
+          <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleAllBlogs}>All</Button>
           {!isDesc ?
-            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
+            <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleDescendent}>
               <KeyboardDoubleArrowDownIcon />
-              DESC
+
             </Button>
             :
-            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
+            <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleAscendent}>
 
               <KeyboardDoubleArrowUpIcon />
-              ACES
+
             </Button>
           }
 
