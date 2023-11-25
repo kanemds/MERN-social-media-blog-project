@@ -26,6 +26,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import { useGetUsersQuery } from '../pages/users/UserApiSlice'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import './scrollbar.css'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -350,7 +351,7 @@ const FrontPageSideBar = () => {
   //////////////////////////////////////////////////////////////////biggest side bar//////////////////////////////////////////////////////////////////////////////////////////////////////
   if (largeBP) {
     sideBar = (
-      <Box >
+      <Box sx={{ width: '272px' }}>
         <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
           <DehazeIcon color='primary' />
         </IconButton>
@@ -444,6 +445,7 @@ const FrontPageSideBar = () => {
           </SideButton>
         </Section>
       </Box >
+
     )
   }
 
@@ -582,11 +584,12 @@ const FrontPageSideBar = () => {
 
   return (
 
-    <Box sx={small ? { display: 'none' } : {}}>
-      <Box sx={{ position: 'sticky', top: '80px', width: isShow ? '260px' : '40px', pl: 2, pr: 2, mb: 10 }}>
+    <Box sx={{ position: 'sticky', top: '80px', height: '100%', width: isShow ? '272px' : '40px', display: small ? 'none' : 'inline-block', flexDirection: 'column', pl: 2, pr: 2 }}>
+      <Box sx={{ overflow: 'auto', height: '100dvh' }}>
         {sideBar}
       </Box>
-    </Box >
+    </Box>
+
   )
 
 

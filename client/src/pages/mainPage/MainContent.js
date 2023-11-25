@@ -620,9 +620,9 @@ const MainContent = (props) => {
       </Box>
 
       <Box sx={{ pl: 2, pr: 2 }}>
-        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
-          {content}
-        </Box>
+
+        {content}
+
         {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}
           <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}
