@@ -114,7 +114,7 @@ const Layout = () => {
         {isLoading || isError ?
           { content }
           :
-          <Box>
+          <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
 
 
@@ -123,8 +123,9 @@ const Layout = () => {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', minHeight: 'calc(100vh - 80px)', mt: '80px', width: '100%' }}>
 
-              <FrontPageSideBar />
-
+              <Box sx={{ position: 'sticky', top: '80px', height: '100%' }}>
+                <FrontPageSideBar />
+              </Box>
 
               <ThemeProvider theme={theme}  >
                 <Container maxWidth='xxl'>
@@ -132,7 +133,7 @@ const Layout = () => {
                 </Container>
               </ThemeProvider>
             </Box>
-          </Box>
+          </>
         }
       </Box >
     )

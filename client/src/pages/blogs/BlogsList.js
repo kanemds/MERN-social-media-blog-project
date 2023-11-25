@@ -273,7 +273,7 @@ const BlogsList = () => {
 
   return (
     <Box sx={{ width: '100%' }} >
-      <Box sx={{ position: 'sticky', top: '0px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>
         <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
           {small ?
             <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
