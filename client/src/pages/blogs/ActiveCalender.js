@@ -266,6 +266,9 @@ export default function ActiveCalender() {
                 // alignItems: 'center',
                 // width: '240px',
               },
+              [`.css-flbe84-MuiDayCalendar-weekContainer`]: {
+                height: '25px'
+              },
               // [`.MuiDatePickerToolbar-title`]: {
               //   alignItems: 'center',
               //   width: '240px',
