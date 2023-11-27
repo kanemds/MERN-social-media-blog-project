@@ -115,24 +115,26 @@ const Layout = () => {
           { content }
           :
           <Box>
-            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
-
+            <Box sx={{ height: '70px' }}>
+              <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
+            </Box>
 
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', minHeight: 'calc(100vh - 80px)', mt: '80px', width: '100%' }}>
 
+            <Box sx={{ minHeight: 'calc(100vh - 70px)', display: 'flex', alignItems: 'flex-start', mt: '20px' }}>
               <FrontPageSideBar />
-
-
               <ThemeProvider theme={theme}  >
                 <Container maxWidth='xxl'>
                   <Outlet />
                 </Container>
               </ThemeProvider>
             </Box>
+
+
           </Box>
+
         }
       </Box >
     )

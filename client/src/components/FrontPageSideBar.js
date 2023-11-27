@@ -246,7 +246,7 @@ const FrontPageSideBar = () => {
       role="presentation"
       // onClick={toggleDrawer(anchor, false)}
       // onKeyDown={toggleDrawer(anchor, false)}
-      sx={{ width: '272px', pb: '10px' }}
+      sx={{ width: '240px', pb: '10px' }}
     >
       <Box sx={{ height: '70px', width: '100%', background: '#1976d2' }}>
 
@@ -351,7 +351,7 @@ const FrontPageSideBar = () => {
   //////////////////////////////////////////////////////////////////biggest side bar//////////////////////////////////////////////////////////////////////////////////////////////////////
   if (largeBP) {
     sideBar = (
-      <Box sx={{ width: '272px' }}>
+      <Box sx={{ width: '240px' }}>
         <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
           <DehazeIcon color='primary' />
         </IconButton>
@@ -584,11 +584,12 @@ const FrontPageSideBar = () => {
 
   return (
 
-    <Box sx={{ position: 'sticky', top: '80px', height: '100%', width: isShow ? '272px' : '40px', display: small ? 'none' : 'inline-block', flexDirection: 'column', pl: 2, pr: 2 }}>
-      <Box sx={{ overflow: 'auto', height: '100dvh' }}>
-        {sideBar}
-      </Box>
-    </Box>
+    <Box sx={{ position: 'sticky', top: '80px', width: isShow ? '340px' : '70px', display: small ? 'none' : 'inline-block', maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', overflowX: 'hidden', pl: 2, pr: 2 }}>
+
+      {sideBar}
+
+
+    </Box >
 
   )
 

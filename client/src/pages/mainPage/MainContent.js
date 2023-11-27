@@ -588,10 +588,10 @@ const MainContent = (props) => {
 
   return (
 
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ mb: '20px' }}>
 
-      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pb: '10px', pl: 2, pr: 2 }}>
-        <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pl: 2, pr: 2, pb: 2 }}>
+        <Box sx={{ display: 'flex', width: '100%', pt: '10px', pb: '10px' }}>
           {small ?
             <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
               onClick={toggleDrawer(drawerDirection, true)}
@@ -626,13 +626,14 @@ const MainContent = (props) => {
         {/* <Button onClick={handlePrev} disabled={page === 1 ? true : false}>pre</Button>
           {page}
           <Button onClick={handleNext} disabled={page === paginatedBlogs?.numberOfPages ? true : false}>next</Button> */}
-      </Box >
-      <Box >
+
         {
           hasMore &&
           <Box ref={moreBlogs}> </Box>
         }
-      </Box>
+
+      </Box >
+
     </Box >
   )
 }
