@@ -610,7 +610,7 @@ const FrontPageSideBar = () => {
 
   return (
 
-    <Box sx={{ position: 'sticky', top: '80px', width: isShow ? '300px' : '80px', display: small ? 'none' : 'inline-block', maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', overflowX: 'hidden' }}>
+    <Box sx={{ position: 'sticky', top: '70px', width: isShow ? '300px' : '80px', display: small ? 'none' : 'inline-block', maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', overflowX: 'hidden', pt: '10px' }}>
 
       {sideBar}
 

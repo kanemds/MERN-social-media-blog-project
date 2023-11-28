@@ -136,7 +136,7 @@ export default function ActiveCalender({ setOnHoverCalendar, largeBP }) {
       }
     }
 
-    if (pathname.includes('/setting') || pathname.includes('/dash') || pathname.includes('/blogs/new')) {
+    if (pathname.includes('/setting') || pathname.includes('/dash') || pathname.includes('/blogs/new') || pathname.includes('/blogs/post')) {
       setIsDisabled(true)
     } else {
       setIsDisabled(false)

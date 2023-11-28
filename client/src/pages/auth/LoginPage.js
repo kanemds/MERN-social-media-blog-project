@@ -136,7 +136,7 @@ const LoginPage = ({ state }) => {
 
 
   content = (
-    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
       <Paper
         component="form"
         noValidate

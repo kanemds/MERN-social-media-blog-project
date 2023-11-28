@@ -38,7 +38,7 @@ export default function UserInputField({ userInputs, state, setState, validation
 
   return (
 
-    <FormControl sx={{ minWidth: '330px', width: '85%', height: `${type === 'password' ? '160px' : '110px'}` }}>
+    <FormControl sx={{ width: '85%', height: `${type === 'password' ? '180px' : '130px'}` }}>
       <FormLabel
         error={state?.length && !validation && focusedInput === null ? true : false}
       >{placeholder}*</FormLabel>

@@ -164,7 +164,7 @@ const Layout = () => {
     return main = (
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} setLoggingOut={setLoggingOut} />
-        <Box sx={{ display: 'flex', minHeight: '100vh', mt: '70px', width: '100%' }}>
+        <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 70px)', mt: '70px', width: '100%' }}>
           <ThemeProvider theme={theme}  >
             <Container maxWidth='xxl'>
               {isLoading || isError ?
