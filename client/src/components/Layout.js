@@ -122,7 +122,7 @@ const Layout = () => {
             <Box sx={{ minHeight: 'calc(100vh - 70px)', display: 'flex', mt: '20px' }}>
               <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
-                <Container maxWidth='xxl' sx={{ position: 'relative' }}>
+                <Container maxWidth='xxl' disableGutters={true} sx={{ position: 'relative' }}>
                   <Outlet />
                 </Container>
               </ThemeProvider>
