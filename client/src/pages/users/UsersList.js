@@ -53,7 +53,7 @@ const UsersList = () => {
   })
 
   const smallerThan1459 = useMediaQuery('(max-width:1459px)')
-  const smallerThan1026 = useMediaQuery('(max-width:1026px)')
+  const smallerThan1080 = useMediaQuery('(max-width:1080px)')
   const smallerThan971 = useMediaQuery('(max-width:971px)')
   const smallerThan699 = useMediaQuery('(max-width:699px)')
   const smallerThan501 = useMediaQuery('(max-width:501px)')
@@ -121,7 +121,7 @@ const UsersList = () => {
                     <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">E-mail</TableCell>
                   }
 
-                  {smallerThan1026 ? ''
+                  {smallerThan1080 ? ''
                     :
                     <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Role</TableCell>
                   }
@@ -151,7 +151,7 @@ const UsersList = () => {
                 </TableRow>
               </TableHead>
               <TableBody  >
-                {usersList.map(user => <UsersTable key={user._id} user={user} smallerThan1459={smallerThan1459} smallerThan1026={smallerThan1026} smallerThan971={smallerThan971} smallerThan699={smallerThan699} smallerThan501={smallerThan501} smallerThan401={smallerThan401} />)}
+                {usersList.map(user => <UsersTable key={user._id} user={user} smallerThan1459={smallerThan1459} smallerThan1080={smallerThan1080} smallerThan971={smallerThan971} smallerThan699={smallerThan699} smallerThan501={smallerThan501} smallerThan401={smallerThan401} />)}
               </TableBody>
             </Table>
           </TableContainer>
