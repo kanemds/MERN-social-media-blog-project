@@ -15,7 +15,7 @@ import { useLocation } from 'react-router-dom'
 
 
 
-export default function ActiveCalender() {
+export default function ActiveCalender({ setOnHoverCalendar, largeBP }) {
 
   const [isDisabled, setIsDisabled] = useState(false)
 
@@ -169,137 +169,153 @@ export default function ActiveCalender() {
     )
   }
 
+  const handleHoverIn = () => {
+    console.log('Mouse entered')
+    setOnHoverCalendar(true)
+  }
+
+  const handleHoverOut = () => {
+    console.log('Mouse left')
+    setOnHoverCalendar(false)
+  }
+
 
 
   return (
 
-    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '200px' }}>
-      <StaticDatePicker
-        disabled={isDisabled}
-        orientation='portrait'
-        // disablePast={true}
-        disableFuture={true}
-        slotProps={{
+    <div
+      onMouseEnter={largeBP ? undefined : handleHoverIn}
+      onMouseLeave={largeBP ? undefined : handleHoverOut}
+    >
 
-          layout: {
-            sx: {
-              width: '200px',
-              [`.MuiGrid2-root`]: {
-                display: 'none',
+      <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '200px' }} >
+        <StaticDatePicker
+          disabled={isDisabled}
+          orientation='portrait'
+          // disablePast={true}
+          disableFuture={true}
+          slotProps={{
 
-              },
-              [`.MuiPickersLayout-root`]: {
-                display: 'none',
-              },
-              [`.MuiPickersLayout-contentWrapper `]: {
+            layout: {
+              sx: {
                 width: '200px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                p: 0,
-                m: 0
-              },
-              [`.MuiTypography-overline`]: {
-                display: 'none',
-              },
-              [`.MuiPickersCalendarHeader-label`]: {
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                m: 0,
-                P: 0
-              },
+                [`.MuiGrid2-root`]: {
+                  display: 'none',
 
-              [`.MuiPickersYear-root`]: {
+                },
+                [`.MuiPickersLayout-root`]: {
+                  display: 'none',
+                },
+                [`.MuiPickersLayout-contentWrapper `]: {
+                  width: '200px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  p: 0,
+                  m: 0
+                },
+                [`.MuiTypography-overline`]: {
+                  display: 'none',
+                },
+                [`.MuiPickersCalendarHeader-label`]: {
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  m: 0,
+                  P: 0
+                },
 
-                maxWidth: '180px',
+                [`.MuiPickersYear-root`]: {
 
-                overflow: 'hidden',
+                  maxWidth: '180px',
 
-                '-webkit-flex-basis': '33%',
-              },
-              [`.css-1lkpf4l-MuiYearCalendar-root`]: {
-                width: '200px',
-                '-webkit-flex-basis': '33%',
-              },
-              [`.css-1beqopj-MuiPickersYear-yearButton`]: {
-                width: '50px',
-                alignItems: 'center',
-                fontSize: '.8rem',
-                m: 0,
-                P: 0
-              },
-              [`.css-nk89i7-MuiPickersCalendarHeader-root`]: {
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                m: 0,
-                p: 0
-              },
-              [`.MuiTypography-root`]: {
-                fontSize: '1rem',
-              },
-              [`.MuiButtonBase-root`]: {
-                fontSize: '.7rem',
-                height: '25px'
-              },
-              [`.MuiPickersActionBar-root`]: {
-                width: '25px',
-                height: '25px'
-              },
-              [`.MuiDateCalendar-root`]: {
-                width: 220,
-              },
-              [`.MuiPickersLayout-actionBar`]: {
-                width: '200px',
-              },
-              [`.MuiPickersLayout-root`]: {
-                width: '200px',
-              },
-              [`.MuiPickersLayout-toolbar`]: {
-                width: '200px',
-              },
-              [`.MuiPickersToolbar-root`]: {
-                display: 'none',
-                // alignItems: 'center',
-                // width: '240px',
-              },
-              [`.css-flbe84-MuiDayCalendar-weekContainer`]: {
-                height: '25px'
-              },
-              [`.css-iyjaod-MuiList-root`]: {
-                margin: 0,
-                padding: 0,
-                display: 'flex',
+                  overflow: 'hidden',
 
-                height: '25px',
+                  '-webkit-flex-basis': '33%',
+                },
+                [`.css-1lkpf4l-MuiYearCalendar-root`]: {
+                  width: '200px',
+                  '-webkit-flex-basis': '33%',
+                },
+                [`.css-1beqopj-MuiPickersYear-yearButton`]: {
+                  width: '50px',
+                  alignItems: 'center',
+                  fontSize: '.8rem',
+                  m: 0,
+                  P: 0
+                },
+                [`.css-nk89i7-MuiPickersCalendarHeader-root`]: {
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  m: 0,
+                  p: 0
+                },
+                [`.MuiTypography-root`]: {
+                  fontSize: '1rem',
+                },
+                [`.MuiButtonBase-root`]: {
+                  fontSize: '.7rem',
+                  height: '25px'
+                },
+                [`.MuiPickersActionBar-root`]: {
+                  width: '25px',
+                  height: '25px'
+                },
+                [`.MuiDateCalendar-root`]: {
+                  width: 220,
+                },
+                [`.MuiPickersLayout-actionBar`]: {
+                  width: '200px',
+                },
+                [`.MuiPickersLayout-root`]: {
+                  width: '200px',
+                },
+                [`.MuiPickersLayout-toolbar`]: {
+                  width: '200px',
+                },
+                [`.MuiPickersToolbar-root`]: {
+                  display: 'none',
+                  // alignItems: 'center',
+                  // width: '240px',
+                },
+                [`.css-flbe84-MuiDayCalendar-weekContainer`]: {
+                  height: '25px'
+                },
+                [`.css-iyjaod-MuiList-root`]: {
+                  margin: 0,
+                  padding: 0,
+                  display: 'flex',
 
-              },
-              // [`.MuiDatePickerToolbar-title`]: {
-              //   alignItems: 'center',
-              //   width: '240px',
-              // },
+                  height: '25px',
 
-              [`.${pickersLayoutClasses.actionBar}`]: {
-                gridColumn: 2,
-                gridRow: 3,
-                width: '220px'
-              },
+                },
+                // [`.MuiDatePickerToolbar-title`]: {
+                //   alignItems: 'center',
+                //   width: '240px',
+                // },
 
-              [`.${pickersLayoutClasses.contentWrapper}`]: {
-                height: '210px',
+                [`.${pickersLayoutClasses.actionBar}`]: {
+                  gridColumn: 2,
+                  gridRow: 3,
+                  width: '220px'
+                },
+
+                [`.${pickersLayoutClasses.contentWrapper}`]: {
+                  height: '210px',
+                },
+                // [`.${pickersLayoutClasses.toolbar}`]: {
+                //   gridColumn: 1,
+                //   gridRow: 1,
+                // },
               },
-              // [`.${pickersLayoutClasses.toolbar}`]: {
-              //   gridColumn: 1,
-              //   gridRow: 1,
-              // },
             },
-          },
-        }}
-        slots={{ actionBar: ActionList }}
-        value={displayDate}
-        onChange={newDate => handleSelectedDate(newDate)}
-      />
-    </LocalizationProvider>
+          }}
+          slots={{ actionBar: ActionList }}
+          value={displayDate}
+          onChange={newDate => handleSelectedDate(newDate)}
+        />
+      </LocalizationProvider >
+    </div>
   )
 }

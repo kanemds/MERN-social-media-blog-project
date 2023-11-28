@@ -102,7 +102,10 @@ const FrontPageSideBar = () => {
   const [isShow, setIsShow] = useState(true)
   const [keepOpen, setKeepOpen] = useState(true)
   const [hiddenSideBar, setHiddenSideBar] = useState(false)
+  const [onHoverCalendar, setOnHoverCalendar] = useState(false)
 
+
+  console.log(onHoverCalendar)
 
   useEffect(() => {
     if (pathname === `/blogs/post/${id}` || pathname === `/blogs/post/edit/${id}`) {
@@ -138,12 +141,13 @@ const FrontPageSideBar = () => {
 
 
 
-  const handleMenu = () => {
+  const handleMenu = (anchor) => {
     if (largeBP) {
       setIsShow(prev => !prev)
       setKeepOpen(prev => !prev)
     } else {
       setKeepOpen(prev => !prev)
+
     }
   }
 
@@ -244,7 +248,7 @@ const FrontPageSideBar = () => {
     <Box
 
       role="presentation"
-      // onClick={toggleDrawer(anchor, false)}
+      onClick={onHoverCalendar ? toggleDrawer(anchor, true) : toggleDrawer(anchor, false)}
       // onKeyDown={toggleDrawer(anchor, false)}
       sx={{ width: '240px', overflowX: 'hidden' }}
     >
@@ -279,8 +283,8 @@ const FrontPageSideBar = () => {
         }
 
         <Divider />
-        <Box sx={{ pl: 1, pr: 1 }}>
-          <ActiveCalender />
+        <Box sx={{ pl: 1, pr: 1 }} >
+          <ActiveCalender setOnHoverCalendar={setOnHoverCalendar} largeBP={largeBP} />
         </Box>
         <Divider />
         <Section >
@@ -359,7 +363,7 @@ const FrontPageSideBar = () => {
   if (largeBP) {
     sideBar = (
       <Box sx={{ width: '240px' }}>
-        <Box sx={{ pl: 2, pr: 2 }}>
+        <Box >
           <Section >
             <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
               <DehazeIcon color='primary' />
@@ -372,7 +376,9 @@ const FrontPageSideBar = () => {
             <HomeIcon />
             <ButtonInfo >Home</ButtonInfo>
           </SideButton>
-          {showBack ?
+        </Section>
+        {showBack ?
+          <Section >
             < Grow
               in={showBack}
               style={{ transformOrigin: '0 0 0' }}
@@ -380,9 +386,10 @@ const FrontPageSideBar = () => {
             >
               {iconBack}
             </Grow>
-            : ''
-          }
-        </Section>
+          </Section>
+          : ''
+        }
+
 
 
         <Divider />
