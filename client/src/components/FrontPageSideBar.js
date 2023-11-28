@@ -31,7 +31,6 @@ import './scrollbar.css'
 const SideButton = styled(Button)({
   textTransform: 'none',
   justifyContent: "flex-start",
-
 })
 
 const ButtonInfo = styled(Typography)({
@@ -41,14 +40,14 @@ const ButtonInfo = styled(Typography)({
 
 const Section = styled(Box)({
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%'
+  width: '100%',
+  paddingLeft: '16px',
+  paddingRight: '16px',
 })
 
 const Divider = styled(Box)({
   height: '100%',
-  maxWidth: '240px',
+  width: '100%',
   borderTop: '1px solid lightGrey',
   marginTop: 12,
   marginBottom: 12,
@@ -70,7 +69,8 @@ const style = {
 }
 
 const IconButtonStyle = {
-  width: '40px', height: '40px'
+  width: '40px',
+  height: '40px',
 }
 
 
@@ -246,23 +246,27 @@ const FrontPageSideBar = () => {
       role="presentation"
       // onClick={toggleDrawer(anchor, false)}
       // onKeyDown={toggleDrawer(anchor, false)}
-      sx={{ width: '240px', pb: '10px' }}
+      sx={{ width: '240px', overflowX: 'hidden' }}
     >
       <Box sx={{ height: '70px', width: '100%', background: '#1976d2' }}>
 
       </Box>
 
-      <List sx={{ pl: 2, pr: 2 }}>
-        <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
-          <DehazeIcon color='primary' />
-        </IconButton>
+      <List >
+        <Box sx={{ pl: 2, pr: 2 }}>
+          <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
+            <DehazeIcon color='primary' />
+          </IconButton>
+        </Box>
         <Divider />
         <Section >
           <SideButton onClick={handleToHome}>
             <HomeIcon />
             <ButtonInfo >Home</ButtonInfo>
           </SideButton>
-          {showBack ?
+        </Section>
+        {showBack ?
+          <Section >
             < Grow
               in={showBack}
               style={{ transformOrigin: '0 0 0' }}
@@ -270,11 +274,14 @@ const FrontPageSideBar = () => {
             >
               {iconBack}
             </Grow>
-            : ''
-          }
-        </Section>
+          </Section>
+          : ''
+        }
+
         <Divider />
-        <ActiveCalender />
+        <Box sx={{ pl: 1, pr: 1 }}>
+          <ActiveCalender />
+        </Box>
         <Divider />
         <Section >
           <SideButton onClick={handleToMyPost}>
@@ -352,9 +359,13 @@ const FrontPageSideBar = () => {
   if (largeBP) {
     sideBar = (
       <Box sx={{ width: '240px' }}>
-        <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
-          <DehazeIcon color='primary' />
-        </IconButton>
+        <Box sx={{ pl: 2, pr: 2 }}>
+          <Section >
+            <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
+              <DehazeIcon color='primary' />
+            </IconButton>
+          </Section>
+        </Box>
         <Divider />
         <Section >
           <SideButton onClick={handleToHome}>
@@ -375,7 +386,9 @@ const FrontPageSideBar = () => {
 
 
         <Divider />
-        <ActiveCalender />
+        <Box sx={{ pl: 1, pr: 1 }}>
+          <ActiveCalender />
+        </Box>
         <Divider />
         <Section >
           <SideButton onClick={handleToMyPost}>
@@ -452,15 +465,18 @@ const FrontPageSideBar = () => {
 
   //////////////////////////////////////////////////////////////////smallest side bar//////////////////////////////////////////////////////////////////////////////////////////////////////
   if (mediumBP || !isShow) {
+
     sideBar = (
-      <Box sx={{ width: '40px' }}>
+      <Box sx={{ width: '80px' }}>
         <>
           {drawerDirection?.map((anchor) => {
             return (
               <Box key={anchor} >
-                <IconButton style={IconButtonStyle} color="primary" onClick={mediumBP ? toggleDrawer(anchor, true) : handleMenu} >
-                  <DehazeIcon color='primary' />
-                </IconButton>
+                <Section >
+                  <IconButton style={IconButtonStyle} color="primary" onClick={mediumBP ? toggleDrawer(anchor, true) : handleMenu} >
+                    <DehazeIcon color='primary' />
+                  </IconButton>
+                </Section>
                 <SwipeableDrawer
                   anchor={anchor}
                   open={state[anchor]}
@@ -475,7 +491,6 @@ const FrontPageSideBar = () => {
         </>
         <Divider />
         <Section >
-
           <IconButton color="primary" onClick={handleToHome}>
             <HomeIcon color='primary' />
           </IconButton>
@@ -483,17 +498,20 @@ const FrontPageSideBar = () => {
         </Section>
         {
           showBack ?
-            <IconButton color="primary" onClick={handleToBack}>
-              <ForwardRoundedIcon style={{ transform: 'rotate(180deg)' }} />
-            </IconButton>
+            <Section >
+              <IconButton color="primary" onClick={handleToBack}>
+                <ForwardRoundedIcon style={{ transform: 'rotate(180deg)' }} />
+              </IconButton>
+            </Section>
             : ''
         }
 
         <Divider />
-        <IconButton color="primary" onClick={handleOpen} disabled={!showCalendar} >
-          <CalendarMonthIcon sx={!showCalendar ? { color: '#bdbdbd' } : { color: '#1976d2' }} />
-        </IconButton>
-
+        <Section >
+          <IconButton color="primary" onClick={handleOpen} disabled={!showCalendar} >
+            <CalendarMonthIcon sx={!showCalendar ? { color: '#bdbdbd' } : { color: '#1976d2' }} />
+          </IconButton>
+        </Section>
 
         <Modal
           aria-labelledby="transition-modal-title"
@@ -511,6 +529,7 @@ const FrontPageSideBar = () => {
           }}
 
         >
+
           <Fade in={open} >
             <Box sx={style} >
               <ActiveCalender />
@@ -584,7 +603,7 @@ const FrontPageSideBar = () => {
 
   return (
 
-    <Box sx={{ position: 'sticky', top: '80px', width: isShow ? '340px' : '70px', display: small ? 'none' : 'inline-block', maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', overflowX: 'hidden', pl: 2, pr: 2 }}>
+    <Box sx={{ position: 'sticky', top: '80px', width: isShow ? '300px' : '80px', display: small ? 'none' : 'inline-block', maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', overflowX: 'hidden' }}>
 
       {sideBar}
 
