@@ -74,8 +74,8 @@ const MainContent = (props) => {
   const dispatch = useDispatch()
   const { pageNumber } = useSelector((state) => state?.blog)
 
-  const small = useMediaQuery('(max-width:791px)')
-  const smallScreenSize = useMediaQuery('(min-width:600px)')
+  const small = useMediaQuery('(min-width: 600px) and (max-width: 791px)')
+  const smallScreenSize = useMediaQuery('(max-width:599px)')
   const smallerThan425 = useMediaQuery('(max-width:425px)')
   const current = Date.parse(new Date())
   const sevenDays = 60 * 60 * 24 * 1000 * 7
@@ -320,7 +320,7 @@ const MainContent = (props) => {
     setIsSearch(false)
     setSearchResult([])
   }
-  console.log(isSearch)
+
 
   const moreBlogs = useCallback(node => {
     if (paginatedIsLoading) return
@@ -590,9 +590,9 @@ const MainContent = (props) => {
 
     <Box >
 
-      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pl: 2, pr: 2, pb: 2 }}>
+      <Box sx={{ position: 'sticky', top: '70px', left: '0px', backgroundColor: 'white', zIndex: 10, pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
         <Box sx={{ display: 'flex', width: '100%', pt: '10px', pb: '10px' }}>
-          {small ?
+          {small || smallScreenSize ?
             <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
               onClick={toggleDrawer(drawerDirection, true)}
             >
@@ -617,9 +617,9 @@ const MainContent = (props) => {
             <Button size='small' sx={{ minWidth: 0, p: '4px', display: selectedDate.frontPage !== null ? 'inline-block' : 'none', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ef5350', '&:hover': { backgroundColor: 'red' }, mt: smallerThan425 && isSearch ? 2 : 0 }} onClick={handleClearFromSelectedDate} variant='contained' >Clear selected date</Button>
           </Box> */}
         </Box>
-      </Box>
+      </Box >
 
-      <Box sx={{ pl: 2, pr: 2 }}>
+      <Box sx={{ pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
 
         {content}
 
