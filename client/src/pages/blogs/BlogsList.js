@@ -63,7 +63,8 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Public' }, { id: 3
 
 const BlogsList = () => {
 
-  const small = useMediaQuery('(max-width:791px)')
+  const small = useMediaQuery('(min-width: 600px) and (max-width: 791px)')
+  const smallScreenSize = useMediaQuery('(max-width:599px)')
   const smallerThan425 = useMediaQuery('(max-width:425px)')
 
   const { username, userId } = useAuth()
@@ -272,10 +273,10 @@ const BlogsList = () => {
   }
 
   return (
-    <Box sx={{ width: '100%' }} >
-      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>
-        <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
-          {small ?
+    <Box  >
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pb: '10px', pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
+        <Box sx={{ display: 'flex', width: '100%', pt: '10px', pb: '10px' }}>
+          {small || smallScreenSize ?
             <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
               onClick={toggleDrawer(drawerDirection, true)}
             >
@@ -319,11 +320,11 @@ const BlogsList = () => {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ height: '100%', p: 2 }}>
+      <Box sx={{ pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
 
-        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
-          {content}
-        </Box>
+
+        {content}
+
 
 
 
