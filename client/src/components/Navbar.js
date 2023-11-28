@@ -34,6 +34,8 @@ const getWindowSize = () => {
   return { innerWidth }
 }
 
+
+
 export default function Navbar({ handleLogout, isSuccess, loggingOut, setLoggingOut }) {
 
   // console.log(isSuccess, 'isSuccess')
@@ -129,7 +131,7 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
   return (
 
     <AppBar sx={{ flexGrow: 1, height: '70px' }}>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100%', width: '100%' }}>
         {
           !isLoggingOut ?
 
@@ -157,9 +159,12 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
           : isLoggingOut ?
             <Typography>Logging out...</Typography>
             :
-            <Box>
-              <LinkButton visit='/login' name='Login' />
-              <LinkButton visit='/register' name='Signup' />
+            <Box sx={{ display: 'flex', }}>
+              <Link to='/login' component={RouterLink} underline='none' color='white' sx={{ width: '60px', '&:hover': { color: 'black' } }}>Log In</Link>
+
+              <Link to='/register' component={RouterLink} underline='none' color='white' sx={{ width: '60px', '&:hover': { color: 'black' } }}>Sign Up</Link>
+              {/* <LinkButton visit='/login' name='Login' />
+              <LinkButton visit='/register' name='Signup' /> */}
             </Box>
         }
 
