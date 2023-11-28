@@ -590,7 +590,7 @@ const MainContent = (props) => {
 
     <Box >
 
-      <Box sx={{ position: 'sticky', top: '70px', left: '0px', backgroundColor: 'white', zIndex: 10, pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
         <Box sx={{ display: 'flex', width: '100%', pt: '10px', pb: '10px' }}>
           {small || smallScreenSize ?
             <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}

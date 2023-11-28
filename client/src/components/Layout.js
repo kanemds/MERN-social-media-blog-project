@@ -146,7 +146,7 @@ const Layout = () => {
             <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 70px)', mt: '70px', width: '100%' }}>
               <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
-                <Container maxWidth='xxl' sx={{ position: 'relative' }}>
+                <Container maxWidth='xxl' disableGutters={true} sx={{ position: 'relative' }}>
                   <Outlet />
                 </Container>
               </ThemeProvider>

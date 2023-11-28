@@ -57,7 +57,8 @@ const buttonStyle = {
 
 const SubscribedList = () => {
 
-  const small = useMediaQuery('(max-width:791px)')
+  const small = useMediaQuery('(min-width: 600px) and (max-width: 791px)')
+  const smallScreenSize = useMediaQuery('(max-width:599px)')
 
   const { username } = useAuth()
   const { pathname } = useLocation()
@@ -80,6 +81,8 @@ const SubscribedList = () => {
       isLoading
     })
   })
+
+
 
 
   const [isDesc, setIsDesc] = useState(true) // high to low
@@ -216,10 +219,10 @@ const SubscribedList = () => {
 
 
   return (
-    <Box sx={{ width: '100%' }} >
-      <Box sx={{ position: 'sticky', top: '0px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>
-        <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
-          {small ?
+    <Box >
+      <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
+        <Box sx={{ display: 'flex', width: '100%', pt: '10px', pb: '10px' }}>
+          {small || smallScreenSize ?
             <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
               onClick={toggleDrawer(drawerDirection, true)}
             >
@@ -237,22 +240,19 @@ const SubscribedList = () => {
           {!isDesc ?
             <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleDescendent}>
               <KeyboardDoubleArrowDownIcon />
-
             </Button>
             :
             <Button size='small' sx={{ minWidth: 0, p: '2px', }} variant='contained' onClick={handleAscendent}>
-
               <KeyboardDoubleArrowUpIcon />
-
             </Button>
           }
 
         </Box>
       </Box>
-      <Box sx={{ pl: 2, pr: 2 }}>
-        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
-          {content}
-        </Box>
+      <Box sx={{ pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
+
+        {content}
+
       </Box>
     </Box >
 
