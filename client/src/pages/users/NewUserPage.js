@@ -88,7 +88,7 @@ const NewUserPage = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center', height: '100%' }}>
 
       <Paper
         component="form"

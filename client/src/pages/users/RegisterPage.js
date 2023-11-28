@@ -143,7 +143,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center', height: '100%' }}>
       <Paper
         component="form"
         noValidate

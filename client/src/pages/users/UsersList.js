@@ -96,84 +96,86 @@ const UsersList = () => {
 
 
     // content = usersList.map(user => <UserListTable key={user._id} user={user} usersList={usersList} />)
-    content = (<Box >
-      {hiddenMenu ?
-        <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
-          onClick={toggleDrawer(drawerDirection, true)}
-        >
-          <DehazeIcon color='primary' />
-        </IconButton>
-        :
-        ''
-      }
+    content = (
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', mt: '30px' }}>
+        {hiddenMenu ?
+          <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
+            onClick={toggleDrawer(drawerDirection, true)}
+          >
+            <DehazeIcon color='primary' />
+          </IconButton>
+          :
+          ''
+        }
 
+        <Box>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 343 }} aria-label="simple table">
+              <TableHead sx={{ backgroundColor: blue[500] }}>
+                <TableRow sx={{ color: 'white' }} >
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 343 }} aria-label="simple table">
-          <TableHead sx={{ backgroundColor: blue[500] }}>
-            <TableRow sx={{ color: 'white' }} >
+                  <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} >Avatar</TableCell>
+                  <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Username </TableCell>
+                  {smallerThan971 ? ''
+                    :
+                    <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">E-mail</TableCell>
+                  }
 
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} >Avatar</TableCell>
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Username </TableCell>
-              {smallerThan971 ? ''
-                :
-                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">E-mail</TableCell>
-              }
+                  {smallerThan1026 ? ''
+                    :
+                    <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Role</TableCell>
+                  }
 
-              {smallerThan1026 ? ''
-                :
-                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Role</TableCell>
-              }
+                  <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align={smallerThan699 ? 'right' : "left"}>View</TableCell>
+                  {smallerThan699 ? ''
+                    :
+                    <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">State</TableCell>
+                  }
 
-              <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align={smallerThan699 ? 'right' : "left"}>View</TableCell>
-              {smallerThan699 ? ''
-                :
-                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">State</TableCell>
-              }
+                  {smallerThan1459 ? '' :
+                    <>
+                      <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Created At</TableCell>
+                      <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Last Updated</TableCell>
+                    </>
+                  }
 
-              {smallerThan1459 ? '' :
-                <>
-                  <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Created At</TableCell>
-                  <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Last Updated</TableCell>
-                </>
-              }
+                  {smallerThan699 ? ''
+                    :
+                    <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Save</TableCell>
+                  }
+                  {smallerThan501 ? ''
+                    :
+                    <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align={smallerThan699 ? 'right' : "left"}>Delete</TableCell>
+                  }
 
-              {smallerThan699 ? ''
-                :
-                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align="left">Save</TableCell>
-              }
-              {smallerThan501 ? ''
-                :
-                <TableCell sx={{ color: 'white', fontSize: '1.3rem' }} align={smallerThan699 ? 'right' : "left"}>Delete</TableCell>
-              }
-
-            </TableRow>
-          </TableHead>
-          <TableBody  >
-            {usersList.map(user => <UsersTable key={user._id} user={user} smallerThan1459={smallerThan1459} smallerThan1026={smallerThan1026} smallerThan971={smallerThan971} smallerThan699={smallerThan699} smallerThan501={smallerThan501} smallerThan401={smallerThan401} />)}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        sx={{ color: 'white', backgroundColor: grey[500], fontSize: '1rem', '& .MuiTablePagination-input': { marginRight: smallerThan401 ? '10px' : '32px' }, '& .MuiTablePagination-actions': { marginLeft: smallerThan401 ? '0px' : '20px' } }}
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={usersList.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-      {hiddenMenu ?
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: '20px' }}>
-          <Button variant='contained' onClick={handleBack}>Back</Button>
+                </TableRow>
+              </TableHead>
+              <TableBody  >
+                {usersList.map(user => <UsersTable key={user._id} user={user} smallerThan1459={smallerThan1459} smallerThan1026={smallerThan1026} smallerThan971={smallerThan971} smallerThan699={smallerThan699} smallerThan501={smallerThan501} smallerThan401={smallerThan401} />)}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            sx={{ color: 'white', backgroundColor: grey[500], fontSize: '1rem', '& .MuiTablePagination-input': { marginRight: smallerThan401 ? '10px' : '32px' }, '& .MuiTablePagination-actions': { marginLeft: smallerThan401 ? '0px' : '20px' } }}
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={usersList.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </Box>
+        {hiddenMenu ?
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: '20px' }}>
+            <Button variant='contained' onClick={handleBack}>Back</Button>
+          </Box>
 
-        :
-        ''
-      }
+          :
+          ''
+        }
 
-    </Box >
+      </Box >
     )
   }
 

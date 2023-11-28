@@ -115,26 +115,19 @@ const Layout = () => {
           { content }
           :
           <Box>
-            <Box sx={{ height: '70px' }}>
-              <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
-            </Box>
-
+            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
             <Box sx={{ width: '100%', height: 'calc(100vh - 70px)', mt: '70px' }}  >
               <VerticalSwiper />
             </Box>
-
-            <Box sx={{ minHeight: 'calc(100vh - 70px)', display: 'flex', alignItems: 'flex-start', mt: '20px' }}>
+            <Box sx={{ minHeight: 'calc(100vh - 70px)', display: 'flex', mt: '20px' }}>
               <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
-                <Container maxWidth='xxl'>
+                <Container maxWidth='xxl' sx={{ position: 'relative' }}>
                   <Outlet />
                 </Container>
               </ThemeProvider>
             </Box>
-
-
           </Box>
-
         }
       </Box >
     )
@@ -150,10 +143,10 @@ const Layout = () => {
           :
           <>
             <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
-            <Box sx={{ display: 'flex', position: 'relative', minHeight: 'calc(100vh - 70px)', mt: '70px', width: '100%' }}>
+            <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 70px)', mt: '70px', width: '100%' }}>
               <FrontPageSideBar />
               <ThemeProvider theme={theme}  >
-                <Container maxWidth='xxl'>
+                <Container maxWidth='xxl' sx={{ position: 'relative' }}>
                   <Outlet />
                 </Container>
               </ThemeProvider>
@@ -171,15 +164,18 @@ const Layout = () => {
     return main = (
       <>
         <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} setLoggingOut={setLoggingOut} />
-        <ThemeProvider theme={theme}  >
-          <Container maxWidth='xxl' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 70px)', mt: '70px', width: '100%' }}>
-            {isLoading || isError ?
-              { content }
-              :
-              <Outlet />
-            }
-          </Container>
-        </ThemeProvider >
+        <Box sx={{ display: 'flex', minHeight: '100vh', mt: '70px', width: '100%' }}>
+          <ThemeProvider theme={theme}  >
+            <Container maxWidth='xxl'>
+              {isLoading || isError ?
+                { content }
+                :
+                <Outlet />
+              }
+            </Container>
+          </ThemeProvider >
+        </Box>
+
       </>)
   }
   return { main }

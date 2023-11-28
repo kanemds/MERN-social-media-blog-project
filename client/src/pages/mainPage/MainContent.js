@@ -588,7 +588,7 @@ const MainContent = (props) => {
 
   return (
 
-    <Box sx={{ mb: '20px' }}>
+    <Box >
 
       <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pl: 2, pr: 2, pb: 2 }}>
         <Box sx={{ display: 'flex', width: '100%', pt: '10px', pb: '10px' }}>
