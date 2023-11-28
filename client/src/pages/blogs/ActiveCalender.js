@@ -173,7 +173,7 @@ export default function ActiveCalender() {
 
   return (
 
-    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ maxWidth: '240px', minWidth: '240px', }}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '200px' }}>
       <StaticDatePicker
         disabled={isDisabled}
         orientation='portrait'
@@ -183,8 +183,7 @@ export default function ActiveCalender() {
 
           layout: {
             sx: {
-              minWidth: '240px',
-              maxWidth: '240px',
+              width: '200px',
               [`.MuiGrid2-root`]: {
                 display: 'none',
 
@@ -193,8 +192,7 @@ export default function ActiveCalender() {
                 display: 'none',
               },
               [`.MuiPickersLayout-contentWrapper `]: {
-                minWidth: '240px',
-                maxWidth: '240px',
+                width: '200px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -253,13 +251,13 @@ export default function ActiveCalender() {
                 width: 220,
               },
               [`.MuiPickersLayout-actionBar`]: {
-                width: '240px',
+                width: '200px',
               },
               [`.MuiPickersLayout-root`]: {
-                width: '240px',
+                width: '200px',
               },
               [`.MuiPickersLayout-toolbar`]: {
-                width: '240px',
+                width: '200px',
               },
               [`.MuiPickersToolbar-root`]: {
                 display: 'none',
@@ -269,6 +267,14 @@ export default function ActiveCalender() {
               [`.css-flbe84-MuiDayCalendar-weekContainer`]: {
                 height: '25px'
               },
+              [`.css-iyjaod-MuiList-root`]: {
+                margin: 0,
+                padding: 0,
+                display: 'flex',
+
+                height: '25px',
+
+              },
               // [`.MuiDatePickerToolbar-title`]: {
               //   alignItems: 'center',
               //   width: '240px',
@@ -277,16 +283,16 @@ export default function ActiveCalender() {
               [`.${pickersLayoutClasses.actionBar}`]: {
                 gridColumn: 2,
                 gridRow: 3,
-
+                width: '220px'
               },
 
               [`.${pickersLayoutClasses.contentWrapper}`]: {
-                height: '240px',
+                height: '210px',
               },
-              [`.${pickersLayoutClasses.toolbar}`]: {
-                gridColumn: 2,
-                gridRow: 1,
-              },
+              // [`.${pickersLayoutClasses.toolbar}`]: {
+              //   gridColumn: 1,
+              //   gridRow: 1,
+              // },
             },
           },
         }}
