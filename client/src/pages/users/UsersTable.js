@@ -23,7 +23,7 @@ import DeleteActionButton from './DeleteActionButton'
 import { useDeleteUserMutation } from './UserApiSlice'
 import LoadingSpinner from '../../components/LoadingSpinner'
 
-export default function UsersTable({ user, smallerThan1459, smallerThan1026, smallerThan971, smallerThan699, smallerThan501, smallerThan401 }) {
+export default function UsersTable({ user, smallerThan1459, smallerThan1080, smallerThan971, smallerThan699, smallerThan501, smallerThan401 }) {
 
   const options = { year: 'numeric', month: 'short', day: 'numeric' }
 
@@ -95,7 +95,7 @@ export default function UsersTable({ user, smallerThan1459, smallerThan1026, sma
         <TableCell align="left">{user.email}</TableCell>
       }
 
-      {smallerThan1026 ? ''
+      {smallerThan1080 ? ''
         :
         <TableCell align="left">
           {
