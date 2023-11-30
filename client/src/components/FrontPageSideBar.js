@@ -102,10 +102,10 @@ const FrontPageSideBar = () => {
   const [isShow, setIsShow] = useState(true)
   const [keepOpen, setKeepOpen] = useState(true)
   const [hiddenSideBar, setHiddenSideBar] = useState(false)
-  const [onHoverCalendar, setOnHoverCalendar] = useState(false)
 
 
-  console.log(onHoverCalendar)
+
+
 
   useEffect(() => {
     if (pathname === `/blogs/post/${id}` || pathname === `/blogs/post/edit/${id}`) {
@@ -147,7 +147,6 @@ const FrontPageSideBar = () => {
       setKeepOpen(prev => !prev)
     } else {
       setKeepOpen(prev => !prev)
-
     }
   }
 
@@ -243,13 +242,15 @@ const FrontPageSideBar = () => {
     </SideButton>
   )
 
+
   //////////////////////////////////////////////////////////////////drawer side bar//////////////////////////////////////////////////////////////////////////////////////////////////////
   const list = (anchor) => (
     <Box
 
       role="presentation"
-      onClick={onHoverCalendar ? toggleDrawer(anchor, true) : toggleDrawer(anchor, false)}
-      // onKeyDown={toggleDrawer(anchor, false)}
+      // onClick={onHoverCalendar ? toggleDrawer(anchor, true) : toggleDrawer(anchor, false)}
+      // onClick={onHoverCalendar ? toggleDrawer(anchor, true) : toggleDrawer(anchor, false)}
+      // onKeyDown={onHoverCalendar ? toggleDrawer(anchor, true) : toggleDrawer(anchor, false)}
       sx={{ width: '240px', overflowX: 'hidden' }}
     >
       <Box sx={{ height: '70px', width: '100%', background: '#1976d2' }}>
@@ -258,7 +259,7 @@ const FrontPageSideBar = () => {
 
       <List >
         <Box sx={{ pl: 2, pr: 2 }}>
-          <IconButton style={IconButtonStyle} color="primary" onClick={handleMenu} >
+          <IconButton style={IconButtonStyle} color="primary" onClick={toggleDrawer(anchor, false)} >
             <DehazeIcon color='primary' />
           </IconButton>
         </Box>
@@ -283,8 +284,8 @@ const FrontPageSideBar = () => {
         }
 
         <Divider />
-        <Box sx={{ pl: 1, pr: 1 }} >
-          <ActiveCalender setOnHoverCalendar={setOnHoverCalendar} largeBP={largeBP} />
+        <Box sx={{ pl: 1, pr: 1 }}  >
+          <ActiveCalender />
         </Box>
         <Divider />
         <Section >
