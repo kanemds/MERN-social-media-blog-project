@@ -66,6 +66,7 @@ const style = {
   p: 4,
   display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center'
 }
 
 const IconButtonStyle = {
@@ -98,7 +99,7 @@ const FrontPageSideBar = () => {
   const [checked, setChecked] = useState(false)
   const [showBack, setShowBack] = useState(false)
   const [showCalendar, setShowCalendar] = useState(true)
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const [isShow, setIsShow] = useState(true)
   const [keepOpen, setKeepOpen] = useState(true)
   const [hiddenSideBar, setHiddenSideBar] = useState(false)
@@ -251,7 +252,7 @@ const FrontPageSideBar = () => {
       // onClick={onHoverCalendar ? toggleDrawer(anchor, true) : toggleDrawer(anchor, false)}
       // onClick={onHoverCalendar ? toggleDrawer(anchor, true) : toggleDrawer(anchor, false)}
       // onKeyDown={onHoverCalendar ? toggleDrawer(anchor, true) : toggleDrawer(anchor, false)}
-      sx={{ width: '240px', overflowX: 'hidden' }}
+      sx={{ width: '250px', overflowX: 'hidden' }}
     >
       <Box sx={{ height: '70px', width: '100%', background: '#1976d2' }}>
 
@@ -284,7 +285,7 @@ const FrontPageSideBar = () => {
         }
 
         <Divider />
-        <Box sx={{ pl: 1, pr: 1 }}  >
+        <Box sx={{ pl: 1, pr: 1, width: '240px', display: 'flex', justifyContent: 'center' }}>
           <ActiveCalender />
         </Box>
         <Divider />
@@ -394,7 +395,7 @@ const FrontPageSideBar = () => {
 
 
         <Divider />
-        <Box sx={{ pl: 1, pr: 1 }}>
+        <Box sx={{ pl: 1, pr: 1, width: '240px', display: 'flex', justifyContent: 'center' }}>
           <ActiveCalender />
         </Box>
         <Divider />
@@ -535,12 +536,13 @@ const FrontPageSideBar = () => {
             },
 
           }}
-
         >
-
           <Fade in={open} >
             <Box sx={style} >
-              <ActiveCalender />
+              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '200px' }}>
+                <ActiveCalender />
+              </Box>
+
             </Box>
           </Fade>
         </Modal>
