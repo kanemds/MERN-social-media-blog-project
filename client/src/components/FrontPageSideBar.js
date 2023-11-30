@@ -31,9 +31,11 @@ import './scrollbar.css'
 const SideButton = styled(Button)({
   textTransform: 'none',
   justifyContent: "flex-start",
+  width: '100%',
 })
 
 const ButtonInfo = styled(Typography)({
+
   textAlign: 'left',
   marginLeft: 12
 })
@@ -556,7 +558,7 @@ const FrontPageSideBar = () => {
             <IconButton color="primary" onClick={handleToEdit}>
               <SvgIcon>
                 <svg
-                  viewBox='-2 0 24 24'
+                  viewBox='0 0 24 24'
                 >
                   <EditNoteIcon />
                 </svg>
@@ -581,7 +583,14 @@ const FrontPageSideBar = () => {
             <StarRoundedIcon color='primary' />
           </IconButton>
           <IconButton color="primary" onClick={handleToLiked}>
-            <FavoriteIcon color='primary' sx={{ fontSize: '1.3rem' }} />
+            <SvgIcon sx={{ fontSize: '1.3rem', width: '24px' }} >
+              <svg
+                viewBox='0 0 24 24'
+              >
+                <FavoriteIcon color='primary' />
+              </svg>
+            </SvgIcon>
+
           </IconButton>
         </Section>
         {
