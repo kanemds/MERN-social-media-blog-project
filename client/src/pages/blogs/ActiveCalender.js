@@ -181,14 +181,19 @@ export default function ActiveCalender() {
 
           layout: {
             sx: {
-              width: '200px',
+
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+
               [`.MuiGrid2-root`]: {
                 display: 'none',
-
               },
               [`.MuiPickersLayout-root`]: {
                 display: 'none',
               },
+
               [`.MuiPickersLayout-contentWrapper `]: {
                 width: '200px',
                 display: 'flex',
@@ -209,11 +214,8 @@ export default function ActiveCalender() {
               },
 
               [`.MuiPickersYear-root`]: {
-
-                maxWidth: '180px',
-
+                width: '180px',
                 overflow: 'hidden',
-
                 '-webkit-flex-basis': '33%',
               },
               [`.css-1lkpf4l-MuiYearCalendar-root`]: {
@@ -254,9 +256,6 @@ export default function ActiveCalender() {
               [`.MuiPickersLayout-root`]: {
                 width: '200px',
               },
-              [`.MuiPickersLayout-toolbar`]: {
-                width: '200px',
-              },
               [`.MuiPickersToolbar-root`]: {
                 display: 'none',
                 // alignItems: 'center',
@@ -269,20 +268,18 @@ export default function ActiveCalender() {
                 margin: 0,
                 padding: 0,
                 display: 'flex',
-
                 height: '25px',
-
               },
               // [`.MuiDatePickerToolbar-title`]: {
               //   alignItems: 'center',
               //   width: '240px',
               // },
 
-              [`.${pickersLayoutClasses.actionBar}`]: {
-                gridColumn: 2,
-                gridRow: 3,
-                width: '220px'
-              },
+              // [`.${pickersLayoutClasses.actionBar}`]: {
+              //   gridColumn: 2,
+              //   gridRow: 3,
+              //   width: '200px'
+              // },
 
               [`.${pickersLayoutClasses.contentWrapper}`]: {
                 height: '210px',
