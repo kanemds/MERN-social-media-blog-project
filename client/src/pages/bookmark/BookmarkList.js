@@ -187,11 +187,21 @@ const BookmarkList = () => {
   }
 
 
-  if (isSuccess && currentBookmarks?.length === 0) {
+  if (isSuccess && currentBookmarks?.length === 0 && selectedDate.bookmarkPage === null) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography >
           No bookmarks yet! Start saving your favorites.
+        </Typography>
+      </Box>
+      )
+  }
+
+  if (isSuccess && currentBookmarks?.length === 0 && selectedDate.bookmarkPage !== null) {
+    content =
+      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography >
+          No bookmarks on the selected date.
         </Typography>
       </Box>
       )
