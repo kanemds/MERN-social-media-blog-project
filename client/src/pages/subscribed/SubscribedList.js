@@ -175,11 +175,21 @@ const SubscribedList = () => {
   }
 
 
-  if (isSuccess && currentSubscribed?.length === 0) {
+  if (isSuccess && currentSubscribed?.length === 0 && selectedDate.subscribePage === null) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography >
-          No subscribed blogger(s) on the selected date
+          No subscribed bloggers yet! Start saving your favorites.
+        </Typography>
+      </Box>
+      )
+  }
+
+  if (isSuccess && currentSubscribed?.length === 0 && selectedDate.subscribePage !== null) {
+    content =
+      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography >
+          No subscribed bloggers on the selected date.
         </Typography>
       </Box>
       )

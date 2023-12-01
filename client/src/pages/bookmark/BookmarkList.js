@@ -156,7 +156,7 @@ const BookmarkList = () => {
     if (!result.length) {
       setSearchInput('')
       setIsSearch(true)
-      return setSearchResult('No bookmarked blog was found to match the input')
+      return setSearchResult('No matching bookmarks were found for the given input.')
     } else {
       setSearchInput('')
       setIsSearch(true)
@@ -191,7 +191,7 @@ const BookmarkList = () => {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography >
-          No Blogs are bookmarked on the selected date
+          No bookmarks yet! Start saving your favorites.
         </Typography>
       </Box>
       )
