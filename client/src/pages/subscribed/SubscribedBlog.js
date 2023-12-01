@@ -152,7 +152,7 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
       className='fadeIn'
       sx={{
         p: 0,
-        maxWidth: 272,
+        maxWidth: 500,
         height: 360,
         boxShadow: 'box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px ',
         "&:hover": {
