@@ -10,8 +10,8 @@ import { red } from '@mui/material/colors'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import SettingsIcon from '@mui/icons-material/Settings'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
-import { useSelector } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { onLoggingOut } from "../pages/auth/authSlice"
 
 
 const SideButton = styled(Button)({
@@ -42,6 +42,7 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
   // console.log(loggingOut)
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const { pathname } = useLocation()
   const { username, userId } = useAuth()
   const { isLoggingOut } = useSelector(state => state?.auth)
@@ -56,6 +57,7 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
   const [avatarImg, setAvatarImg] = useState(null)
   const [isOnClick, setIsOnClick] = useState(false)
   const [windowSize, setWindowSize] = useState(getWindowSize())
+
 
 
 
@@ -86,10 +88,11 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
     if (isSuccess) {
       setTimeout(() => {
         navigate('/')
-        setLoggingOut(false)
+        dispatch(onLoggingOut(false))
       }, 4000)
     }
   }, [isSuccess])
+
 
 
   const [anchorEl, setAnchorEl] = useState(null)

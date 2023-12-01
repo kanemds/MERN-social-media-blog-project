@@ -157,11 +157,14 @@ const LoginPage = ({ state }) => {
             <Typography sx={{ fontSize: '1.7rem' }}>Login</Typography>
           </Box>
         </Box>
-        {
-          errorMessage ?
-            <Typography>{errorMessage}</Typography>
-            : ''
-        }
+        <Box textAlign='center'>
+          {
+            errorMessage ?
+              <Typography>{errorMessage}</Typography>
+              : ''
+          }
+        </Box>
+
         <Box
           sx={{
             display: 'flex',
