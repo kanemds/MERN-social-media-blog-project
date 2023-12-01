@@ -150,7 +150,7 @@ const LikeList = () => {
     if (!result.length) {
       setSearchInput('')
       setIsSearch(true)
-      return setSearchResult('No liked blog was found to match the input')
+      return setSearchResult('No matching blogs were found for the given input.')
     } else {
       setSearchInput('')
       setIsSearch(true)
@@ -184,7 +184,7 @@ const LikeList = () => {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography >
-          No Blogs are liked on the selected date
+          No liked blogs yet! Start saving your favorites.
         </Typography>
       </Box>
       )
