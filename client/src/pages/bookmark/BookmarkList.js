@@ -80,6 +80,8 @@ const BookmarkList = () => {
     })
   })
 
+  console.log(bookmarkBlogs)
+
   const [
     deleteBookmark, {
       data: removeMessage,
@@ -105,17 +107,21 @@ const BookmarkList = () => {
   useEffect(() => {
 
     if (isSuccess || refresh) {
+      console.log('run')
       if (selectedDate.bookmarkPage) {
         const selectedDay = bookmarkBlogs.filter(blog => blog?.bookmarkedAt === selectedDate.bookmarkPage)
         setCurrentBookmarks(selectedDay)
         setRefresh(false)
       } else {
+        console.log('deleted')
         setCurrentBookmarks(bookmarkBlogs)
         setRefresh(false)
       }
     }
 
   }, [isSuccess, refresh, selectedDate.bookmarkPage])
+
+
 
   useEffect(() => {
     if (pathname === '/blogs/bookmarks') {
