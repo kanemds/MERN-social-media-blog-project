@@ -86,8 +86,8 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
     if (isSuccess) {
       setTimeout(() => {
         navigate('/')
-        // setLoggingOut(false)
-      }, 10000)
+        setLoggingOut(false)
+      }, 4000)
     }
   }, [isSuccess])
 
