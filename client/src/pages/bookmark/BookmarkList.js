@@ -201,7 +201,7 @@ const BookmarkList = () => {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography >
-          No bookmarks on the selected date.
+          No bookmarks found on the selected date.
         </Typography>
       </Box>
       )
