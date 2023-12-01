@@ -136,15 +136,16 @@ const LoginPage = ({ state }) => {
 
 
   content = (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', m: 1 }}>
       <Paper
         component="form"
         noValidate
         autoComplete="off"
         sx={{
-          width: '500px',
-          p: '10px',
-          pb: '100px'
+          minWidth: '320px',
+          width: '400px',
+          pt: '20px',
+          pb: '20px'
         }}
       >
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

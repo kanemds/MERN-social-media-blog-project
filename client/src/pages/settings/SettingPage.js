@@ -26,7 +26,7 @@ const SettingPage = () => {
   if (currentUser) content = <UserSettingForm currentUser={currentUser} />
 
   return (
-    <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
+    <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', m: 1 }} >
 
       {content}
     </Box>

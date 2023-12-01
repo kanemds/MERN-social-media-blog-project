@@ -190,11 +190,12 @@ const UserSettingForm = ({ currentUser }) => {
         noValidate
         autoComplete="off"
         sx={{
-          minWidth: '500px',
-          width: '50%',
-          p: '10px',
-          pb: '100px',
-        }}
+          minWidth: '320px',
+          width: '400px',
+          pt: '20px',
+          pb: '20px',
+        }
+        }
       >
         <Modal
           open={open}
@@ -211,9 +212,10 @@ const UserSettingForm = ({ currentUser }) => {
         <Box sx={{ ml: '5%' }}>
           <Typography variant='h4'>EDIT ACCOUNT</Typography>
         </Box>
-        {isError ?
-          <Typography>{error?.data?.message}</Typography>
-          : ''
+        {
+          isError ?
+            <Typography>{error?.data?.message}</Typography>
+            : ''
         }
 
 
@@ -260,7 +262,7 @@ const UserSettingForm = ({ currentUser }) => {
             <>
               <Typography>Status</Typography>
               <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                <FormControl sx={{ m: 3, width: 120 }}>
+                <FormControl sx={{ m: 3, width: 130 }}>
                   <InputLabel>Select Role</InputLabel>
                   <Select
                     value={role}
