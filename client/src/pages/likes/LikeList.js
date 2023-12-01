@@ -180,7 +180,7 @@ const LikeList = () => {
   }
 
 
-  if (isSuccess && currentLikes?.length === 0) {
+  if (isSuccess && currentLikes?.length === 0 && selectedDate.likedPage === null) {
     content =
       (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography >
@@ -189,6 +189,17 @@ const LikeList = () => {
       </Box>
       )
   }
+
+  if (isSuccess && currentLikes?.length === 0 && selectedDate.likedPage !== null) {
+    content =
+      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography >
+          No blogs found on the selected date.
+        </Typography>
+      </Box>
+      )
+  }
+
 
   if (isSuccess && currentLikes?.length >= 1) {
     content = (
