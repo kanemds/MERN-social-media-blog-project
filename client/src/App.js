@@ -24,6 +24,7 @@ import BookmarkList from './pages/bookmark/BookmarkList'
 import SettingPage from './pages/settings/SettingPage'
 import UserLogout from './pages/auth/UserLogout'
 import NotAuth from './components/NotAuth'
+import NotExist from './components/NotExist'
 
 
 
@@ -33,6 +34,11 @@ function App() {
 
   return (
     <Routes>
+      <Route element={<Layout />}>
+        <Route path='/logout' element={<UserLogout />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
+      </Route>
       <Route element={<Layout />}>
 
         <Route element={<PersistLogin />}>
@@ -70,14 +76,9 @@ function App() {
               </Route>
             </Route>
           </Route>
-
+          <Route path='/no-auth' element={<NotAuth />} />
+          <Route path='*' element={<NotExist />} />
         </Route>
-      </Route>
-      <Route element={<Layout />}>
-        <Route path='/logout' element={<UserLogout />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/no-auth' element={<NotAuth />} />
       </Route>
     </Routes >
   )

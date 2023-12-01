@@ -16,9 +16,13 @@ const NotAuth = () => {
   const handleRegister = () => {
     navigate('/register')
   }
+  const handleHome = () => {
+    navigate('/')
+  }
+
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
 
       {!username ?
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -26,7 +30,7 @@ const NotAuth = () => {
             This content requires authorization.
           </Typography>
           <Typography>
-            Back to  <Button onClick={handleLogin}>Home Page</Button>
+            Back to  <Button onClick={handleHome}>Home Page</Button>
           </Typography>
         </Box>
         :

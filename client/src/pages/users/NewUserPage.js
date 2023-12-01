@@ -88,17 +88,16 @@ const NewUserPage = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center', height: '100%' }}>
-
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', m: 1 }}>
       <Paper
         component="form"
         noValidate
         autoComplete="off"
         sx={{
-          width: '500px',
-          p: '10px',
-          pb: '100px',
-
+          minWidth: '320px',
+          width: '400px',
+          pt: '20px',
+          pb: '20px',
         }}
       >
         <Box sx={{ pb: '40px' }}>
@@ -116,8 +115,6 @@ const NewUserPage = () => {
             justifyContent: 'center',
           }}
         >
-
-
           <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
           <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
           <UserInputField userInputs={userInputs.password} state={password} setState={setPassword} validation={validPassword} />

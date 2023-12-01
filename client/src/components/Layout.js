@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom"
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom"
 import React, { useState, useEffect } from 'react'
 import Navbar from "./Navbar"
 import { Box, Container } from "@mui/material"
@@ -134,9 +134,8 @@ const Layout = () => {
   }
 
   // startWith /blogs pages with slider,sidebar and searchbar 
-  if (pathname.includes('/blogs') || pathname.includes('/setting') || pathname.includes('/dash')) {
+  if (pathname.includes('/blogs')) {
     return main = (
-
       <Box >
         {isLoading || isError ?
           { content }
@@ -154,7 +153,29 @@ const Layout = () => {
           </>
         }
       </Box >
+    )
+  }
 
+  // startWith /blogs pages with slider,sidebar and searchbar 
+  if (pathname.includes('/dash') || pathname.includes('/setting')) {
+    return main = (
+      <Box >
+        {isLoading || isError ?
+          { content }
+          :
+          <>
+            <Navbar handleLogout={handleLogout} isSuccess={isSuccess} loggingOut={loggingOut} />
+            <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 70px)', mt: '70px', width: '100%' }}>
+              <FrontPageSideBar />
+              <ThemeProvider theme={theme}  >
+                <Container maxWidth='xxl' >
+                  <Outlet />
+                </Container>
+              </ThemeProvider>
+            </Box>
+          </>
+        }
+      </Box >
     )
   }
 
