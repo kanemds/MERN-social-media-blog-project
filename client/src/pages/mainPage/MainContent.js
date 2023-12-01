@@ -366,7 +366,7 @@ const MainContent = (props) => {
         <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
           {
             currentDateWithoutUser?.map(blog =>
-              <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+              <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
                 <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
               </Grid>)}
         </Grid>
@@ -376,7 +376,7 @@ const MainContent = (props) => {
         <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
           {
             currentDate?.map(blog =>
-              <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+              <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
                 <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
               </Grid>)}
         </Grid>
@@ -428,7 +428,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {allBlogs?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
@@ -440,7 +440,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {recentlyUploadWithAllUsers?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
@@ -454,7 +454,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {recentlyUploadWithoutUser?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
@@ -480,7 +480,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {blogsWithoutCurrentUser?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
@@ -492,7 +492,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {recentlyUploadWithoutUser?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
@@ -504,7 +504,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {allBlogs?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
@@ -516,7 +516,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {recentlyUploadWithAllUsers?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
@@ -561,7 +561,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {searchResult?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
@@ -574,7 +574,7 @@ const MainContent = (props) => {
     content = (
       <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {searchResultFromRecentlyUpload?.map(blog =>
-          <Grid key={blog.id} xs={12} sm={6} md={3} lg={3} ll={3} xl={2} xxl={2} >
+          <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
             <MainBlog blog={blog} setUpdateLoading={setUpdateLoading} />
           </Grid>)}
       </Grid>
