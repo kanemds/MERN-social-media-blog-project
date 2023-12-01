@@ -55,6 +55,7 @@ export const bookmarkApiSlice = apiSlice.injectEndpoints({
         console.log('delete', arg)
         return [
           { type: 'Bookmark', id: arg.id },
+          { type: 'Bookmark', id: 'LIST' },
           { type: 'Blog', id: arg.blogId },
           { type: 'Blog', id: 'LIST' }
         ]
