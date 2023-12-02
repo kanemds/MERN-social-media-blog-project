@@ -60,36 +60,46 @@ const ImageEditor = ({ avatarImage, setAvatarImage, setCroppedImg, handleClose, 
         />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', position: 'absolute', bottom: 0, height: '180px', alignItems: 'center', justifyContent: 'center', width: '100%' }} >
-        <Box sx={{ width: '60%', }} textAlign='center'>
+        <Box sx={{ width: '60%', maxWidth: '400px', minWidth: '220px' }} textAlign='center'>
           <Typography>{zoomPercent(zoom)}</Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Typography sx={{ width: '120px' }}>Zoom:</Typography>
-            <Slider
-              value={zoom}
-              // valueLabelFormat={zoomPercent}
-              min={1}
-              max={3}
-              step={1}
-              aria-labelledby="Zoom"
-              onChange={(e, zoom) => onZoomChange(zoom)}
-              classes={{ container: 'slider' }}
-            />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <Box sx={{ width: '100px', display: 'flex', justifyContent: 'flex-start', mr: 2 }}>
+              <Typography >Zoom:</Typography>
+            </Box>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+              <Slider
+                value={zoom}
+                // valueLabelFormat={zoomPercent}
+                min={1}
+                max={3}
+                step={0.1}
+                aria-labelledby="Zoom"
+                onChange={(e, zoom) => onZoomChange(zoom)}
+                classes={{ container: 'slider' }}
+              />
+            </Box>
+
           </Box>
         </Box>
-        <Box sx={{ width: '60%', }} textAlign='center'>
+        <Box sx={{ width: '60%', maxWidth: '400px', minWidth: '220px' }} textAlign='center'>
           <Typography >{rotation}°</Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Typography sx={{ width: '120px' }}>Rotation:</Typography>
-            <Slider
-              value={rotation}
-              min={0}
-              max={360}
-              step={1}
-              aria-labelledby="Rotation"
-              onChange={(e, rotation) => onRotationChange(rotation)}
-              classes={{ container: 'slider' }}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <Box sx={{ width: '100px', display: 'flex', justifyContent: 'flex-start', mr: 2 }}>
+              <Typography >Rotation:</Typography>
+            </Box>
 
-            />
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+              <Slider
+                value={rotation}
+                min={0}
+                max={360}
+                step={1}
+                aria-labelledby="Rotation"
+                onChange={(e, rotation) => onRotationChange(rotation)}
+                classes={{ container: 'slider' }}
+              />
+            </Box>
+
           </Box>
         </Box>
         <Box>
@@ -97,7 +107,7 @@ const ImageEditor = ({ avatarImage, setAvatarImage, setCroppedImg, handleClose, 
           <Button onClick={saveImg}>Save</Button>
         </Box>
       </Box >
-    </Box>
+    </Box >
   )
 }
 
