@@ -163,9 +163,9 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
             <Typography>Logging out...</Typography>
             :
             <Box sx={{ display: 'flex', }}>
-              <Link to='/login' component={RouterLink} underline='none' color='white' sx={{ width: '60px', '&:hover': { color: 'black' } }}>Log In</Link>
+              <Link to='/login' component={RouterLink} underline='hover' color='white' sx={{ width: '60px' }}>Log In</Link>
 
-              <Link to='/register' component={RouterLink} underline='none' color='white' sx={{ width: '60px', '&:hover': { color: 'black' } }}>Sign Up</Link>
+              <Link to='/register' component={RouterLink} underline='hover' color='white' sx={{ width: '60px' }}>Sign Up</Link>
               {/* <LinkButton visit='/login' name='Login' />
               <LinkButton visit='/register' name='Signup' /> */}
             </Box>
