@@ -43,7 +43,7 @@ const ImageEditor = ({ avatarImage, setAvatarImage, setCroppedImg, handleClose, 
 
   return (
     <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>
-      <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: '180px', backgroundColor: 'black' }}>
+      <Box sx={{ position: 'absolute', top: 40, left: 40, right: 40, bottom: '180px', backgroundColor: 'black' }}>
         <Cropper
           image={url}
           crop={crop}
