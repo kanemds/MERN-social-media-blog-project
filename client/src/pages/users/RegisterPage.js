@@ -9,21 +9,34 @@ import LinkButton from '../../components/LinkButton'
 import CameraAltIcon from '@mui/icons-material/CameraAlt'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import ImageEditor from '../../components/imageEditor/ImageEditor'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '70%',
-  height: '70%',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-}
+
+
 
 
 const RegisterPage = () => {
+
+  const small = useMediaQuery('(max-Height:400px)')
+
+  console.log(small)
+
+
+  const style = {
+    position: 'absolute',
+    top: small ? '0' : '50%',
+    left: '50%',
+    transform: small ? 'translate(-50%, 0%)' : 'translate(-50%, -50%)',
+    width: '100%',
+    height: '100%',
+    maxHeight: '600px',
+    maxWidth: '500px',
+    minHeight: '400px',
+    minWidth: '300px',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+  }
 
   const [
     addNewUser,
@@ -186,6 +199,7 @@ const RegisterPage = () => {
             </IconButton>
           </Box>
           <Modal
+            sx={{ overflow: 'auto' }}
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
