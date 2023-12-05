@@ -247,6 +247,8 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
                   onClick={handleBookmark}
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
+                  onTouchStart={() => setIsClick(true)}
+                  onTouchEnd={() => setIsClick(true)}
                   style={iconStyle}
                   sx={{
                     mr: 1,

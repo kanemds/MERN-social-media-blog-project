@@ -385,6 +385,7 @@ export default function MainBlog({ blog, setUpdateLoading }) {
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
                 onTouchStart={() => setIsClick(true)}
+                onTouchEnd={() => setIsClick(true)}
                 style={iconStyle}
                 sx={{
                   mr: 1,
@@ -406,6 +407,7 @@ export default function MainBlog({ blog, setUpdateLoading }) {
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
                   onTouchStart={() => setIsClick(true)}
+                  onTouchEnd={() => setIsClick(true)}
                   style={iconStyle}
                   sx={{
                     '&:hover': { color: red[400], background: 'white' }

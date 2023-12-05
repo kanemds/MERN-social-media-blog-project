@@ -249,6 +249,8 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
                   onClick={handleLiked}
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
+                  onTouchStart={() => setIsClick(true)}
+                  onTouchEnd={() => setIsClick(true)}
                   style={iconStyle}
                   sx={{
                     '&:hover': { color: red[400], background: 'white' }
