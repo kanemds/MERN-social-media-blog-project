@@ -211,6 +211,8 @@ export default function SubscribedBlog({ blog, setRefresh, deleteSubscribed, rem
           <Button
             onMouseOver={() => setIsClick(true)}
             onMouseOut={() => setIsClick(false)}
+            onTouchStart={() => setIsClick(true)}
+            onTouchEnd={() => setIsClick(true)}
             onClick={handleDeleteOpen}
             sx={{
               '&:hover': { background: '#f4f4f4' },
