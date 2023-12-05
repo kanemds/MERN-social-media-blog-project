@@ -291,6 +291,7 @@ export default function MainBlog({ blog, setUpdateLoading }) {
   //   )
   // }
 
+  console.log(isClick)
 
   return (
 
@@ -334,6 +335,7 @@ export default function MainBlog({ blog, setUpdateLoading }) {
               <IconButton
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
+
                 onClick={handleUserPage}
                 disableRipple={true}
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
@@ -382,6 +384,7 @@ export default function MainBlog({ blog, setUpdateLoading }) {
                 onClick={handleBookmark}
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
+                onTouchStart={() => setIsClick(true)}
                 style={iconStyle}
                 sx={{
                   mr: 1,
@@ -402,6 +405,7 @@ export default function MainBlog({ blog, setUpdateLoading }) {
                   onClick={handleLiked}
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
+                  onTouchStart={() => setIsClick(true)}
                   style={iconStyle}
                   sx={{
                     '&:hover': { color: red[400], background: 'white' }
