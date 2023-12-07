@@ -11,11 +11,11 @@ import ClearIcon from '@mui/icons-material/Clear'
 
 const style = {
   position: 'absolute',
-  top: '40%',
+  top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
-
+  width: '100%',
+  maxWidth: '330px',
   bgcolor: 'background.paper',
   border: '2px solid #bdbdbd',
   boxShadow: 24,
@@ -94,11 +94,11 @@ const DeleteActionButton = ({ userId }) => {
 
         <Box sx={style}>
           {isLoading ? <LoadingSpinner /> :
-            isError ? <Typography id="modal-modal-description" sx={{ m: 2 }}>
+            isError ? <Typography id="modal-modal-description" variant="h6" component="h2">
               {error?.data.message}
             </Typography> :
               <>
-                <Typography id="modal-modal-description" sx={{ m: 2 }}>
+                <Typography id="modal-modal-description" variant="h6" component="h2">
                   Delete the selected user?
                 </Typography>
 
@@ -114,7 +114,7 @@ const DeleteActionButton = ({ userId }) => {
                     }}
                     onClick={handleSubmit}
                   >
-                    Delete User
+                    Delete
                   </Button>
 
 
