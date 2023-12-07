@@ -92,6 +92,7 @@ const SingleBlog = () => {
 
 
 
+  const extraSmall = useMediaQuery('(max-width:431px)')
   const small = useMediaQuery('(max-width:791px)')
   const mediumBP = useMediaQuery('(min-width:750px)') // true when larger
   const smallBP = useMediaQuery('(min-width:550px)') // true when larger
@@ -228,7 +229,6 @@ const SingleBlog = () => {
     }
   }, [isSuccess, data])
 
-  console.log(currentBlog)
 
   // useEffect(() => {
   //   if (isAddLikeSuccess) {
@@ -603,17 +603,27 @@ const SingleBlog = () => {
   if (small) {
     menuButton = (
       <Box sx={{ position: 'fixed', bottom: 0, background: '#bdbdbd', zIndex: 30, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <SideButton disableRipple color="primary" sx={{ m: 1 }}
+        <SideButton
+          // disableRipple
+          color="primary" sx={{ m: 1 }}
           onClick={toggleDrawer(drawerDirection, true)}
         >
           <DehazeIcon color='primary' />
-          <ButtonInfo >  Menu</ButtonInfo>
+          {extraSmall ? '' :
+            <ButtonInfo > Menu</ButtonInfo>
+          }
+
+
         </SideButton>
         <SideButton onClick={handleBackToBlogs} sx={{ m: 1 }}>
           <ForwardRoundedIcon
             style={{ transform: 'rotate(180deg)' }}
           />
-          <ButtonInfo >  Back</ButtonInfo>
+          {extraSmall ? '' :
+            <ButtonInfo >  Back</ButtonInfo>
+          }
+
+
         </SideButton>
         {username === currentBlog.username ?
           <>
@@ -625,11 +635,17 @@ const SingleBlog = () => {
                   <DeleteForeverOutlinedIcon />
                 </svg>
               </SvgIcon>
-              <ButtonInfo >Delete</ButtonInfo>
+              {extraSmall ? '' :
+                <ButtonInfo >Delete</ButtonInfo>
+              }
+
+
             </SideButton>
             <SideButton onClick={handleToEdit} sx={{ m: 1 }}>
               <EditNoteOutlinedIcon />
-              <ButtonInfo >  Edit</ButtonInfo>
+              {extraSmall ? '' :
+                <ButtonInfo >  Edit</ButtonInfo>
+              }
             </SideButton>
           </>
           :
@@ -653,7 +669,7 @@ const SingleBlog = () => {
     <Box
       className='fadeIn'
       sx={{
-        display: 'flex', width: '100%', height: '100%', minWidth: '375px', minHeight: '375px', position: !mediumBP ? 'none' : 'relative', justifyContent: 'space-evenly'
+        display: 'flex', width: '100%', height: '100%', minWidth: '320px', position: !mediumBP ? 'none' : 'relative', justifyContent: 'space-evenly'
       }}>
       {menuButton}
       < Box sx={{
