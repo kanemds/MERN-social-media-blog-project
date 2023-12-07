@@ -31,7 +31,8 @@ const styleDelete = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: '100%',
+  maxWidth: '330px',
   height: 140,
   bgcolor: 'background.paper',
   border: '2px solid #bdbdbd',
@@ -146,7 +147,7 @@ export default function BookmarkBlog({ blog, setRefresh, deleteBookmark, removeM
             '&:hover': {
               backgroundColor: red[800]
             }
-          }}>Remove Bookmark</Button>
+          }}>Remove</Button>
         </Box>
       </>
     )
