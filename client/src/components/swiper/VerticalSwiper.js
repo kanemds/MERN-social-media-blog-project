@@ -41,8 +41,6 @@ export default function VerticalSwiper() {
     const lastElement = document.querySelector('.lastElement')
 
     const wheelControl = e => {
-      console.log(e.deltaY)
-      console.log('swiperPro.mousewheel', swiperPro.mousewheel)
 
       if (swiperPro.mousewheel === undefined) {
         return console.log('no more image to scroll up')
@@ -70,12 +68,10 @@ export default function VerticalSwiper() {
   }, [isAllow, scroll])
 
   const handleReachEnd = (swiper) => {
-    console.log('swiper', swiper)
     setSwiperPro(swiper)
     setIsAllow(true)
   }
 
-  console.log(isAllow)
 
   return (
     <>
