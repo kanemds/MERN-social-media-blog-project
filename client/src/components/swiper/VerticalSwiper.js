@@ -27,12 +27,13 @@ export default function VerticalSwiper() {
     [people, hiking]
   ]
 
-  const [isLast, setIsLast] = useState('')
+
+  const [swiperPro, setSwiperPro] = useState('')
   const [isAllow, setIsAllow] = useState(false)
   const [scroll, setScroll] = useState(0)
   const contentRef = useRef()
 
-  // console.log(isLast)
+  // console.log(swiperPro)
   // console.log(isAllow)
   // console.log("Vertical Scroll Position: " + scroll)
 
@@ -40,20 +41,23 @@ export default function VerticalSwiper() {
     const lastElement = document.querySelector('.lastElement')
 
     const wheelControl = e => {
+      console.log(e.deltaY)
+      console.log('swiperPro.mousewheel', swiperPro.mousewheel)
 
-      if (e.deltaY <= 0 && scroll === 0) {
+      if (swiperPro.mousewheel === undefined) {
+        return console.log('no more image to scroll up')
+      } else if (e.deltaY <= 0 && scroll === 0) {
         setIsAllow(false)
-        isLast.mousewheel.enable()
+        swiperPro.mousewheel.enable()
 
       } else if (e.deltaY >= 0 && isAllow) {
-        isLast.mousewheel.disable()
+        swiperPro.mousewheel.disable()
       }
     }
 
     const handleWindowScroll = () => {
       // Get the current vertical scroll position
       setScroll(window.scrollY)
-
     }
 
     lastElement.addEventListener('wheel', wheelControl)
@@ -66,12 +70,12 @@ export default function VerticalSwiper() {
   }, [isAllow, scroll])
 
   const handleReachEnd = (swiper) => {
-    // console.log('reachEnd')
-    setIsLast(swiper)
+    console.log('swiper', swiper)
+    setSwiperPro(swiper)
     setIsAllow(true)
   }
 
-
+  console.log(isAllow)
 
   return (
     <>
