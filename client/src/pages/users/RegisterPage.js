@@ -19,9 +19,6 @@ const RegisterPage = () => {
 
   const small = useMediaQuery('(max-Height:400px)')
 
-  console.log(small)
-
-
   const style = {
     position: 'absolute',
     top: small ? '0' : '50%',
@@ -156,7 +153,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center', height: '100%', m: 1 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center', height: '100%', mt: 2, mb: 2 }}>
       <Paper
         component="form"
         noValidate
