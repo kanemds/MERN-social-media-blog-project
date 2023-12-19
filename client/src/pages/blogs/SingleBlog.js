@@ -394,7 +394,11 @@ const SingleBlog = () => {
 
       <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
 
-        <Paper onClick={handleOpen} className='display' sx={!xSamllBP ? { width: 375, height: 375 } : !smallBP ? { width: 420, height: 420 } : { width: 500, height: 500 }}>
+        <Paper onClick={handleOpen} className='display'
+
+          // sx={!xSamllBP ? { width: 350, height: 350 } : !smallBP ? { width: 420, height: 420 } : { width: 500, height: 500 }}
+          sx={{ minWidth: 340, width: 500, aspectRatio: '1 / 1' }}
+        >
           <ImagesDisplaySlider row={currentBlog?.images} />
         </Paper>
 
