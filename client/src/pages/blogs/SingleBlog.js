@@ -46,6 +46,7 @@ const style = {
   alignItems: 'center',
   p: 4,
   borderRadius: '20px',
+
 }
 
 const IconButtonStyle = {
@@ -397,7 +398,7 @@ const SingleBlog = () => {
         <Paper onClick={handleOpen} className='display'
 
           // sx={!xSamllBP ? { width: 350, height: 350 } : !smallBP ? { width: 420, height: 420 } : { width: 500, height: 500 }}
-          sx={{ minWidth: 340, width: 500, aspectRatio: '1 / 1' }}
+          sx={{ minWidth: 340, width: 500, aspectRatio: '1 / 1', '&:hover': { cursor: 'pointer' } }}
         >
           <ImagesDisplaySlider row={currentBlog?.images} />
         </Paper>
@@ -607,7 +608,7 @@ const SingleBlog = () => {
 
   if (small) {
     menuButton = (
-      <Box sx={{ position: 'fixed', bottom: 0, background: '#bdbdbd', zIndex: 30, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+      <Box sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#bdbdbd', zIndex: 30, width: '100%', minWidth: 300, display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
         <SideButton
           // disableRipple
           color="primary" sx={{ m: 1 }}
