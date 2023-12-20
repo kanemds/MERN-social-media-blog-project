@@ -163,7 +163,7 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
 
   return (
 
-    <Box className='container' sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: !smallBP && data?.length <= 2 ? 400 : !smallBP && data?.length >= 3 ? 300 : 500 }}>
+    <Box className='container' sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: !smallBP && data?.length <= 2 ? 340 : !smallBP && data?.length >= 3 ? 300 : 500 }}>
       {!data?.length ? ''
         :
         data?.map((image, index) => {
@@ -185,7 +185,11 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
                 onClick={(e) => onDeleteImage(e, index)}
                 sx={{ position: 'absolute', top: 12, right: 12, zIndex: 20, p: 0 }}
                 onMouseOver={() => setIsClick(true)}
-                onMouseOut={() => setIsClick(false)}>
+                onMouseOut={() => setIsClick(false)}
+                onTouchStart={() => setIsClick(true)}
+                onTouchEnd={() => setIsClick(true)}
+              >
+
                 <ClearOutlinedIcon />
               </IconButton>
               <CardMedia
