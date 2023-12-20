@@ -7,7 +7,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useNavigate, useParams } from 'react-router-dom'
 import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { useAddNewBlogMutation, useDeleteBlogMutation, useUpdateBlogMutation } from './blogsApiSlice'
+import { useAddNewBlogMutation, useDeleteBlogMutation, useGetSingleBlogQuery, useUpdateBlogMutation } from './blogsApiSlice'
 import './imagesDisplaySlider.css'
 import { SideBarContext } from '../../useContext/SideBarContext'
 import DehazeIcon from '@mui/icons-material/Dehaze'
@@ -51,31 +51,25 @@ const style = {
 }
 
 
-const SingleBlogEditForm = ({ blog }) => {
-
-
-  const extraSmall = useMediaQuery('(max-width:431px)')
-
-  const noMenu = useMediaQuery('(max-width:791px)')
+// const SingleBlogEditForm = ({ blog }) => {
+const SingleBlogEditForm = () => {
 
   const { id } = useParams()
+  const { username } = useAuth()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { drawerDirection, toggleDrawer } = useContext(SideBarContext)
-  const { username } = useAuth()
+  const currentSingleBlog = {
+    id: id ? id : '',
+    username: username ? username : null
+  }
 
-  const [selectedImage, setSelectedImage] = useState([])
-  const [orgImages, setOrgImages] = useState(blog?.images)
-  const [imagesBeforeEdit, setImagesBeforeEdit] = useState(blog?.images)
-  const [title, setTitle] = useState(blog?.title)
-  const [text, setText] = useState(blog?.text)
-  const [status, setStatus] = useState(blog?.visible_to)
-  const [deleteOpen, setDeleteOpen] = useState(false)
-  const [isDeleteReady, setIsDeleteReady] = useState(false)
-  const [deleteMessage, setDeleteMessage] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [blogId, setBlogId] = useState(blog ? blog?._id : '')
+
+  const {
+    data: singleBlog,
+    isLoading: isSingleBlogLoading,
+    isSuccess: isSingleBlogSuccess,
+  } = useGetSingleBlogQuery(currentSingleBlog)
 
   const [
     updateBlog,
@@ -99,6 +93,41 @@ const SingleBlogEditForm = ({ blog }) => {
   ] = useDeleteBlogMutation()
 
 
+  const extraSmall = useMediaQuery('(max-width:431px)')
+
+  const noMenu = useMediaQuery('(max-width:791px)')
+
+
+
+  const { drawerDirection, toggleDrawer } = useContext(SideBarContext)
+
+
+  const [blog, setBlog] = useState('')
+  const [selectedImage, setSelectedImage] = useState([])
+  const [orgImages, setOrgImages] = useState('')
+  const [imagesBeforeEdit, setImagesBeforeEdit] = useState('')
+  const [title, setTitle] = useState('')
+  const [text, setText] = useState('')
+  const [status, setStatus] = useState('')
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [isDeleteReady, setIsDeleteReady] = useState(false)
+  const [deleteMessage, setDeleteMessage] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+
+
+
+
+  useEffect(() => {
+    if (isSingleBlogSuccess) {
+      setTitle(singleBlog?.title)
+      setText(singleBlog?.text)
+      setStatus(singleBlog?.visible_to)
+      setOrgImages(singleBlog?.images)
+      setImagesBeforeEdit(singleBlog?.images)
+      setBlog(singleBlog)
+    }
+  }, [isSingleBlogSuccess, singleBlog])
 
 
   useEffect(() => {
@@ -112,18 +141,19 @@ const SingleBlogEditForm = ({ blog }) => {
 
 
   useEffect(() => {
+    setDeleteMessage(message?.message)
     if (isDeleteReady) {
-      navigate('/blogs')
-      setDeleteMessage(message?.message)
+      setLoading(false)
+
       setTimeout(() => {
         navigate('/blogs')
         setDeleteOpen(false)
         setIsDeleteReady(false)
-        setLoading(false)
+
         // dispatch(apiSlice.util.invalidateTags(['Blog']))
       }, 1400)
     }
-  }, [isDeleteReady])
+  }, [isDeleteReady, isDeleteSuccess])
 
   useEffect(() => {
     if (isDeleteLoading) {
@@ -145,7 +175,7 @@ const SingleBlogEditForm = ({ blog }) => {
 
   // }, [isDeleteSuccess])
 
-  const canSave = [title.length && text.length].every(Boolean) && !isLoading
+  const canSave = [title?.length && text?.length].every(Boolean) && !isLoading
 
   const handleTitle = e => {
     setTitle(e.target.value)
@@ -166,8 +196,6 @@ const SingleBlogEditForm = ({ blog }) => {
   const handleDelete = () => setDeleteOpen(true)
   const handleDeleteClose = () => setDeleteOpen(false)
 
-
-  console.log(id)
 
   const handleDeleteConfirm = async (e) => {
     e.preventDefault()
@@ -222,7 +250,7 @@ const SingleBlogEditForm = ({ blog }) => {
     )
   }
 
-  if (isDeleteReady && isDeleteSuccess && !loading) {
+  if (isDeleteReady && isDeleteSuccess && deleteMessage) {
     deleteModalMessage = (
       <Typography id="modal-modal-title" variant="h6" component="h2">
         {deleteMessage}
@@ -299,131 +327,146 @@ const SingleBlogEditForm = ({ blog }) => {
     )
   }
 
+  let content
+
+  if (isSingleBlogLoading) {
+    content = (
+      <Container sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <LoadingSpinner />
+      </Container>
+    )
+  }
+
+  if (blog && isSingleBlogSuccess) {
+    content = (
+      <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', mt: noMenu ? '0' : '20px' }} >
+
+        {/* picture area */}
+
+        {/* preveiw */}
+        {!selectedImage ? '' :
+          <Card sx={{
+            maxWidth: 500, minWidth: 340, aspectRatio: '1 / 1', display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+
+          }}>
+            <CardMedia
+              // className='display'
+              component="img"
+              image={selectedImage.url}
+              alt={selectedImage.name}
+              sx={{ objectFit: 'initial' }}
+            />
+          </Card>
+        }
+
+        {/* image list */}
+
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, mb: 5, alignItems: 'center' }}>
+          <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} imagesBeforeEdit={imagesBeforeEdit} />
+        </Box>
 
 
-  return (
-    <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', mt: noMenu ? '0' : '20px' }} >
-      {/* <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%' }}>
-      <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: matches ? '200px' : '120px' }}> */}
-      {/* picture area */}
 
-      {/* preveiw */}
-      {!selectedImage ? '' :
-        <Card sx={{ maxWidth: 500, minWidth: 340 }}>
-          <CardMedia
-            // className='display'
-            component="img"
-            image={selectedImage.url}
-            alt={selectedImage.name}
-
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          {isError ?
+            <OutlinedInput defaultValue={error.data.message} color='error' disabled />
+            :
+            ''
+          }
+          <TextField
+            value={title}
+            onChange={handleTitle}
+            autoComplete='true'
+            multiline
+            fullWidth
+            placeholder='Story Title'
+            sx={{ width: '80%', maxWidth: 500 }}
           />
-        </Card>
-      }
-
-      {/* image list */}
-
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, mb: 5, alignItems: 'center' }}>
-        <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} imagesBeforeEdit={imagesBeforeEdit} />
-      </Box>
-
-      {/* </Grid> */}
-
-
-      {/* <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', mt: '160px' }}> */}
-
-      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-        {isError ?
-          <OutlinedInput defaultValue={error.data.message} color='error' disabled />
-          :
-          ''
-        }
-        <TextField
-          value={title}
-          onChange={handleTitle}
-          autoComplete='true'
-          multiline
-          fullWidth
-          placeholder='Story Title'
-          sx={{ width: '80%', maxWidth: 500 }}
-        />
-        <TextField
-          value={text}
-          onChange={handleText}
-          placeholder='what would you like to share today?'
-          sx={{ mt: 10, width: '80%', maxWidth: 500 }}
-          fullWidth
-          multiline // auto add line if needed 
-          // maxRows={20} will create a scroll bar after the maxRows is reached (not good) 
-          minRows={14}
-          autoComplete='true'
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: noMenu ? 6 : 3 }}>
-          <Box sx={{ display: 'flex' }} >
-            <EmojiPeopleOutlinedIcon />
-            <ButtonInfo >Visible To</ButtonInfo>
+          <TextField
+            value={text}
+            onChange={handleText}
+            placeholder='what would you like to share today?'
+            sx={{ mt: 10, width: '80%', maxWidth: 500 }}
+            fullWidth
+            multiline // auto add line if needed 
+            // maxRows={20} will create a scroll bar after the maxRows is reached (not good) 
+            minRows={14}
+            autoComplete='true'
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: noMenu ? 6 : 3 }}>
+            <Box sx={{ display: 'flex' }} >
+              <EmojiPeopleOutlinedIcon />
+              <ButtonInfo >Visible To</ButtonInfo>
+            </Box>
+            <FormControl sx={{ m: 3, width: 120 }}>
+              <Select
+                sx={{
+                  boxShadow: "none",
+                  ".MuiOutlinedInput-notchedOutline": { border: 0 },
+                  "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                  {
+                    border: 0,
+                  },
+                  "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                  {
+                    border: 0,
+                  },
+                }}
+                autoWidth
+                defaultValue='public'
+                onChange={handlePostTo}
+              >
+                <MenuItem value='public' >Public</MenuItem>
+                <MenuItem value='private'>Private</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
-          <FormControl sx={{ m: 3, width: 120 }}>
-            <Select
-              sx={{
-                boxShadow: "none",
-                ".MuiOutlinedInput-notchedOutline": { border: 0 },
-                "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                {
-                  border: 0,
-                },
-                "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                {
-                  border: 0,
-                },
-              }}
-              autoWidth
-              defaultValue='public'
-              onChange={handlePostTo}
+
+          {noMenu ? '' :
+            <Box sx={{ mb: 10 }}>
+              <Button
+                onClick={handleBack}
+              >
+                Back
+              </Button>
+              <Button
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={!canSave}
+              >
+                Save
+              </Button>
+            </Box>
+          }
+          {noMenu ? '' :
+            <Modal
+              open={deleteOpen}
+              onClose={handleDeleteClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
             >
-              <MenuItem value='public' >Public</MenuItem>
-              <MenuItem value='private'>Private</MenuItem>
-            </Select>
-          </FormControl>
+              <Box sx={style}>
+                {deleteModalMessage}
+              </Box>
+            </Modal>
+          }
         </Box>
+        {menuButton}
 
-        {noMenu ? '' :
-          <Box sx={{ mb: 10 }}>
-            <Button
-              onClick={handleBack}
-            >
-              Back
-            </Button>
-            <Button
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              disabled={!canSave}
-            >
-              Save
-            </Button>
-          </Box>
-        }
+      </Box >
+    )
 
-      </Box>
-      {menuButton}
-      {/* </Grid> */}
+  }
 
-      {/* </Grid > */}
-      <Modal
-        open={deleteOpen}
-        onClose={handleDeleteClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          {deleteModalMessage}
-        </Box>
-      </Modal>
-    </Box >
-  )
+
+
+  return content
 }
 
 export default SingleBlogEditForm
