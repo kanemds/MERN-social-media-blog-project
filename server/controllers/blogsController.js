@@ -235,6 +235,10 @@ const getSingleBlog = async (req, res) => {
   // current login username
   const { username } = req.query
 
+  if (!id || !username) {
+    return res.status(200).json('Not blog found')
+  }
+
   if (username) {
     findUser = await User.findOne({ username }).lean().exec()
   }
@@ -501,7 +505,7 @@ const getSingleBlog = async (req, res) => {
     ]).sort({ createdAt: -1 })
   }
 
-  console.log(blogs)
+
 
   res.status(200).json(blogs[0])
 }
@@ -1572,6 +1576,7 @@ const updateBlog = async (req, res) => {
 // @access Private
 const deleteBlog = async (req, res) => {
   const { id } = req.body
+  console.log(id)
 
   if (!id) {
     return res.status(400).json({ message: 'Blog ID required' })
@@ -1579,6 +1584,7 @@ const deleteBlog = async (req, res) => {
 
   // Confirm blog exists to delete 
   const blog = await Blog.findById(id).exec()
+  console.log(blog)
 
   if (!blog) {
     return res.status(400).json({ message: 'Blog not found' })

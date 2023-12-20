@@ -192,9 +192,7 @@ const BlogsList = () => {
     )
   }
 
-  console.log(selectedDate.myPostPage)
-  console.log(privateBlogs.length)
-  console.log(isSelected)
+
 
   if ((isSuccess && !currentUserBlogs.length && selectedDate.myPostPage !== null) || (isSuccess && !publicBlogs.length && selectedDate.myPostPage !== null) || (isSuccess && !privateBlogs.length && selectedDate.myPostPage !== null)) {
     content =

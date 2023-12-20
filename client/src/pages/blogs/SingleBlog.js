@@ -29,6 +29,7 @@ import { SideBarContext } from '../../useContext/SideBarContext'
 import { useAddSubscribedBlogMutation, useDeleteSubscribedFromBlogMutation } from '../subscribed/subscribeApiSlice'
 import { useAddBookmarkMutation, useDeleteBookmarkMutation } from '../bookmark/bookmarkApiSlice'
 import useNumberDisplay from '../../hooks/useNumberDisplay'
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -110,7 +111,7 @@ const SingleBlog = () => {
   /////////////// find and delete blog ///////////////////////
 
   const currentSingleBlog = {
-    id,
+    id: id ? id : '',
     username: username ? username : null
   }
 
@@ -262,7 +263,7 @@ const SingleBlog = () => {
       setDeleteMessage(message.message)
       setTimeout(() => {
         setDeleteOpen(false)
-        dispatch(apiSlice.util.invalidateTags(['Blog']))
+        // dispatch(apiSlice.util.invalidateTags(['Blog']))
         navigate('/blogs')
       }, 1400)
     } else {
