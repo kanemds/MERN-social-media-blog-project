@@ -25,6 +25,7 @@ import SettingPage from './pages/settings/SettingPage'
 import UserLogout from './pages/auth/UserLogout'
 import NotAuth from './components/NotAuth'
 import NotExist from './components/NotExist'
+import SingleBlogEditForm from './pages/blogs/SingleBlogEditForm'
 
 
 
@@ -55,7 +56,8 @@ function App() {
               <Route path='new' element={<NewBlog />} />
               <Route path='bookmarks' element={<BookmarkList />} />
               <Route path='subscribed' element={<SubscribedList />} />
-              <Route path='post/edit/:id' element={<SingleBlogEditPage />} />
+              {/* <Route path='post/edit/:id' element={<SingleBlogEditPage />} /> */}
+              <Route path='post/edit/:id' element={<SingleBlogEditForm />} />
               <Route path='user/:id' element={<BloggerHomePage />} />
             </Route>
             <Route path='setting/:id'>
