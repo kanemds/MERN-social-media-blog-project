@@ -12,16 +12,24 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
     getSingleBlog: builder.query({
       query: (currentSingleBlog) => ({
         url: `/blogs/${currentSingleBlog.id}?username=${currentSingleBlog.username}`,
-        validateStatus: (response, result) => {
-          return response.status === 200 && !result.isError
-        }
+        // validateStatus: (response, result) => {
+        //   console.log(response, result)
+        //   return response.status === 200 && !result.isError
+        // }
       }),
       keepUnusedDataFor: 300,
-      // transformResponse: (response, meta, arg) => {
-      //   const id = response._id
-      //   const blog = { ...response, id: id }
-      //   return blog
-      // },
+      transformResponse: (response, meta, arg) => {
+        console.log(response)
+        if (response) {
+
+          const id = response._id
+          const blog = { ...response, id: id }
+          return blog
+        } else {
+          return
+        }
+
+      },
       providesTags: (result, error, arg) => {
         // console.log(arg)
         // console.log(result)

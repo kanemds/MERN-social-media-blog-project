@@ -13,7 +13,7 @@ const SingleBlogEditPage = () => {
   const [blog, setBlog] = useState('')
 
   const currentSingleBlog = {
-    id,
+    id: id ? id : '',
     username: username ? username : null
   }
 
@@ -31,6 +31,8 @@ const SingleBlogEditPage = () => {
       setBlog(data)
     }
   }, [isSuccess, data])
+
+  console.log(blog)
 
   let content
 
