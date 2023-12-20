@@ -98,105 +98,107 @@ const SingleBlogEditForm = ({ blog }) => {
 
 
   return (
-    <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%' }}>
-      <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: matches ? '200px' : '120px' }}>
-        {/* picture area */}
+    <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
+      {/* <Grid container spacing={2} sx={{ width: '100%', minHeight: '100%' }}>
+      <Grid xs={12} md={12} lg={5} sx={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: matches ? '200px' : '120px' }}> */}
+      {/* picture area */}
 
-        {/* preveiw */}
-        {!selectedImage ? '' :
-          <Card sx={{ p: 2, width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', width: 400, height: 400 }}>
-            <CardMedia
-              // className='display'
-              component="img"
-              image={selectedImage.url}
-              alt={selectedImage.name}
-            />
-          </Card>
+      {/* preveiw */}
+      {!selectedImage ? '' :
+        <Card sx={{ maxWidth: 500, minWidth: 340 }}>
+          <CardMedia
+            // className='display'
+            component="img"
+            image={selectedImage.url}
+            alt={selectedImage.name}
+
+          />
+        </Card>
+      }
+
+      {/* image list */}
+
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, mb: 5, alignItems: 'center' }}>
+        <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} imagesBeforeEdit={imagesBeforeEdit} />
+      </Box>
+
+      {/* </Grid> */}
+
+
+      {/* <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', mt: '160px' }}> */}
+
+      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        {isError ?
+          <OutlinedInput defaultValue={error.data.message} color='error' disabled />
+          :
+          ''
         }
-
-        {/* image list */}
-
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, mb: 5, alignItems: 'center' }}>
-          <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} imagesBeforeEdit={imagesBeforeEdit} />
-        </Box>
-
-      </Grid>
-
-
-      <Grid xs={12} md={12} lg={7} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', mt: '160px' }}>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-          {isError ?
-            <OutlinedInput defaultValue={error.data.message} color='error' disabled />
-            :
-            ''
-          }
-          <TextField
-            value={title}
-            onChange={handleTitle}
-            autoComplete='true'
-            multiline
-            fullWidth
-            placeholder='Story Title'
-            sx={{ width: '80%' }}
-          />
-          <TextField
-            value={text}
-            onChange={handleText}
-            placeholder='what would you like to share today?'
-            sx={{ mt: 10, width: '80%' }}
-            fullWidth
-            multiline // auto add line if needed 
-            // maxRows={20} will create a scroll bar after the maxRows is reached (not good) 
-            minRows={14}
-            autoComplete='true'
-          />
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex' }} >
-              <EmojiPeopleOutlinedIcon />
-              <ButtonInfo >Visible To</ButtonInfo>
-            </Box>
-            <FormControl sx={{ m: 3, width: 120 }}>
-              <Select
-                sx={{
-                  boxShadow: "none",
-                  ".MuiOutlinedInput-notchedOutline": { border: 0 },
-                  "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                  {
-                    border: 0,
-                  },
-                  "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                  {
-                    border: 0,
-                  },
-                }}
-                autoWidth
-                defaultValue='public'
-                onChange={handlePostTo}
-              >
-                <MenuItem value='public' >Public</MenuItem>
-                <MenuItem value='private'>Private</MenuItem>
-              </Select>
-            </FormControl>
+        <TextField
+          value={title}
+          onChange={handleTitle}
+          autoComplete='true'
+          multiline
+          fullWidth
+          placeholder='Story Title'
+          sx={{ width: '80%', maxWidth: 500 }}
+        />
+        <TextField
+          value={text}
+          onChange={handleText}
+          placeholder='what would you like to share today?'
+          sx={{ mt: 10, width: '80%', maxWidth: 500 }}
+          fullWidth
+          multiline // auto add line if needed 
+          // maxRows={20} will create a scroll bar after the maxRows is reached (not good) 
+          minRows={14}
+          autoComplete='true'
+        />
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex' }} >
+            <EmojiPeopleOutlinedIcon />
+            <ButtonInfo >Visible To</ButtonInfo>
           </Box>
-          <Box sx={{ mb: 10 }}>
-            <Button
-              onClick={handleBack}
+          <FormControl sx={{ m: 3, width: 120 }}>
+            <Select
+              sx={{
+                boxShadow: "none",
+                ".MuiOutlinedInput-notchedOutline": { border: 0 },
+                "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                {
+                  border: 0,
+                },
+                "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                {
+                  border: 0,
+                },
+              }}
+              autoWidth
+              defaultValue='public'
+              onChange={handlePostTo}
             >
-              Back
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              disabled={!canSave}
-            >
-              Save
-            </Button>
-          </Box>
+              <MenuItem value='public' >Public</MenuItem>
+              <MenuItem value='private'>Private</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
-      </Grid>
+        <Box sx={{ mb: 10 }}>
+          <Button
+            onClick={handleBack}
+          >
+            Back
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={!canSave}
+          >
+            Save
+          </Button>
+        </Box>
+      </Box>
+      {/* </Grid> */}
 
-    </Grid >
-
+      {/* </Grid > */}
+    </Box>
   )
 }
 
