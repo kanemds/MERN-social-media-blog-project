@@ -19,6 +19,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import { red } from '@mui/material/colors'
 import { useDispatch } from 'react-redux'
 import { apiSlice } from '../../app/api/apiSlice'
+import ModalForDeleteBlog from '../../components/ModalForDeleteBlog'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -51,25 +52,27 @@ const style = {
 }
 
 
-// const SingleBlogEditForm = ({ blog }) => {
-const SingleBlogEditForm = () => {
+const SingleBlogEditForm = ({ blog, deleteBlog, message, isDeleteSuccess, isDeleteLoading }) => {
+  // const SingleBlogEditForm = () => {
 
-  const { id } = useParams()
+  // const { id } = useParams()
   const { username } = useAuth()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const currentSingleBlog = {
-    id: id ? id : '',
-    username: username ? username : null
-  }
+  console.log(blog)
+
+  // const currentSingleBlog = {
+  //   id: id ? id : '',
+  //   username: username ? username : null
+  // }
 
 
-  const {
-    data: singleBlog,
-    isLoading: isSingleBlogLoading,
-    isSuccess: isSingleBlogSuccess,
-  } = useGetSingleBlogQuery(currentSingleBlog)
+  // const {
+  //   data: singleBlog,
+  //   isLoading: isSingleBlogLoading,
+  //   isSuccess: isSingleBlogSuccess,
+  // } = useGetSingleBlogQuery(currentSingleBlog)
 
   const [
     updateBlog,
@@ -81,16 +84,16 @@ const SingleBlogEditForm = () => {
     }
   ] = useUpdateBlogMutation()
 
-  const [
-    deleteBlog,
-    {
-      data: message,
-      isLoading: isDeleteLoading,
-      isSuccess: isDeleteSuccess,
-      isError: isDeleteError,
-      error: deleteError
-    }
-  ] = useDeleteBlogMutation()
+  // const [
+  //   deleteBlog,
+  //   {
+  //     data: message,
+  //     isLoading: isDeleteLoading,
+  //     isSuccess: isDeleteSuccess,
+  //     isError: isDeleteError,
+  //     error: deleteError
+  //   }
+  // ] = useDeleteBlogMutation()
 
 
   const extraSmall = useMediaQuery('(max-width:431px)')
@@ -102,7 +105,7 @@ const SingleBlogEditForm = () => {
   const { drawerDirection, toggleDrawer } = useContext(SideBarContext)
 
 
-  const [blog, setBlog] = useState('')
+  // const [blog, setBlog] = useState('')
   const [selectedImage, setSelectedImage] = useState([])
   const [orgImages, setOrgImages] = useState('')
   const [imagesBeforeEdit, setImagesBeforeEdit] = useState('')
@@ -113,21 +116,23 @@ const SingleBlogEditForm = () => {
   const [isDeleteReady, setIsDeleteReady] = useState(false)
   const [deleteMessage, setDeleteMessage] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [transparent, setTransparent] = useState(true)
+
+  console.log(blog)
+  console.log(isDeleteSuccess)
 
 
 
-
-
-  useEffect(() => {
-    if (isSingleBlogSuccess) {
-      setTitle(singleBlog?.title)
-      setText(singleBlog?.text)
-      setStatus(singleBlog?.visible_to)
-      setOrgImages(singleBlog?.images)
-      setImagesBeforeEdit(singleBlog?.images)
-      setBlog(singleBlog)
-    }
-  }, [isSingleBlogSuccess, singleBlog])
+  // useEffect(() => {
+  //   if (isSingleBlogSuccess) {
+  //     setTitle(singleBlog?.title)
+  //     setText(singleBlog?.text)
+  //     setStatus(singleBlog?.visible_to)
+  //     setOrgImages(singleBlog?.images)
+  //     setImagesBeforeEdit(singleBlog?.images)
+  //     setBlog(singleBlog)
+  //   }
+  // }, [isSingleBlogSuccess, singleBlog])
 
 
   useEffect(() => {
@@ -141,39 +146,22 @@ const SingleBlogEditForm = () => {
 
 
   useEffect(() => {
-    setDeleteMessage(message?.message)
-    if (isDeleteReady) {
-      setLoading(false)
 
+    if (isDeleteLoading) {
+      setLoading(true)
+    }
+
+    if (isDeleteSuccess) {
+      setLoading(false)
+      setDeleteMessage(message?.message)
       setTimeout(() => {
         navigate('/blogs')
         setDeleteOpen(false)
-        setIsDeleteReady(false)
-
-        // dispatch(apiSlice.util.invalidateTags(['Blog']))
-      }, 1400)
+      }, 1500)
     }
-  }, [isDeleteReady, isDeleteSuccess])
-
-  useEffect(() => {
-    if (isDeleteLoading) {
-      setLoading(true)
-      setTimeout(() => {
-        setIsDeleteReady(true)
-      }, 1400)
-    }
-
-  }, [isDeleteLoading])
+  }, [isDeleteSuccess, isDeleteLoading])
 
 
-
-  // useEffect(() => {
-  //   if (isDeleteSuccess) {
-  //     setDeleteOpen(false)
-  //     navigate('/blogs')
-  //   }
-
-  // }, [isDeleteSuccess])
 
   const canSave = [title?.length && text?.length].every(Boolean) && !isLoading
 
@@ -199,15 +187,14 @@ const SingleBlogEditForm = () => {
 
   const handleDeleteConfirm = async (e) => {
     e.preventDefault()
-
-    await deleteBlog({ id })
+    await deleteBlog({ id: blog._id })
 
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData()
-    formData.append('id', id)
+    formData.append('id', blog._id)
     formData.append('title', title)
     formData.append('text', text)
     formData.append('visibleTo', status)
@@ -250,7 +237,7 @@ const SingleBlogEditForm = () => {
     )
   }
 
-  if (isDeleteReady && isDeleteSuccess && deleteMessage) {
+  if (isDeleteSuccess && deleteMessage) {
     deleteModalMessage = (
       <Typography id="modal-modal-title" variant="h6" component="h2">
         {deleteMessage}
@@ -323,21 +310,23 @@ const SingleBlogEditForm = () => {
             {deleteModalMessage}
           </Box>
         </Modal>
+        {/* <ModalForDeleteBlog deleteOpen={deleteOpen} handleDeleteClose={handleDeleteClose} deleteModalMessage={deleteModalMessage} /> */}
       </Box >
     )
   }
 
   let content
 
-  if (isSingleBlogLoading) {
-    content = (
-      <Container sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <LoadingSpinner />
-      </Container>
-    )
-  }
+  // if (isSingleBlogLoading) {
+  //   content = (
+  //     <Container sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+  //       <LoadingSpinner />
+  //     </Container>
+  //   )
+  // }
 
-  if (blog && isSingleBlogSuccess) {
+  // if (blog && isSingleBlogSuccess) {
+  if (blog) {
     content = (
       <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', mt: noMenu ? '0' : '20px' }} >
 
@@ -349,7 +338,6 @@ const SingleBlogEditForm = () => {
             maxWidth: 500, minWidth: 340, aspectRatio: '1 / 1', display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-
           }}>
             <CardMedia
               // className='display'
@@ -445,8 +433,7 @@ const SingleBlogEditForm = () => {
             </Box>
           }
           {noMenu ? '' :
-            <Modal
-              open={deleteOpen}
+            <Modal open={deleteOpen}
               onClose={handleDeleteClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
@@ -456,6 +443,7 @@ const SingleBlogEditForm = () => {
               </Box>
             </Modal>
           }
+          {/* <ModalForDeleteBlog deleteOpen={deleteOpen} handleDeleteClose={handleDeleteClose} deleteModalMessage={deleteModalMessage} /> */}
         </Box>
         {menuButton}
 
@@ -466,7 +454,137 @@ const SingleBlogEditForm = () => {
 
 
 
-  return content
+  // return content
+  return (
+    <>
+      {blog ?
+        <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', mt: noMenu ? '0' : '20px' }} >
+
+          {/* picture area */}
+
+          {/* preveiw */}
+          {!selectedImage ? '' :
+            <Card sx={{
+              maxWidth: 500, minWidth: 340, aspectRatio: '1 / 1', display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <CardMedia
+                // className='display'
+                component="img"
+                image={selectedImage.url}
+                alt={selectedImage.name}
+                sx={{ objectFit: 'initial' }}
+              />
+            </Card>
+          }
+
+          {/* image list */}
+
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: 5, mb: 5, alignItems: 'center' }}>
+            <Drag_N_DropImages setSelectedImage={setSelectedImage} selectedImage={selectedImage} setOrgImages={setOrgImages} orgImages={orgImages} imagesBeforeEdit={imagesBeforeEdit} />
+          </Box>
+
+
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+            {isError ?
+              <OutlinedInput defaultValue={error.data.message} color='error' disabled />
+              :
+              ''
+            }
+            <TextField
+              value={title}
+              onChange={handleTitle}
+              autoComplete='true'
+              multiline
+              fullWidth
+              placeholder='Story Title'
+              sx={{ width: '80%', maxWidth: 500 }}
+            />
+            <TextField
+              value={text}
+              onChange={handleText}
+              placeholder='what would you like to share today?'
+              sx={{ mt: 10, width: '80%', maxWidth: 500 }}
+              fullWidth
+              multiline // auto add line if needed 
+              // maxRows={20} will create a scroll bar after the maxRows is reached (not good) 
+              minRows={14}
+              autoComplete='true'
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: noMenu ? 6 : 3 }}>
+              <Box sx={{ display: 'flex' }} >
+                <EmojiPeopleOutlinedIcon />
+                <ButtonInfo >Visible To</ButtonInfo>
+              </Box>
+              <FormControl sx={{ m: 3, width: 120 }}>
+                <Select
+                  sx={{
+                    boxShadow: "none",
+                    ".MuiOutlinedInput-notchedOutline": { border: 0 },
+                    "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                    {
+                      border: 0,
+                    },
+                    "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                    {
+                      border: 0,
+                    },
+                  }}
+                  autoWidth
+                  defaultValue='public'
+                  onChange={handlePostTo}
+                >
+                  <MenuItem value='public' >Public</MenuItem>
+                  <MenuItem value='private'>Private</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
+            {noMenu ? '' :
+              <Box sx={{ mb: 10 }}>
+                <Button
+                  onClick={handleBack}
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!canSave}
+                >
+                  Save
+                </Button>
+              </Box>
+            }
+
+            {/* <ModalForDeleteBlog deleteOpen={deleteOpen} handleDeleteClose={handleDeleteClose} deleteModalMessage={deleteModalMessage} /> */}
+          </Box>
+          {menuButton}
+
+        </Box >
+        : ''}
+      {noMenu ? '' :
+        <Modal open={deleteOpen}
+          onClose={handleDeleteClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            {deleteModalMessage}
+          </Box>
+
+        </Modal>
+      }
+    </>
+
+
+  )
 }
 
 export default SingleBlogEditForm

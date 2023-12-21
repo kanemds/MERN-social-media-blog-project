@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { useGetSingleBlogQuery } from './blogsApiSlice'
+import { useDeleteBlogMutation, useGetSingleBlogQuery } from './blogsApiSlice'
 import { Button, Container } from '@mui/material'
 
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -25,6 +25,17 @@ const SingleBlogEditPage = () => {
     error
   } = useGetSingleBlogQuery(currentSingleBlog)
 
+  const [
+    deleteBlog,
+    {
+      data: message,
+      isLoading: isDeleteLoading,
+      isSuccess: isDeleteSuccess,
+      isError: isDeleteError,
+      error: deleteError
+    }
+  ] = useDeleteBlogMutation()
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -36,7 +47,7 @@ const SingleBlogEditPage = () => {
 
   let content
 
-  if (!blog || isLoading) {
+  if (isLoading) {
     content = (
       <Container sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <LoadingSpinner />
@@ -45,7 +56,7 @@ const SingleBlogEditPage = () => {
   }
 
   if (blog && isSuccess) {
-    content = <SingleBlogEditForm blog={blog} />
+    content = <SingleBlogEditForm blog={blog} deleteBlog={deleteBlog} message={message} isDeleteSuccess={isDeleteSuccess} isDeleteLoading={isDeleteLoading} />
   }
 
 
