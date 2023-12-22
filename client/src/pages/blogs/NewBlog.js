@@ -1,5 +1,5 @@
-import { Box, Input, OutlinedInput, Paper, CardMedia, TextField, Typography, Button, FormControl, InputLabel, CardActionArea, Select, MenuItem, IconButton, Card, Container } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Box, Input, OutlinedInput, Paper, CardMedia, SvgIcon, TextField, Typography, Button, FormControl, InputLabel, CardActionArea, Select, MenuItem, IconButton, Card, Container } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react'
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined'
@@ -8,10 +8,14 @@ import { useNavigate } from 'react-router-dom'
 import noteBook from '../../images/noteBook.jpg'
 import ark from '../../images/ark.jpg'
 import Drag_N_DropImages from '../../components/Drag_N_Drop/Drag_N_DropImages'
-
+import DehazeIcon from '@mui/icons-material/Dehaze'
+import ForwardRoundedIcon from '@mui/icons-material/ForwardRounded'
+import SaveIcon from '@mui/icons-material/Save'
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useAddNewBlogMutation } from './blogsApiSlice'
 import useAuth from '../../hooks/useAuth'
+import { SideBarContext } from '../../useContext/SideBarContext'
 
 const SideButton = styled(Button)({
   textTransform: 'none',
@@ -27,7 +31,9 @@ const ButtonInfo = styled(Typography)({
 const NewBlog = () => {
 
   const matches = useMediaQuery('(min-width:1200px)')
-
+  const noMenu = useMediaQuery('(max-width:791px)')
+  const extraSmall = useMediaQuery('(max-width:431px)')
+  const { drawerDirection, toggleDrawer } = useContext(SideBarContext)
 
   const { username, userId } = useAuth()
   const navigate = useNavigate()
@@ -57,7 +63,7 @@ const NewBlog = () => {
     }
   }, [isSuccess])
 
-  const canSave = [title.length && text.length].every(Boolean) && !isLoading
+  const canSave = [title.length && text.length && orgImages.length].every(Boolean) && !isLoading
 
   const handleTitle = e => {
     setTitle(e.target.value)
@@ -71,6 +77,9 @@ const NewBlog = () => {
     setStatus(e.target.value)
   }
 
+  const handleBack = () => {
+    navigate(-1)
+  }
 
 
   const handleSubmit = async (e) => {
@@ -92,6 +101,42 @@ const NewBlog = () => {
 
   }
 
+
+  let menuButton
+
+
+  if (noMenu) {
+    menuButton = (
+      <Box sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#bdbdbd', zIndex: 30, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+        <SideButton
+          // disableRipple
+          color="primary" sx={{ m: 1 }}
+          onClick={toggleDrawer(drawerDirection, true)}
+        >
+          <DehazeIcon color='primary' />
+          {extraSmall ? '' :
+            <ButtonInfo > Menu</ButtonInfo>
+          }
+        </SideButton>
+        <SideButton onClick={handleBack} sx={{ m: 1 }}>
+          <ForwardRoundedIcon
+            style={{ transform: 'rotate(180deg)' }}
+          />
+          {extraSmall ? '' :
+            <ButtonInfo >  Back</ButtonInfo>
+          }
+
+
+        </SideButton>
+        <SideButton onClick={handleSubmit} sx={{ m: 1 }} disabled={!canSave}>
+          <SaveIcon />
+          {extraSmall ? '' :
+            <ButtonInfo >Create</ButtonInfo>
+          }
+        </SideButton>
+      </Box >
+    )
+  }
 
   return (
 
@@ -149,12 +194,12 @@ const NewBlog = () => {
             minRows={14}
             autoComplete='true'
           />
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 3 }}>
             <Box sx={{ display: 'flex' }} >
               <EmojiPeopleOutlinedIcon />
               <ButtonInfo >Visible To</ButtonInfo>
             </Box>
-            <FormControl sx={{ m: 3, width: 120 }}>
+            <FormControl sx={{ width: 120 }}>
               <Select
                 sx={{
                   boxShadow: "none",
@@ -177,12 +222,20 @@ const NewBlog = () => {
               </Select>
             </FormControl>
           </Box>
-          <Button
-            onClick={handleSubmit}
-            disabled={!canSave}
-          >
-            Create
-          </Button>
+          {noMenu ?
+            <Box sx={{ mt: 5 }}>
+              {menuButton}
+            </Box>
+
+            :
+            <Button
+              onClick={handleSubmit}
+              disabled={!canSave}
+              sx={{ mb: 3 }}
+            >
+              Create
+            </Button>
+          }
         </Box>
       </Grid>
 
