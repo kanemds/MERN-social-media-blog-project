@@ -26,6 +26,7 @@ import UserLogout from './pages/auth/UserLogout'
 import NotAuth from './components/NotAuth'
 import NotExist from './components/NotExist'
 import SingleBlogEditForm from './pages/blogs/SingleBlogEditForm'
+import AboutThisApp from './components/AboutThisApp'
 
 
 
@@ -39,6 +40,7 @@ function App() {
         <Route path='/logout' element={<UserLogout />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
+        <Route path='/about-this-app' element={<AboutThisApp />} />
       </Route>
       <Route element={<Layout />}>
 
