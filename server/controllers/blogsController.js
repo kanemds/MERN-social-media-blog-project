@@ -1453,6 +1453,7 @@ const createBlog = async (req, res) => {
   const { title, text, visibleTo, userId } = req.body
 
   const images = await req.files.images // same order from how frontend formData append
+  console.log(images)
 
   if (!title || !text) {
     return res.status(400).json({ message: 'All fields are required' })
@@ -1502,10 +1503,15 @@ const updateBlog = async (req, res) => {
 
   // ...orgImages = ...req.body rename (type of orgImages === 'object')
   const { id, title, text, visibleTo, ...orgImages } = req.body
-  const fileObject = { ...req.files } // if [...req.files] not not iterable, prevent mapping
+  const fileObject = { ...req.files } // if [...req.files] not iterable, prevent mapping
   // console.log('orgImages', orgImages) // return as obj even though single or multiples
   // console.log('fileObject', fileObject) // return as obj single or multiples
 
+  //   // The prototype of myObject is Object.prototype
+  // console.log(Object.getPrototypeOf(myObject)); // Outputs: [Object: null prototype] {}
+
+  // // Creating another object with myObject as its prototype
+  // let anotherObject = Object.create(myObject);
 
   if (!id || !title || !text || !visibleTo) {
     return res.status(400).json({ message: 'All fields are required' })

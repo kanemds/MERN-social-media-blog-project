@@ -194,7 +194,7 @@ const NewBlog = () => {
             minRows={14}
             autoComplete='true'
           />
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 3, mb: 8 }}>
             <Box sx={{ display: 'flex' }} >
               <EmojiPeopleOutlinedIcon />
               <ButtonInfo >Visible To</ButtonInfo>
