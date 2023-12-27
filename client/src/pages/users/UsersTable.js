@@ -87,7 +87,7 @@ export default function UsersTable({ user, smallerThan1459, smallerThan1080, sma
           WebkitLineClamp: 1,
           textOverflow: 'ellipsis',
         }}>
-          {user.username}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          {user.username}
         </Typography>
       </TableCell>
       {smallerThan971 ? ''

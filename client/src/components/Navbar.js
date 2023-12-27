@@ -137,11 +137,15 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100%', width: '100%' }}>
         {
           !isLoggingOut ?
-
-            <Link to='/' component={RouterLink} underline='none' color='white' sx={{ fontSize: '32px', p: 0 }}>
-              K-BLOG
-            </Link>
-
+            <Box sx={{ display: 'flex' }}>
+              <Link to='/' component={RouterLink} underline='none' color='white' sx={{ fontSize: '16px', p: 0 }}>
+                K-BLOG (Demo)
+              </Link>
+              <Typography sx={{ ml: 1, mr: 1 }}>|</Typography>
+              <Link to='/about-this-app' component={RouterLink} underline='none' color='white' sx={{ fontSize: '16px', p: 0 }}>
+                about this app
+              </Link>
+            </Box>
             :
             <Typography fontSize='32px'>K-BLOG</Typography>
 
@@ -152,7 +156,6 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
           <IconButton
             aria-owns={open ? 'mouse-over-popover' : undefined}
             aria-haspopup="true"
-
             onMouseEnter={!isOnClick ? handlePopoverOpen : null}
             onMouseLeave={!isOnClick ? handlePopoverClose : null}
             onClick={handleClick}
