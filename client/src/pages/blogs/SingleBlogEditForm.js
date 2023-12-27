@@ -48,7 +48,6 @@ const SingleBlogEditForm = ({ blog, setDeleteOpen, deleteOpen }) => {
     }
   ] = useUpdateBlogMutation()
 
-
   const extraSmall = useMediaQuery('(max-width:431px)')
 
   const noMenu = useMediaQuery('(max-width:791px)')
@@ -58,11 +57,14 @@ const SingleBlogEditForm = ({ blog, setDeleteOpen, deleteOpen }) => {
 
 
   const [selectedImage, setSelectedImage] = useState([])
-  const [orgImages, setOrgImages] = useState('')
-  const [imagesBeforeEdit, setImagesBeforeEdit] = useState('')
-  const [title, setTitle] = useState('')
-  const [text, setText] = useState('')
-  const [status, setStatus] = useState('')
+  const [orgImages, setOrgImages] = useState(blog.images)
+  const [imagesBeforeEdit, setImagesBeforeEdit] = useState(blog.images)
+  const [title, setTitle] = useState(blog.title)
+  const [text, setText] = useState(blog.text)
+  const [status, setStatus] = useState(blog.visible_to)
+
+  console.log('orgImages', orgImages)
+  console.log('imagesBeforeEdit', imagesBeforeEdit)
 
 
 

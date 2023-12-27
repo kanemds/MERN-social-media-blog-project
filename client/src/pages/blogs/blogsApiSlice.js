@@ -19,7 +19,6 @@ export const blogsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300,
       transformResponse: (response, meta, arg) => {
-        console.log(response)
         if (response) {
 
           const id = response._id
