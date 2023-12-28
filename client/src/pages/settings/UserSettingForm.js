@@ -189,6 +189,11 @@ const UserSettingForm = ({ currentUser }) => {
     setAnchorEl(null)
   }
 
+  const handleClearAvatar = () => {
+    setCroppedImg(null)
+    setAnchorEl(null)
+  }
+
 
   const onDataSelect = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -331,7 +336,6 @@ const UserSettingForm = ({ currentUser }) => {
           vertical: 'top',
           horizontal: 'right',
         }}
-
       >
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <SideButton disableRipple component="label" onChange={onDataSelect} onClick={handlePopClose}>
@@ -339,7 +343,7 @@ const UserSettingForm = ({ currentUser }) => {
             <FlipCameraIosOutlinedIcon />
             <ButtonInfo >Edit photo</ButtonInfo>
           </SideButton>
-          <SideButton  >
+          <SideButton onClick={handleClearAvatar}>
             <DeleteForeverRoundedIcon />
             <ButtonInfo >Remove photo</ButtonInfo>
           </SideButton>
