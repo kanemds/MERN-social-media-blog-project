@@ -1,59 +1,109 @@
-import { Paper, Typography, Box } from '@mui/material'
+import { Paper, Typography, Box, List, ListItem, ListItemText } from '@mui/material'
 import React from 'react'
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
 
 const AboutThisApp = () => {
 
 
   return (
-    <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column', m: 3 }}>
+    <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column', m: 1 }}>
       <Box sx={{ p: 3 }}>
         <Typography variant='h6'>About this App</Typography>
       </Box>
       <Box sx={{ p: 3 }}>
         <Typography>Concept:</Typography>
-        <Typography>
-          The concept involves sharing joyful moments and reconnecting with loved ones.
-        </Typography>
+        <List sx={{ listStyle: 'inherit', pl: 4 }}>
+          <ListItem sx={{ display: "list-item" }}>
+            <Typography>
+              To share joyful moments and reconnect with loved ones.
+            </Typography>
+          </ListItem>
+        </List>
+
       </Box>
       <Box sx={{ p: 3 }}>
         <Typography>Feature:</Typography>
-        <Typography>
-          - Bookmark and like blogs
-        </Typography>
-        <Typography>
-          - subscribe to favorite bloggers
-        </Typography>
-        <Typography>
-          - choose specific dates to showcase content
-        </Typography>
+        <List sx={{ listStyle: 'inherit', pl: 4 }}>
+          <ListItem sx={{ display: "list-item" }}>
+            <Typography>
+              Creating blog posts with image and texts as public or private entries
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "list-item" }}>
+            <Typography>
+              Browsing public posts from all users with infinite scroll
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "list-item" }}>
+            <Typography>
+              Interacting with other blog posts by liking and bookmarking their entries
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "list-item" }}>
+            <Typography>
+              Subscribing to favorite bloggers
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "list-item" }}>
+            <Typography>
+              Sorting post entries with date picker
+            </Typography>
+          </ListItem>
+        </List>
       </Box>
       <Box>
         <Box sx={{ p: 3 }}>
           <Typography>Frontend:</Typography>
-          <Typography>- react: RTK-Query, Redux-toolkit, Redux, react-context</Typography>
-          <Typography>- app style: Material UI</Typography>
-          <Typography>- using Grid to make the app responsive (support minimum  screen width:360px) </Typography>
-          <Typography>- image upload: Firebase</Typography>
-          <Typography>- infinite scroll: front page </Typography>
+          <List sx={{ listStyle: 'inherit', pl: 4 }}>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography>UI: React, Material UI</Typography>
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography>State Management: Redux Toolkit, RTK Query, React Context</Typography>
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography>Image upload: Firebase</Typography>
+            </ListItem>
+          </List>
         </Box>
 
         <Box sx={{ p: 3 }}>
-          <Typography>libraries / tools:</Typography>
-          <Typography>- swiper: display images content</Typography>
-          <Typography>- moment: display time</Typography>
-          <Typography>- react-easy-crop: image cropping for user avatar </Typography>
+          <Typography>Libraries / tools:</Typography>
+          <List sx={{ listStyle: 'inherit', pl: 4 }}>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography>Image Gallery: swiper</Typography>
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography>Date & Time: momentjs</Typography>
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography>User Avatar: react-easy-crop</Typography>
+            </ListItem>
+          </List>
         </Box>
 
         <Box sx={{ p: 3 }}>
           <Typography>Backend:</Typography>
-          <Typography>MVC:An architectural pattern structure.</Typography>
-          <Typography>- nodeJs: Express</Typography>
-          <Typography>- data storage: MongoDB</Typography>
-          <Typography>- image storage: Firebase</Typography>
-          <Typography>- password encryption: Bcrypt</Typography>
-          <Typography>- authorization key: Json Web Token (JWT)</Typography>
+          <List sx={{ listStyle: 'inherit', pl: 4 }}>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography> Frameworks: Node.js, Express</Typography>
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography> Data storage: MongoDB</Typography>
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography> Image storage: Firebase</Typography>
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography>Password encryption: Bcrypt</Typography>
+            </ListItem>
+            <ListItem sx={{ display: "list-item" }}>
+              <Typography>Authentication: Json Web Token (JWT)</Typography>
+            </ListItem>
+          </List>
         </Box>
       </Box>
+
     </Paper >
   )
 }
