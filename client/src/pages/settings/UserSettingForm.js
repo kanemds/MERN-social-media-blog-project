@@ -82,6 +82,8 @@ const UserSettingForm = ({ currentUser }) => {
     null
   )
 
+  console.log(croppedImg)
+
 
   const [open, setOpen] = React.useState(false)
 
@@ -112,7 +114,7 @@ const UserSettingForm = ({ currentUser }) => {
   }, [showPassword])
 
 
-  const canSave = showPassword ? [role, validEmail, validPassword, validUsername, validConfirm, typeof active === 'boolean'].every(Boolean) && !isLoading : [role, validEmail, validUsername, typeof active === 'boolean'].every(Boolean) && !isLoading
+  const canSave = showPassword ? [role, validEmail, validPassword, validUsername, validConfirm, typeof active === 'boolean'].every(Boolean) : [role, validEmail, validUsername, typeof active === 'boolean'].every(Boolean)
 
   const handleSave = async (e) => {
     e.preventDefault()
@@ -128,7 +130,9 @@ const UserSettingForm = ({ currentUser }) => {
       formData.append('password', password)
       formData.append('active', active)
       formData.append('role', role)
-      formData.append("avatar", croppedImg.file)
+      if (croppedImg !== null) {
+        formData.append("avatar", croppedImg.file)
+      }
       // const updateReady = await updateUser({ id: currentUser.id, username, email, password, role, active }).unwrap()
       const updateReady = await updateUser(formData).unwrap()
         .catch(error => {
@@ -178,124 +182,117 @@ const UserSettingForm = ({ currentUser }) => {
   }
 
 
-  let content
 
-  if (!username.length || !email.length || !role.length || typeof active !== 'boolean') content = <LoadingSpinner />
-
-  if (username && email && role && typeof active === 'boolean') {
-
-    content = (
-      <Paper
-        component="form"
-        noValidate
-        autoComplete="off"
-        sx={{
-          minWidth: '320px',
-          width: '400px',
-          pt: '20px',
-          pb: '20px',
-        }
-        }
+  return (
+    <Paper
+      component="form"
+      noValidate
+      autoComplete="off"
+      sx={{
+        minWidth: '320px',
+        width: '400px',
+        pt: '20px',
+        pb: '20px',
+      }
+      }
+    >
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <ImageEditor avatarImage={avatarImage} setAvatarImage={setAvatarImage} setCroppedImg={setCroppedImg} handleClose={handleClose} setOpen={setOpen} />
-          </Box>
-        </Modal>
-
-
-        <Box sx={{ ml: '5%' }}>
-          <Typography variant='h4'>EDIT ACCOUNT</Typography>
+        <Box sx={style}>
+          <ImageEditor avatarImage={avatarImage} setAvatarImage={setAvatarImage} setCroppedImg={setCroppedImg} handleClose={handleClose} setOpen={setOpen} />
         </Box>
-        {
-          isError ?
-            <Typography>{error?.data?.message}</Typography>
-            : ''
+      </Modal>
+
+
+      <Box sx={{ ml: '5%' }}>
+        <Typography variant='h4'>EDIT ACCOUNT</Typography>
+      </Box>
+      {
+        isError ?
+          <Typography>{error?.data?.message}</Typography>
+          : ''
+      }
+
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+
+        <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+          <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
+            {croppedImg ?
+              <CardMedia
+                sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
+                component="img"
+                image={croppedImg.url}
+              /> :
+              <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
+            }
+
+            <input type="file" accept='image/*' hidden />
+            <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
+            <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
+          </IconButton>
+        </Box>
+
+        <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
+        <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
+
+        <Button onClick={handleShowPassword}>
+          Update Password
+        </Button>
+        {showPassword ?
+          (<>
+            <UserInputField userInputs={userInputs.newPassword} state={password} setState={setPassword} validation={validPassword} />
+            <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
+          </>
+          )
+          : ''
         }
+        {currentUser.role === ROLES.Admin ?
+          <>
+            <Typography>Status</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <FormControl sx={{ m: 3, width: 130 }}>
+                <InputLabel>Select Role</InputLabel>
+                <Select
+                  value={role}
+                  onChange={handleChange}
+                  autoWidth
+                  label="Select Role"
+                >
+                  <MenuItem value='User'>User</MenuItem>
+                  <MenuItem value='Employee'>Employee</MenuItem>
+                  <MenuItem value='Admin'>Admin</MenuItem>
+                </Select>
+              </FormControl>
+              <ToggleButton active={active} setActive={setActive} />
+            </Box>
+          </>
+          : ''}
 
+        <Box sx={{ mt: '30px' }}>
+          <LinkButton visit='/' name={'cancel'} />
+          <Button
+            variant='contained'
+            sx={{ ml: '10px' }}
+            disabled={canSave ? false : true}
+            onClick={handleSave}
+          >Submit</Button>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-
-          <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
-            <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
-              {croppedImg ?
-                <CardMedia
-                  sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
-                  component="img"
-                  image={croppedImg.url}
-                /> :
-                <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
-              }
-
-              <input type="file" accept='image/*' hidden />
-              <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
-            </IconButton>
-          </Box>
-
-          <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
-          <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
-
-          <Button onClick={handleShowPassword}>
-            Update Password
-          </Button>
-          {showPassword ?
-            (<>
-              <UserInputField userInputs={userInputs.newPassword} state={password} setState={setPassword} validation={validPassword} />
-              <UserInputField userInputs={userInputs.confirm} state={confirm} setState={setConfirm} validation={validConfirm} />
-            </>
-            )
-            : ''
-          }
-          {currentUser.role === ROLES.Admin ?
-            <>
-              <Typography>Status</Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                <FormControl sx={{ m: 3, width: 130 }}>
-                  <InputLabel>Select Role</InputLabel>
-                  <Select
-                    value={role}
-                    onChange={handleChange}
-                    autoWidth
-                    label="Select Role"
-                  >
-                    <MenuItem value='User'>User</MenuItem>
-                    <MenuItem value='Employee'>Employee</MenuItem>
-                    <MenuItem value='Admin'>Admin</MenuItem>
-                  </Select>
-                </FormControl>
-                <ToggleButton active={active} setActive={setActive} />
-              </Box>
-            </>
-            : ''}
-
-          <Box sx={{ mt: '30px' }}>
-            <LinkButton visit='/' name={'cancel'} />
-            <Button
-              variant='contained'
-              sx={{ ml: '10px' }}
-              disabled={canSave ? false : true}
-              onClick={handleSave}
-            >Submit</Button>
-
-          </Box>
         </Box>
-      </Paper >
-    )
-  }
-
-  return content
+      </Box>
+    </Paper >
+  )
 }
 
 export default UserSettingForm
