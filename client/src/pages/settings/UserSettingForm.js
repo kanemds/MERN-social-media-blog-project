@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 
 import { useNavigate, useParams } from 'react-router-dom'
-import { FormControl, MenuItem, Paper, Box, SvgIcon, InputLabel, Modal, Select, Typography, CardActionArea, Button, CardMedia, IconButton } from '@mui/material'
+import { FormControl, MenuItem, Paper, Box, SvgIcon, InputLabel, Modal, Select, Typography, CardActionArea, Button, CardMedia, IconButton, Popover } from '@mui/material'
 import UserInputField from '../../components/UserInputField'
 import LinkButton from '../../components/LinkButton'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -16,6 +16,9 @@ import CameraIcon from '@mui/icons-material/Camera'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import ImageEditor from '../../components/imageEditor/ImageEditor'
 import CameraAltIcon from '@mui/icons-material/CameraAlt'
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded'
+import FlipCameraIosOutlinedIcon from '@mui/icons-material/FlipCameraIosOutlined'
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 
 const style = {
   position: 'absolute',
@@ -28,6 +31,22 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
 }
+
+const SideButton = styled(Button)({
+  textTransform: 'none',
+  justifyContent: "flex-start",
+  borderRadius: '0px',
+  '&:hover': {
+    backgroundColor: '#1976d2',
+    color: 'white'
+  }
+})
+
+const ButtonInfo = styled(Typography)({
+  textAlign: 'left',
+  marginLeft: 12
+})
+
 
 
 const UserSettingForm = ({ currentUser }) => {
@@ -71,6 +90,7 @@ const UserSettingForm = ({ currentUser }) => {
   const [role, setRole] = useState(currentUser?.role)
   const [active, setActive] = useState(currentUser?.active)
   const [showPassword, setShowPassword] = useState(false)
+  const [open, setOpen] = useState(false)
   const [avatarImage, setAvatarImage] = useState({
     name: null,
     url: null
@@ -81,11 +101,10 @@ const UserSettingForm = ({ currentUser }) => {
   } :
     null
   )
+  const [anchorEl, setAnchorEl] = useState(null)
 
-  console.log(croppedImg)
-
-
-  const [open, setOpen] = React.useState(false)
+  const popOpen = Boolean(anchorEl)
+  const id = popOpen ? 'simple-popover' : undefined
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
@@ -162,10 +181,16 @@ const UserSettingForm = ({ currentUser }) => {
     })
   }
 
+  const handlePopClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handlePopClose = () => {
+    setAnchorEl(null)
+  }
 
 
   const onDataSelect = (e) => {
-
     if (e.target.files && e.target.files.length > 0) {
       const files = e.target.files
       const name = files[0].name
@@ -228,25 +253,27 @@ const UserSettingForm = ({ currentUser }) => {
       >
 
         <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
-          <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
-            {croppedImg ?
+          {croppedImg ?
+            <IconButton disableRipple component="label" onClick={handlePopClick} sx={{ height: 200, width: 200, p: 0 }}>
               <CardMedia
                 sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
                 component="img"
                 image={croppedImg.url}
-              /> :
-              <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
-            }
+              />
 
-            <input type="file" accept='image/*' hidden />
-            <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
-            <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
-          </IconButton>
+              <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
+            </IconButton>
+            :
+            <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
+              <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
+              <input type="file" accept='image/*' hidden />
+              <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
+            </IconButton>
+          }
         </Box>
 
         <UserInputField userInputs={userInputs.username} state={username} setState={setUsername} validation={validUsername} />
         <UserInputField userInputs={userInputs.email} state={email} setState={setEmail} validation={validEmail} />
-
         <Button onClick={handleShowPassword}>
           Update Password
         </Button>
@@ -291,6 +318,33 @@ const UserSettingForm = ({ currentUser }) => {
 
         </Box>
       </Box>
+      <Popover
+        id={id}
+        open={popOpen}
+        anchorEl={anchorEl}
+        onClose={handlePopClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <SideButton disableRipple component="label" onChange={onDataSelect} onClick={handlePopClose}>
+            <input type="file" accept='image/*' hidden />
+            <FlipCameraIosOutlinedIcon />
+            <ButtonInfo >Edit photo</ButtonInfo>
+          </SideButton>
+          <SideButton  >
+            <DeleteForeverRoundedIcon />
+            <ButtonInfo >Remove photo</ButtonInfo>
+          </SideButton>
+        </Box>
+      </Popover>
     </Paper >
   )
 }
