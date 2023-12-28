@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react'
 
 import { useNavigate, useParams } from 'react-router-dom'
 import { FormControl, MenuItem, Paper, Box, SvgIcon, InputLabel, Modal, Select, Typography, CardActionArea, Button, CardMedia, IconButton, Popover } from '@mui/material'
@@ -79,6 +79,10 @@ const UserSettingForm = ({ currentUser }) => {
     }
   }, [isSuccess, navigate])
 
+
+  const fileInputRef = useRef(null)
+
+  const avatarContainerRef = useRef(null)
   const [username, setUsername] = useState(currentUser?.username)
   const [validUsername, setValidUsername] = useState(false)
   const [email, setEmail] = useState(currentUser?.email)
@@ -101,10 +105,8 @@ const UserSettingForm = ({ currentUser }) => {
   } :
     null
   )
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [hiddenAvatarMenu, setHiddenAvatarMenu] = useState(false)
 
-  const popOpen = Boolean(anchorEl)
-  const id = popOpen ? 'simple-popover' : undefined
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
@@ -131,6 +133,7 @@ const UserSettingForm = ({ currentUser }) => {
     setPassword('')
     setConfirm('')
   }, [showPassword])
+
 
 
   const canSave = showPassword ? [role, validEmail, validPassword, validUsername, validConfirm, typeof active === 'boolean'].every(Boolean) : [role, validEmail, validUsername, typeof active === 'boolean'].every(Boolean)
@@ -182,20 +185,22 @@ const UserSettingForm = ({ currentUser }) => {
   }
 
   const handlePopClick = (event) => {
-    setAnchorEl(event.currentTarget)
+
+    setHiddenAvatarMenu(prev => !prev)
   }
 
   const handlePopClose = () => {
-    setAnchorEl(null)
+
   }
 
   const handleClearAvatar = () => {
     setCroppedImg(null)
-    setAnchorEl(null)
+    setHiddenAvatarMenu(false)
   }
 
-
   const onDataSelect = (e) => {
+    e.preventDefault()
+    console.log('onDataSelect called')
     if (e.target.files && e.target.files.length > 0) {
       const files = e.target.files
       const name = files[0].name
@@ -211,6 +216,29 @@ const UserSettingForm = ({ currentUser }) => {
     }
   }
 
+  const handleButtonClick = (event) => {
+    setHiddenAvatarMenu(false)
+  }
+
+
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      // Check if the click is outside of the container
+      if (avatarContainerRef.current && !avatarContainerRef.current.contains(event.target)) {
+        setHiddenAvatarMenu(false)
+      }
+    }
+
+    // Attach event listeners based on device type
+    const eventType = 'ontouchstart' in window ? 'touchstart' : 'mousedown'
+    document.addEventListener(eventType, handleOutsideClick)
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      document.removeEventListener(eventType, handleOutsideClick)
+    }
+  }, [avatarContainerRef.current])
 
 
   return (
@@ -259,15 +287,27 @@ const UserSettingForm = ({ currentUser }) => {
 
         <Box sx={{ height: 200, width: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
           {croppedImg ?
-            <IconButton disableRipple component="label" onClick={handlePopClick} sx={{ height: 200, width: 200, p: 0 }}>
-              <CardMedia
-                sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
-                component="img"
-                image={croppedImg.url}
-              />
-
-              <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
-            </IconButton>
+            <Box ref={avatarContainerRef}>
+              <IconButton disableRipple component="label" onClick={handlePopClick} sx={{ height: 200, width: 200, p: 0 }}>
+                <CardMedia
+                  sx={{ height: 166.67, width: 166.67, borderRadius: '50%', p: 0, objectFit: 'initial' }}
+                  component="img"
+                  image={croppedImg.url}
+                />
+                <CameraAltIcon color="primary" sx={{ position: 'absolute', right: 40, bottom: 20, fontSize: '30px' }} />
+              </IconButton>
+              <Paper sx={{ display: hiddenAvatarMenu ? 'flex' : 'none', flexDirection: 'column', position: 'absolute', right: -40, bottom: -55, zIndex: '10', fontSize: '30px', overflow: 'hidden' }}>
+                <SideButton component="label" onClick={handleButtonClick} >
+                  <input type="file" accept='image/*' hidden onChange={onDataSelect} />
+                  <FlipCameraIosOutlinedIcon />
+                  <ButtonInfo >Edit photo</ButtonInfo>
+                </SideButton>
+                <SideButton onClick={handleClearAvatar}>
+                  <DeleteForeverRoundedIcon />
+                  <ButtonInfo >Remove photo</ButtonInfo>
+                </SideButton>
+              </Paper>
+            </Box>
             :
             <IconButton disableRipple component="label" onChange={onDataSelect} sx={{ height: 200, width: 200, p: 0 }}>
               <AccountCircleIcon sx={{ fontSize: 200, p: 0, color: '#bdbdbd' }} />
@@ -323,32 +363,6 @@ const UserSettingForm = ({ currentUser }) => {
 
         </Box>
       </Box>
-      <Popover
-        id={id}
-        open={popOpen}
-        anchorEl={anchorEl}
-        onClose={handlePopClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <SideButton disableRipple component="label" onChange={onDataSelect} onClick={handlePopClose}>
-            <input type="file" accept='image/*' hidden />
-            <FlipCameraIosOutlinedIcon />
-            <ButtonInfo >Edit photo</ButtonInfo>
-          </SideButton>
-          <SideButton onClick={handleClearAvatar}>
-            <DeleteForeverRoundedIcon />
-            <ButtonInfo >Remove photo</ButtonInfo>
-          </SideButton>
-        </Box>
-      </Popover>
     </Paper >
   )
 }
