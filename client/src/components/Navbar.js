@@ -139,11 +139,11 @@ export default function Navbar({ handleLogout, isSuccess, loggingOut, setLogging
           !isLoggingOut ?
             <Box sx={{ display: 'flex' }}>
               <Link to='/' component={RouterLink} underline='none' color='white' sx={{ fontSize: '16px', p: 0 }}>
-                K-BLOG (Demo)
+                K-BLOG
               </Link>
               <Typography sx={{ ml: 1, mr: 1 }}>|</Typography>
               <Link to='/about-this-app' component={RouterLink} underline='none' color='white' sx={{ fontSize: '16px', p: 0 }}>
-                about this app
+                about the App
               </Link>
             </Box>
             :
