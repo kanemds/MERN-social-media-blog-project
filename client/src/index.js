@@ -8,9 +8,11 @@ import { store } from './app/store'
 import { Provider } from 'react-redux'
 import ScrollToTop from './components/ScrollToTop'
 import SideBarProvider from './useContext/SideBarContext'
+import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 
 
-
+//  disable the React Developer Tools addon to access the application
+if (process.env.NODE_ENV === 'production') disableReactDevTools()
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
