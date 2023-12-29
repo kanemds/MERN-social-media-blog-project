@@ -84,7 +84,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         // the updated user info: {id: '64a5fa16c6aa3ed5b30e837d', username: 'John', email: 'john@gmail.com', role: 'Admin', active: false}
         // console.log('invalidatesTags-arg', arg)
         return [
-          { type: 'User', id: arg.id },
+          // { type: 'User', id: arg.id },
+          { type: 'User', avatar: arg.avatar },
           { type: 'Blog', id: 'LIST' }
         ]
       }

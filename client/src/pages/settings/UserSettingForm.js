@@ -71,16 +71,13 @@ const UserSettingForm = ({ currentUser }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setUsername('')
-      setEmail('')
-      setPassword('')
-      setRole('')
-      navigate('/')
+      setTimeout(() => {
+        navigate('/')
+      }, 800)
     }
+
   }, [isSuccess, navigate])
 
-
-  const fileInputRef = useRef(null)
 
   const avatarContainerRef = useRef(null)
   const [username, setUsername] = useState(currentUser?.username)
@@ -106,6 +103,7 @@ const UserSettingForm = ({ currentUser }) => {
     null
   )
   const [hiddenAvatarMenu, setHiddenAvatarMenu] = useState(false)
+  const [isAvatarDelete, setIsAvatarDelete] = useState(false)
 
 
   useEffect(() => {
@@ -152,6 +150,7 @@ const UserSettingForm = ({ currentUser }) => {
       formData.append('password', password)
       formData.append('active', active)
       formData.append('role', role)
+      formData.append('isAvatarDelete', isAvatarDelete)
       if (croppedImg !== null) {
         formData.append("avatar", croppedImg.file)
       }
@@ -189,14 +188,14 @@ const UserSettingForm = ({ currentUser }) => {
     setHiddenAvatarMenu(prev => !prev)
   }
 
-  const handlePopClose = () => {
-
-  }
 
   const handleClearAvatar = () => {
     setCroppedImg(null)
     setHiddenAvatarMenu(false)
+    setIsAvatarDelete(true)
   }
+
+
 
   const onDataSelect = (e) => {
     e.preventDefault()
@@ -206,6 +205,7 @@ const UserSettingForm = ({ currentUser }) => {
       const name = files[0].name
       setAvatarImage({ name, url: URL.createObjectURL(files[0]) })
       setOpen(true)
+      setIsAvatarDelete(true)
       e.target.value = ''
       // // turn into base64
       // const reader = new FileReader()

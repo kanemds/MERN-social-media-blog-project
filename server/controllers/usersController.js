@@ -101,7 +101,7 @@ const createNewUser = async (req, res) => {
 // route Patch /users
 // @access Private
 const updateUser = async (req, res) => {
-  const { id, username, email, role, active, password } = req.body
+  const { id, username, email, role, active, password, isAvatarDelete } = req.body
 
   let processedImages = null
   if (req.files) {
@@ -114,6 +114,8 @@ const updateUser = async (req, res) => {
   // if (!id || !username || !email || !role.length || typeof active !== 'boolean') {
   //   return res.status(400).json({ message: 'All fields are required' })
   // }
+
+  console.log(isAvatarDelete)
 
 
   const user = await User.findById(id).exec()
@@ -134,7 +136,7 @@ const updateUser = async (req, res) => {
     return res.status(409).json({ message: 'Email is taken' })
   }
 
-  if (user.avatar) {
+  if (isAvatarDelete === true) {
     await deleteImageFromFirebase(user.avatar)
   }
 
@@ -144,10 +146,11 @@ const updateUser = async (req, res) => {
   user.role = role
   user.active = active
 
-  if (processedImages) {
+  if (processedImages !== null) {
     user.avatar = processedImages
+  } else if (isAvatarDelete) {
+    user.avatar = null
   }
-
 
   if (password) {
     user.password = await bcrypt.hash(password, 10)
