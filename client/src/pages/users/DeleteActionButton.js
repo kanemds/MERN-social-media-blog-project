@@ -59,7 +59,7 @@ const DeleteActionButton = ({ userId }) => {
       setOpen(false)
       navigate('/')
     }
-  }, [isSuccess])
+  }, [isSuccess, navigate])
 
 
   return (

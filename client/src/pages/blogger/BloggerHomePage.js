@@ -67,7 +67,8 @@ const dataList = [{ id: 1, 'type': 'All' }, { id: 2, 'type': 'Public' }, { id: 3
 
 const BloggerHomePage = () => {
 
-  const small = useMediaQuery('(max-width:791px)')
+  const small = useMediaQuery('(min-width: 600px) and (max-width: 791px)')
+  const smallScreenSize = useMediaQuery('(max-width:599px)')
 
   const { id } = useParams()
   const { username, userId } = useAuth()
