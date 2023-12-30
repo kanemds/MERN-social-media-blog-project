@@ -129,8 +129,13 @@ const LoginPage = ({ state }) => {
 
   let content
 
-  if (isLoading) return content = <LoadingSpinner />
-
+  if (isLoading) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <LoadingSpinner />
+      </Box>
+    )
+  }
   // testing purpose
   // if (isLoading) return content = <LoadingSpinner />
 
