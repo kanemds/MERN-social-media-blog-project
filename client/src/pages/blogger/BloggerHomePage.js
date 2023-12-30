@@ -212,10 +212,10 @@ const BloggerHomePage = () => {
   if (isSuccess && currentUserBlogs?.length > 0 && !updateLoading) {
 
     content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {
           currentUserBlogs?.map(blog =>
-            <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+            <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2} >
               <BlogForBlogger blog={blog} bloggerUsername={bloggerUsername} setUpdateLoading={setUpdateLoading} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
             </Grid>
           )}
@@ -225,12 +225,12 @@ const BloggerHomePage = () => {
 
   if (isSearch) {
     content = (
-      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 12, xl: 15, xxl: 12 }}>
+      <Grid container spacing={1} columns={{ xs: 12, sm: 12, md: 12, lg: 12, ll: 15, xl: 12, xxl: 14 }}>
         {
           Array.isArray(searchResult) ?
             (
               searchResult?.map(blog =>
-                <Grid key={blog.id} xs={12} sm={12} md={6} lg={4} ll={3} xl={3} xxl={2} >
+                <Grid key={blog.id} xs={12} sm={6} md={4} lg={3} ll={3} xl={2} xxl={2}  >
                   <BlogForBlogger blog={blog} bloggerUsername={bloggerUsername} setUpdateLoading={setUpdateLoading} deleteBlog={deleteBlog} setRefresh={setRefresh} isDeleteLoading={isDeleteLoading} removeMessage={removeMessage} />
                 </Grid>)
             ) :
