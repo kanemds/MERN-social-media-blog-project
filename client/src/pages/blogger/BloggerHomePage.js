@@ -243,7 +243,7 @@ const BloggerHomePage = () => {
   }
 
   return (
-    <Box sx={{ width: '100%' }} >
+    <Box sx={{ width: '100%', mt: '30px' }} >
       <Box sx={{ height: 120, width: '100%' }}>
         <Box sx={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'start-left', pl: 2, pr: 2 }}>
           {bloggerAvatar ?
@@ -293,27 +293,23 @@ const BloggerHomePage = () => {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
-          <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAllBlogs}>All</Button>
+          <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleAllBlogs}>All</Button>
           {!isDesc ?
-            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleDescendent}>
-
+            <Button size='small' sx={{ minWidth: 0, p: '2px', }} variant='contained' onClick={handleDescendent}>
               <KeyboardDoubleArrowDownIcon />
-              DESC
             </Button>
             :
-            <Button size='small' sx={{ minWidth: 0, p: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant='contained' onClick={handleAscendent}>
-
+            <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleAscendent}>
               <KeyboardDoubleArrowUpIcon />
-              ACES
             </Button>
           }
 
         </Box>
       </Box>
-      <Box sx={{ height: '100%', p: 2 }}>
-        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 250px)' }}>
-          {content}
-        </Box>
+      <Box sx={{ pr: small ? '24px' : smallScreenSize ? '16px' : 2, pl: small ? '24px' : smallScreenSize ? '16px' : 2, pb: 2 }}>
+
+        {content}
+
       </Box>
     </Box >
 
