@@ -15,7 +15,6 @@ const style = {
   maxWidth: '330px',
   height: 140,
   bgcolor: 'background.paper',
-  border: '2px solid #bdbdbd',
   boxShadow: 24,
   display: 'flex',
   flexDirection: 'column',
@@ -151,6 +150,7 @@ const SingleBlogEditPage = () => {
     <>
       {content}
       <Modal
+
         open={deleteOpen}
         onClose={handleDeleteClose}
         aria-labelledby="modal-modal-title"

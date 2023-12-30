@@ -206,11 +206,11 @@ export default function ActiveCalender() {
                 display: 'none',
               },
               [`.MuiPickersCalendarHeader-label`]: {
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                m: 0,
-                P: 0
+                // width: '100%',
+                // display: 'flex',
+                // justifyContent: 'space-between',
+                margin: 0,
+                padding: 0
               },
 
               [`.MuiPickersYear-root`]: {
@@ -218,23 +218,23 @@ export default function ActiveCalender() {
                 overflow: 'hidden',
                 '-webkit-flex-basis': '33%',
               },
-              [`.css-1lkpf4l-MuiYearCalendar-root`]: {
+              [`.MuiYearCalendar-root`]: {
                 width: '200px',
                 '-webkit-flex-basis': '33%',
               },
-              [`.css-1beqopj-MuiPickersYear-yearButton`]: {
+              [`.MuiPickersYear-yearButton`]: {
                 width: '50px',
                 alignItems: 'center',
                 fontSize: '.8rem',
-                m: 0,
-                P: 0
+                margin: 0,
+                padding: 0
               },
-              [`.css-nk89i7-MuiPickersCalendarHeader-root`]: {
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                m: 0,
-                p: 0
+              [`.MuiPickersCalendarHeader-root`]: {
+                // width: '100%',
+                // display: 'flex',
+                // justifyContent: 'space-between',
+                margin: 0,
+                padding: 0
               },
               [`.MuiTypography-root`]: {
                 fontSize: '1rem',
@@ -261,10 +261,10 @@ export default function ActiveCalender() {
                 // alignItems: 'center',
                 // width: '240px',
               },
-              [`.css-flbe84-MuiDayCalendar-weekContainer`]: {
+              [`.MuiDayCalendar-weekContainer`]: {
                 height: '25px'
               },
-              [`.css-iyjaod-MuiList-root`]: {
+              [`.MuiList-root`]: {
                 margin: 0,
                 padding: 0,
                 display: 'flex',
