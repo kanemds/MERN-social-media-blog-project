@@ -252,7 +252,7 @@ const SubscribedList = () => {
               <KeyboardDoubleArrowDownIcon />
             </Button>
             :
-            <Button size='small' sx={{ minWidth: 0, p: '2px', }} variant='contained' onClick={handleAscendent}>
+            <Button size='small' sx={{ minWidth: 0, p: '2px' }} variant='contained' onClick={handleAscendent}>
               <KeyboardDoubleArrowUpIcon />
             </Button>
           }
