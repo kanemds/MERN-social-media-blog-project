@@ -74,7 +74,9 @@ const PersistLogin = () => {
     content = <Outlet />
   } else if (isLoading) {
     // console.log('Loading')
-    content = <LoadingSpinner />
+    content = (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+      <LoadingSpinner />
+    </Box>)
   } else if (isError) {
     // console.log('error', error.data)
     // content = (

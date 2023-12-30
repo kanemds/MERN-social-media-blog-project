@@ -232,6 +232,11 @@ const MainContent = (props) => {
     // if (page === paginatedData?.numberOfPages) {
     //   setHasMore(false)
     // }
+
+    if (!paginatedData) {
+      setHasMore(false)
+    }
+
     if (paginationQueryInfo.page === paginatedData?.numberOfPages) {
       setHasMore(false)
     }
@@ -346,6 +351,15 @@ const MainContent = (props) => {
 
 
   // // ---------------------- date select --------------------------------
+
+  if (paginatedData === undefined) {
+    content = (
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography>Issues with Connecting to the Server</Typography>
+        <Typography>Please try again later</Typography>
+      </Box>
+    )
+  }
 
   if ((paginatedIsLoading && selectedDate.frontPage === null) || (updateLoading)) {
     content = (

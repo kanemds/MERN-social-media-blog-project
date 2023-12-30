@@ -291,8 +291,6 @@ export default function MainBlog({ blog, setUpdateLoading }) {
   //   )
   // }
 
-  console.log(isClick)
-
   return (
 
     <Card
