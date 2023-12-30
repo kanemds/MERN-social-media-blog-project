@@ -17,7 +17,6 @@ const style = {
   width: '100%',
   maxWidth: '330px',
   bgcolor: 'background.paper',
-  border: '2px solid #bdbdbd',
   boxShadow: 24,
   p: 4,
   display: 'flex',

@@ -51,7 +51,6 @@ const style = {
   width: 400,
   bgcolor: 'background.paper',
   borderRadius: '20px',
-  border: '2px solid #bdbdbd',
   boxShadow: 24,
   p: 4,
   display: 'flex',
