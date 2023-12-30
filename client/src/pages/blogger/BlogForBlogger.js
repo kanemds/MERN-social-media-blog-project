@@ -297,7 +297,7 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
       className='fadeIn'
       sx={{
         p: 0,
-        maxWidth: 272,
+        maxWidth: 500,
         height: 360,
         boxShadow: 'box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px ',
         "&:hover": {
@@ -333,6 +333,8 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
               <IconButton
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
+                onTouchStart={() => setIsClick(true)}
+                onTouchEnd={() => setIsClick(true)}
                 onClick={handleUserPage}
                 disableRipple={true}
                 sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
@@ -381,6 +383,8 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
                   onClick={handleBookmark}
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
+                  onTouchStart={() => setIsClick(true)}
+                  onTouchEnd={() => setIsClick(true)}
                   style={iconStyle}
                   sx={{
                     mr: 1,
@@ -401,6 +405,8 @@ export default function BlogForBlogger({ blog, bloggerUsername, setUpdateLoading
                   onClick={handleLiked}
                   onMouseOver={() => setIsClick(true)}
                   onMouseOut={() => setIsClick(false)}
+                  onTouchStart={() => setIsClick(true)}
+                  onTouchEnd={() => setIsClick(true)}
                   style={iconStyle}
                   sx={{
                     '&:hover': { color: red[400], background: 'white' }

@@ -78,11 +78,11 @@ export default function ActiveCalender() {
       setCalendarDate({ ...calendarDate, bookmarkPage: date })
       setSelectedDate({ ...selectedDate, bookmarkPage: timeConvert })
     }
+    if (path?.includes('/blogs/user/')) {
+      setCalendarDate({ ...calendarDate, bloggerPage: date })
+      setSelectedDate({ ...selectedDate, bloggerPage: timeConvert })
+    }
   }
-
-
-
-
 
 
   // display on the sidebar calender
@@ -103,6 +103,9 @@ export default function ActiveCalender() {
   }
   if (path === '/blogs/bookmarks') {
     displayDate = calendarDate.bookmarkPage
+  }
+  if (path?.includes('/blogs/user/')) {
+    displayDate = calendarDate.bloggerPage
   }
 
 
@@ -131,6 +134,11 @@ export default function ActiveCalender() {
       if (path === '/blogs/bookmarks') {
         setCalendarDate({ ...calendarDate, bookmarkPage: null })
         setSelectedDate({ ...selectedDate, bookmarkPage: null })
+        setClearSelectedDate(false)
+      }
+      if (path?.includes('/blogs/user/')) {
+        setCalendarDate({ ...calendarDate, bloggerPage: null })
+        setSelectedDate({ ...selectedDate, bloggerPage: null })
         setClearSelectedDate(false)
       }
     }

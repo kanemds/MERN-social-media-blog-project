@@ -6,7 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { blue } from '@mui/material/colors'
 import ClientSearchBar from '../../components/ClientSearchBar'
 import { useDeleteBlogMutation, useGetBloggerHomePageQuery, useGetUserBlogsFromUserIdQuery } from '../blogs/blogsApiSlice'
-
+import { timeDisplayOptions } from '../../config/timeDisplayOptions'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined'
 import UpgradeOutlinedIcon from '@mui/icons-material/UpgradeOutlined'
@@ -25,6 +25,7 @@ import BlogForBlogger from './BlogForBlogger'
 import useAuth from '../../hooks/useAuth'
 import useNumberDisplay from '../../hooks/useNumberDisplay'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { set } from 'lodash'
 
 const Root = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -72,7 +73,7 @@ const BloggerHomePage = () => {
 
   const { id } = useParams()
   const { username, userId } = useAuth()
-  const { state, setState, drawerDirection, toggleDrawer } = useContext(SideBarContext)
+  const { state, setState, drawerDirection, toggleDrawer, selectedDate, path, setPath, setClearSelectedDate } = useContext(SideBarContext)
 
   const bloggerInfo = {
     id,
@@ -114,9 +115,20 @@ const BloggerHomePage = () => {
   const [isReady, setIsReady] = useState(false)
   const [updateLoading, setUpdateLoading] = useState(false)
 
+
+  const timeConvert = (date) => {
+    return new Date(Date.parse(date?.toString())).toLocaleString(undefined, timeDisplayOptions.optionTwo)
+  }
+
   useEffect(() => {
     if (isSuccess || refresh) {
-      setCurrentUserBlogs(Object.values(userBlogs?.blogs))
+      if (selectedDate.bloggerPage) {
+        const selectedDay = Object.values(userBlogs?.blogs).filter(blog => timeConvert(blog.createdAt) === selectedDate.bloggerPage)
+        setCurrentUserBlogs(selectedDay)
+      } else {
+        setCurrentUserBlogs(Object.values(userBlogs?.blogs))
+      }
+
       setBloggerUsername(userBlogs?.blogger_name)
       setNumberOfSubscribers(userBlogs?.number_of_subscribers)
       setNumberOfBlogs(userBlogs?.number_of_blogs)
@@ -135,7 +147,7 @@ const BloggerHomePage = () => {
         setUpdateLoading(false)
       }, 500)
     }
-  }, [isSuccess, refresh, userBlogs, updateLoading])
+  }, [isSuccess, refresh, userBlogs, updateLoading, selectedDate.bloggerPage])
 
   const handleSelect = (e) => {
     setIsSelected(e.target.value)
@@ -180,6 +192,17 @@ const BloggerHomePage = () => {
     }
   }
 
+  const handleClearFromSearch = () => {
+    setIsSearch(false)
+    setSearchResult([])
+  }
+
+
+  const handleClearFromSelectedDate = (e) => {
+    setClearSelectedDate(true)
+  }
+
+
   const subscribersDisplay = useNumberDisplay(numberOfSubscribers)
   const blogsDisplay = useNumberDisplay(numberOfBlogs)
 
@@ -209,6 +232,21 @@ const BloggerHomePage = () => {
       </Box>
       )
   }
+
+  if (isSuccess && currentUserBlogs?.length === 0 && selectedDate.bloggerPage !== null) {
+    content =
+      (<Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Typography >
+          No blogs found on the selected date.
+        </Typography>
+      </Box>
+      )
+  }
+
+  console.log(isSuccess)
+  console.log(selectedDate.bloggerPage)
+  console.log(currentUserBlogs?.length)
+
 
   if (isSuccess && currentUserBlogs?.length > 0 && !updateLoading) {
 
@@ -267,7 +305,7 @@ const BloggerHomePage = () => {
 
           <Box sx={{ display: 'flex', flexDirection: 'column', ml: 2 }}>
             <Typography variant='h5' sx={{
-              width: 300,
+              width: '100%',
               wordBreak: "break-word", display: '-webkit-box',
               overflow: 'hidden',
               WebkitBoxOrient: 'vertical',
@@ -280,8 +318,8 @@ const BloggerHomePage = () => {
         </Box>
       </Box>
       <Box sx={{ position: 'sticky', top: '70px', backgroundColor: 'white', zIndex: 10, width: '100%', pt: '10px', pb: '10px', pl: 2, pr: 2 }}>
-        <Box sx={{ display: 'flex', width: '100%', mb: 1, p: '0px' }}>
-          {small ?
+        <Box sx={{ display: 'flex', width: '100%', pt: '10px', pb: '10px' }}>
+          {small || smallScreenSize ?
             <IconButton style={IconButtonStyle} disableRipple color="primary" sx={{ display: 'flex', justifyContent: 'flex-start', p: '0px', width: '0px' }}
               onClick={toggleDrawer(drawerDirection, true)}
             >
@@ -290,7 +328,7 @@ const BloggerHomePage = () => {
             : ''
           }
           <Box sx={{ width: '100%', pt: '10px' }}>
-            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} handleSearch={handleSearch} />
+            <ClientSearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearch={isSearch} isSelectedDate={selectedDate.bloggerPage} handleSearch={handleSearch} handleClearFromSearch={handleClearFromSearch} handleClearFromSelectedDate={handleClearFromSelectedDate} />
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', mt: 1 }}>
