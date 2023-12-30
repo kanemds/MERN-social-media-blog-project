@@ -199,6 +199,8 @@ export default function LikeBlog({ blog, setRefresh, deleteLike, removeMessage, 
               <IconButton
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
+                onTouchStart={() => setIsClick(true)}
+                onTouchEnd={() => setIsClick(true)}
                 onClick={handleUserPage}
                 disableRipple={true}
 

@@ -9,23 +9,24 @@ export const SideBarContext = createContext()
 
 const SideBarProvider = ({ children }) => {
 
-
-
-
   const [selectedDate, setSelectedDate] = useState({
     frontPage: null,
     myPostPage: null,
     subscribePage: null,
     bookmarkPage: null,
-    likedPage: null
+    likedPage: null,
+    bloggerPage: null
   })
   const [calendarDate, setCalendarDate] = useState({
     frontPage: null,
     myPostPage: null,
     subscribePage: null,
     bookmarkPage: null,
-    likedPage: null
+    likedPage: null,
+    bloggerPage: null
   })
+
+
   const [path, setPath] = useState(null)
   const [state, setState] = useState({
     left: false,
