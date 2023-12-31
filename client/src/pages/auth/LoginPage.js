@@ -154,7 +154,7 @@ const LoginPage = ({ state }) => {
         }}
       >
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Typography variant='h8' sx={{ mb: 1 }}>{requiredLoginMessage}</Typography>
+          <Typography variant='h8' sx={{ mb: 1, p: 2 }}>{requiredLoginMessage}</Typography>
         </Box>
 
         <Box sx={{ pb: '40px', }} textAlign='center'>

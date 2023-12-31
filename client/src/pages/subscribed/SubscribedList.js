@@ -132,6 +132,7 @@ const SubscribedList = () => {
   }
 
   const handleAllBlogs = () => {
+    setSearchInput('')
     setIsSearch(false)
   }
 
@@ -143,17 +144,16 @@ const SubscribedList = () => {
       [inputLowerCase].some(character => blog.username.toLowerCase().includes(character))
     )
     if (!result.length) {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult('No subscriber was found to match the input')
     } else {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult(result)
     }
   }
 
   const handleClearFromSearch = () => {
+    setSearchInput('')
     setIsSearch(false)
     setSearchResult([])
   }

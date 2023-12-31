@@ -443,7 +443,7 @@ const SingleBlog = () => {
             <IconButton
               onClick={handleUserPage}
               disableRipple={true}
-              sx={{ display: 'flex', alignItems: 'self-start', p: 0, mr: '16px' }}
+              sx={{ display: 'flex', alignItems: 'self-start', p: 1, mr: '16px' }}
             >
               {avatar ?
                 <Avatar src={avatar} />

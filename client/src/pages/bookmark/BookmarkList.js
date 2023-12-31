@@ -80,8 +80,6 @@ const BookmarkList = () => {
     })
   })
 
-  console.log(bookmarkBlogs)
-
   const [
     deleteBookmark, {
       data: removeMessage,
@@ -149,6 +147,7 @@ const BookmarkList = () => {
   }
 
   const handleAllBlogs = () => {
+    setSearchInput('')
     setIsSearch(false)
   }
 
@@ -160,11 +159,9 @@ const BookmarkList = () => {
       [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
     )
     if (!result.length) {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult('No matching bookmarks were found for the given input.')
     } else {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult(result)
     }

@@ -137,6 +137,7 @@ const LikeList = () => {
   }
 
   const handleAllBlogs = () => {
+    setSearchInput('')
     setIsSearch(false)
   }
 
@@ -148,11 +149,9 @@ const LikeList = () => {
       [inputLowerCase].some(character => blog.title.toLowerCase().includes(character) || blog.text.toLowerCase().includes(character))
     )
     if (!result.length) {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult('No matching blogs were found for the given input.')
     } else {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult(result)
     }

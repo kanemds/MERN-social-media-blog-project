@@ -257,6 +257,8 @@ export default function Blog({ blog, setRefresh, deleteBlog, isDeleteLoading, re
               <IconButton
                 onMouseOver={() => setIsClick(true)}
                 onMouseOut={() => setIsClick(false)}
+                onTouchStart={() => setIsClick(true)}
+                onTouchEnd={() => setIsClick(true)}
                 onClick={handleUserPage}
                 disableRipple={true}
 
