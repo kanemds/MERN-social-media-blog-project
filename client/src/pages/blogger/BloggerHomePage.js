@@ -170,6 +170,7 @@ const BloggerHomePage = () => {
   }
 
   const handleAllBlogs = () => {
+    setSearchInput('')
     setIsSearch(false)
   }
 
@@ -182,11 +183,9 @@ const BloggerHomePage = () => {
     )
 
     if (!result.length) {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult('No search results found for blog(s)')
     } else {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult(result)
     }
@@ -242,10 +241,6 @@ const BloggerHomePage = () => {
       </Box>
       )
   }
-
-  console.log(isSuccess)
-  console.log(selectedDate.bloggerPage)
-  console.log(currentUserBlogs?.length)
 
 
   if (isSuccess && currentUserBlogs?.length > 0 && !updateLoading) {

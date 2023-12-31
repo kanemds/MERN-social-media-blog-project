@@ -85,7 +85,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         // console.log('invalidatesTags-arg', arg)
         return [
           { type: 'User', id: arg.id },
-          { type: 'User', avatar: arg.avatar },
           { type: 'Blog', id: 'LIST' }
         ]
       }

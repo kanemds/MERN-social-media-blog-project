@@ -90,7 +90,7 @@ const MainContent = (props) => {
   const [searchResultForRecently, setSearchResultForRecently] = useState(null)
   const [isSearch, setIsSearch] = useState(false)
   const [maxPage, setMaxPage] = useState('')
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(false)
   const [isReFetch, setIsReFetch] = useState(false)
   const [paginationQueryInfo, setPaginationQueryInfo] = useState({ page: 1, username: null })
   const [updateLoading, setUpdateLoading] = useState(false)
@@ -235,10 +235,10 @@ const MainContent = (props) => {
 
     if (!paginatedData) {
       setHasMore(false)
-    }
-
-    if (paginationQueryInfo.page === paginatedData?.numberOfPages) {
+    } else if (paginationQueryInfo.page >= paginatedData?.numberOfPages) {
       setHasMore(false)
+    } else {
+      setHasMore(true)
     }
     // if (paginatedIsSuccess) {
     //   if (username) {
@@ -261,9 +261,14 @@ const MainContent = (props) => {
         setUpdateLoading(false)
       }, 1000)
     }
-
   }, [paginatedData, updateLoading, page]) // needs paginatedData as dependency for the latest update
 
+
+  console.log(paginatedData)
+  console.log(paginatedIsSuccess)
+  console.log(paginationQueryInfo)
+  console.log(page)
+  console.log(hasMore)
 
 
   const handleNext = () => {

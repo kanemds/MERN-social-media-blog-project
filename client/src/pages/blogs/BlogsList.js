@@ -102,6 +102,8 @@ const BlogsList = () => {
   const [refresh, setRefresh] = useState(false)
 
 
+  console.log(userBlogs)
+
 
 
   useEffect(() => {
@@ -154,18 +156,16 @@ const BlogsList = () => {
     )
 
     if (!result.length) {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult('No matching blogs were found for the given input.')
     } else {
-      setSearchInput('')
       setIsSearch(true)
       return setSearchResult(result)
     }
-
   }
 
   const handleClearFromSearch = () => {
+    setSearchInput('')
     setIsSearch(false)
     setSearchResult([])
   }

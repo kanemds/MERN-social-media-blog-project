@@ -1,6 +1,6 @@
 export const messages = {
-  bookmark: 'Please log in to activate the "Save Bookmark" feature',
-  like: 'Please log in to activate the "Liking" feature',
-  subscribe: 'Please log in to activate the "Subscribe" feature',
-  user: 'Please log in to activate all user features'
+  bookmark: 'Log in to enable "Bookmark" feature.',
+  like: 'Log in to enable  "Liking" feature',
+  subscribe: 'Log in to enable  "Subscribe" feature',
+  user: 'Log in to enable  all user features'
 }

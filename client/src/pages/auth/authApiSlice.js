@@ -28,6 +28,9 @@ const authApiSlice = apiSlice.injectEndpoints({
         } catch (error) {
           console.log(error)
         }
+      },
+      invalidatesTags: (result, error, arg) => {
+        return ['Blog']
       }
     }),
     refresh: builder.mutation({
@@ -43,6 +46,13 @@ const authApiSlice = apiSlice.injectEndpoints({
         } catch (error) {
           // console.log(error)
         }
+      }
+      ,
+      invalidatesTags: (result, error, arg) => {
+        return [
+          { type: 'Blog', id: 'LIST' },
+          { type: 'User', id: 'LIST' }
+        ]
       }
     })
   })
