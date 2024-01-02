@@ -109,13 +109,6 @@ export default function VerticalSwiper() {
   // document.addEventListener('touchmove', handleTouchMove)
 
 
-  useEffect(() => {
-    console.log(swiperState)
-  }, [swiperState])
-
-
-
-
   return (
     <>
       <Swiper
