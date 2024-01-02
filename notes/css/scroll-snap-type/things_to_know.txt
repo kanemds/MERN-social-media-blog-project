@@ -1,6 +1,0 @@
-
-scroll snap can not do:
-  speed control
-  use pointer to move
-
-
