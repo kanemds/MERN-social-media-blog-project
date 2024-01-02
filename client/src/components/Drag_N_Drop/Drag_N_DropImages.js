@@ -7,13 +7,15 @@ import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
 import './drag_n_drop.css'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Grid from '@mui/material/Unstable_Grid2'
-
+import { isMobile } from 'is-mobile'
 
 
 const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgImages, imagesBeforeEdit = [] }) => {
 
+  const isCurrentMobile = isMobile()
   const smallBP = useMediaQuery('(min-width:550px)') // true when larger
   const xSamllBP = useMediaQuery('(min-width:466px)') // true when larger
+
 
   const [data, setData] = useState(imagesBeforeEdit)
   const [isClick, setIsClick] = useState(false)
@@ -209,20 +211,29 @@ const Drag_N_DropImages = ({ setSelectedImage, selectedImage, setOrgImages, orgI
         onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}
         disabled={data?.length <= 5 ? false : true}
       >
-        {isDragging ? (
-          <Button>Drop images here</Button>
-        ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} >
-            <Typography variant='caption'>Drop Image(s)</Typography>
-            <Typography variant='caption'>or</Typography>
+        {!isDragging && isCurrentMobile ? (
+          <Box sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
             <IconButton color="primary" component="label" onChange={onDataSelect} disabled={data?.length <= 4 ? false : true}>
               <AddPhotoAlternateOutlinedIcon />
               {/* <input type="file" hidden multiple ref={fileInputRef} /> */}
               <input type="file" hidden multiple />
             </IconButton>
           </Box>
+        ) :
+          isDragging && !isCurrentMobile ? (
+            <Button>Drop images here</Button>
+          ) : (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} >
+              <Typography variant='caption'>Drop Image(s)</Typography>
+              <Typography variant='caption'>or</Typography>
+              <IconButton color="primary" component="label" onChange={onDataSelect} disabled={data?.length <= 4 ? false : true}>
+                <AddPhotoAlternateOutlinedIcon />
+                {/* <input type="file" hidden multiple ref={fileInputRef} /> */}
+                <input type="file" hidden multiple />
+              </IconButton>
+            </Box>
 
-        )}
+          )}
       </Box>
 
     </Box>
