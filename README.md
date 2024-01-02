@@ -49,6 +49,11 @@ Backend:
 
 ![2024-01-02 09_56_37-Window](https://github.com/kanemds/mern-blog/assets/90575401/261e159b-71f8-4e25-abdb-5ccd6374c154)
 
+![2024-01-02 11_53_46-Window](https://github.com/kanemds/MERN-social-media-blog-project/assets/90575401/6dd9258d-4d27-4fdd-9619-377cfd949dd8)
+
 ![2024-01-02 09_52_28-Window](https://github.com/kanemds/mern-blog/assets/90575401/1b0f665d-33dc-4604-9fe2-75839b49a036)
 
 ![2024-01-02 09_56_07-Window](https://github.com/kanemds/mern-blog/assets/90575401/82b290ba-3397-4c01-a745-d5cc44c4ffce)
+
+![2024-01-02 11_53_10-Window](https://github.com/kanemds/MERN-social-media-blog-project/assets/90575401/37160efa-b947-475a-9458-0c85e510203a)
+
