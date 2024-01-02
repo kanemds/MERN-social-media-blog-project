@@ -4,8 +4,8 @@ import { setCredentials } from '../../pages/auth/authSlice'
 
 // common usage patterns, setting default headers on every request
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:4567',
-  // baseUrl: 'https://k-blog-demo-server.onrender.com', // deployment
+  // baseUrl: 'http://localhost:4567',
+  baseUrl: 'https://k-blog-demo-server.onrender.com', // deployment
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token

@@ -94,6 +94,7 @@ const MainContent = (props) => {
   const [isReFetch, setIsReFetch] = useState(false)
   const [paginationQueryInfo, setPaginationQueryInfo] = useState({ page: 1, username: null })
   const [updateLoading, setUpdateLoading] = useState(false)
+  const [loadingFromServer, setLoadingFromServer] = useState(true)
 
 
 
@@ -233,8 +234,21 @@ const MainContent = (props) => {
     //   setHasMore(false)
     // }
 
+    let existTimeout
+
+    const cleanup = () => {
+      if (existTimeout) {
+        console.log('clean up')
+        clearTimeout(existTimeout)
+      }
+    }
+
+
     if (!paginatedData) {
       setHasMore(false)
+      existTimeout = setTimeout(() => {
+        setLoadingFromServer(false)
+      }, 90000)
     } else if (paginationQueryInfo.page >= paginatedData?.numberOfPages) {
       setHasMore(false)
     } else {
@@ -261,14 +275,13 @@ const MainContent = (props) => {
         setUpdateLoading(false)
       }, 1000)
     }
+
+    return cleanup
+
+
   }, [paginatedData, updateLoading, page]) // needs paginatedData as dependency for the latest update
 
-
   console.log(paginatedData)
-  console.log(paginatedIsSuccess)
-  console.log(paginationQueryInfo)
-  console.log(page)
-  console.log(hasMore)
 
 
   const handleNext = () => {
@@ -357,7 +370,7 @@ const MainContent = (props) => {
 
   // // ---------------------- date select --------------------------------
 
-  if (paginatedData === undefined) {
+  if (!loadingFromServer) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <Typography>Issues with Connecting to the Server</Typography>
@@ -366,10 +379,13 @@ const MainContent = (props) => {
     )
   }
 
-  if ((paginatedIsLoading && selectedDate.frontPage === null) || (updateLoading)) {
+  if ((paginatedIsLoading && selectedDate.frontPage === null) || (updateLoading) || (loadingFromServer)) {
     content = (
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <LoadingSpinner />
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography sx={{ mb: 2 }}>Welcome! It may take a while to load data from the server. </Typography>
+          <LoadingSpinner />
+        </Box>
       </Box>
     )
   }
